@@ -1,0 +1,10 @@
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.AssemblyInfoInputs.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.AssemblyInfo.cs
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.deps.json
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.csproj.AssemblyReference.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.GeneratedMSBuildEditorConfig.editorconfig
