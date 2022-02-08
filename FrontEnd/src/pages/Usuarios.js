@@ -21,7 +21,7 @@ const columnas=[
     { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
     { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
     { title: 'Firma', field: 'firma', filtering:false },
-    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Admin"},filterPlaceholder:"Filtrar por perfil" },
+    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector"},filterPlaceholder:"Filtrar por perfil" },
     { title: 'Cliente', field: 'idCliente', type: 'numeric',filterPlaceholder:"Filtrar por cliente" },
     
     //Ocultas
@@ -40,7 +40,7 @@ const columnas=[
 ];
 
 
-const baseUrl="/usuario/";
+
 const token = {
     headers:{
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -77,27 +77,51 @@ function Usuarios() {
     
     const [modalEliminar, setModalEliminar]= useState(false);
 
-    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
+      nombre: "",
+      apellidos: "",
+      id: "",
+      idPerfil: 0,
+      idCliente: 0,
+      usuario: "",
+      login: "",
+      telefono: "",
+      password: "",
+      activo: 0,
+      
+    })
 
     const [data, setData] = useState([]);
+
+    const [perfiles, setPerfiles] = useState([]);
 
     const styles= useStyles();
 
     //peticiones API
+    const GetPerfiles = async () => {
+      axios.get("/perfil", token).then(response => {
+        const perfil = Object.entries(response.data.data).map(([key,value]) => (key, value))
+        setPerfiles(perfil);
+        console.log(perfil)
+      },[])
+    }
+
+
     const peticionGet = async () => {
-      axios.get(baseUrl, token).then(response => {
+      axios.get("/usuario", token).then(response => {
         setData(response.data.data)
       })
     }
 
     useEffect(() => {
       peticionGet();
+      GetPerfiles();
+
     }, [])
 
     const peticionPost = async () => {
-      await axios.post(baseUrl, usuarioSeleccionado)
+      await axios.post("/usuario", usuarioSeleccionado)
         .then(response => {
-          console.log(response)
           console.log(usuarioSeleccionado)
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
@@ -107,7 +131,7 @@ function Usuarios() {
     }
 
     const peticionPut=async()=>{
-      await axios.put(baseUrl+"/"+usuarioSeleccionado.id, usuarioSeleccionado)
+      await axios.put("/usuario/"+usuarioSeleccionado.id, usuarioSeleccionado)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{
@@ -123,7 +147,7 @@ function Usuarios() {
     }
   
     const peticionDelete=async()=>{
-      await axios.delete(baseUrl+"/"+ usuarioSeleccionado.id)
+      await axios.delete("/usuario/"+ usuarioSeleccionado.id)
       .then(response=>{
         setData(data.filter(usuario=>usuario.id!==usuarioSeleccionado.id));
         abrirCerrarModalEliminar();
@@ -152,6 +176,7 @@ function Usuarios() {
         ...prevState,
         [name]: value
       }));
+      console.log(usuarioSeleccionado)
     }
 
     const pruebaoptions = ['Administrador', 'Cliente', 'Informador', 'Inspector'];
@@ -178,19 +203,24 @@ function Usuarios() {
         <Autocomplete
           disablePortal
           id="CboPerfiles"
-          options={pruebaoptions}
+          options={perfiles}
+          getOptionLabel={option => option.nombre}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-        />
+          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+            ...prevState,
+            idPerfil:value.id
+          }))}
+            />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
           disabled
           id="CboClientes"
-          options={pruebaoptions}
+          options={perfiles}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
-        />
+          onChange={handleChange}/>
 
         <br /><br />
         <div align="right">
@@ -224,7 +254,7 @@ function Usuarios() {
         <Autocomplete
           disablePortal
           id="CboPerfiles"
-          options={pruebaoptions}
+          options={perfiles}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Perfil"  value={usuarioSeleccionado&&usuarioSeleccionado.idPerfil} name="idPerfil"/>}
         />

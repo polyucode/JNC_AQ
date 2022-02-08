@@ -11,3 +11,16 @@ C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Infrast
 C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
 C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.AssemblyReference.cache
 C:\Users\Usuario\Desktop\Projectes\JNC_Analisis_Quimico\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.deps.json
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfo.cs
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CopyComplete
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
