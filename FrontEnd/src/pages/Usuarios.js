@@ -78,31 +78,57 @@ function Usuarios() {
     const [modalEliminar, setModalEliminar]= useState(false);
 
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
-      nombre: "",
-      apellidos: "",
-      id: "",
-      idPerfil: 0,
+      id: 0,
+      nombre: '',
+      apellidos: '',
+      login: null,
+      telefono: '',
+      usuario: '',
+      password: '',
+      activo: false,
+      firma: '',
       idCliente: 0,
-      usuario: "",
-      login: "",
-      telefono: "",
-      password: "",
-      activo: 0,
-      
-    })
+      idPerfil: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+
+
+    });
+
+    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+
+    const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
+
+    const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
 
     const [data, setData] = useState([]);
 
     const [perfiles, setPerfiles] = useState([]);
 
+    const [clientes, setClientes] = useState([]);
+
     const styles= useStyles();
 
+    const [estadoCboCliente, setestadoCboCliente] = useState(true);
+
+
     //peticiones API
+    const GetClientes = async () => {
+      axios.get("/cliente", token).then(response => {
+        const clientes = Object.entries(response.data.data).map(([key,value]) => (key, value))
+        setClientes(clientes);
+      },[])
+    }
+
     const GetPerfiles = async () => {
       axios.get("/perfil", token).then(response => {
         const perfil = Object.entries(response.data.data).map(([key,value]) => (key, value))
         setPerfiles(perfil);
-        console.log(perfil)
       },[])
     }
 
@@ -116,13 +142,11 @@ function Usuarios() {
     useEffect(() => {
       peticionGet();
       GetPerfiles();
-
     }, [])
 
     const peticionPost = async () => {
       await axios.post("/usuario", usuarioSeleccionado)
         .then(response => {
-          console.log(usuarioSeleccionado)
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
         }).catch(error => {
@@ -131,7 +155,8 @@ function Usuarios() {
     }
 
     const peticionPut=async()=>{
-      await axios.put("/usuario/"+usuarioSeleccionado.id, usuarioSeleccionado)
+      console.log(usuarioSeleccionado)
+      await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{
@@ -147,9 +172,10 @@ function Usuarios() {
     }
   
     const peticionDelete=async()=>{
-      await axios.delete("/usuario/"+ usuarioSeleccionado.id)
+      console.log("id=" + UsuarioEliminar[0].id)
+      await axios.delete("/usuario/"+ UsuarioEliminar[0].id)
       .then(response=>{
-        setData(data.filter(usuario=>usuario.id!==usuarioSeleccionado.id));
+        peticionGet();
         abrirCerrarModalEliminar();
       }).catch(error=>{
         console.log(error);
@@ -158,8 +184,7 @@ function Usuarios() {
 
     //usuarioSeleccionado
     const seleccionarUsuario=(usuario, caso)=>{
-      console.log(caso)
-      setUsuarioSeleccionado(usuario);
+      console.log(FilasSeleccionadas)
       (caso==="Editar")?abrirCerrarModalEditar()
       :
       abrirCerrarModalEliminar()
@@ -176,10 +201,31 @@ function Usuarios() {
         ...prevState,
         [name]: value
       }));
-      console.log(usuarioSeleccionado)
     }
 
-    const pruebaoptions = ['Administrador', 'Cliente', 'Informador', 'Inspector'];
+    const handleChangePerfil=(event,value) => {
+    setUsuarioSeleccionado(prevState=>({
+    ...prevState,
+    idPerfil:value.id
+    }))
+    if(value.id === 2){
+    setestadoCboCliente(false)
+    GetClientes();
+    }else{
+      setestadoCboCliente(true)
+    }
+    }
+
+    const eliminarFilas=()=>{
+      console.log("filasseleccionadas= " + FilasSeleccionadas)
+      FilasSeleccionadas.map(element => {
+        console.log("elementid" + element.id)
+        setUsuarioSeleccionado(element);
+        console.log("usuarioSeleccionado" + usuarioSeleccionado.id)
+        peticionDelete();
+      });
+
+    }
 
     const bodyInsertar=(
       <div className={styles.modal}>
@@ -201,26 +247,28 @@ function Usuarios() {
 
         {/* Desplegable de Perfiles */}
         <Autocomplete
-          disablePortal
+          disabledPortal
           id="CboPerfiles"
           options={perfiles}
           getOptionLabel={option => option.nombre}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
-            ...prevState,
-            idPerfil:value.id
-          }))}
+          onChange={handleChangePerfil}
             />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
-          disabled
+          disabled={estadoCboCliente}
           id="CboClientes"
-          options={perfiles}
+          options={clientes}
+          getOptionLabel={option => option.nombreComercial}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
-          onChange={handleChange}/>
+          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+            ...prevState,
+            idCliente:value.id
+          }))}
+          />
 
         <br /><br />
         <div align="right">
@@ -255,17 +303,25 @@ function Usuarios() {
           disablePortal
           id="CboPerfiles"
           options={perfiles}
+          getOptionLabel={option => option.nombre}
+          defaultValue={perfilUsuarioEditar[0]}
           sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Perfil"  value={usuarioSeleccionado&&usuarioSeleccionado.idPerfil} name="idPerfil"/>}
+          onChange={handleChangePerfil}
+          renderInput={(params) => <TextField {...params} label="Perfil"   name="idPerfil"/>}
         />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
-          disabled
+          disabled={estadoCboCliente}
           id="CboClientes"
-          options={pruebaoptions}
+          options={clientes}
+          getOptionLabel={option => option.nombreComercial}
           sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Clientes" value={usuarioSeleccionado&&usuarioSeleccionado.idCliente} name="idCliente"/>}
+          renderInput={(params) => <TextField {...params} label="Clientes" value={perfilUsuarioEditar&& perfilUsuarioEditar[0] } name="idCliente"/>}
+          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+            ...prevState,
+            idCliente:value.id
+          }))}
         />
 
         <br /><br />
@@ -283,7 +339,7 @@ function Usuarios() {
 
     const bodyEliminar=(
       <div className={styles.modal}>
-        <p>Estás seguro que deseas eliminar al artista <b>{usuarioSeleccionado && usuarioSeleccionado.name + ' ' + usuarioSeleccionado.apellidos}</b>? </p>
+        <p>Estás seguro que deseas eliminar el usuario ? </p>
         <div align="right">
           <Button color="secondary" onClick={()=>peticionDelete()}>Sí</Button>
           <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
@@ -357,22 +413,26 @@ function Usuarios() {
                 {
                     icon: () => <RemoveCircle style={{ fill: "red"}}/>,
                   tooltip: "Eliminar Usuario",
-                  isFreeAction: true,
-                  onClick: (e,data) => {
-                    seleccionarUsuario(data,"Eliminar")
-                },
+                  onClick: (event,rowData) => {
+                    setUsuarioEliminar(FilasSeleccionadas);
+                    abrirCerrarModalEliminar()
+                  },
                 },
                 {
                     icon: () => <Edit/>,
                   tooltip: "Editar Usuario",
                   onClick: (e,data) => {
-                    seleccionarUsuario(data,"Editar")
+                    setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idCliente));
+                    abrirCerrarModalEditar();
                   },
                 },
               ]}
 
             onRowClick={((evt, usuarioSeleccionado) => setUsuarioSeleccionado(usuarioSeleccionado.tableData.id))}  
-            
+            onSelectionChange={(filas)=>{
+              setFilasSeleccionadas(filas);
+              setUsuarioSeleccionado(filas[0]);}
+            }
             options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({
