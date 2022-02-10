@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace AnalisisQuimicos.Core.Entities
 {
-    public partial class Comarcas
+    public partial class Comarcas : BaseEntity
     {
-        public int? Id { get; set; }
         public string Descripcion { get; set; }
     }
 }

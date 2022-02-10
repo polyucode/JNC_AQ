@@ -14,7 +14,9 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
             CreateMap<Clientes, ClienteDto>().ReverseMap();
             CreateMap<Perfiles, PerfilDto>().ReverseMap();
-
+            CreateMap<Comarcas, ComarcaDto>().ReverseMap();
+            CreateMap<Provincias, ProvinciaDto>().ReverseMap();
+            CreateMap<Poblaciones, PoblacionDto>().ReverseMap();
         }
 
         

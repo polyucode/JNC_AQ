@@ -14,10 +14,10 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly YucodeDevelopmentJNC_AQContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IRepository<Clientes> _clienteRepository;
-        //private readonly IRepository<Comarcas> _comarcaRepository;
+        private readonly IRepository<Comarcas> _comarcaRepository;
         private readonly IRepository<Perfiles> _perfilRepository;
-        //private readonly IRepository<Poblaciones> _poblacionRepository;
-        //private readonly IRepository<Provincias> _provinviaRepository;
+        private readonly IRepository<Poblaciones> _poblacionRepository;
+        private readonly IRepository<Provincias> _provinviaRepository;
         private readonly IRepository<ServMantenimientoCab> _servMantenimientoCabRepository;
         private readonly IRepository<ServMantenimientoDet> _servMantenimientoDetRepository;
         private readonly IRepository<ElementosPlanta> _ElementosPlantaRepository;
@@ -36,6 +36,11 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<ServMantenimientoCab> ServMantenimientoCabRepository => _servMantenimientoCabRepository ?? new BaseRepository<ServMantenimientoCab>(_context);
 
         public IRepository<ServMantenimientoDet> ServMantenimientoDetRepository => _servMantenimientoDetRepository ?? new BaseRepository<ServMantenimientoDet>(_context);
+
+        public IRepository<Comarcas> ComarcaRepository => _comarcaRepository ?? new BaseRepository<Comarcas>(_context);
+        public IRepository<Poblaciones> PoblacionRepository => _poblacionRepository ?? new BaseRepository<Poblaciones>(_context);
+        public IRepository<Provincias> ProvinciaRepository => _provinviaRepository ?? new BaseRepository<Provincias>(_context);
+
 
         public void Dispose()
         {

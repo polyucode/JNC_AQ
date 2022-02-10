@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace AnalisisQuimicos.Core.Entities
+namespace AnalisisQuimicos.Core.DTOs
 {
-    public partial class Poblaciones : BaseEntity 
+    public class PoblacionDto
     {
+        public int id { get; set; }
         public string Poblacion { get; set; }
         public string Cp { get; set; }
     }

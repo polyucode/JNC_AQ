@@ -15,6 +15,10 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.ToTable("LST_Comarcas");
 
+            builder.Property(e => e.AddDate).HasColumnType("datetime");
+            builder.Property(e => e.DelDate).HasColumnType("datetime");
+            builder.Property(e => e.ModDate).HasColumnType("datetime");
+
             builder.Property(e => e.Descripcion).HasMaxLength(500);
         }
     }

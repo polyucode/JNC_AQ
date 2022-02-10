@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace AnalisisQuimicos.Core.Entities
+namespace AnalisisQuimicos.Core.DTOs
 {
-    public partial class Provincias : BaseEntity
+    public class ProvinciaDto
     {
+        public int id { get; set; }
         public string Descripcion { get; set; }
         public string Codigo { get; set; }
     }
