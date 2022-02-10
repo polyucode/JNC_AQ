@@ -78,7 +78,6 @@ namespace AnalisisQuimicos.Api.Controllers
         [HttpDelete ("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
          {
-
             var result = await _usuarioService.DeleteUsuario(id);
             var response = new ApiResponses<bool>(result);
             return Ok(response);

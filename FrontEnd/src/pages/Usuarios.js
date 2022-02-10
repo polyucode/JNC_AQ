@@ -13,31 +13,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 
 
-const columnas=[
-    //visibles
-    { title: 'Nombre', field: 'nombre', filterPlaceholder:"Filtrar por nombre" },
-    { title: 'Apellidos', field: 'apellidos', filterPlaceholder:"Filtrar por apellidos"},
-    { title: 'Telefono', field: 'telefono', filterPlaceholder:"Filtrar por Telefono" },
-    { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
-    { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
-    { title: 'Firma', field: 'firma', filtering:false },
-    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector"},filterPlaceholder:"Filtrar por perfil" },
-    { title: 'Cliente', field: 'idCliente', type: 'numeric',filterPlaceholder:"Filtrar por cliente" },
-    
-    //Ocultas
-    { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
-    { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario creación", hidden: true },
-    { title: 'Fecha eliminación', field: 'delDate', type: 'date', filterPlaceholder:"Filtrar por Fecha eliminación", hidden: true },
-    { title: 'Usuario eliminación', field: 'delIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario eliminación", hidden: true },
 
-    { title: 'Eliminado', field: 'deleted', type: 'boolean', filterPlaceholder:"Filtrar por Eliminado", hidden: true },
-    { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder:"Filtrar por Id", hidden: true , },
-    { title: 'Login', field: 'login', filterPlaceholder:"Filtrar por Login", hidden: true },
-
-    { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder:"Filtrar por Fecha modificación", hidden: true },
-    { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
-        
-];
 
 
 
@@ -104,6 +80,8 @@ function Usuarios() {
 
     const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
 
+    const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
+
     const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
 
     const [data, setData] = useState([]);
@@ -112,10 +90,39 @@ function Usuarios() {
 
     const [clientes, setClientes] = useState([]);
 
+    const [clientesTable, setClientesTable] = useState({});
+
     const styles= useStyles();
 
     const [estadoCboCliente, setestadoCboCliente] = useState(true);
+    
 
+
+    const columnas=[
+      //visibles
+      { title: 'Nombre', field: 'nombre', filterPlaceholder:"Filtrar por nombre" },
+      { title: 'Apellidos', field: 'apellidos', filterPlaceholder:"Filtrar por apellidos"},
+      { title: 'Telefono', field: 'telefono', filterPlaceholder:"Filtrar por Telefono" },
+      { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
+      { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
+      { title: 'Firma', field: 'firma', filtering:false },
+      { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector"},filterPlaceholder:"Filtrar por perfil" },
+      { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
+      
+      //Ocultas
+      { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
+      { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario creación", hidden: true },
+      { title: 'Fecha eliminación', field: 'delDate', type: 'date', filterPlaceholder:"Filtrar por Fecha eliminación", hidden: true },
+      { title: 'Usuario eliminación', field: 'delIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario eliminación", hidden: true },
+  
+      { title: 'Eliminado', field: 'deleted', type: 'boolean', filterPlaceholder:"Filtrar por Eliminado", hidden: true },
+      { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder:"Filtrar por Id", hidden: true , },
+      { title: 'Login', field: 'login', filterPlaceholder:"Filtrar por Login", hidden: true },
+  
+      { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder:"Filtrar por Fecha modificación", hidden: true },
+      { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
+          
+  ];
 
     //peticiones API
     const GetClientes = async () => {
@@ -142,13 +149,19 @@ function Usuarios() {
     useEffect(() => {
       peticionGet();
       GetPerfiles();
+      GetClientes();
+      const lookupClientes = {};
+      clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
+      setClientesTable(lookupClientes);
     }, [])
 
     const peticionPost = async () => {
+      usuarioSeleccionado.id = null;
       await axios.post("/usuario", usuarioSeleccionado)
         .then(response => {
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
+          peticionGet();
         }).catch(error => {
           console.log(error);
         })
@@ -164,7 +177,7 @@ function Usuarios() {
             usuario = usuarioSeleccionado
           }
         });
-        setData(usuarioModificado);
+        peticionGet();
         abrirCerrarModalEditar();
       }).catch(error=>{
         console.log(error);
@@ -180,14 +193,6 @@ function Usuarios() {
       }).catch(error=>{
         console.log(error);
       })
-    }
-
-    //usuarioSeleccionado
-    const seleccionarUsuario=(usuario, caso)=>{
-      console.log(FilasSeleccionadas)
-      (caso==="Editar")?abrirCerrarModalEditar()
-      :
-      abrirCerrarModalEliminar()
     }
 
     //modal insertar usuario
@@ -210,21 +215,9 @@ function Usuarios() {
     }))
     if(value.id === 2){
     setestadoCboCliente(false)
-    GetClientes();
     }else{
       setestadoCboCliente(true)
     }
-    }
-
-    const eliminarFilas=()=>{
-      console.log("filasseleccionadas= " + FilasSeleccionadas)
-      FilasSeleccionadas.map(element => {
-        console.log("elementid" + element.id)
-        setUsuarioSeleccionado(element);
-        console.log("usuarioSeleccionado" + usuarioSeleccionado.id)
-        peticionDelete();
-      });
-
     }
 
     const bodyInsertar=(
@@ -234,20 +227,20 @@ function Usuarios() {
         <br />
         <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange}/>          
         <br />
-        <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Teléfono" type="number" name="telefono" onChange={handleChange}/>
         <br />
         <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Password" name="password" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Password" type="password" name="password" onChange={handleChange}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Repetir Contraseña" name="repetir_contraseña" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Repetir Contraseña" type="password" name="repetir_contraseña" onChange={handleChange}/>
         <br />
         <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} />
         <br />
 
         {/* Desplegable de Perfiles */}
         <Autocomplete
-          disabledPortal
+          disableClearable={true}
           id="CboPerfiles"
           options={perfiles}
           getOptionLabel={option => option.nombre}
@@ -258,6 +251,7 @@ function Usuarios() {
 
         {/* Desplegable de Clientes */}
         <Autocomplete
+          disableClearable={true}
           disabled={estadoCboCliente}
           id="CboClientes"
           options={clientes}
@@ -300,7 +294,7 @@ function Usuarios() {
 
         {/* Desplegable de Perfiles */}
         <Autocomplete
-          disablePortal
+          disableClearable={true}
           id="CboPerfiles"
           options={perfiles}
           getOptionLabel={option => option.nombre}
@@ -312,12 +306,14 @@ function Usuarios() {
 
         {/* Desplegable de Clientes */}
         <Autocomplete
+          disableClearable={true}
           disabled={estadoCboCliente}
           id="CboClientes"
           options={clientes}
           getOptionLabel={option => option.nombreComercial}
+          defaultValue={clienteUsuarioEditar[0]}
           sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Clientes" value={perfilUsuarioEditar&& perfilUsuarioEditar[0] } name="idCliente"/>}
+          renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
           onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
             ...prevState,
             idCliente:value.id
@@ -422,7 +418,14 @@ function Usuarios() {
                     icon: () => <Edit/>,
                   tooltip: "Editar Usuario",
                   onClick: (e,data) => {
-                    setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idCliente));
+                    setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
+                    if(FilasSeleccionadas[0].idPerfil === 2){
+                      setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+                      setestadoCboCliente(false);
+                    }else{
+                      setclienteUsuarioEditar(false);
+                      setestadoCboCliente(true);
+                    }
                     abrirCerrarModalEditar();
                   },
                 },
