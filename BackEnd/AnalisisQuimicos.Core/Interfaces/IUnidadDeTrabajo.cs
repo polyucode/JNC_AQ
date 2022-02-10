@@ -11,6 +11,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Perfiles> PerfilRepository { get; }
         IRepository<ServMantenimientoCab> ServMantenimientoCabRepository { get; }
         IRepository<ServMantenimientoDet> ServMantenimientoDetRepository { get; }
+        IRepository<ElementosPlanta> ElementosPlantaRepository { get; }
 
         void SaveChanges();
 

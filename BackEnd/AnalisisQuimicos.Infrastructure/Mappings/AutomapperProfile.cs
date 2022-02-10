@@ -13,6 +13,10 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
         {
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
             CreateMap<Clientes, ClienteDto>().ReverseMap();
+            CreateMap<ElementosPlanta, ElementosPlantaDto>().ReverseMap();
+            CreateMap<ServMantenimientoCab, ServMantenimientoCabDto>().ReverseMap();
+            CreateMap<ServMantenimientoDet, ServMantenimientoDetDto>().ReverseMap();
+
         }
 
         

@@ -20,7 +20,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         //private readonly IRepository<Provincias> _provinviaRepository;
         private readonly IRepository<ServMantenimientoCab> _servMantenimientoCabRepository;
         private readonly IRepository<ServMantenimientoDet> _servMantenimientoDetRepository;
-        private readonly IRepository<ElementosPlanta> _ElementosPlantaRepository;
+        private readonly IRepository<ElementosPlanta> _elementosPlantaRepository;
          
         public UnidadDeTrabajo(YucodeDevelopmentJNC_AQContext context)
         {
@@ -36,6 +36,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<ServMantenimientoCab> ServMantenimientoCabRepository => _servMantenimientoCabRepository ?? new BaseRepository<ServMantenimientoCab>(_context);
 
         public IRepository<ServMantenimientoDet> ServMantenimientoDetRepository => _servMantenimientoDetRepository ?? new BaseRepository<ServMantenimientoDet>(_context);
+
+        public IRepository<ElementosPlanta> ElementosPlantaRepository => _elementosPlantaRepository ?? new BaseRepository<ElementosPlanta>(_context);
 
         public void Dispose()
         {
