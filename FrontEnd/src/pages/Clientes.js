@@ -56,11 +56,14 @@ function Clientes() {
     const [clienteSeleccionado, setClienteSeleccionado] = useState({
       id: 0,
       codigo: '',
+      cif: '',
       razonSocial: '',
       nombreComercial: '',
       telefono1: '',
       telefono2: '',
       idSector: 0,
+      movil: '',
+      email: '',
       direccion: '',
       poblacion: 0,
       provincia: 0,
@@ -258,6 +261,10 @@ function Clientes() {
           getOptionLabel={option => option.poblacion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            poblacion:value.id
+          }))}
             />
 
         {/* Desplegable de Provincia */}
@@ -268,6 +275,10 @@ function Clientes() {
           getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            provincia:value.id
+          }))}
             />
 
         <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange}/>
@@ -284,6 +295,10 @@ function Clientes() {
           getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            comarca:value.id
+          }))}
             />
 
         <br /><br />
@@ -303,21 +318,21 @@ function Clientes() {
     const bodyEditar=(
       <div className={styles.modal}>
         <h3>Editar Cliente</h3>
-        <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.codigo}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.cif}/>
         <br />
-        <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.razonSocial}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.telefono1}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.telefono2}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.movil}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.email}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.direccion}/>
         <br />
 
         {/* Desplegable de Población */}
@@ -328,6 +343,10 @@ function Clientes() {
           getOptionLabel={option => option.poblacion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            poblacion:value.id
+          }))}
             />
 
         {/* Desplegable de Provincia */}
@@ -338,12 +357,16 @@ function Clientes() {
           getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            provincia:value.id
+          }))}
             />
 
-        <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.cp}/>
         <br />
 
-        <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.nombre}/>
+        <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.pais}/>
         <br />
 
         {/* Desplegable de Comarca */}
@@ -354,6 +377,10 @@ function Clientes() {
           getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            comarca:value.id
+          }))}
             />
 
         <br /><br />
@@ -463,6 +490,7 @@ function Clientes() {
             onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}  
             onSelectionChange={(filas)=>{
               setFilasSeleccionadas(filas);
+              
               setClienteSeleccionado(filas[0]);}
             }
             options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
