@@ -13,6 +13,15 @@ function Navbar() {
   const showSidebar = () => setSidebar(!sidebar);
   const UsuarioActual = localStorage.getItem('UsuarioActual')
 
+  var entero = 0
+
+
+function handleClick(e)
+{
+  document.getElementById("NavTitulo").innerHTML = e
+}
+
+
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
@@ -20,9 +29,15 @@ function Navbar() {
           <Link to='#' className='menu-bars'>
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
-          <div className='justify-content-end'>
-          <Link  className='nav-link' to={'login'} >Login</Link>
+          <div className='text-white navbar-titulo'>
+          <h2 id="NavTitulo" >Home</h2>
           </div>
+        <div className='navbar-login'>
+        <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
+          <FaIcons.FaUser/> 
+       </Link>
+
+        </div>
 
 
         </div>
@@ -35,11 +50,12 @@ function Navbar() {
             </li>
             {SidebarData.map((item, index) => {
               return (
-                <li key={index} className={item.cName} >
+                <li key={index} className={item.cName} setTitulo>
                   
-                  <Link to={item.path}>
+                  <Link to={item.path} >
                     {item.icon}
-                    <span>{item.title}</span>
+                    <span onClick={() => handleClick(item.title)}>{item.title}</span>
+                    
                   </Link>
                 </li>
               );

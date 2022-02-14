@@ -1,0 +1,57 @@
+:root{
+    --color-fondo: #282828;
+    --color-letras: #FF3030;
+    --color-bordes: whitesmoke;
+}
+
+.login-contenedor{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-letras);
+}
+
+form{
+    padding-top: 10px;
+    font-size:  14px;
+    margin-top: 30px;
+}
+
+.login-form{
+    width: 380px;
+    height: 450px;
+    margin: 20px;
+    background: var(--color-fondo);
+    border-radius: 10px !important;
+}
+
+.card-title{
+    font-weight: 700;
+    padding-top: 20px;
+}
+
+.btn{
+    background: var(--color-letras) !important;
+    font-size: 14px;
+    transform: translateY(10px);
+    border-radius: 10px !important;
+    align-items: flex-end;
+}
+
+input[type="email"],
+input[type="password"]{
+    background: var(--color-fondo);
+    border: 2px, solid, whitesmoke ;
+    border-radius: 10px;
+    margin-bottom:  25px;
+    color: whitesmoke !important;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus{
+    outline: none !important;
+    border: 2px, solid, #FF3A3A;
+    background: var(--color-fondo);
+    
+}
