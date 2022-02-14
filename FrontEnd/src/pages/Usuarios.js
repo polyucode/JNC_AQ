@@ -11,36 +11,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
 
-
-
-const columnas=[
-    //visibles
-    { title: 'Nombre', field: 'nombre', filterPlaceholder:"Filtrar por nombre" },
-    { title: 'Apellidos', field: 'apellidos', filterPlaceholder:"Filtrar por apellidos"},
-    { title: 'Telefono', field: 'telefono', filterPlaceholder:"Filtrar por Telefono" },
-    { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
-    { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
-    { title: 'Firma', field: 'firma', filtering:false },
-    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Admin"},filterPlaceholder:"Filtrar por perfil" },
-    { title: 'Cliente', field: 'idCliente', type: 'numeric',filterPlaceholder:"Filtrar por cliente" },
-    
-    //Ocultas
-    { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
-    { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario creación", hidden: true },
-    { title: 'Fecha eliminación', field: 'delDate', type: 'date', filterPlaceholder:"Filtrar por Fecha eliminación", hidden: true },
-    { title: 'Usuario eliminación', field: 'delIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario eliminación", hidden: true },
-
-    { title: 'Eliminado', field: 'deleted', type: 'boolean', filterPlaceholder:"Filtrar por Eliminado", hidden: true },
-    { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder:"Filtrar por Id", hidden: true , },
-    { title: 'Login', field: 'login', filterPlaceholder:"Filtrar por Login", hidden: true },
-
-    { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder:"Filtrar por Fecha modificación", hidden: true },
-    { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
-        
-];
-
-
-const baseUrl="/usuario/";
 const token = {
     headers:{
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -77,37 +47,123 @@ function Usuarios() {
     
     const [modalEliminar, setModalEliminar]= useState(false);
 
-    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
+      id: 0,
+      nombre: '',
+      apellidos: '',
+      login: null,
+      telefono: '',
+      usuario: '',
+      password: '',
+      activo: false,
+      firma: '',
+      idCliente: 0,
+      idPerfil: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+
+
+    });
+
+    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+
+    const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
+
+    const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
+
+    const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
 
     const [data, setData] = useState([]);
 
+    const [perfiles, setPerfiles] = useState([]);
+
+    const [clientes, setClientes] = useState([]);
+
+    const [clientesTable, setClientesTable] = useState({});
+
     const styles= useStyles();
 
+    const [estadoCboCliente, setestadoCboCliente] = useState(true);
+    
+
+
+    const columnas=[
+      //visibles
+      { title: 'Nombre', field: 'nombre', filterPlaceholder:"Filtrar por nombre" },
+      { title: 'Apellidos', field: 'apellidos', filterPlaceholder:"Filtrar por apellidos"},
+      { title: 'Telefono', field: 'telefono', filterPlaceholder:"Filtrar por Telefono" },
+      { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
+      { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
+      { title: 'Firma', field: 'firma', filtering:false },
+      { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector"},filterPlaceholder:"Filtrar por perfil" },
+      { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
+      
+      //Ocultas
+      { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
+      { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario creación", hidden: true },
+      { title: 'Fecha eliminación', field: 'delDate', type: 'date', filterPlaceholder:"Filtrar por Fecha eliminación", hidden: true },
+      { title: 'Usuario eliminación', field: 'delIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario eliminación", hidden: true },
+  
+      { title: 'Eliminado', field: 'deleted', type: 'boolean', filterPlaceholder:"Filtrar por Eliminado", hidden: true },
+      { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder:"Filtrar por Id", hidden: true , },
+      { title: 'Login', field: 'login', filterPlaceholder:"Filtrar por Login", hidden: true },
+  
+      { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder:"Filtrar por Fecha modificación", hidden: true },
+      { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
+          
+  ];
+
     //peticiones API
+    const GetClientes = async () => {
+      axios.get("/cliente", token).then(response => {
+        const clientes = Object.entries(response.data.data).map(([key,value]) => (key, value))
+        setClientes(clientes);
+      },[])
+    }
+
+    const GetPerfiles = async () => {
+      axios.get("/perfil", token).then(response => {
+        const perfil = Object.entries(response.data.data).map(([key,value]) => (key, value))
+        setPerfiles(perfil);
+      },[])
+    }
+
+
     const peticionGet = async () => {
-      axios.get(baseUrl, token).then(response => {
+      axios.get("/usuario", token).then(response => {
         setData(response.data.data)
       })
     }
 
     useEffect(() => {
       peticionGet();
+      GetPerfiles();
+      GetClientes();
+      const lookupClientes = {};
+      clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
+      setClientesTable(lookupClientes);
     }, [])
 
     const peticionPost = async () => {
-      await axios.post(baseUrl, usuarioSeleccionado)
+      usuarioSeleccionado.id = null;
+      await axios.post("/usuario", usuarioSeleccionado)
         .then(response => {
-          console.log(response)
-          console.log(usuarioSeleccionado)
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
+          peticionGet();
         }).catch(error => {
           console.log(error);
         })
     }
 
     const peticionPut=async()=>{
-      await axios.put(baseUrl+"/"+usuarioSeleccionado.id, usuarioSeleccionado)
+      console.log(usuarioSeleccionado)
+      await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{
@@ -115,7 +171,7 @@ function Usuarios() {
             usuario = usuarioSeleccionado
           }
         });
-        setData(usuarioModificado);
+        peticionGet();
         abrirCerrarModalEditar();
       }).catch(error=>{
         console.log(error);
@@ -123,22 +179,14 @@ function Usuarios() {
     }
   
     const peticionDelete=async()=>{
-      await axios.delete(baseUrl+"/"+ usuarioSeleccionado.id)
+      console.log("id=" + UsuarioEliminar[0].id)
+      await axios.delete("/usuario/"+ UsuarioEliminar[0].id)
       .then(response=>{
-        setData(data.filter(usuario=>usuario.id!==usuarioSeleccionado.id));
+        peticionGet();
         abrirCerrarModalEliminar();
       }).catch(error=>{
         console.log(error);
       })
-    }
-
-    //usuarioSeleccionado
-    const seleccionarUsuario=(usuario, caso)=>{
-      console.log(caso)
-      setUsuarioSeleccionado(usuario);
-      (caso==="Editar")?abrirCerrarModalEditar()
-      :
-      abrirCerrarModalEliminar()
     }
 
     //modal insertar usuario
@@ -154,7 +202,17 @@ function Usuarios() {
       }));
     }
 
-    const pruebaoptions = ['Administrador', 'Cliente', 'Informador', 'Inspector'];
+    const handleChangePerfil=(event,value) => {
+    setUsuarioSeleccionado(prevState=>({
+    ...prevState,
+    idPerfil:value.id
+    }))
+    if(value.id === 2){
+    setestadoCboCliente(false)
+    }else{
+      setestadoCboCliente(true)
+    }
+    }
 
     const bodyInsertar=(
       <div className={styles.modal}>
@@ -163,34 +221,42 @@ function Usuarios() {
         <br />
         <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange}/>          
         <br />
-        <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Teléfono" type="number" name="telefono" onChange={handleChange}/>
         <br />
         <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Password" name="password" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Password" type="password" name="password" onChange={handleChange}/>
         <br />
-        <TextField className={styles.inputMaterial} label="Repetir Contraseña" name="repetir_contraseña" onChange={handleChange}/>
+        <TextField className={styles.inputMaterial} label="Repetir Contraseña" type="password" name="repetir_contraseña" onChange={handleChange}/>
         <br />
         <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} />
         <br />
 
         {/* Desplegable de Perfiles */}
         <Autocomplete
-          disablePortal
+          disableClearable={true}
           id="CboPerfiles"
-          options={pruebaoptions}
+          options={perfiles}
+          getOptionLabel={option => option.nombre}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-        />
+          onChange={handleChangePerfil}
+            />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
-          disabled
+          disableClearable={true}
+          disabled={estadoCboCliente}
           id="CboClientes"
-          options={pruebaoptions}
+          options={clientes}
+          getOptionLabel={option => option.nombreComercial}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
-        />
+          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+            ...prevState,
+            idCliente:value.id
+          }))}
+          />
 
         <br /><br />
         <div align="right">
@@ -222,20 +288,30 @@ function Usuarios() {
 
         {/* Desplegable de Perfiles */}
         <Autocomplete
-          disablePortal
+          disableClearable={true}
           id="CboPerfiles"
-          options={pruebaoptions}
+          options={perfiles}
+          getOptionLabel={option => option.nombre}
+          defaultValue={perfilUsuarioEditar[0]}
           sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Perfil"  value={usuarioSeleccionado&&usuarioSeleccionado.idPerfil} name="idPerfil"/>}
+          onChange={handleChangePerfil}
+          renderInput={(params) => <TextField {...params} label="Perfil"   name="idPerfil"/>}
         />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
-          disabled
+          disableClearable={true}
+          disabled={estadoCboCliente}
           id="CboClientes"
-          options={pruebaoptions}
+          options={clientes}
+          getOptionLabel={option => option.nombreComercial}
+          defaultValue={clienteUsuarioEditar[0]}
           sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Clientes" value={usuarioSeleccionado&&usuarioSeleccionado.idCliente} name="idCliente"/>}
+          renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
+          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+            ...prevState,
+            idCliente:value.id
+          }))}
         />
 
         <br /><br />
@@ -253,13 +329,12 @@ function Usuarios() {
 
     const bodyEliminar=(
       <div className={styles.modal}>
-        <p>Estás seguro que deseas eliminar al artista <b>{usuarioSeleccionado && usuarioSeleccionado.name + ' ' + usuarioSeleccionado.apellidos}</b>? </p>
+        <p>Estás seguro que deseas eliminar el usuario ? </p>
         <div align="right">
           <Button color="secondary" onClick={()=>peticionDelete()}>Sí</Button>
           <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
   
         </div>
-  
       </div>
     )
 
@@ -321,28 +396,40 @@ function Usuarios() {
                   tooltip: "Añadir Usuario",
                   isFreeAction: true,
                   onClick: (e,data) => {
+                    
                     abrirCerrarModalInsertar()
                 },
                 },
                 {
                     icon: () => <RemoveCircle style={{ fill: "red"}}/>,
                   tooltip: "Eliminar Usuario",
-                  isFreeAction: true,
-                  onClick: (e,data) => {
-                    seleccionarUsuario(data,"Eliminar")
-                },
+                  onClick: (event,rowData) => {
+                    setUsuarioEliminar(FilasSeleccionadas);
+                    abrirCerrarModalEliminar()
+                  },
                 },
                 {
                     icon: () => <Edit/>,
                   tooltip: "Editar Usuario",
                   onClick: (e,data) => {
-                    seleccionarUsuario(data,"Editar")
+                    setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
+                    if(FilasSeleccionadas[0].idPerfil === 2){
+                      setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+                      setestadoCboCliente(false);
+                    }else{
+                      setclienteUsuarioEditar(false);
+                      setestadoCboCliente(true);
+                    }
+                    abrirCerrarModalEditar();
                   },
                 },
               ]}
 
             onRowClick={((evt, usuarioSeleccionado) => setUsuarioSeleccionado(usuarioSeleccionado.tableData.id))}  
-            
+            onSelectionChange={(filas)=>{
+              setFilasSeleccionadas(filas);
+              setUsuarioSeleccionado(filas[0]);}
+            }
             options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({
