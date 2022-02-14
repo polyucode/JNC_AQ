@@ -407,7 +407,6 @@ function Mantenimientos() {
 
     return (
         <div>
-        <h1>Mantenimientos</h1>
         <MaterialTable columns={columnas} data={data}
             localization={{
                 body: {
@@ -495,7 +494,7 @@ function Mantenimientos() {
               setFilasSeleccionadas(filas);
               setMantenimientoCabSeleccionado(filas[0]);}
             }
-            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
+            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:10,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({
                     backgroundColor: (mantenimientoCabSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',

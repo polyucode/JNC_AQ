@@ -341,7 +341,6 @@ function Usuarios() {
 
     return (
         <div>
-        <h1>Usuarios</h1>
         <MaterialTable columns={columnas} data={data}
             localization={{
                 body: {
@@ -430,7 +429,7 @@ function Usuarios() {
               setFilasSeleccionadas(filas);
               setUsuarioSeleccionado(filas[0]);}
             }
-            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
+            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:10,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({
                     backgroundColor: (usuarioSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',

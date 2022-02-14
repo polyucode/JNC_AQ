@@ -12,11 +12,6 @@ import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
 
 
-
-
-
-
-
 const token = {
     headers:{
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -411,7 +406,6 @@ function Clientes() {
 
     return (
         <div>
-        <h1>Clientes</h1>
         <MaterialTable columns={columnas} data={data}
             localization={{
                 body: {
@@ -493,7 +487,7 @@ function Clientes() {
               
               setClienteSeleccionado(filas[0]);}
             }
-            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:5,filtering:true,search: false,selection:true,
+            options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:10,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({
                     backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',

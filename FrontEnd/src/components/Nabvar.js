@@ -50,11 +50,11 @@ function handleClick(e)
             </li>
             {SidebarData.map((item, index) => {
               return (
-                <li key={index} className={item.cName} setTitulo>
+                <li key={index} onClick={() => handleClick(item.title)} className={item.cName} setTitulo>
                   
                   <Link to={item.path} >
                     {item.icon}
-                    <span onClick={() => handleClick(item.title)}>{item.title}</span>
+                    <span>{item.title}</span>
                     
                   </Link>
                 </li>
