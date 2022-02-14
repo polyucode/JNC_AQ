@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
+import './Login.css';
 
 
 function Login(){
@@ -48,21 +49,44 @@ function Login(){
 
     return (
         
-        <form onSubmit={handleSubmit}>
-            <h3>Log In</h3>
-            <div className='form-group'>
-                <label>Usuario</label>
-                <input type="text" className='form-control' placeholder='usuario' value={User}
-                 onChange={e => setUsuario(e.target.value)} />
-            </div>
-            <div className='form-group'>
-                <label>Contraseña</label>
-                <input type="password" className='form-control' placeholder='Contraseña' value={Password}
-                    onChange={e => setContraseña(e.target.value)} />
-            </div>
+        // <form onSubmit={handleSubmit}>
+        //     <h3>Log In</h3>
+        //     <div className='form-group'>
+        //         <label>Usuario</label>
+        //         <input type="text" className='form-control' placeholder='usuario' value={User}
+        //          onChange={e => setUsuario(e.target.value)} />
+        //     </div>
+        //     <div className='form-group'>
+        //         <label>Contraseña</label>
+        //         <input type="password" className='form-control' placeholder='Contraseña' value={Password}
+        //             onChange={e => setContraseña(e.target.value)} />
+        //     </div>
 
-            <button className='btn btn-primary btn-block'>Login</button>
-        </form>
+        //     <button className='btn btn-primary btn-block'>Login</button>
+        // </form>
+        <div className='login-contenedor'>
+                <div className='card login-form'>
+                    <div className='card-body'>
+                        <h1 className='card-title text-center'>LOGIN</h1>
+                        <div className='card-text'></div>
+                        <form onSubmit={handleSubmit}>
+                            <div className='form-group'>
+                                <label>Usuario</label>
+                                <input type="email" className='form-control form-control-sm' id='emailInput' value={User}
+                                onChange={e => setUsuario(e.target.value)}></input>
+                            </div>
+
+                            <div className='form-group'>
+                                <label>Contraseña</label>
+                                <input type="password" className='form-control form-control-sm' id='contraseñaInput' value={Password}
+                                onChange={e => setContraseña(e.target.value)}></input>
+                            </div>
+                            <button className='btn btn-primary btn-block'>Login</button>
+                        </form>
+                    </div>
+
+                </div>
+        </div>
     );
 }
 
