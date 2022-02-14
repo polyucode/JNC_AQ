@@ -24,7 +24,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.NumOferta).HasMaxLength(50);
 
-            builder.Property(e => e.Tipo).HasMaxLength(50);
         }
     }
 }

@@ -11,12 +11,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
 
-
-
-
-
-
-
 const token = {
     headers:{
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -341,7 +335,6 @@ function Usuarios() {
           <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
   
         </div>
-  
       </div>
     )
 
@@ -403,6 +396,7 @@ function Usuarios() {
                   tooltip: "Añadir Usuario",
                   isFreeAction: true,
                   onClick: (e,data) => {
+                    
                     abrirCerrarModalInsertar()
                 },
                 },

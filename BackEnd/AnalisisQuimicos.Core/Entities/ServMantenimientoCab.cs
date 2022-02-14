@@ -10,7 +10,7 @@ namespace AnalisisQuimicos.Core.Entities
         public int? IdTecnicoAsignado { get; set; }
         public int? IdElementoPlanta { get; set; }
         public string NumOferta { get; set; }
-        public string Tipo { get; set; }
+        public int? Tipo { get; set; }
 
     }
 }
