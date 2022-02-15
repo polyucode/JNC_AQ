@@ -7,11 +7,6 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
 import {Modal, TextField, Button} from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import {makeStyles} from '@material-ui/core/styles';
 
 const token = {
