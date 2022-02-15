@@ -7,12 +7,9 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
 import {Modal, TextField, Button} from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import {makeStyles} from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import {makeStyles} from '@material-ui/core/styles';
 
 const token = {
     headers:{
@@ -30,10 +27,11 @@ const tipos = [
 
 
 //estilos modal
-const useStyles = makeStyles((theme) => ({
+const useStylesEditarDet = makeStyles((theme) => ({
     modal: {
       position: 'absolute',
-      width: 400,
+      width: 1500,
+      height: 780,
       backgroundColor: theme.palette.background.paper,
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
@@ -49,6 +47,76 @@ const useStyles = makeStyles((theme) => ({
       width: '100%'
     }
   }));
+
+  //estilos modal
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    position: 'absolute',
+    width: 700,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  iconos:{
+    cursor: 'pointer'
+  }, 
+  inputMaterial:{
+    width: '100%'
+  }
+}));
+
+  // tablas español
+  const localization = {
+    body: {
+      emptyDataSourceMessage: 'No hay datos por mostrar',
+      addTooltip: 'Añadir',
+      deleteTooltip: 'Eliminar',
+      editTooltip: 'Editar',
+      filterRow: {
+        filterTooltip: 'Filtrar',
+      },
+      editRow: {
+        deleteText: '¿Segura(o) que quiere eliminar?',
+        cancelTooltip: 'Cancelar',
+        saveTooltip: 'Guardar',
+      },
+    },
+    grouping: {
+      placeholder: "Arrastre un encabezado aquí para agrupar",
+      groupedBy: 'Agrupado por',
+    },
+    header: {
+      actions: 'Acciones',
+    },
+    pagination: {
+      firstAriaLabel: 'Primera página',
+      firstTooltip: 'Primera página',
+      labelDisplayedRows: '{from}-{to} de {count}',
+      labelRowsPerPage: 'Filas por página:',
+      labelRowsSelect: 'filas',
+      lastAriaLabel: 'Ultima página',
+      lastTooltip: 'Ultima página',
+      nextAriaLabel: 'Pagina siguiente',
+      nextTooltip: 'Pagina siguiente',
+      previousAriaLabel: 'Pagina anterior',
+      previousTooltip: 'Pagina anterior',
+    },
+    toolbar: {
+      addRemoveColumns: 'Agregar o eliminar columnas',
+      exportAriaLabel: 'Exportar',
+      exportName: 'Exportar a CSV',
+      exportTitle: 'Exportar',
+      nRowsSelected: '{0} filas seleccionadas',
+      searchPlaceholder: 'Buscar',
+      searchTooltip: 'Buscar',
+      showColumnsAriaLabel: 'Mostrar columnas',
+      showColumnsTitle: 'Mostrar columnas',
+    },
+  }
   
 function Mantenimientos() {
 
@@ -59,6 +127,14 @@ function Mantenimientos() {
     
     const [modalEliminar, setModalEliminar]= useState(false);
 
+    //modals detalle
+    const [modalInsertarDet, setModalInsertarDet]= useState(false);
+
+    const [modalEditarDet, setModalEditarDet]= useState(false);
+    
+    const [modalEliminarDet, setModalEliminarDet]= useState(false);
+
+
     const [mantenimientoCabSeleccionado, setMantenimientoCabSeleccionado] = useState({
 
       id: 0,
@@ -66,7 +142,7 @@ function Mantenimientos() {
       idTecnicoAsignado: 0,
       idElementoPlanta: 0,
       numOferta: "",
-      tipo: "",
+      tipo: 0,
       addDate: null,
       addIdUser: null,
       modDate: null,
@@ -77,15 +153,34 @@ function Mantenimientos() {
 
     });
 
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+    const [mantenimientoDetSeleccionado, setMantenimientoDetSeleccionado] = useState({
 
-    const [perfilMantenimientoCabEditar, setperfilMantenimientoCabEditar] = useState([]);
+      id: 0,
+      idCab: 0,
+      fechaPrevista: null,
+      realizado: false,
+      fechaRealizacion: null,
+      estado: "",
+      observaciones: "",
+    });
+
+    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+    const [FilasSeleccionadasDet, setFilasSeleccionadasDet] = useState([]);
+
+    const [clienteMantenimientoCabEditar, setClienteMantenimientoCabEditar] = useState([]);
+    const [elementoMantenimientoCabEditar, setElementoMantenimientoCabEditar] = useState([]);
+    const [tipoMantenimientoCabEditar, setTipoMantenimientoCabEditar] = useState([]);
+    const [tecnicoMantenimientoCabEditar, setTecnicoMantenimientoCabEditar] = useState([]);
+
+    const [clienteMantenimientoDetEditar, setClienteMantenimientoDetEditar] = useState([]);
 
     const [mantenimientoCabMantenimientoCabEditar, setmantenimientoCabMantenimientoCabEditar] = useState([]);
 
     const [MantenimientoCabEliminar, setMantenimientoCabEliminar] = useState([]);
+    const [MantenimientoDetEliminar, setMantenimientoDetEliminar] = useState([]);
 
     const [data, setData] = useState([]);
+    const [dataDet, setDataDet] = useState([]);
 
     const [tecnicos, setTecnicos] = useState([]);
 
@@ -101,9 +196,12 @@ function Mantenimientos() {
 
     const [tiposTable, setTiposTable] = useState({});
 
-    const styles= useStyles();    
+    const [fechaprevista, setfechaprevista] = useState("");
+    const [fechaRealizacion, setFechaRealizacion] = useState("");
 
-    const [fechaprevista, setFechaPrevista] = React.useState(new Date('2014-08-18T21:11:54'));
+    const styles= useStyles();   
+    
+    const stylesEditarDet = useStylesEditarDet();
 
     const columnas=[
 
@@ -126,6 +224,31 @@ function Mantenimientos() {
       { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
           
   ];
+  
+  const columnasDet=[
+
+    //visibles
+    { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
+    { title: 'Número de oferta', field: 'numOferta', filterPlaceholder:"Filtrar por oferta" },
+    { title: 'Fecha Prevista', field: 'fechaPrevista', type: 'date',filterPlaceholder:"Filtrar por fecha" },
+    { title: 'Realizado', field: 'realizado', type: 'boolean',filterPlaceholder:"Filtrar por realizado" },
+    { title: 'Fecha Realización', field: 'fechaRealizacion', type: 'date',filterPlaceholder:"Filtrar por fecha" },
+    { title: 'Estado', field: 'estado',filterPlaceholder:"Filtrar por estado" },
+    { title: 'Observaciones', field: 'observaciones',filterPlaceholder:"Filtrar por observaciones" },
+
+
+    //Ocultas
+    { title: 'Id Cabecera', field: 'idCab', type: 'numeric', filterPlaceholder:"Filtrar por Id Cabecera", hidden: true , },
+    { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
+    { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario creación", hidden: true },
+    { title: 'Fecha eliminación', field: 'delDate', type: 'date', filterPlaceholder:"Filtrar por Fecha eliminación", hidden: true },
+    { title: 'Usuario eliminación', field: 'delIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario eliminación", hidden: true },
+    { title: 'Eliminado', field: 'deleted', type: 'boolean', filterPlaceholder:"Filtrar por Eliminado", hidden: true },
+    { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder:"Filtrar por Id", hidden: true , },
+    { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder:"Filtrar por Fecha modificación", hidden: true },
+    { title: 'Usuario modificacion', field: 'modIdUser', type: 'numeric', filterPlaceholder:"Filtrar por Usuario modificacion", hidden: true },
+        
+];
 
     //peticiones API
     const GetClientes = async () => {
@@ -150,15 +273,12 @@ function Mantenimientos() {
         },[])
       }
 
-
     const peticionGet = async () => {
       axios.get("/servmantenimientocab", token).then(response => {
         setData(response.data.data)
       })
-    }
 
-    useEffect(() => {
-      peticionGet();
+      //lookups
       GetElementosPlanta();
       GetClientes();
       GetTecnicos();
@@ -179,8 +299,15 @@ function Mantenimientos() {
       tecnicos.map(fila=>lookupTecnicos[fila.id]=fila.nombre);
       setTecnicosTable(lookupTecnicos);
 
-      console.log(lookupClientes);
-      console.log(lookupElementosPlanta);
+
+    }
+
+    useEffect(() => {
+      peticionGet();
+      
+      console.log(data)
+      console.log(clientes);
+
 
     }, [])
 
@@ -189,7 +316,66 @@ function Mantenimientos() {
       mantenimientoCabSeleccionado.id = null;
       await axios.post("/servmantenimientocab", mantenimientoCabSeleccionado)
         .then(response => {
-          //setData(data.concat(response.data));
+          //Creamos los detalles
+          var date = new Date(fechaprevista);
+          
+          if(mantenimientoCabSeleccionado.tipo === 1){
+            for(let i = 0;i<12;i++){
+
+              mantenimientoDetSeleccionado.id = null;
+              mantenimientoDetSeleccionado.idCab = response.data.data.id;
+              mantenimientoDetSeleccionado.fechaPrevista = date.toJSON();
+              mantenimientoDetSeleccionado.realizado = false;
+              mantenimientoDetSeleccionado.fechaRealizacion = null;
+              mantenimientoDetSeleccionado.estado = "1";
+              mantenimientoDetSeleccionado.observaciones = "Servicio de Mantenimiento añadido automaticamente";
+              date.setMonth(date.getMonth()+1)
+              peticionPostDet();
+            }
+          }
+          if(mantenimientoCabSeleccionado.tipo === 2){
+            for(let i = 0;i<6;i++){
+
+              mantenimientoDetSeleccionado.id = null;
+              mantenimientoDetSeleccionado.idCab = response.data.data.id;
+              mantenimientoDetSeleccionado.fechaPrevista = date.toJSON();
+              mantenimientoDetSeleccionado.realizado = false;
+              mantenimientoDetSeleccionado.fechaRealizacion = null;
+              mantenimientoDetSeleccionado.estado = "1";
+              mantenimientoDetSeleccionado.observaciones = "Servicio de Mantenimiento añadido automaticamente";
+              date.setMonth(date.getMonth()+2)
+              peticionPostDet();
+            }
+          }
+          if(mantenimientoCabSeleccionado.tipo === 3){
+            for(let i = 0;i<4;i++){
+
+              mantenimientoDetSeleccionado.id = null;
+              mantenimientoDetSeleccionado.idCab = response.data.data.id;
+              mantenimientoDetSeleccionado.fechaPrevista = date.toJSON();
+              mantenimientoDetSeleccionado.realizado = false;
+              mantenimientoDetSeleccionado.fechaRealizacion = null;
+              mantenimientoDetSeleccionado.estado = "1";
+              mantenimientoDetSeleccionado.observaciones = "Servicio de Mantenimiento añadido automaticamente";
+              date.setMonth(date.getMonth()+3)
+              peticionPostDet();
+            }
+          }
+          if(mantenimientoCabSeleccionado.tipo === 4){
+            for(let i = 0;i<3;i++){
+
+              mantenimientoDetSeleccionado.id = null;
+              mantenimientoDetSeleccionado.idCab = response.data.data.id;
+              mantenimientoDetSeleccionado.fechaPrevista = date.toJSON();
+              mantenimientoDetSeleccionado.realizado = false;
+              mantenimientoDetSeleccionado.fechaRealizacion = null;
+              mantenimientoDetSeleccionado.estado = "1";
+              mantenimientoDetSeleccionado.observaciones = "Servicio de Mantenimiento añadido automaticamente";
+              date.setMonth(date.getMonth()+4)
+              peticionPostDet();
+            }
+          }
+          
           abrirCerrarModalInsertar();
           peticionGet();
         }).catch(error => {
@@ -214,6 +400,23 @@ function Mantenimientos() {
       })
     }
   
+    const peticionPutDet=async()=>{
+      console.log(mantenimientoDetSeleccionado)
+      await axios.put("/servmantenimientodet?id=" + mantenimientoDetSeleccionado.id, mantenimientoDetSeleccionado)
+      .then(response=>{
+        var mantenimientoDetSeleccionado = data;
+        mantenimientoDetSeleccionado.map(mantenimientoDet=>{
+          if(mantenimientoDet.id===mantenimientoDetSeleccionado.id){
+            mantenimientoDet = mantenimientoDetSeleccionado
+          }
+        });
+        peticionGetDet();
+        abrirCerrarModalEditarDet();
+      }).catch(error=>{
+        console.log(error);
+      })
+    }
+
     const peticionDelete=async()=>{
       console.log("id=" + MantenimientoCabEliminar[0].id)
       await axios.delete("/servmantenimientocab/"+ MantenimientoCabEliminar[0].id)
@@ -223,6 +426,36 @@ function Mantenimientos() {
       }).catch(error=>{
         console.log(error);
       })
+    }
+
+    const peticionDeleteDet=async()=>{
+      console.log("id=" + MantenimientoDetEliminar[0].id)
+      await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[0].id)
+      .then(response=>{
+        peticionGetDet();
+        abrirCerrarModalEliminarDet();
+      }).catch(error=>{
+        console.log(error);
+      })
+    }
+
+    //peticiones mantenimiento detalle
+    const peticionGetDet = async () => {
+      axios.get("/servmantenimientodet", token).then(response => {
+        setDataDet(response.data.data.filter(servicio => servicio.idCab === mantenimientoCabSeleccionado.id))
+      })
+    }
+
+    const peticionPostDet = async () => {
+      mantenimientoDetSeleccionado.id = 0;
+      console.log(mantenimientoDetSeleccionado)
+      await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado)
+        .then(response => {
+          // abrirCerrarModalInsertar();
+          // peticionGet();
+        }).catch(error => {
+          console.log(error);
+        })
     }
 
 
@@ -254,12 +487,116 @@ function Mantenimientos() {
         const bodyInsertar=(
             <div className={styles.modal}>
               <h3>Agregar mantenimiento</h3>
+            <div className="row g-3">
+              <div className="col-md-6">
+                {/* Desplegable de Clientes */}
+                <Autocomplete
+                  disableClearable={true}
+                  id="CboClientes"
+                  options={clientes}
+                  getOptionLabel={option => option.nombreComercial}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
+                  onChange={(event, value) => setMantenimientoCabSeleccionado(prevState => ({
+                    ...prevState,
+                    idCliente: value.id
+                  }))}
+                />
+              </div>
+              
+              <div className="col-md-6">
+              {/* Desplegable de Técnicos */}
+              <Autocomplete
+                disableClearable={true}
+                id="CboTecnicos"
+                options={tecnicos}
+                filterOptions={options => tecnicos.filter(cliente => cliente.idPerfil === 1004)}
+                getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Técnicos" name="idTecnicoAsignado" />}
+                onChange={(event, value) => setMantenimientoCabSeleccionado(prevState => ({
+                  ...prevState,
+                  idTecnicoAsignado: value.id
+                }))}
+              />
+              </div>
+              {/* Desplegable de elementos planta */}
+              <div className="col-md-6">
+              <Autocomplete
+                disableClearable={true}
+                id="CboElementosPlanta"
+                options={elementosplanta}
+                getOptionLabel={option => option.nombre}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Elemento planta" name="idElementoPlanta" />}
+                onChange={(event, value) => setMantenimientoCabSeleccionado(prevState => ({
+                  ...prevState,
+                  idElementoPlanta: value.id
+                }))}
+              />
+              </div>
+              <div className="col-md-6">
+              {/* Desplegable de tipos*/}
+              <Autocomplete
+                disableClearable={true}
+                id="CboTipos"
+                options={tipos}
+                getOptionLabel={option => option.nombre}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Tipo" name="idTipo" />}
+                onChange={(event, value) => setMantenimientoCabSeleccionado(prevState => ({
+                  ...prevState,
+                  tipo: value.id
+                }))}
+              />
+              </div>
 
+              <div className="col-md-6">
+              <TextField className={styles.inputMaterial} label="Número de oferta" name="numOferta" onChange={handleChange} />
+              </div>
+              
+              <br />
+              <div className="col-md-6">
+              {/* Fecha prevista */}
+              <TextField
+                id="fechaprevista"
+                label="Fecha prevista"
+                type="date"
+                name="fechaPrevista"
+                sx={{ width: 220 }}
+                onChange={(e) => setfechaprevista(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              </div>
+            </div>
+              <br />
+
+              <div align="right">
+                <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
+                <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
+              </div>
+            </div>
+          )
+      
+          //modal editar mantenimiento
+      
+          const abrirCerrarModalEditar=()=>{
+            setModalEditar(!modalEditar);
+          }
+      
+          const bodyEditar=(
+            <div className={stylesEditarDet.modal}>
+              <h3>Editar mantenimiento</h3>
+              <div className="row g-3">
+              <div className="col-md-6">
               {/* Desplegable de Clientes */}
               <Autocomplete
                 disableClearable={true}
                 id="CboClientes"
                 options={clientes}
+                defaultValue={clienteMantenimientoCabEditar[0]}
                 getOptionLabel={option => option.nombreComercial}
                 sx={{ width: 300}}
                 renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
@@ -268,12 +605,15 @@ function Mantenimientos() {
                   idCliente:value.id
                 }))}
                 />
-
+                </div>
+                <div className="col-md-6">
                 {/* Desplegable de Técnicos */}
               <Autocomplete
                 disableClearable={true}
                 id="CboTecnicos"
                 options={tecnicos}
+                defaultValue={tecnicoMantenimientoCabEditar[0]}
+                filterOptions={options => tecnicos.filter(cliente=>cliente.idPerfil===1004)}
                 getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                 sx={{ width: 300}}
                 renderInput={(params) => <TextField {...params} label="Técnicos" name="idTecnicoAsignado"/>}
@@ -282,12 +622,15 @@ function Mantenimientos() {
                   idTecnicoAsignado:value.id
                 }))}
                 />
+                </div>
+                <div className="col-md-6">
 
                 {/* Desplegable de elementos planta */}
               <Autocomplete
                 disableClearable={true}
                 id="CboElementosPlanta"
                 options={elementosplanta}
+                defaultValue={elementoMantenimientoCabEditar[0]}
                 getOptionLabel={option => option.nombre}
                 sx={{ width: 300}}
                 renderInput={(params) => <TextField {...params} label="Elemento planta" name="idElementoPlanta"/>}
@@ -296,12 +639,15 @@ function Mantenimientos() {
                   idElementoPlanta:value.id
                 }))}
                 />
+                </div>
+                <div className="col-md-6">
 
                 {/* Desplegable de tipos*/}
               <Autocomplete
                 disableClearable={true}
                 id="CboTipos"
                 options={tipos}
+                defaultValue={tipoMantenimientoCabEditar[0]}
                 getOptionLabel={option => option.nombre}
                 sx={{ width: 300}}
                 renderInput={(params) => <TextField {...params} label="Tipo" name="idTipo"/>}
@@ -310,158 +656,301 @@ function Mantenimientos() {
                   tipo:value.id
                 }))}
                 />
-              <TextField className={styles.inputMaterial} label="Número de oferta" name="numOferta" onChange={handleChange}/>
+                </div>
+                <div className="col-md-6">
+              <TextField className={styles.inputMaterial} label="Número de oferta" name="numOferta" value={mantenimientoCabSeleccionado&&mantenimientoCabSeleccionado.numOferta} onChange={handleChange}/>      
+              </div>
+              </div>
               <br />
-                
-            {/* Fecha prevista */}
-            <TextField
-              id="fechaprevista"
-              label="Fecha prevista"
-              type="date"
-              name="numOferta"
-              sx={{ width: 220 }}
-              //onChange={handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-              <br /><br />
+              <div className="row">
+              {/* Listado de mantenimientosDet */}
+              <MaterialTable columns={columnasDet} data={dataDet}
+                localization={localization}
+                actions={[
+                  {
+                    icon: () => <AddCircle style={{ fill: "green" }} />,
+                    tooltip: "Añadir detalle mantenimiento",
+                    isFreeAction: true,
+                    onClick: (e, data) => {
+                      setClienteMantenimientoDetEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+                      abrirCerrarModalInsertarDet();
+                      console.log(dataDet)
+                    },
+                  },
+                  {
+                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                    tooltip: "Eliminar detalle mantenimiento",
+                    onClick: (event, rowData) => {
+                      setMantenimientoDetEliminar(FilasSeleccionadasDet);
+                      abrirCerrarModalEliminarDet();
+                    },
+                  },
+                  {
+                    icon: () => <Edit />,
+                    tooltip: "Editar detalle mantenimiento",
+                    onClick: (e, data) => {
+                      setClienteMantenimientoDetEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+                      if(mantenimientoDetSeleccionado.realizado === true){
+                        console.log("prueba fecha not null")
+                        setFechaRealizacion(new Date(mantenimientoDetSeleccionado.fechaRealizacion).getFullYear() + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getDate())).slice(-2))
+                      }else{
+                        setFechaRealizacion("")
+                      }
+                      console.log(mantenimientoDetSeleccionado)                      // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+                      // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
+                      // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
+                      // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
+                      // if(FilasSeleccionadas[0].idPerfil === 2){
+                      //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+                      //   setestadoCboCliente(false);
+                      // }else{
+                      //   setclienteUsuarioEditar(false);
+                      //   setestadoCboCliente(true);
+                      // }
+                      abrirCerrarModalEditarDet();
+                    },
+                  },
+                ]}
+
+                // onRowClick={((evt, mantenimientoDetSeleccionado) => setMantenimientoDetSeleccionado(mantenimientoDetSeleccionado.tableData.id))}
+                onSelectionChange={(filas) => {
+                  setFilasSeleccionadasDet(filas);
+                  if(filas.length > 0)
+                  setMantenimientoDetSeleccionado(filas[0]);
+                }
+                }
+                options={{
+                  sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
+                  columnsButton: true,
+                  rowStyle: rowData => ({
+                    backgroundColor: (mantenimientoDetSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                    whiteSpace: "nowrap"
+                  }),
+                  exportMenu: [{
+                    label: 'Export PDF',
+                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de detalles mantenimientos')
+                  }, {
+                    label: 'Export CSV',
+                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de detalles mantenimientos')
+                  }]
+                }}
+
+                title="Listado detalles de mantenimientos"
+              />
+            </div>
+              <br />
               <div align="right">
-                <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
-                <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
+                <Button color="primary" onClick={()=>peticionPut()}>Editar</Button>
+                <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
               </div>
             </div>
           )
-      
-          //modal editar usuario
-      
-          const abrirCerrarModalEditar=()=>{
-            setModalEditar(!modalEditar);
-          }
-      
-        //   const bodyEditar=(
-            // <div className={styles.modal}>
-            //   <h3>Editar Usuario</h3>
-            //   <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado&&usuarioSeleccionado.nombre}/>
-            //   <br />
-            //   <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange} value={usuarioSeleccionado&&usuarioSeleccionado.apellidos}/>          
-            //   <br />
-            //   <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChange} value={usuarioSeleccionado&&usuarioSeleccionado.telefono}/>
-            //   <br />
-            //   <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange} value={usuarioSeleccionado&&usuarioSeleccionado.usuario}/>
-            //   <br />
-            //   <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} value={usuarioSeleccionado&&usuarioSeleccionado.activo}/>
-            //   <br />
-      
-            //   {/* Desplegable de Perfiles */}
-            //   <Autocomplete
-            //     disableClearable={true}
-            //     id="CboPerfiles"
-            //     options={perfiles}
-            //     getOptionLabel={option => option.nombre}
-            //     defaultValue={perfilUsuarioEditar[0]}
-            //     sx={{ width: 300}}
-            //     onChange={handleChangePerfil}
-            //     renderInput={(params) => <TextField {...params} label="Perfil"   name="idPerfil"/>}
-            //   />
-      
-            //   {/* Desplegable de Clientes */}
-            //   <Autocomplete
-            //     disableClearable={true}
-            //     disabled={estadoCboCliente}
-            //     id="CboClientes"
-            //     options={clientes}
-            //     getOptionLabel={option => option.nombreComercial}
-            //     defaultValue={clienteUsuarioEditar[0]}
-            //     sx={{ width: 300}}
-            //     renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
-            //     onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
-            //       ...prevState,
-            //       idCliente:value.id
-            //     }))}
-            //   />
-      
-            //   <br /><br />
-            //   <div align="right">
-            //     <Button color="primary" onClick={()=>peticionPut()}>Editar</Button>
-            //     <Button onClick={()=>abrirCerrarModalEditar()}>Cancelar</Button>
-            //   </div>
-            // </div>
-        //   )
           
-          //modal eliminar usuario
+          // modal eliminar mantenimiento
           const abrirCerrarModalEliminar=()=>{
             setModalEliminar(!modalEliminar);
           }
       
-        //   const bodyEliminar=(
-            // <div className={styles.modal}>
-            //   <p>Estás seguro que deseas eliminar el usuario ? </p>
-            //   <div align="right">
-            //     <Button color="secondary" onClick={()=>peticionDelete()}>Sí</Button>
-            //     <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
+          const bodyEliminar=(
+            
+            <div className={styles.modal}>
+              <p>Estás seguro que deseas eliminar el mantenimiento ? </p>
+              <div align="right">
+                <Button color="secondary" onClick={()=>peticionDelete()}>Sí</Button>
+                <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
         
-            //   </div>
-            // </div>
-        //   )
+              </div>
+            </div>
+          )
+
+
+          // modal insertar mantenimiento detalle
+          const handleChangeDet=e=>{
+            const {name, value}=e.target;
+            setMantenimientoDetSeleccionado(prevState=>({
+              ...prevState,
+              [name]: value
+            }));
+          }
+
+          const handleChangeCheck=(event,value) => {
+            setMantenimientoDetSeleccionado(prevState=>({
+          ...prevState,
+          realizado:value
+          }))
+          }
+
+
+          const abrirCerrarModalInsertarDet=()=>{
+            setModalInsertar(!modalInsertar)
+            setModalInsertarDet(!modalInsertarDet);
+          }
+
+          const bodyInsertarDet=(
+            <div className={styles.modal}>
+              <h3>Insertar detalle mantenimiento</h3>
+              <div className="row g-3">
+              <div className="col-md-6">
+                {/* Desplegable de Clientes */}
+                <Autocomplete
+                  disabled
+                  disableClearable={true}
+                  id="CboClientes"
+                  options={clientes}
+                  defaultValue={clienteMantenimientoDetEditar[0]}
+                  getOptionLabel={option => option.nombreComercial}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
+                  onChange={(event, value) => setMantenimientoDetSeleccionado(prevState => ({
+                    ...prevState,
+                    idCliente: value.id
+                  }))}
+                />
+              </div>
+              <div className="col-md-6">
+              <TextField disabled className={styles.inputMaterial} label="Número de oferta" name="numOferta" defaultValue={mantenimientoCabSeleccionado.numOferta} onChange={handleChangeDet} />
+              </div>
+              <div className="col-md-6">
+              {/* Fecha prevista */}
+              <TextField
+                id="fechaprevista"
+                label="Fecha prevista"
+                type="date"
+                name="fechaPrevista"
+                sx={{ width: 220 }}
+                onChange={handleChangeDet}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              </div>
+              <div className="col-md-6">
+              <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChange} />
+              </div>
+              <div className="col-md-6">
+              {/* Fecha realizacion */}
+              <TextField
+                id="fecharealizacion"
+                label="Fecha realización"
+                type="date"
+                name="fechaRealizacion"
+                sx={{ width: 220 }}
+                onChange={handleChangeDet}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              </div>
+            </div>
+
+
+              <br /><br />
+              <div align="right">
+                <Button color="primary" onClick={()=>peticionPut()}>Insertar</Button>
+                <Button onClick={()=>abrirCerrarModalInsertarDet()}>Cancelar</Button>
+              </div>
+            </div>
+          )
+
+                    // modal editar mantenimiento detalle
+                    const abrirCerrarModalEditarDet=()=>{
+                      setModalInsertar(!modalInsertar);
+                      setModalEditarDet(!modalEditarDet);
+
+                    }
+          
+                    const bodyEditarDet=(
+                      <div className={styles.modal}>
+                        <h3>Editar detalle mantenimiento</h3>
+                        <div className="row g-3">
+                        <div className="col-md-6">
+                          {/* Desplegable de Clientes */}
+                          <Autocomplete
+                            disabled
+                            disableClearable={true}
+                            id="CboClientesDet"
+                            options={clientes}
+                            defaultValue={clienteMantenimientoDetEditar[0]}
+                            getOptionLabel={option => option.nombreComercial}
+                            sx={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
+                            
+                          />
+                        </div>
+                        <div className="col-md-6">
+                        <TextField disabled className={styles.inputMaterial} defaultValue={mantenimientoCabSeleccionado.numOferta} label="Número de oferta" name="numOferta" />
+                        </div>
+                        <div className="col-md-6">
+                        {/* Fecha prevista */}
+                        <TextField
+                          id="fechaprevistadet"
+                          label="Fecha prevista"
+                          type="date"
+                          defaultValue={new Date(mantenimientoDetSeleccionado.fechaPrevista).getFullYear() + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaPrevista).getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaPrevista).getDate())).slice(-2)}
+                          name="fechaPrevista"
+                          sx={{ width: 220 }}
+                          onChange={handleChangeDet}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        />
+                        </div>
+                        <div className="col-md-6">
+                        <FormControlLabel control={<Checkbox defaultChecked={mantenimientoDetSeleccionado.realizado} />}  className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheck} />
+                        </div>
+                        <div className="col-md-6">
+                        {/* Fecha realizacion */}
+                        <TextField
+                          id="fecharealizacion"
+                          label="Fecha realización"
+                          type="date"
+                          defaultValue={fechaRealizacion}                        
+                          name="fechaRealizacion"
+                          sx={{ width: 220 }}
+                          onChange={handleChangeDet}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        />
+                        </div>
+                      </div>
+                        <br /><br />
+                        <div align="right">
+                          <Button color="primary" onClick={()=>peticionPutDet()}>Editar</Button>
+                          <Button onClick={()=>abrirCerrarModalEditarDet()}>Cancelar</Button>
+                        </div>
+                      </div>
+                    )
+
+                    // modal eliminar mantenimiento
+          const abrirCerrarModalEliminarDet=()=>{
+            setModalEditar(!modalEditar);
+            setModalEliminarDet(!modalEliminarDet);
+          }
+      
+          const bodyEliminarDet=(
+            
+            <div className={styles.modal}>
+              <p>Estás seguro que deseas eliminar el detalle de mantenimiento ? </p>
+              <div align="right">
+                <Button color="secondary" onClick={()=>peticionDeleteDet()}>Sí</Button>
+                <Button onClick={()=>abrirCerrarModalEliminarDet()}>No</Button>
+        
+              </div>
+            </div>
+          )
 
     return (
         <div>
         <MaterialTable columns={columnas} data={data}
-            localization={{
-                body: {
-                  emptyDataSourceMessage: 'No hay datos por mostrar',
-                  addTooltip: 'Añadir',
-                  deleteTooltip: 'Eliminar',
-                  editTooltip: 'Editar',
-                  filterRow: {
-                    filterTooltip: 'Filtrar',
-                  },
-                  editRow: {
-                    deleteText: '¿Segura(o) que quiere eliminar?',
-                    cancelTooltip: 'Cancelar',
-                    saveTooltip: 'Guardar',
-                  },
-                },
-                grouping: {
-                  placeholder: "Arrastre un encabezado aquí para agrupar",
-                  groupedBy: 'Agrupado por',
-                },
-                header: {
-                  actions: 'Acciones',
-                },
-                pagination: {
-                  firstAriaLabel: 'Primera página',
-                  firstTooltip: 'Primera página',
-                  labelDisplayedRows: '{from}-{to} de {count}',
-                  labelRowsPerPage: 'Filas por página:',
-                  labelRowsSelect: 'filas',
-                  lastAriaLabel: 'Ultima página',
-                  lastTooltip: 'Ultima página',
-                  nextAriaLabel: 'Pagina siguiente',
-                  nextTooltip: 'Pagina siguiente',
-                  previousAriaLabel: 'Pagina anterior',
-                  previousTooltip: 'Pagina anterior',
-                },
-                toolbar: {
-                  addRemoveColumns: 'Agregar o eliminar columnas',
-                  exportAriaLabel: 'Exportar',
-                  exportName: 'Exportar a CSV',
-                  exportTitle: 'Exportar',
-                  nRowsSelected: '{0} filas seleccionadas',
-                  searchPlaceholder: 'Buscar',
-                  searchTooltip: 'Buscar',
-                  showColumnsAriaLabel: 'Mostrar columnas',
-                  showColumnsTitle: 'Mostrar columnas',
-                },
-              }}
+            localization={localization}
             actions={[
                 {
                     icon: () => <AddCircle style={{ fill: "green"}}/>,
                   tooltip: "Añadir Mantenimiento",
                   isFreeAction: true,
                   onClick: (e,data) => {
-                    abrirCerrarModalInsertar()
+                    abrirCerrarModalInsertar();
                 },
                 },
                 {
@@ -476,7 +965,12 @@ function Mantenimientos() {
                     icon: () => <Edit/>,
                   tooltip: "Editar Mantenimiento",
                   onClick: (e,data) => {
-                    // setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
+                     peticionGetDet();
+
+                     setClienteMantenimientoCabEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+                     setElementoMantenimientoCabEditar(elementosplanta.filter(elemento=>elemento.id===FilasSeleccionadas[0].idElementoPlanta));
+                     setTipoMantenimientoCabEditar(tipos.filter(tipo=>tipo.id===FilasSeleccionadas[0].tipo));
+                     setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico=>tecnico.id===FilasSeleccionadas[0].idTecnicoAsignado));
                     // if(FilasSeleccionadas[0].idPerfil === 2){
                     //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
                     //   setestadoCboCliente(false);
@@ -489,10 +983,12 @@ function Mantenimientos() {
                 },
               ]}
 
-            onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
+            // onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
             onSelectionChange={(filas)=>{
               setFilasSeleccionadas(filas);
-              setMantenimientoCabSeleccionado(filas[0]);}
+              if(filas.length > 0)
+              setMantenimientoCabSeleccionado(filas[0]);
+            }
             }
             options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:10,filtering:true,search: false,selection:true,
                 columnsButton:true,
@@ -500,7 +996,10 @@ function Mantenimientos() {
                     backgroundColor: (mantenimientoCabSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                     whiteSpace: "nowrap"
                   }),
-
+                headerStyle: {
+                    height: 10,
+                    backgroundcolor: "#D8D8D8"
+                  },
                 exportMenu: [{
                     label: 'Export PDF',
                     exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Mantenimientos')
@@ -519,7 +1018,7 @@ function Mantenimientos() {
           {bodyInsertar}
         </Modal>
 
-        {/*<Modal
+        <Modal
         open={modalEditar}
         onClose={abrirCerrarModalEditar}>
           {bodyEditar}
@@ -529,8 +1028,26 @@ function Mantenimientos() {
         open={modalEliminar}
         onClose={abrirCerrarModalEliminar}>
           {bodyEliminar}
+        </Modal>
 
-        </Modal> */}
+        {/* modal detalle */}
+        <Modal
+          open={modalInsertarDet}
+          onClose={abrirCerrarModalInsertarDet}>
+          {bodyInsertarDet}
+        </Modal>
+
+        <Modal
+        open={modalEditarDet}
+        onClose={abrirCerrarModalEditarDet}>
+          {bodyEditarDet}
+        </Modal>
+
+        <Modal
+        open={modalEliminarDet}
+        onClose={abrirCerrarModalEliminarDet}>
+          {bodyEliminarDet}
+        </Modal>
         </div>
 
     );

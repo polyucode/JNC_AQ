@@ -6,7 +6,7 @@ import { MdOutlineConstruction } from "react-icons/md";
 
 export const SlidebarData = [
     {
-        title: 'Home',
+        title: 'Inicio',
         path: '/',
         icon: <AiIcons.AiFillHome />,
         cName: 'nav-text'

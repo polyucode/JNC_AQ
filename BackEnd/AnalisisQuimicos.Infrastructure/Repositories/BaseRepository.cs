@@ -33,18 +33,20 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public async Task Add(T entity)
         {
             await _entities.AddAsync(entity);
-
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
             T entity = await GetById(id);
             _entities.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public void Update(T entity)
         {
             _entities.Update(entity);
+            _context.SaveChanges();
         }
 
     }

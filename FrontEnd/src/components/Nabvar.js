@@ -9,7 +9,6 @@ import { IconContext } from 'react-icons';
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
-  const [titulo, setTitulo] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
   const UsuarioActual = localStorage.getItem('UsuarioActual')
 
@@ -30,7 +29,7 @@ function handleClick(e)
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
           <div className='text-white navbar-titulo'>
-          <h2 id="NavTitulo" >Home</h2>
+          <h2 id="NavTitulo" >Inicio</h2>
           </div>
         <div className='navbar-login'>
         <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
@@ -50,12 +49,11 @@ function handleClick(e)
             </li>
             {SidebarData.map((item, index) => {
               return (
-                <li key={index} onClick={() => handleClick(item.title)} className={item.cName} setTitulo>
+                <li key={index} onClick={() => handleClick(item.title)} className={item.cName} >
                   
                   <Link to={item.path} >
                     {item.icon}
                     <span>{item.title}</span>
-                    
                   </Link>
                 </li>
               );

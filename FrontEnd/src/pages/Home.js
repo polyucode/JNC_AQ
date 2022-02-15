@@ -23,7 +23,6 @@ function Home() {
 
     return (
         <div className="container">
-        <h1>Inicio</h1>
             <div className="card" >
             <div className="card-body">
                 <h5 className="card-title"><span style={{fontWeight: "bold"}}>Usuario conectado</span></h5>

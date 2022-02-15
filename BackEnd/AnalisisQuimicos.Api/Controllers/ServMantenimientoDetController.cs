@@ -61,7 +61,7 @@ namespace AnalisisQuimicos.Api.Controllers
         public void Update(int id, ServMantenimientoDetDto clienteDto)
         {
             var cliente = _mapper.Map<ServMantenimientoDet>(clienteDto);
-
+            
             _clienteService.Update(cliente);
 
         }

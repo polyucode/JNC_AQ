@@ -17,6 +17,8 @@ namespace AnalisisQuimicos.Api.Controllers
     public class ServMantenimientoCabController : ControllerBase
     {
         private readonly IRepository<ServMantenimientoCab> _clienteService;
+        private readonly IRepository<ServMantenimientoDet> _servmantenimientoDetService;
+
         private readonly IMapper _mapper;
 
 
@@ -54,6 +56,7 @@ namespace AnalisisQuimicos.Api.Controllers
 
             clienteDto = _mapper.Map<ServMantenimientoCabDto>(cliente);
             var response = new ApiResponses<ServMantenimientoCabDto>(clienteDto);
+
             return Ok(response);
         }
 
