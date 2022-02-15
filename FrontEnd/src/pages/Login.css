@@ -39,7 +39,7 @@ form{
     align-items: flex-end;
 }
 
-input[type="email"],
+input[type="text"],
 input[type="password"]{
     background: var(--color-fondo);
     border: 2px, solid, whitesmoke ;
@@ -48,7 +48,7 @@ input[type="password"]{
     color: whitesmoke !important;
 }
 
-input[type="email"]:focus,
+input[type="text"]:focus,
 input[type="password"]:focus{
     outline: none !important;
     border: 2px, solid, #FF3A3A;

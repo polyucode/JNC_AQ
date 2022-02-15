@@ -3,9 +3,15 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SlidebarData as SidebarData} from './SlidebarData';
+import { useNavigate } from "react-router-dom";
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 
+
+function Logout(){
+  localStorage.clear();
+  window.location.reload(false);
+}
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
@@ -32,9 +38,19 @@ function handleClick(e)
           <h2 id="NavTitulo" >Inicio</h2>
           </div>
         <div className='navbar-login'>
-        <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
-          <FaIcons.FaUser/> 
-       </Link>
+          {localStorage.getItem('UsuarioActual') === null ? (
+            <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
+              <FaIcons.FaUser/> 
+            </Link>
+          ) 
+          :
+          (
+            <Link  className='nav-link' to='#' onClick={() => Logout()}>
+              Logout 
+            </Link>
+          )}
+
+
 
         </div>
 

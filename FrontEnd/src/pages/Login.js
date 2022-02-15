@@ -1,11 +1,14 @@
 import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import './Login.css';
 
 
 function Login(){
+
+    const navigate = useNavigate();
 
     const cookies = new Cookies();
     const [User,setUsuario] = useState('');
@@ -21,7 +24,8 @@ function Login(){
             .then(res=> {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('UsuarioActual', JSON.stringify(res.data.item2));
-                alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
+                //alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
+                window.location.reload(false);
                 //guardoamos usuario en cookies
                 // cookies.set('activo', res.data.item2, {path: '/'})
                 // cookies.set('addDate', res.data.item2, {path: '/'})
@@ -72,7 +76,7 @@ function Login(){
                         <form onSubmit={handleSubmit}>
                             <div className='form-group'>
                                 <label>Usuario</label>
-                                <input type="email" className='form-control form-control-sm' id='emailInput' value={User}
+                                <input type="text" className='form-control form-control-sm' id='emailInput' value={User}
                                 onChange={e => setUsuario(e.target.value)}></input>
                             </div>
 

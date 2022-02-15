@@ -18,11 +18,11 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Movil { get; set; }
         public string Email { get; set; }
         public string Direccion { get; set; }
-        public string Poblacion { get; set; }
-        public string Provincia { get; set; }
+        public int? Poblacion { get; set; }
+        public int? Provincia { get; set; }
         public string Cp { get; set; }
         public string Pais { get; set; }
-        public string Comarca { get; set; }
+        public int? Comarca { get; set; }
 
         public string CuentaContable { get; set; }
     }

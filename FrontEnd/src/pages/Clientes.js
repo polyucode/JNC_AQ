@@ -78,7 +78,9 @@ function Clientes() {
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
-    const [perfilClienteEditar, setperfilClienteEditar] = useState([]);
+    const [comarcaClienteEditar, setComarcaClienteEditar] = useState([]);
+    const [provinciaClienteEditar, setProvinciaClienteEditar] = useState([]);
+    const [poblacionClienteEditar, setPoblacionClienteEditar] = useState([]);
 
     const [clienteClienteEditar, setclienteClienteEditar] = useState([]);
 
@@ -248,6 +250,40 @@ function Clientes() {
         <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange}/>
         <br />
 
+        <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange}/>
+        <br />
+
+        <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange}/>
+        <br />
+
+        {/* Desplegable de Comarca */}
+        <Autocomplete
+          disableClearable={true}
+          id="CboCamarca"
+          options={comarca}
+          getOptionLabel={option => option.comarca}
+          sx={{ width: 300}}
+          renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            comarca:value.id
+          }))}
+            />
+
+        {/* Desplegable de Provincia */}
+        <Autocomplete
+          disableClearable={true}
+          id="CboProvincia"
+          options={provincia}
+          getOptionLabel={option => option.provincia}
+          sx={{ width: 300}}
+          renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            provincia:value.id
+          }))}
+            />
+
         {/* Desplegable de Población */}
         <Autocomplete
           disableClearable={true}
@@ -262,39 +298,6 @@ function Clientes() {
           }))}
             />
 
-        {/* Desplegable de Provincia */}
-        <Autocomplete
-          disableClearable={true}
-          id="CboProvincia"
-          options={provincia}
-          getOptionLabel={option => option.descripcion}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
-          onChange={(event, value) => setClienteSeleccionado(prevState=>({
-            ...prevState,
-            provincia:value.id
-          }))}
-            />
-
-        <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange}/>
-        <br />
-
-        <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange}/>
-        <br />
-
-        {/* Desplegable de Comarca */}
-        <Autocomplete
-          disableClearable={true}
-          id="CboCamarca"
-          options={comarca}
-          getOptionLabel={option => option.descripcion}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
-          onChange={(event, value) => setClienteSeleccionado(prevState=>({
-            ...prevState,
-            comarca:value.id
-          }))}
-            />
 
         <br /><br />
         <div align="right">
@@ -330,34 +333,6 @@ function Clientes() {
         <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.direccion}/>
         <br />
 
-        {/* Desplegable de Población */}
-        <Autocomplete
-          disableClearable={true}
-          id="CboPoblacion"
-          options={poblacion}
-          getOptionLabel={option => option.poblacion}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
-          onChange={(event, value) => setClienteSeleccionado(prevState=>({
-            ...prevState,
-            poblacion:value.id
-          }))}
-            />
-
-        {/* Desplegable de Provincia */}
-        <Autocomplete
-          disableClearable={true}
-          id="CboProvincia"
-          options={provincia}
-          getOptionLabel={option => option.descripcion}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
-          onChange={(event, value) => setClienteSeleccionado(prevState=>({
-            ...prevState,
-            provincia:value.id
-          }))}
-            />
-
         <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado&&clienteSeleccionado.cp}/>
         <br />
 
@@ -370,11 +345,42 @@ function Clientes() {
           id="CboCamarca"
           options={comarca}
           getOptionLabel={option => option.descripcion}
+          defaultValue={comarcaClienteEditar[0]}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
           onChange={(event, value) => setClienteSeleccionado(prevState=>({
             ...prevState,
             comarca:value.id
+          }))}
+            />
+
+        {/* Desplegable de Provincia */}
+        <Autocomplete
+          disableClearable={true}
+          id="CboProvincia"
+          options={provincia}
+          getOptionLabel={option => option.descripcion}
+          defaultValue={provinciaClienteEditar[0]}
+          sx={{ width: 300}}
+          renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            provincia:value.id
+          }))}
+            />
+
+        {/* Desplegable de Población */}
+        <Autocomplete
+          disableClearable={true}
+          id="CboPoblacion"
+          options={poblacion}
+          getOptionLabel={option => option.poblacion}
+          defaultValue={poblacionClienteEditar[0]}
+          sx={{ width: 300}}
+          renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+          onChange={(event, value) => setClienteSeleccionado(prevState=>({
+            ...prevState,
+            poblacion:value.id
           }))}
             />
 
@@ -475,7 +481,9 @@ function Clientes() {
                     icon: () => <Edit/>,
                   tooltip: "Editar Cliente",
                   onClick: (e,data) => {
-                    setperfilClienteEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
+                    setComarcaClienteEditar(comarca.filter(comarca=>comarca.id===FilasSeleccionadas[0].comarca));
+                    setProvinciaClienteEditar(provincia.filter(provincia=>provincia.id===FilasSeleccionadas[0].provincia));
+                    setPoblacionClienteEditar(poblacion.filter(poblacion=>poblacion.id===FilasSeleccionadas[0].poblacion));
                     abrirCerrarModalEditar();
                   },
                 },
