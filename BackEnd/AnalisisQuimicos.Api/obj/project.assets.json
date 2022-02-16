@@ -6748,25 +6748,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Usuario\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\34626\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
+      "projectUniqueName": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
       "projectName": "AnalisisQuimicos.Api",
-      "projectPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
-      "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\obj\\",
+      "projectPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
+      "packagesPath": "C:\\Users\\34626\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\34626\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -6779,11 +6779,11 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
-              "projectPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
+            "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+              "projectPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
             },
-            "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj"
+            "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj"
             }
           }
         }
@@ -6831,7 +6831,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   },

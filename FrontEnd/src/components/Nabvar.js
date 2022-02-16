@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SlidebarData as SidebarData} from './SlidebarData';
-import { useNavigate } from "react-router-dom";
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 import logo from '../img/logo.png'
 
 function Logout(){
   localStorage.clear();
-  window.location.reload(false);
+  //window.location.reload(false);
 }
 
 function Navbar() {
@@ -19,6 +18,10 @@ function Navbar() {
   const UsuarioActual = localStorage.getItem('UsuarioActual')
 
   var entero = 0
+
+  useEffect(() => {
+    console.log("CAMBIO");
+  }, [localStorage.getItem('UsuarioActual')])
 
 
 function handleClick(e)
@@ -47,7 +50,7 @@ function handleClick(e)
           ) 
           :
           (
-            <Link  className='nav-link' to='#' onClick={() => Logout()}>
+            <Link  className='nav-link' to={'login'} onClick={() => Logout()}>
               Logout 
             </Link>
           )}

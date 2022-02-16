@@ -1,14 +1,15 @@
+import { PinDropSharp } from '@material-ui/icons';
 import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Cookies from 'universal-cookie';
-import './Login.css';
+import { useNavigate } from 'react-router';
 
+import './Login.css';
 
 function Login(){
 
-    const navigate = useNavigate();
+    let navigate = useNavigate();
 
     const cookies = new Cookies();
     const [User,setUsuario] = useState('');
@@ -25,7 +26,7 @@ function Login(){
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('UsuarioActual', JSON.stringify(res.data.item2));
                 //alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
-                window.location.reload(false);
+                navigate("/")
                 //guardoamos usuario en cookies
                 // cookies.set('activo', res.data.item2, {path: '/'})
                 // cookies.set('addDate', res.data.item2, {path: '/'})
