@@ -76,13 +76,13 @@ function Login(){
                         <form onSubmit={handleSubmit}>
                             <div className='form-group'>
                                 <label>Usuario</label>
-                                <input type="text" className='form-control form-control-sm' id='emailInput' value={User}
+                                <input type="text" className='form-control form-control-sm usuariologn' id='emailInput' value={User}
                                 onChange={e => setUsuario(e.target.value)}></input>
                             </div>
 
                             <div className='form-group'>
                                 <label>Contraseña</label>
-                                <input type="password" className='form-control form-control-sm' id='contraseñaInput' value={Password}
+                                <input type="password" className='form-control form-control-sm pswdlogn' id='contraseñaInput' value={Password}
                                 onChange={e => setContraseña(e.target.value)}></input>
                             </div>
                             <button className='btn btn-primary btn-block'>Login</button>

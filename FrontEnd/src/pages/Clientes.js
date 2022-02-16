@@ -261,7 +261,7 @@ function Clientes() {
           disableClearable={true}
           id="CboCamarca"
           options={comarca}
-          getOptionLabel={option => option.comarca}
+          getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
           onChange={(event, value) => setClienteSeleccionado(prevState=>({
@@ -275,7 +275,7 @@ function Clientes() {
           disableClearable={true}
           id="CboProvincia"
           options={provincia}
-          getOptionLabel={option => option.provincia}
+          getOptionLabel={option => option.descripcion}
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
           onChange={(event, value) => setClienteSeleccionado(prevState=>({
@@ -405,7 +405,6 @@ function Clientes() {
           <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>
   
         </div>
-  
       </div>
     )
 

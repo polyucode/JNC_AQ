@@ -6,7 +6,7 @@ import { SlidebarData as SidebarData} from './SlidebarData';
 import { useNavigate } from "react-router-dom";
 import './Navbar.css';
 import { IconContext } from 'react-icons';
-
+import logo from '../img/logo.png'
 
 function Logout(){
   localStorage.clear();
@@ -26,7 +26,6 @@ function handleClick(e)
   document.getElementById("NavTitulo").innerHTML = e
 }
 
-
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
@@ -34,6 +33,9 @@ function handleClick(e)
           <Link to='#' className='menu-bars'>
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
+          <div style={{justifyContent:"left"}}>
+            <img style={{height:43,width:50}} src={logo} alt="Logo" />
+          </div>
           <div className='text-white navbar-titulo'>
           <h2 id="NavTitulo" >Inicio</h2>
           </div>
@@ -49,11 +51,7 @@ function handleClick(e)
               Logout 
             </Link>
           )}
-
-
-
         </div>
-
 
         </div>
         <nav style={{ zIndex: '100000'}} className={sidebar ? 'nav-menu active' : 'nav-menu' }>
@@ -67,7 +65,7 @@ function handleClick(e)
               return (
                 <li key={index} onClick={() => handleClick(item.title)} className={item.cName} >
                   
-                  <Link to={item.path} >
+                  <Link to={item.path}>
                     {item.icon}
                     <span>{item.title}</span>
                   </Link>

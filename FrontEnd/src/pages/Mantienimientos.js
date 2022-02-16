@@ -25,7 +25,6 @@ const tipos = [
     {id:4, nombre:"Semestral"}      
 ]
 
-
 //estilos modal
 const useStylesEditarDet = makeStyles((theme) => ({
     modal: {
@@ -203,7 +202,8 @@ function Mantenimientos() {
     
     const stylesEditarDet = useStylesEditarDet();
 
-    const columnas=[
+    
+    const columnas= [
 
       //visibles
       { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
@@ -211,6 +211,7 @@ function Mantenimientos() {
       { title: 'Elemetno de planta', field: 'idElementoPlanta', type: 'numeric',lookup:elementosplantaTable,filterPlaceholder:"Filtrar por elemento" },
       { title: 'Número de oferta', field: 'numOferta', filterPlaceholder:"Filtrar por oferta" },
       { title: 'Tipo', field: 'tipo',lookup:tiposTable, filterPlaceholder:"Filtrar por tipo"},
+
 
 
       //Ocultas
@@ -229,7 +230,6 @@ function Mantenimientos() {
 
     //visibles
     { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
-    { title: 'Número de oferta', field: 'numOferta', filterPlaceholder:"Filtrar por oferta" },
     { title: 'Fecha Prevista', field: 'fechaPrevista', type: 'date',filterPlaceholder:"Filtrar por fecha" },
     { title: 'Realizado', field: 'realizado', type: 'boolean',filterPlaceholder:"Filtrar por realizado" },
     { title: 'Fecha Realización', field: 'fechaRealizacion', type: 'date',filterPlaceholder:"Filtrar por fecha" },
@@ -273,7 +273,7 @@ function Mantenimientos() {
         },[])
       }
 
-    const peticionGet = async () => {
+    const  peticionGet = async () => {
       axios.get("/servmantenimientocab", token).then(response => {
         setData(response.data.data)
       })
@@ -299,16 +299,10 @@ function Mantenimientos() {
       tecnicos.map(fila=>lookupTecnicos[fila.id]=fila.nombre);
       setTecnicosTable(lookupTecnicos);
 
-
     }
 
     useEffect(() => {
       peticionGet();
-      
-      console.log(data)
-      console.log(clientes);
-
-
     }, [])
 
     const peticionPost = async () => {
