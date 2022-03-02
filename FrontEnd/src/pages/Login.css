@@ -22,7 +22,7 @@ form{
     width: 380px;
     height: 450px;
     margin: 20px;
-    background: var(--color-fondo);
+    background: black;
     border-radius: 10px !important;
 }
 
@@ -39,8 +39,9 @@ form{
     align-items: flex-end;
 }
 
-.usuariologn .pswdlogn{
-    background: var(--color-fondo);
+.usuariologn, 
+.pswdlogn{
+    background: var(--color-fondo) !important;
     border: 2px, solid, whitesmoke ;
     border-radius: 10px;
     margin-bottom:  25px;
@@ -51,6 +52,6 @@ form{
 .pswdlogn:focus{
     outline: none !important;
     border: 2px, solid, #FF3A3A;
-    background: var(--color-fondo);
+    background: var(--color-fondo) !important;
     
 }

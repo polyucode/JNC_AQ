@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import './Login.css';
+import logo from '../img/jncLogoDark.jpg'
 
 
 function Login(){
@@ -24,8 +25,9 @@ function Login(){
             .then(res=> {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('UsuarioActual', JSON.stringify(res.data.item2));
-                //alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
                 window.location.reload(false);
+                alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
+
                 //guardoamos usuario en cookies
                 // cookies.set('activo', res.data.item2, {path: '/'})
                 // cookies.set('addDate', res.data.item2, {path: '/'})
@@ -71,7 +73,8 @@ function Login(){
         <div className='login-contenedor'>
                 <div className='card login-form'>
                     <div className='card-body'>
-                        <h1 className='card-title text-center'>LOGIN</h1>
+                        {/* <h1 className='card-title text-center'>LOGIN</h1> */}
+                        <div><img src={logo}></img></div>
                         <div className='card-text'></div>
                         <form onSubmit={handleSubmit}>
                             <div className='form-group'>

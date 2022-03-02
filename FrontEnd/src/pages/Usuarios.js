@@ -144,14 +144,18 @@ function Usuarios() {
       peticionGet();
       GetPerfiles();
       GetClientes();
+    }, [])
+
+    useEffect(() => {
+
       const lookupClientes = {};
       clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
       setClientesTable(lookupClientes);
-    }, [])
+    },[clientes])
 
     const peticionPost = async () => {
       usuarioSeleccionado.id = null;
-      await axios.post("/usuario", usuarioSeleccionado)
+      await axios.post("/usuario", usuarioSeleccionado, token)
         .then(response => {
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
@@ -163,7 +167,7 @@ function Usuarios() {
 
     const peticionPut=async()=>{
       console.log(usuarioSeleccionado)
-      await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado)
+      await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{
@@ -180,7 +184,7 @@ function Usuarios() {
   
     const peticionDelete=async()=>{
       console.log("id=" + UsuarioEliminar[0].id)
-      await axios.delete("/usuario/"+ UsuarioEliminar[0].id)
+      await axios.delete("/usuario/"+ UsuarioEliminar[0].id, token)
       .then(response=>{
         peticionGet();
         abrirCerrarModalEliminar();

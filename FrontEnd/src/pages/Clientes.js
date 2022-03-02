@@ -179,7 +179,7 @@ function Clientes() {
     const peticionPost = async () => {
       clienteSeleccionado.id = null;
       console.log(clienteSeleccionado)
-      await axios.post("/cliente", clienteSeleccionado)
+      await axios.post("/cliente", clienteSeleccionado, token)
         .then(response => {
           //setData(data.concat(response.data));
           abrirCerrarModalInsertar();
@@ -191,7 +191,7 @@ function Clientes() {
 
     const peticionPut=async()=>{
       console.log(clienteSeleccionado)
-      await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado)
+      await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
       .then(response=>{
         var clienteModificado = data;
         clienteModificado.map(cliente=>{
@@ -208,7 +208,7 @@ function Clientes() {
   
     const peticionDelete=async()=>{
       console.log("id=" + ClienteEliminar[0].id)
-      await axios.delete("/cliente/"+ ClienteEliminar[0].id)
+      await axios.delete("/cliente/"+ ClienteEliminar[0].id, token)
       .then(response=>{
         peticionGet();
         abrirCerrarModalEliminar();

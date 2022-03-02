@@ -3,6 +3,7 @@ using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Api.Controllers
 {
-    //[Authorize(Roles = "1")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ServMantenimientoCabController : ControllerBase

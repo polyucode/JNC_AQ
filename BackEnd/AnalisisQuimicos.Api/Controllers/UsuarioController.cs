@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Api.Controllers
 {
-    //[Authorize(Roles = "1")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase

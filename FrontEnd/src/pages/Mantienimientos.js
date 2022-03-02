@@ -229,7 +229,6 @@ function Mantenimientos() {
   const columnasDet=[
 
     //visibles
-    { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
     { title: 'Fecha Prevista', field: 'fechaPrevista', type: 'date',filterPlaceholder:"Filtrar por fecha" },
     { title: 'Realizado', field: 'realizado', type: 'boolean',filterPlaceholder:"Filtrar por realizado" },
     { title: 'Fecha Realización', field: 'fechaRealizacion', type: 'date',filterPlaceholder:"Filtrar por fecha" },
@@ -278,37 +277,48 @@ function Mantenimientos() {
         setData(response.data.data)
       })
 
-      //lookups
-      GetElementosPlanta();
-      GetClientes();
-      GetTecnicos();
-
-      const lookupClientes = {};
-      clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
-      setClientesTable(lookupClientes);
-
-      const lookupElementosPlanta = {};
-      elementosplanta.map(fila=>lookupElementosPlanta[fila.id]=fila.nombre);
-      setElementosPlantaTable(lookupElementosPlanta);
-
-      const lookupTipos = {};
-      tipos.map(fila=>lookupTipos[fila.id]=fila.nombre);
-      setTiposTable(lookupTipos);
-
-      const lookupTecnicos = {};
-      tecnicos.map(fila=>lookupTecnicos[fila.id]=fila.nombre);
-      setTecnicosTable(lookupTecnicos);
 
     }
 
     useEffect(() => {
       peticionGet();
+
+
+      GetElementosPlanta();
+      GetClientes();
+      GetTecnicos();
+
+
     }, [])
 
+
+    useEffect(() => { 
+            //lookups
+            const lookupClientes = {};
+            clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
+            setClientesTable(lookupClientes);
+            //console.log("clientesTable " + JSON.stringify(clientesTable) )
+            const lookupElementosPlanta = {};
+            elementosplanta.map(fila=>lookupElementosPlanta[fila.id]=fila.nombre);
+            setElementosPlantaTable(lookupElementosPlanta);
+            //console.log("ElementosTable " + JSON.stringify(elementosplantaTable))
+        
+            const lookupTipos = {};
+            tipos.map(fila=>lookupTipos[fila.id]=fila.nombre);
+            setTiposTable(lookupTipos);
+            //console.log("tiposTable " + JSON.stringify(tiposTable))
+        
+            const lookupTecnicos = {};
+            tecnicos.map(fila=>lookupTecnicos[fila.id]=fila.nombre);
+            setTecnicosTable(lookupTecnicos);
+            //console.log("tecnicosTable " + JSON.stringify(tecnicosTable))
+
+     }, [clientes,tecnicos,elementosplanta])
+
     const peticionPost = async () => {
-      console.log(mantenimientoCabSeleccionado)
+      console.log(mantenimientoCabSeleccionado, )
       mantenimientoCabSeleccionado.id = null;
-      await axios.post("/servmantenimientocab", mantenimientoCabSeleccionado)
+      await axios.post("/servmantenimientocab", mantenimientoCabSeleccionado,token)
         .then(response => {
           //Creamos los detalles
           var date = new Date(fechaprevista);
@@ -379,7 +389,7 @@ function Mantenimientos() {
 
     const peticionPut=async()=>{
       console.log(mantenimientoCabSeleccionado)
-      await axios.put("/servmantenimientocab?id=" + mantenimientoCabSeleccionado.id, mantenimientoCabSeleccionado)
+      await axios.put("/servmantenimientocab?id=" + mantenimientoCabSeleccionado.id, mantenimientoCabSeleccionado, token)
       .then(response=>{
         var mantenimientoCabModificado = data;
         mantenimientoCabModificado.map(mantenimientoCab=>{
@@ -396,7 +406,7 @@ function Mantenimientos() {
   
     const peticionPutDet=async()=>{
       console.log(mantenimientoDetSeleccionado)
-      await axios.put("/servmantenimientodet?id=" + mantenimientoDetSeleccionado.id, mantenimientoDetSeleccionado)
+      await axios.put("/servmantenimientodet?id=" + mantenimientoDetSeleccionado.id, mantenimientoDetSeleccionado, token)
       .then(response=>{
         var mantenimientoDetSeleccionado = data;
         mantenimientoDetSeleccionado.map(mantenimientoDet=>{
@@ -413,7 +423,7 @@ function Mantenimientos() {
 
     const peticionDelete=async()=>{
       console.log("id=" + MantenimientoCabEliminar[0].id)
-      await axios.delete("/servmantenimientocab/"+ MantenimientoCabEliminar[0].id)
+      await axios.delete("/servmantenimientocab/"+ MantenimientoCabEliminar[0].id, token)
       .then(response=>{
         peticionGet();
         abrirCerrarModalEliminar();
@@ -424,7 +434,7 @@ function Mantenimientos() {
 
     const peticionDeleteDet=async()=>{
       console.log("id=" + MantenimientoDetEliminar[0].id)
-      await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[0].id)
+      await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[0].id, token)
       .then(response=>{
         peticionGetDet();
         abrirCerrarModalEliminarDet();
@@ -442,11 +452,11 @@ function Mantenimientos() {
 
     const peticionPostDet = async () => {
       mantenimientoDetSeleccionado.id = 0;
-      console.log(mantenimientoDetSeleccionado)
-      await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado)
+      console.log("DEt insertar : " + mantenimientoDetSeleccionado)
+      await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado, token)
         .then(response => {
-          // abrirCerrarModalInsertar();
-          // peticionGet();
+          //abrirCerrarModalInsertarDet();
+          //peticionGetDet();
         }).catch(error => {
           console.log(error);
         })
@@ -776,7 +786,7 @@ function Mantenimientos() {
 
 
           const abrirCerrarModalInsertarDet=()=>{
-            setModalInsertar(!modalInsertar)
+            
             setModalInsertarDet(!modalInsertarDet);
           }
 
@@ -795,10 +805,7 @@ function Mantenimientos() {
                   getOptionLabel={option => option.nombreComercial}
                   sx={{ width: 300 }}
                   renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
-                  onChange={(event, value) => setMantenimientoDetSeleccionado(prevState => ({
-                    ...prevState,
-                    idCliente: value.id
-                  }))}
+                 
                 />
               </div>
               <div className="col-md-6">
@@ -840,7 +847,7 @@ function Mantenimientos() {
 
               <br /><br />
               <div align="right">
-                <Button color="primary" onClick={()=>peticionPut()}>Insertar</Button>
+                <Button color="primary" onClick={()=>peticionPostDet()}>Insertar</Button>
                 <Button onClick={()=>abrirCerrarModalInsertarDet()}>Cancelar</Button>
               </div>
             </div>
