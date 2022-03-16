@@ -8,10 +8,8 @@ import './Navbar.css';
 import { IconContext } from 'react-icons';
 import logo from '../img/logo.png'
 
-function Logout(){
-  localStorage.clear();
-  window.location.reload(false);
-}
+import { LogMenuItems } from './LogMenuItems';
+import MenuItems from "./MenuItems";
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
@@ -40,16 +38,22 @@ function handleClick(e)
           <h2 id="NavTitulo" >Inicio</h2>
           </div>
         <div className='navbar-login'>
-          {localStorage.getItem('UsuarioActual') === null ? (
+          {localStorage.getItem('UsuarioActual') === null ? 
+          (
             <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
               <FaIcons.FaUser/> 
             </Link>
           ) 
           :
           (
-            <Link  className='nav-link' to='#' onClick={() => Logout()}>
-              Logout 
-            </Link>
+            <nav>
+            <ul className="menus">
+              {LogMenuItems.map((menu, index) => {
+                const depthLevel = 0;
+                return <MenuItems items={menu} key={index} depthLevel={depthLevel} />;
+              })}
+            </ul>
+          </nav>
           )}
         </div>
 

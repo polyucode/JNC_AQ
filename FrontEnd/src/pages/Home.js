@@ -1,4 +1,6 @@
 import React, {useState, useEffect}  from "react";
+import PermissionsGate from "../PermissionsGate";
+import { SCOPES } from "../permission-maps";
 import './Home.css';
 
 const token = {

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace AnalisisQuimicos.Api.Controllers
 {
 
-        [Authorize]
+        //[Authorize]
         [Route("api/[controller]")]
         [ApiController]
         public class PoblacionController : ControllerBase

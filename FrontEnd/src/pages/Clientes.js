@@ -208,13 +208,17 @@ function Clientes() {
   
     const peticionDelete=async()=>{
       console.log("id=" + ClienteEliminar[0].id)
-      await axios.delete("/cliente/"+ ClienteEliminar[0].id, token)
-      .then(response=>{
-        peticionGet();
-        abrirCerrarModalEliminar();
-      }).catch(error=>{
-        console.log(error);
-      })
+      var i = 0;
+      while(i < ClienteEliminar.length){
+        await axios.delete("/cliente/"+ ClienteEliminar[i].id, token)
+        .then(response=>{
+          peticionGet();
+          abrirCerrarModalEliminar();
+        }).catch(error=>{
+          console.log(error);
+        })
+        i++;
+      }
     }
 
     //modal insertar cliente
