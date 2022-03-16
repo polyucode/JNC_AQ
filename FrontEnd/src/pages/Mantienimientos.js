@@ -434,13 +434,17 @@ function Mantenimientos() {
 
     const peticionDeleteDet=async()=>{
       console.log("id=" + MantenimientoDetEliminar[0].id)
-      await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[0].id, token)
-      .then(response=>{
-        peticionGetDet();
-        abrirCerrarModalEliminarDet();
-      }).catch(error=>{
-        console.log(error);
-      })
+      var i = 0;
+      while(i < MantenimientoDetEliminar.length){
+        await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[i].id, token)
+        .then(response=>{
+          peticionGetDet();
+          abrirCerrarModalEliminarDet();
+        }).catch(error=>{
+          console.log(error);
+        })
+        i++;
+      }
     }
 
     //peticiones mantenimiento detalle

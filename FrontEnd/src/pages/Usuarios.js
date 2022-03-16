@@ -183,14 +183,19 @@ function Usuarios() {
     }
   
     const peticionDelete=async()=>{
+      console.log(UsuarioEliminar.length)
       console.log("id=" + UsuarioEliminar[0].id)
-      await axios.delete("/usuario/"+ UsuarioEliminar[0].id, token)
-      .then(response=>{
-        peticionGet();
-        abrirCerrarModalEliminar();
-      }).catch(error=>{
-        console.log(error);
-      })
+      var i = 0;
+      while(i < UsuarioEliminar.length){
+        await axios.delete("/usuario/"+ UsuarioEliminar[i].id, token)
+        .then(response=>{
+          peticionGet();
+          abrirCerrarModalEliminar();
+        }).catch(error=>{
+          console.log(error);
+        })
+        i++;
+      }
     }
 
     //modal insertar usuario

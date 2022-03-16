@@ -25,6 +25,7 @@ function Login(){
             .then(res=> {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('UsuarioActual', JSON.stringify(res.data.item2));
+                localStorage.setItem('Perfil', res.data.item2.idPerfil);
                 window.location.reload(false);
                 alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
 
