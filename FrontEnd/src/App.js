@@ -8,6 +8,7 @@ import Navbar from './components/Nabvar';
 import Usuarios from './pages/Usuarios';
 import Mantenimientos from './pages/Mantienimientos';
 import Clientes from './pages/Clientes';
+import Perfil from './pages/Perfil';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path='/usuarios' element={<Usuarios />} />
           <Route path='/clientes' element={<Clientes />} />
           <Route path='/mantenimientos' element={<Mantenimientos />} />
+          <Route path='/perfil' element={<Perfil />} />
         </Routes>
         </div>
 

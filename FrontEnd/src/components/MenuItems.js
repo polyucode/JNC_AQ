@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from 'react-router-dom';
 
 import Dropdown from "./Dropdown";
 
@@ -82,7 +83,8 @@ const MenuItems = ({ items, depthLevel }) => {
             aria-haspopup="menu"
             onClick={items.id ? () => handleClick(items.id) : null}
         >
-        {items.title}
+          {items.link ? (<Link  className='nav-link' to={items.linkName} onClick={() => handleClick('Login')}>{items.title}</Link>) : items.title}
+        {/* {items.title} */}
       </button>
       )}
     </li>
