@@ -1,0 +1,57 @@
+
+.row1 {
+    width: 100%;
+    display: flex;
+}
+
+.col1 {
+    width: 40%;
+}
+.col2 {
+    width: 60%;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+}
+
+.busqueda-clientes {
+    width: 50%;
+}
+.numero-niveles {
+    width: 50%;
+}
+.numero-niveles > .botones {
+    display: flex;
+    justify-content: space-between;
+}
+
+.analisis-elemento {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.analisis-elemento > h3,hr {
+    width: 100%;
+}
+.analisis-elemento > select {
+    width: 50%;
+}
+.analisis-elemento > .analisis-elemento-checks {
+    width: 50%;
+}
+
+.elementos-planta {
+    width: 100%;
+}
+.elementos-planta-elements {
+    display: flex;
+    width: 100%;
+}
+.elementos-planta-elements > .planta {
+    width: 25%;
+    display: flex;
+    flex-wrap: wrap;
+}
