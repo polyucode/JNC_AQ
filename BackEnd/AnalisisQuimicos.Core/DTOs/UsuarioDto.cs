@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Usuario { get; set; }
         public string Password { get; set; }
         public bool? Activo { get; set; }
-        public byte[] Firma { get; set; }
+        public string Firma { get; set; }
         public int? IdCliente { get; set; }
         public int? IdPerfil { get; set; }
         public DateTime? AddDate { get; set; }

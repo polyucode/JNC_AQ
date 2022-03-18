@@ -55,7 +55,7 @@ function Perfil() {
         usuario: '',
         password: '',
         activo: false,
-        firma: '',
+        firma: "",
         idCliente: 0,
         idPerfil: 0,
         addDate: null,
@@ -108,6 +108,8 @@ function Perfil() {
 
       // Creamos el json para enviar al backend
       User.firma = uploader.current.state.imageSrc;
+
+      //User.firma = "HOLA QUE TAL";
 
       peticionPut();
 
