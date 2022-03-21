@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import axios from "axios";
 
 import FirmaFileUploader from '../components/FirmaFileUploader';
+import './Perfil.css';
 
 
 const token = {
@@ -116,8 +117,9 @@ function Perfil() {
     };
 
     return (
-        <div>
-            <h4>Perfil de usuario</h4>
+        <div className="container">
+            <h3>Perfil de usuario</h3>
+            <hr/>
             <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} value={User.nombre} /> {/* value={usuarioSeleccionado&&usuarioSeleccionado.nombre} */}
             <br />
             <div className="firma-image">
