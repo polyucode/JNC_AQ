@@ -1,0 +1,15 @@
+.MuiTabPanel-root {
+    display: flex;
+}
+.col-1 {
+    width: 40%;
+}
+.col-2 {
+    width: 40%;
+}
+.col-3 {
+    width: 20%;
+}
+table {
+    width: 100%;
+}
