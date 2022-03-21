@@ -4,11 +4,15 @@ using System.Text;
 
 namespace AnalisisQuimicos.Core.DTOs
 {
-    public class ElementosPlantaDto
+    public class ConfNivelesPlantasClienteDTO
     {
-        public int? Id { get; set; }
-        public string Nombre { get; set; }
-        public bool? Maestro { get; set; }
+        public int? Id_Cliente { get; set; }
+        public int? Id_Planta { get; set; }
+        public int? Nivel { get; set; }
+        public int? Id_Elemento { get; set; }
+        public int? Orden { get; set; }
+        public bool? Visible { get; set; }
+        public string Conecta { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

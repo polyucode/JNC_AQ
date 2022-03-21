@@ -21,6 +21,10 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<ServMantenimientoCab, ServMantenimientoCabDto>().ReverseMap();
             CreateMap<ServMantenimientoDet, ServMantenimientoDetDto>().ReverseMap();
 
+            CreateMap<ConfNivelesPlantasCliente, ConfNivelesPlantasClienteDTO>().ReverseMap();
+            CreateMap<ConfPlantasCliente, ConfPlantasClienteDTO>().ReverseMap();
+            CreateMap<ParametrosElementoPlantaCliente, ParametrosElementoPlantaClienteDto>().ReverseMap();
+
         }
 
         
