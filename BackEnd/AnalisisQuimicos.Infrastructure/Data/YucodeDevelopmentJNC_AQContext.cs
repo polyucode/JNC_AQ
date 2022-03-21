@@ -21,7 +21,7 @@ namespace AnalisisQuimicos.Infrastructure.Data
         public virtual DbSet<Analisis> GesAnalisis { get; set; }
         public virtual DbSet<Clientes> GesClientes { get; set; }
         public virtual DbSet<AnalisisNivelesPlantasCliente> GesConfAnalisisNivelesPlantasCliente { get; set; }
-        public virtual DbSet<NivelesPlantasCliente> GesConfNivelesPlantasCliente { get; set; }
+        //public virtual DbSet<NivelesPlantasCliente> GesConfNivelesPlantasCliente { get; set; }
         public virtual DbSet<ConfPlantasCliente> GesConfPlantasCliente { get; set; }
         public virtual DbSet<ElementosPlanta> GesElementosPlanta { get; set; }
         public virtual DbSet<PlantasCliente> GesPlantasCliente { get; set; }

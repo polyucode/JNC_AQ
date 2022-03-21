@@ -15,6 +15,9 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Provincias> ProvinciaRepository { get; }
         IRepository<Poblaciones> PoblacionRepository { get; }
         IRepository<ElementosPlanta> ElementosPlantaRepository { get; }
+        IRepository<ConfNivelesPlantasCliente> ConfNivelesPlantasClienteRepository { get; }
+        IRepository<ConfPlantasCliente> ConfPlantasClienteRepository { get; }
+        IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository { get; }
 
         void SaveChanges();
 
