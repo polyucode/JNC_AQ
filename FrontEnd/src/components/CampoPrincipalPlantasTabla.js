@@ -1,6 +1,6 @@
 import React from 'react';
 
-class CampoPlantasTabla extends React.Component {
+class CampoPrincipalPlantasTabla extends React.Component {
 
     constructor(props) {
         super(props);
@@ -92,7 +92,10 @@ class CampoPlantasTabla extends React.Component {
                 <td><input type="text" size="3" id={this.props.nombre+'-limit-sup'} value={this.state.LimSup} onChange={this.handleLimitSuperior}  /></td>
                 <td>
                     <select id={this.props.nombre+'-unidades'}>
-                        <option>---</option>
+                        <option value='m3'>m3</option>
+                        <option value='Un. p'>Un. p</option>
+                        <option value='ºC'>ºC</option>
+                        <option value='mg/l'>mg/l</option>
                     </select>
                 </td>
                 <td><center><input type="checkbox" id={this.props.nombre+'-activo'} onChange={this.handleActivo} checked={this.state.Activo} /></center></td>
@@ -103,4 +106,4 @@ class CampoPlantasTabla extends React.Component {
 
 };
 
-export default CampoPlantasTabla;
+export default CampoPrincipalPlantasTabla;

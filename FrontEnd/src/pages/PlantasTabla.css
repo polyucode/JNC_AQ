@@ -9,6 +9,7 @@ th {
 p, td {
     font-size: 0.875rem;
     font-weight: 500;
+    margin: 0;
 }
 input[type=text] {
     padding: 5px 15px;
@@ -22,6 +23,7 @@ select {
 }
 button {
     padding: 5px 15px;
+    margin: 8px 0;
     border: 1px solid #DBDBDB;
 }
 
@@ -34,6 +36,7 @@ div.cliente {
     width: 25%;
     box-sizing: border-box;
     padding: 24px 12px 0;
+    margin-bottom: 24px;
 }
 .h6 {
     font-size: 1.062rem;
@@ -67,4 +70,13 @@ div.ver-inspector {
 div.ver-inspector > div.opciones {
     display: flex;
     justify-content: space-evenly;
+}
+
+div.contenedor > div.botones-menu {
+    box-sizing: border-box;
+    padding: 16px 8px;
+}
+
+div.contenedor > div.botones-menu > button {
+    margin-right: 16px;
 }

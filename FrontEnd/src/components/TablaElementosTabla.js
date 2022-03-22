@@ -1,9 +1,24 @@
 import React from 'react';
 import { TabPanel } from '@mui/lab';
-import CampoPlantasTabla from './CampoPlantasTabla';
+import CampoPrincipalPlantasTabla from './CampoPrincipalPlantasTabla';
+import CampoPersPlantasTabla from './CampoPersPlantasTabla';
 
 
 class TablaElementosTabla extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        const parametres = [
+            'Comptador',
+            'pH',
+            'Temperatura',
+            'Conductivitat',
+            'AlcalinitatM',
+            'AlcalinitatP',
+            'DuresaCalcica',
+        ]
+    }
 
     render() {
 
@@ -22,21 +37,22 @@ class TablaElementosTabla extends React.Component {
                                 <th><center>Activar</center></th>
                                 <th><center>Ver Insp.</center></th>
                             </tr>
-                            <CampoPlantasTabla nombre="Comptador" datos={this.props.plantilla.Comptador} />
-                            <CampoPlantasTabla nombre="pH" datos={this.props.plantilla.PH} />
-                            <CampoPlantasTabla nombre="Temperatura" datos={this.props.plantilla.Temperatura} />
-                            <CampoPlantasTabla nombre="Conductivitat 25 ºC" datos={this.props.plantilla.Conductivitat} />
-                            <CampoPlantasTabla nombre="Alcalinitat M" datos={this.props.plantilla.AlcalinitatM} />
-                            <CampoPlantasTabla nombre="Duresa Càlcica" datos={this.props.plantilla.DuresaCalcica} />
-                            <CampoPlantasTabla nombre="Duresa Total" datos={this.props.plantilla.DuresaTotal} />
-                            <CampoPlantasTabla nombre="Terbolesa" datos={this.props.plantilla.Terbolesa} />
-                            <CampoPlantasTabla nombre="Fe" datos={this.props.plantilla.Fe} />
-                            <CampoPlantasTabla nombre="Clorurs" datos={this.props.plantilla.Clorurs} />
-                            <CampoPlantasTabla nombre="Sulfats" datos={this.props.plantilla.Sulfots} />
-                            <CampoPlantasTabla nombre="Clor Lliure" datos={this.props.plantilla.ClorLliure} />
-                            <CampoPlantasTabla nombre="Clor Total" datos={this.props.plantilla.ClorTotal} />
-                            <CampoPlantasTabla nombre="Brom" datos={this.props.plantilla.Brom} />
-                            <CampoPlantasTabla nombre="Sulfits (SO3)" datos={this.props.plantilla.Sulfits} />
+                            <CampoPrincipalPlantasTabla nombre="Comptador" datos={this.props.plantilla.Comptador} />
+                            <CampoPrincipalPlantasTabla nombre="pH" datos={this.props.plantilla.PH} />
+                            <CampoPrincipalPlantasTabla nombre="Temperatura" datos={this.props.plantilla.Temperatura} />
+                            <CampoPrincipalPlantasTabla nombre="Conductivitat 25 ºC" datos={this.props.plantilla.Conductivitat} />
+                            <CampoPrincipalPlantasTabla nombre="Alcalinitat M" datos={this.props.plantilla.AlcalinitatM} />
+                            <CampoPrincipalPlantasTabla nombre="Alcalinitat P" datos={this.props.plantilla.AlcalinitatP} />
+                            <CampoPrincipalPlantasTabla nombre="Duresa Càlcica" datos={this.props.plantilla.DuresaCalcica} />
+                            <CampoPrincipalPlantasTabla nombre="Duresa Total" datos={this.props.plantilla.DuresaTotal} />
+                            <CampoPrincipalPlantasTabla nombre="Terbolesa" datos={this.props.plantilla.Terbolesa} />
+                            <CampoPrincipalPlantasTabla nombre="Fe" datos={this.props.plantilla.Fe} />
+                            <CampoPrincipalPlantasTabla nombre="Clorurs" datos={this.props.plantilla.Clorurs} />
+                            <CampoPrincipalPlantasTabla nombre="Sulfats" datos={this.props.plantilla.Sulfots} />
+                            <CampoPrincipalPlantasTabla nombre="Clor Lliure" datos={this.props.plantilla.ClorLliure} />
+                            <CampoPrincipalPlantasTabla nombre="Clor Total" datos={this.props.plantilla.ClorTotal} />
+                            <CampoPrincipalPlantasTabla nombre="Brom" datos={this.props.plantilla.Brom} />
+                            <CampoPrincipalPlantasTabla nombre="Sulfits (SO3)" datos={this.props.plantilla.Sulfits} />
                         </tbody>
                     </table>
                 </div>
@@ -54,162 +70,18 @@ class TablaElementosTabla extends React.Component {
                                 <th><center>Activar</center></th>
                                 <th><center>Ver Insp.</center></th>
                             </tr>
-                            <tr>
-                                <td>Campo 1</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><center><input type="checkbox" /></center></td>
-                                <td><center><input type="checkbox" /></center></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 2</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 3</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 4</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 5</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 6</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 7</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 8</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 9</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 10</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 11</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-                            <tr>
-                                <td>Campo 12</td>
-                                <td><input type="text" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>m3</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
+                            <CampoPersPlantasTabla nombre="Campo 1" datos={this.props.plantilla.Campo1} />
+                            <CampoPersPlantasTabla nombre="Campo 2" datos={this.props.plantilla.Campo2} />
+                            <CampoPersPlantasTabla nombre="Campo 3" datos={this.props.plantilla.Campo3} />
+                            <CampoPersPlantasTabla nombre="Campo 4" datos={this.props.plantilla.Campo4} />
+                            <CampoPersPlantasTabla nombre="Campo 5" datos={this.props.plantilla.Campo5} />
+                            <CampoPersPlantasTabla nombre="Campo 6" datos={this.props.plantilla.Campo6} />
+                            <CampoPersPlantasTabla nombre="Campo 7" datos={this.props.plantilla.Campo7} />
+                            <CampoPersPlantasTabla nombre="Campo 8" datos={this.props.plantilla.Campo8} />
+                            <CampoPersPlantasTabla nombre="Campo 9" datos={this.props.plantilla.Campo9} />
+                            <CampoPersPlantasTabla nombre="Campo 10" datos={this.props.plantilla.Campo10} />
+                            <CampoPersPlantasTabla nombre="Campo 11" datos={this.props.plantilla.Campo11} />
+                            <CampoPersPlantasTabla nombre="Campo 12" datos={this.props.plantilla.Campo12} />
                         </tbody>
                     </table>
                 </div>
