@@ -8,7 +8,7 @@ import Navbar from './components/Nabvar';
 import Usuarios from './pages/Usuarios';
 import Mantenimientos from './pages/Mantienimientos';
 import Clientes from './pages/Clientes';
-import Plantas from './pages/Plantas';
+import PlantasTabla from './pages/PlantasTabla';
 
 export default function App() {
   return (
@@ -22,7 +22,7 @@ export default function App() {
           <Route path='/usuarios' element={<Usuarios />} />
           <Route path='/clientes' element={<Clientes />} />
           <Route path='/mantenimientos' element={<Mantenimientos />} />
-          <Route path='/plantas' element={<Plantas />} />
+          <Route path='/plantasTabla' element={<PlantasTabla />} />
         </Routes>
         </div>
 
