@@ -1,18 +1,36 @@
-h6 {
+h5 {
     font-size: 1.25rem;
     font-weight: 500;
     box-sizing: border-box;
     margin: 12px 0;
 }
+h6 {
+    font-size: 1.062rem;
+    font-weight: 500;
+    margin: 0;
+}
 hr {
     margin: 8px 0;
+    width: 100%;
 }
 p {
     font-size: 0.875rem;
     font-weight: 500;
 }
 button {
-    
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+}
+input[type=text] {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+}
+input[type=checkbox] {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+}
+select {
+    border: 1px solid #DBDBDB;
 }
 
 div.main-container {
@@ -44,37 +62,50 @@ div.main-container {
 }
 .numero-niveles {
     width: 50%;
+    box-sizing: border-box;
+    padding: 0 12px;
 }
 .numero-niveles > .botones {
+    margin: 24px 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .analisis-elemento {
     width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+}
+.analisis-elemento > .elementos {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 24px;
 }
-.analisis-elemento > h3,hr {
-    width: 100%;
+.analisis-elemento > .elementos > select {
+    width: calc(50% - 12px);
 }
-.analisis-elemento > select {
-    width: 50%;
+.analisis-elemento > .elementos > .analisis-elemento-checks {
+    width: calc(50% - 12px);
 }
-.analisis-elemento > .analisis-elemento-checks {
-    width: 50%;
+.analisis-elemento > button {
+    margin: 24px 0;
 }
 
 .elementos-planta {
     width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
 }
 .elementos-planta-elements {
     display: flex;
     width: 100%;
 }
 .elementos-planta-elements > .planta {
-    width: 25%;
+    width: 20%;
     display: flex;
     flex-wrap: wrap;
+    box-sizing: border-box;
+}
+.lista-niveles {
+    width: 100%;
 }

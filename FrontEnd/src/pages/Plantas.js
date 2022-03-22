@@ -158,6 +158,11 @@ function Plantas() {
         let numNiveles = document.getElementById('numero-niveles').value;
         let listadoNiveles = [];
 
+        if(numNiveles > 5) {
+            alert('El número máximo de niveles que se pueden crear son 5');
+            return;
+        }
+
         // Generamos en el DOM la interfaz de los niveles
         for(let i=0; i<numNiveles; i++) {
             
@@ -172,12 +177,12 @@ function Plantas() {
 
             // Creamos todos los componentes de la interfaz del nivel
             let elementos = [
-                React.createElement('h4',null,'Nivel '+(i+1)),
+                React.createElement('h6',null,'Nivel '+(i+1)),
                 React.createElement('hr',null,null),
                 React.createElement('select',{id: 'lista-nivel-'+(i+1)},listadoElementos),
                 React.createElement('button',{onClick: () => crearElemento(i+1)},'+'),
                 React.createElement('button',null,'-'),
-                React.createElement('select',{id: 'lista-elementos-nivel-'+(i+1),size: 10},null),
+                React.createElement('select',{class: 'lista-niveles',id: 'lista-elementos-nivel-'+(i+1),size: 10},null),
                 React.createElement('input',{type: 'checkbox'},null),
                 React.createElement('label',null,'Ver inspector'),
                 React.createElement('button',null,'Eliminar')
@@ -245,11 +250,12 @@ function Plantas() {
 
                         {/* BUSQUEDA DE CLIENTES */}
                         <div className="busqueda-clientes">
-                            <h6>Cliente</h6>
+                            <h5>Cliente</h5>
                             <hr/>
                             <p>Codigo</p>
                             <input type="text"/>
                             <button>Buscar</button>
+                            <br/><br/>
                             <p>Nombre</p>
                             <input type="text"/>
                             <button>Buscar</button>
@@ -257,9 +263,12 @@ function Plantas() {
 
                         {/* NUMERO DE NIVELES */}
                         <div className='numero-niveles'>
-                            <h6>Número de niveles en planta</h6>
+                            <h5>Número de niveles en planta</h5>
                             <hr/>
-                            <p>Número: <input type="text" id="numero-niveles" /></p>
+                            <center>
+                            <p>Número</p>
+                            <input type="text" id="numero-niveles" size="2" />
+                            </center>
                             <div className='botones'>
                                 <button>Cancelar</button>
                                 <button onClick={crearNiveles}>Aceptar</button>
@@ -271,22 +280,23 @@ function Plantas() {
                     
                     {/* ANÁLISIS POR ELEMENTO */}
                     <div className='analisis-elemento'>
-                        <h6>Análisis por elemento</h6>
+                        <h5>Análisis por elemento</h5>
                         <hr/>
-                        <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
-                            {
-                                // Recorremos la lista de elementos que tenemos para mostrarlos
-                                listaElementos.map((d,index) => (<option key={index} value={index}>{d.nombre} {d.numero}</option>))
-                            }
-                        </select>
-                        <div className='analisis-elemento-checks'>
-                            <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} />Físico-Químico</label><br/>
-                            <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} />Aerobios</label><br/>
-                            <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} />Legionela</label><br/>
-                            <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} />Agua Potable</label><br/>
-                            <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} />Aguas Residuales</label>
+                        <div className='elementos'>
+                            <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
+                                {
+                                    // Recorremos la lista de elementos que tenemos para mostrarlos
+                                    listaElementos.map((d,index) => (<option key={index} value={index}>{d.nombre} {d.numero}</option>))
+                                }
+                            </select>
+                            <div className='analisis-elemento-checks'>
+                                <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br/>
+                                <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br/>
+                                <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br/>
+                                <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br/>
+                                <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                            </div>
                         </div>
-            
                         <button onClick={() => console.log(listaElementos)}>Guardar</button>
                     </div>
 
@@ -295,7 +305,7 @@ function Plantas() {
 
                     {/* ELEMENTOS DE PLANTA */}
                     <div className='elementos-planta'>
-                        <h6>Elementos de planta</h6>
+                        <h5>Elementos de planta</h5>
                         <hr/>
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
                     </div>
