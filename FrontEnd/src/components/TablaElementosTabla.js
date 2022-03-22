@@ -10,7 +10,7 @@ class TablaElementosTabla extends React.Component {
         return (
             <TabPanel value={this.props.value.toString()}>
                 <div className="col-1">
-                    <h3>Campos principales - {this.props.nombre}</h3>
+                    <h6>Campos principales</h6>
                     <hr/>
                     <table>
                         <tbody>
@@ -19,27 +19,13 @@ class TablaElementosTabla extends React.Component {
                                 <th>Lim. Min.</th>
                                 <th>Lim. Max.</th>
                                 <th>Unidades</th>
-                                <th>Activar</th>
-                                <th>Ver Insp.</th>
+                                <th><center>Activar</center></th>
+                                <th><center>Ver Insp.</center></th>
                             </tr>
                             <CampoPlantasTabla nombre="Comptador" datos={this.props.plantilla.Comptador} />
                             <CampoPlantasTabla nombre="pH" datos={this.props.plantilla.PH} />
                             <CampoPlantasTabla nombre="Temperatura" datos={this.props.plantilla.Temperatura} />
                             <CampoPlantasTabla nombre="Conductivitat 25 ºC" datos={this.props.plantilla.Conductivitat} />
-
-                            <tr>
-                                <td>TDS</td>
-                                <td><input type="text" size="3" /></td>
-                                <td><input type="text" size="3" /></td>
-                                <td>
-                                    <select>
-                                        <option>mg/l</option>
-                                    </select>
-                                </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
-                            </tr>
-
                             <CampoPlantasTabla nombre="Alcalinitat M" datos={this.props.plantilla.AlcalinitatM} />
                             <CampoPlantasTabla nombre="Duresa Càlcica" datos={this.props.plantilla.DuresaCalcica} />
                             <CampoPlantasTabla nombre="Duresa Total" datos={this.props.plantilla.DuresaTotal} />
@@ -55,7 +41,7 @@ class TablaElementosTabla extends React.Component {
                     </table>
                 </div>
                 <div className="col-2">
-                    <h3>Campos personalizados</h3>
+                    <h6>Campos personalizados</h6>
                     <hr/>
                     <table>
                         <tbody>
@@ -65,8 +51,8 @@ class TablaElementosTabla extends React.Component {
                                 <th>Lim. Min.</th>
                                 <th>Lim. Max.</th>
                                 <th>Unidades</th>
-                                <th>Activar</th>
-                                <th>Ver Insp.</th>
+                                <th><center>Activar</center></th>
+                                <th><center>Ver Insp.</center></th>
                             </tr>
                             <tr>
                                 <td>Campo 1</td>
@@ -78,8 +64,8 @@ class TablaElementosTabla extends React.Component {
                                         <option>m3</option>
                                     </select>
                                 </td>
-                                <td><input type="checkbox" /></td>
-                                <td><input type="checkbox" /></td>
+                                <td><center><input type="checkbox" /></center></td>
+                                <td><center><input type="checkbox" /></center></td>
                             </tr>
                             <tr>
                                 <td>Campo 2</td>
@@ -229,17 +215,19 @@ class TablaElementosTabla extends React.Component {
                 </div>
                 <div className="col-3">
                     <div className="ver-inspector">
-                        <h3>Ver Inspector (todo)</h3>
+                        <h6>Ver Inspector (todo)</h6>
                         <hr/>
-                        <label><input type="checkbox" /> Si</label>
-                        <label><input type="checkbox" /> No</label>
+                        <div className='opciones'>
+                            <label><input type="checkbox" /> Si</label>
+                            <label><input type="checkbox" /> No</label>
+                        </div>
                     </div>
                     <div>
-                        <h3>Legionela</h3>
+                        <h6>Legionela</h6>
                         <hr/>
                     </div>
                     <div>
-                        <h3>Aerobio</h3>
+                        <h6>Aerobio</h6>
                         <hr/>
                     </div>
                     <br/>
