@@ -5,11 +5,21 @@ import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
+import CalendarToday from '@material-ui/icons/CalendarToday';
 import {Modal, TextField, Button} from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import {makeStyles} from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+
+import FullCalendar from '@fullcalendar/react'
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+
+import './Mantenimientos.css';
 
 const token = {
     headers:{
@@ -132,6 +142,8 @@ function Mantenimientos() {
     const [modalEditarDet, setModalEditarDet]= useState(false);
     
     const [modalEliminarDet, setModalEliminarDet]= useState(false);
+
+    const [modalCalendario, setmodalCalendario]= useState(false);
 
 
     const [mantenimientoCabSeleccionado, setMantenimientoCabSeleccionado] = useState({
@@ -593,6 +605,72 @@ function Mantenimientos() {
           const abrirCerrarModalEditar=()=>{
             setModalEditar(!modalEditar);
           }
+
+          const abrirCerrarCalendario=()=>{
+            setmodalCalendario(!modalCalendario);
+          }
+
+          const bodyCalendar=(
+            <div className={stylesEditarDet.modal}>
+              <h3>Calendario</h3>
+              <FullCalendar
+                plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
+                headerToolbar={{
+                  left: 'today prev,next',
+                  center: 'title',
+                  right: 'resourceTimelineMonth'
+                }}
+                timeZone= 'UTC'
+                initialView= 'resourceTimelineDay'
+                scrollTime= '08:00'
+                aspectRatio= {1.5}
+                weekends={false}
+                height= {650}
+                resourceAreaHeaderContent= 'Elementos'
+                resources= {[
+                  {    
+                    id: 1,
+                    title: 'Elemento 1'
+                  },
+                  {    
+                    id: 2,
+                    title: 'Elemento 2'
+                  },
+                  {    
+                    id: 3,
+                    title: 'Elemento 3'
+                  },
+                ]}
+                events={ [
+                  {
+                    id: 1,
+                    title: 'Mantenimiento 1',
+                    start: '2022-03-01',
+                    end: '2022-03-06',
+                    resourceId: 1,
+                    color: 'red'
+                  },
+                  {
+                    id: 2,
+                    title: 'Mantenimiento 2',
+                    start: '2022-03-05',
+                    end: '2022-03-11',
+                    resourceId: 3,
+                    color: 'green'
+                  },
+                  {
+                    id: 3,
+                    title: 'Mantenimiento 3',
+                    start: '2022-03-15',
+                    end: '2022-03-23',
+                    resourceId: 2,
+                    color: 'orange'
+                  }
+                ]}
+                //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
+              />
+            </div>
+          )
       
           const bodyEditar=(
             <div className={stylesEditarDet.modal}>
@@ -675,6 +753,15 @@ function Mantenimientos() {
               <MaterialTable columns={columnasDet} data={dataDet}
                 localization={localization}
                 actions={[
+                  {
+                    icon: () => <CalendarToday />,
+                    tooltip: "Ver calendario",
+                    isFreeAction: true,
+                    onClick: (e, data) => {
+                      abrirCerrarCalendario();
+                      console.log("CALENDARIO")
+                    },
+                  },
                   {
                     icon: () => <AddCircle style={{ fill: "green" }} />,
                     tooltip: "Añadir detalle mantenimiento",
@@ -1053,8 +1140,14 @@ function Mantenimientos() {
         onClose={abrirCerrarModalEliminarDet}>
           {bodyEliminarDet}
         </Modal>
-        </div>
 
+        <Modal
+        open={modalCalendario}
+        onClose={abrirCerrarCalendario}>
+          {bodyCalendar}
+        </Modal>
+
+        </div>
     );
 
 } 
