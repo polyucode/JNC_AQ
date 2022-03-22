@@ -133,9 +133,14 @@ function Usuarios() {
       },[])
     }
 
-
     const peticionGet = async () => {
       axios.get("/usuario", token).then(response => {
+        for(let i = 0; i < response.data.data.length; i++) {
+          if(response.data.data[i].firma) {
+            let firmaB64 = response.data.data[i].firma;
+            response.data.data[i].firma = <img height="58px" src={firmaB64} />;
+          }
+        }
         setData(response.data.data)
       })
     }

@@ -7,10 +7,13 @@ export const LogMenuItems = [
         {
             id: 1,
             title: "Mi perfil",
+            link: true,
+            linkName: 'perfil',
         },
         {
             id: 2,
             title: "Logout",
+            link: false,
         },
     ]
     }
