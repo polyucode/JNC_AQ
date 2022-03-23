@@ -1308,7 +1308,7 @@ function PlantasTabla() {
         </div>
         <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList id="tab-list" onChange={handleChange} aria-label="basic tabs example">
+                <TabList id="tab-list" onChange={handleChange}>
                     {
                         listaElementos.map((elemento,index) => <Tab key={index} label={elemento.nombre+' '+elemento.numero} value={index.toString()} />)
                     }
