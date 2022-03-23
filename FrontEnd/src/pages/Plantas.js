@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 
 import './Plantas.css';
 
@@ -312,6 +313,9 @@ function Plantas() {
 
                 </div>
 
+            </div>
+            <div className='botones'>
+                <button><Link to='/plantasTabla'>Siguiente</Link></button>
             </div>
         </div>
     );

@@ -30,6 +30,12 @@ export const SlidebarData = [
         cName: 'nav-text'
     },
     {
+        title: 'Plantas',
+        path: '/plantas',
+        icon: <MdOutlineConstruction/>,
+        cName: 'nav-text'
+    },
+    {
         title: 'Plantas (Tabla)',
         path: '/plantasTabla',
         icon: <MdOutlineConstruction/>,

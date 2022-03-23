@@ -109,3 +109,17 @@ div.main-container {
 .lista-niveles {
     width: 100%;
 }
+
+.botones {
+    padding:  0 12px;
+}
+.botones > button {
+    padding: 0;
+    border: 1px solid #DBDBDB;
+}
+.botones > button > a {
+    display: block;
+    text-decoration: none;
+    padding: 5px 15px;
+    color: #000000;
+}
