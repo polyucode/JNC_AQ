@@ -1,65 +1,138 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { TabPanel } from '@mui/lab';
+
 import CampoPrincipalPlantasTabla from './CampoPrincipalPlantasTabla';
 import CampoPersPlantasTabla from './CampoPersPlantasTabla';
+
+import './TablaElementosTabla.css';
+import { ThreeSixty } from '@material-ui/icons';
 
 
 class TablaElementosTabla extends React.Component {
 
+    // Obtenemos los datos del usuario actual
     usuario = JSON.parse(localStorage.getItem('UsuarioActual'));
 
-    parametres = [
-        'Comptador',
-        'PH',
-        'Temperatura',
-        'Conductivitat',
-        'AlcalinitatM',
-        'AlcalinitatP',
-        'DuresaCalcica',
-        'DuresaTotal',
-        'Terbolesa',
-        'Fe',
-        'Clorurs',
-        'Sulfots',
-        'ClorLliure',
-        'ClorTotal',
-        'Brom',
-        'Sulfits'
-    ]
+    // Lista de los parametros principales
+    parametros = [
+    {
+        nombre: 'Contador',
+        nombreInt: 'Comptador'
+    },
+    {
+        nombre: 'pH',
+        nombreInt: 'PH'
+    },
+    {
+        nombre: 'Temperatura',
+        nombreInt: 'Temperatura'
+    },
+    {
+        nombre: 'Conductividad 25 ºC',
+        nombreInt: 'Conductivitat'
+    },
+    {
+        nombre: 'Alcalinidad "M"',
+        nombreInt: 'AlcalinitatM'
+    },
+    {
+        nombre: 'Alcalinidad "P"',
+        nombreInt: 'AlcalinitatP'
+    },
+    {
+        nombre: 'Dureza Cálcica',
+        nombreInt: 'DuresaCalcica'
+    },
+    {
+        nombre: 'Dureza Total',
+        nombreInt: 'DuresaTotal'
+    }, 
+    {
+        nombre: 'Turbidez',
+        nombreInt: 'Terbolesa'
+    }, 
+    {
+        nombre: 'Fe',
+        nombreInt: 'Fe'
+    }, 
+    {
+        nombre: 'Cloruros',
+        nombreInt: 'Clorurs'
+    }, 
+    {
+        nombre: 'Sulfatos',
+        nombreInt: 'Sulfots'
+    }, 
+    {
+        nombre: 'Cloro Libre',
+        nombreInt: 'ClorLliure'
+    }, 
+    {
+        nombre: 'Cloro Total',
+        nombreInt: 'ClorTotal'
+    }, 
+    {
+        nombre: 'Bromo',
+        nombreInt: 'Brom'
+    }, 
+    {
+        nombre: 'Sulfitos (SO3)',
+        nombreInt: 'Sulfits'
+    }
+    ];
+
+    // Variables para la generación de los parametros activos
+    filaElementoActivo = [];
+    filasElementosActivos = [];
+
+    /* MÉTODOS DE LA CLASE */
 
     constructor(props) {
         super(props);
 
     }
 
-    componentDidMount() {
-
-        let filaElementoActivo = [];
-        let filasElementosActivos = [];
+    // Función que se encarga de generar la tabla solamente con los elementos activos
+    cargarParametrosTabla() {
 
         // Creamos la cabecera de la tabla de elementos activos
-        filaElementoActivo.push(React.createElement('th',{},'Nombre'));
-        filaElementoActivo.push(React.createElement('th',{},'Valor'));
-        filaElementoActivo.push(React.createElement('th',{},'Unidad'));
-        filasElementosActivos.push(React.createElement('tr',{},filaElementoActivo));
-        filaElementoActivo = [];
+        this.filaElementoActivo.push(React.createElement('th',{},'Nombre'));
+        this.filaElementoActivo.push(React.createElement('th',{},'Valor'));
+        this.filaElementoActivo.push(React.createElement('th',{},'Unidad'));
+        this.filasElementosActivos.push(React.createElement('tr',{},this.filaElementoActivo));
+        this.filaElementoActivo = [];
 
         // Recorremos toda la lista de parámetros principales para buscar los activos
-        this.parametres.forEach((element) => {
-            if(this.props.plantilla[element].Activo) {
+        this.parametros.forEach((element) => {
+            if(this.props.plantilla[element.nombreInt].Activo) {
 
-                filaElementoActivo.push(React.createElement('td',{},element));
-                filaElementoActivo.push(React.createElement('td',{},React.createElement('input',{type: 'text',size: '3'},null)));
-                filaElementoActivo.push(React.createElement('td',{},this.props.plantilla[element].Unidades));
-                filasElementosActivos.push(React.createElement('tr',{},filaElementoActivo));
-                filaElementoActivo = [];
+                this.filaElementoActivo.push(React.createElement('td',{},element.nombre));
+                this.filaElementoActivo.push(React.createElement('td',{},React.createElement('input',{type: 'text',size: '3'},null)));
+                this.filaElementoActivo.push(React.createElement('td',{},this.props.plantilla[element.nombreInt].Unidades));
+                this.filasElementosActivos.push(React.createElement('tr',{},this.filaElementoActivo));
+                this.filaElementoActivo = [];
 
             }
         })
 
-        // Pintamos los elementos activos en la tabla
-        ReactDOM.render(filasElementosActivos,document.getElementById('tabla'));
+        // Pintamos los elementos activos en la tabla activa
+        if(document.getElementById('tabla-'+this.props.value.toString())) {
+            ReactDOM.render(this.filasElementosActivos,document.getElementById('tabla-'+this.props.value.toString()));
+        }
+        
+    }
+
+    componentDidMount() {
+
+        this.cargarParametrosTabla();
+
+    }
+
+    componentDidUpdate() {
+
+        this.filasElementosActivos = [];
+        this.cargarParametrosTabla();
 
     }
 
@@ -156,13 +229,8 @@ class TablaElementosTabla extends React.Component {
 
         const tablaTecnico = (
         <>
-            <table>
-                <tbody id="tabla">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Valor</th>
-                        <th>Unidad</th>
-                    </tr>
+            <table className="tabla-tecnico">
+                <tbody id={'tabla-'+this.props.value.toString()}>
                 </tbody>
             </table>
         </>
@@ -170,9 +238,7 @@ class TablaElementosTabla extends React.Component {
 
         return (
             <TabPanel value={this.props.value.toString()}>
-                <div id={'prueba-'+this.props.value.toString()}>
                 {this.usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
-                </div>
             </TabPanel>
         );
     };

@@ -249,14 +249,14 @@ function PlantasTabla() {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'Un. p',
-                    Activo: true,
+                    Activo: false,
                     VerInspector: false,
                 },
                 Temperatura: {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'C',
-                    Activo: true,
+                    Activo: false,
                     VerInspector: false,
                 },
                 Conductivitat: {
@@ -455,7 +455,7 @@ function PlantasTabla() {
                     LimInf: '5',
                     LimSup: '',
                     Unidades: 'm3',
-                    Activo: false,
+                    Activo: true,
                     VerInspector: false,
                 },
                 PH: {
@@ -476,7 +476,7 @@ function PlantasTabla() {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'Un. p',
-                    Activo: false,
+                    Activo: true,
                     VerInspector: false,
                 },
                 AlcalinitatM: {
@@ -519,7 +519,7 @@ function PlantasTabla() {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'm3',
-                    Activo: false,
+                    Activo: true,
                     VerInspector: false,
                 },
                 Clorurs: {
@@ -554,14 +554,14 @@ function PlantasTabla() {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'mg/l',
-                    Activo: false,
+                    Activo: true,
                     VerInspector: false,
                 },
                 Sulfits: {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'm3',
-                    Activo: false,
+                    Activo: true,
                     VerInspector: false,
                 },
                 Campo1: {
@@ -583,7 +583,7 @@ function PlantasTabla() {
                     LimInf: '',
                     LimSup: '',
                     Unidades: 'm3',
-                    Activo: false,
+                    Activo: true,
                 },
                 Campo4: {
                     Nombre: '',
@@ -1306,19 +1306,21 @@ function PlantasTabla() {
             <p>Código: <strong>{planta.idCliente}</strong></p>
             <p>Nombre: <strong>{planta.nombreCliente}</strong></p>
         </div>
-        <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList id="tab-list" onChange={handleChange}>
-                    {
-                        listaElementos.map((elemento,index) => <Tab key={index} label={elemento.nombre+' '+elemento.numero} value={index.toString()} />)
-                    }
-                </TabList>
-            </Box>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+            <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList id="tab-list" onChange={handleChange}>
+                        {
+                            listaElementos.map((elemento,index) => <Tab key={index} label={elemento.nombre+' '+elemento.numero} value={index.toString()} />)
+                        }
+                    </TabList>
+                </Box>
 
-            {
-                listaElementos.map((elemento,index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
-            }
-        </TabContext>
+                {
+                    listaElementos.map((elemento,index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
+                }
+            </TabContext>
+        </Box>
         <div className='botones-menu'>
             <button>Cancelar</button>
             <button>Aceptar</button>
