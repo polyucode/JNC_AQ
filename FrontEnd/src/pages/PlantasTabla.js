@@ -1303,8 +1303,18 @@ function PlantasTabla() {
         <div className='cliente'>
             <h6>Cliente</h6>
             <hr/>
-            <p>Código: <strong>{planta.idCliente}</strong></p>
-            <p>Nombre: <strong>{planta.nombreCliente}</strong></p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                    </tr>
+                    <tr>
+                        <td>{planta.idCliente}</td>
+                        <td>{planta.nombreCliente}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <Box sx={{ width: '100%', typography: 'body1' }}>
             <TabContext value={value}>
