@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
 
+import 'beautiful-react-diagrams/styles.css';
 import './Plantas.css';
 
 function Plantas() {
+
 
     const planta = {
         idCliente: '',
@@ -87,12 +90,13 @@ function Plantas() {
                 aguasResiduales: false
             }
         }]
-    }
-    let listaElementos = planta.elementos;
+    };
 
+    const listaElementos = planta.elementos;
+    
     // Variables del analisis del elemento
-    let elementoAnalisisId = 0;
-    let elementoAnalisisProps = {
+    const elementoAnalisisId = 0;
+    const elementoAnalisisProps = {
         fisicoQuimico: false,
         aerobios: false,
         legionela: false,
@@ -100,8 +104,27 @@ function Plantas() {
         aguasResiduales: false
     };
 
+    // Variables para los nodos del diagrama
+    let contadorNodo = 1;
+    let contadorPort = 1;
+
+    const CustomRender = ({ id, content, data, inputs, outputs }) => (
+
+        <div style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
+            <div style={{display:'flex', justifyContent:'space-between'}}>
+                {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
+                <div role="button" style={{padding: '5px'}}>
+                {content}
+                </div>
+                {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
+            </div>
+        </div>
+    
+    );
+
+    const [schema, { onChange, addNode, removeNode }] = useSchema(createSchema({}));
+
     function crearElemento(id) {
-        console.log('Crear elemento');
 
         // Preparamos una variable para el elemento nuevo
         let elementoNuevo = {
@@ -151,6 +174,9 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
 
+        console.log('Crear elemento');
+        crearNodo(elementoNuevo);
+
     }
 
     function crearNiveles() {
@@ -180,17 +206,17 @@ function Plantas() {
             let elementos = [
                 React.createElement('h6',null,'Nivel '+(i+1)),
                 React.createElement('hr',null,null),
-                React.createElement('select',{id: 'lista-nivel-'+(i+1)},listadoElementos),
+                React.createElement('select',{id: 'lista-nivel-'+(i+1), key: i},listadoElementos),
                 React.createElement('button',{onClick: () => crearElemento(i+1)},'+'),
                 React.createElement('button',null,'-'),
-                React.createElement('select',{class: 'lista-niveles',id: 'lista-elementos-nivel-'+(i+1),size: 10},null),
+                React.createElement('select',{className: 'lista-niveles',id: 'lista-elementos-nivel-'+(i+1),size: 10},null),
                 React.createElement('input',{type: 'checkbox'},null),
                 React.createElement('label',null,'Ver inspector'),
                 React.createElement('button',null,'Eliminar')
             ]
 
             // Creamos el contenedor de planta principal para añadir todos los demás componentes
-            let contenido = React.createElement('div',{className: 'planta'},elementos);
+            let contenido = React.createElement('div',{className: 'planta', key: i},elementos);
             listadoNiveles.push(contenido);
 
         }
@@ -242,8 +268,97 @@ function Plantas() {
 
     }
 
-    return(
+    function crearNodo(elemento) {
 
+        console.log('Crear nodo');
+
+        // Preparamos los input y output
+        var input = [];
+        var output = [];
+
+        // Según el nivel del elemento, asignamos estilos y entradas o salidas
+        if(elemento.nivel == 1){
+            var color = '#d1c4e9'; // 100
+            var selector = '#b39ddb'; // 200
+            var textoColor = '#4527a0'; // 800
+            output = [
+                { id: 'port-'+contadorPort, alignment: 'right' }
+            ]
+            contadorPort += 1;
+        }
+        if(elemento.nivel == 2){
+            var color = '#c5cae9';
+            var selector = '#9fa8da';
+            var textoColor = '#283593';
+            input = [
+                { id: 'port-'+contadorPort, alignment: 'left' }
+            ]
+            output = [
+                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+            ]
+            contadorPort += 2;
+        }
+        if(elemento.nivel == 3){
+            var color = '#bbdefb';
+            var selector = '#90caf9';
+            var textoColor = '#1565c0';
+            input = [
+                { id: 'port-'+contadorPort, alignment: 'left' }
+            ]
+            output = [
+                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+            ]
+            contadorPort += 2;
+        }
+        if(elemento.nivel == 4){
+            var color = '#b3e5fc';
+            var selector = '#81d4fa';
+            var textoColor = '#0277bd';
+            input = [
+                { id: 'port-'+contadorPort, alignment: 'left' }
+            ]
+            output = [
+                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+            ]
+            contadorPort += 2;
+        }
+        if(elemento.nivel == 5){
+            var color = '#b2ebf2';
+            var selector = '#80deea';
+            var textoColor = '#00838f';
+            input = [
+                { id: 'port-'+contadorPort, alignment: 'left' }
+            ]
+            contadorPort += 1;
+        }
+
+        // Creamos el nodo con los datos preparados
+        var nodo = {
+            id: 'node-'+contadorNodo,
+            content: elemento.nombre+' '+elemento.numero,
+            coordinates: [150*contadorNodo, 60],
+            render: CustomRender,
+            data: {background: color, selector: selector, color: textoColor},
+            inputs: input,
+            outputs: output
+        };
+
+        // Augmentamos el contador de nodos y lo añadimos a la lista
+        contadorNodo += 1;
+
+        schema.nodes.forEach((node) => {
+            console.log(node.id);
+        })
+
+        addNode(nodo);
+
+        console.log(schema);
+
+    }
+
+
+    return(
+    
         <div className="main-container">
             <div className='row1'>
                 <div className='col1'>
@@ -252,23 +367,23 @@ function Plantas() {
                         {/* BUSQUEDA DE CLIENTES */}
                         <div className="busqueda-clientes">
                             <h5>Cliente</h5>
-                            <hr/>
+                            <hr />
                             <p>Codigo</p>
-                            <input type="text"/>
+                            <input type="text" />
                             <button>Buscar</button>
-                            <br/><br/>
+                            <br /><br />
                             <p>Nombre</p>
-                            <input type="text"/>
+                            <input type="text" />
                             <button>Buscar</button>
                         </div>
 
                         {/* NUMERO DE NIVELES */}
                         <div className='numero-niveles'>
                             <h5>Número de niveles en planta</h5>
-                            <hr/>
+                            <hr />
                             <center>
-                            <p>Número</p>
-                            <input type="text" id="numero-niveles" size="2" />
+                                <p>Número</p>
+                                <input type="text" id="numero-niveles" size="2" />
                             </center>
                             <div className='botones'>
                                 <button>Cancelar</button>
@@ -277,28 +392,27 @@ function Plantas() {
                         </div>
 
                     </div>
-                    <br/>
-                    
+                    <br />
+
                     {/* ANÁLISIS POR ELEMENTO */}
                     <div className='analisis-elemento'>
                         <h5>Análisis por elemento</h5>
-                        <hr/>
+                        <hr />
                         <div className='elementos'>
                             <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
                                 {
                                     // Recorremos la lista de elementos que tenemos para mostrarlos
-                                    listaElementos.map((d,index) => (<option key={index} value={index}>{d.nombre} {d.numero}</option>))
-                                }
+                                    listaElementos.map((d, index) => (<option key={index} value={index}>{d.nombre} {d.numero}</option>))}
                             </select>
                             <div className='analisis-elemento-checks'>
-                                <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br/>
-                                <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br/>
-                                <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br/>
-                                <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br/>
+                                <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
+                                <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
+                                <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
+                                <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
                                 <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
                             </div>
                         </div>
-                        <button onClick={() => console.log(listaElementos)}>Guardar</button>
+                        <button>Guardar</button>
                     </div>
 
                 </div>
@@ -307,18 +421,28 @@ function Plantas() {
                     {/* ELEMENTOS DE PLANTA */}
                     <div className='elementos-planta'>
                         <h5>Elementos de planta</h5>
-                        <hr/>
+                        <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
                     </div>
 
                 </div>
 
             </div>
+
+            <div className='row2'>
+                <h5>Diagrama</h5>
+                <hr />
+                <div style={{ height: '22.5rem' }}>
+                    <Diagram schema={schema} onChange={onChange} />
+                </div>
+            </div>
             <div className='botones'>
                 <button><Link to='/plantasTabla'>Siguiente</Link></button>
             </div>
         </div>
-    );
+
+    )
+    
 }
 
 export default Plantas;
