@@ -1,10 +1,68 @@
-import React from 'react';
+import React , {useState, useEffect} from "react";
+import axios from "axios";
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 
 import './Plantas.css';
 
+const token = {
+    headers:{
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+};
+
 function Plantas() {
+
+    /*const [confPlantasCliente, setConfPlantasCliente] = useState({
+        id: 0,
+        IdCliente: 0,
+        IdPlanta: 0,
+        NumNiveles: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
+
+    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
+        id: 0,
+        IdCliente: 0,
+        IdPlanta: 0,
+        Nivel: 0,
+        Id_Elemento: 0,
+        Orden: 0,
+        Visible: false,
+        Conecta: "",
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
+
+    const [elementosPlanta, setElementosPlanta] = useState({
+        id: 0,
+        Nombre: "",
+        Maestro: false,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });*/
+
+    const [confPlantasCliente, setConfPlantasCliente] = useState([]);
+
+    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+
+    const [elementosPlanta, setElementosPlanta] = useState([]);
 
     const planta = {
         idCliente: '',
@@ -241,6 +299,37 @@ function Plantas() {
         listaElementos[elementoAnalisisId].propiedades = elementoAnalisisProps;
 
     }
+
+    const GetConfPlantasCliente = async () => {
+        axios.get("/confplantascliente", token).then(response => {
+          setConfPlantasCliente(response.data.data)
+        })
+    }
+
+    const GetConfNivelesPlantaCliente = async () => {
+        axios.get("/confnivelesplantascliente", token).then(response => {
+          setConfNivelesPlantaCliente(response.data.data)
+        })
+    }
+    
+    const GetElementosPlanta = async () => {
+        axios.get("/confplantascliente", token).then(response => {
+          setElementosPlanta(response.data.data)
+        })
+    }
+
+    useEffect(() => {
+        GetConfPlantasCliente();
+        GetConfNivelesPlantaCliente();
+        GetElementosPlanta();
+
+        console.log(confPlantasCliente);
+        //peticionGet();
+        //GetPerfiles();
+        //GetPoblacion();
+        //GetProvincia();
+        //GetComarca();
+      }, [])
 
     return(
 
