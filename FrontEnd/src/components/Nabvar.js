@@ -41,7 +41,7 @@ function handleClick(e)
           {localStorage.getItem('UsuarioActual') === null ? 
           (
             <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
-              <FaIcons.FaUser/> 
+              <FaIcons.FaUser/>
             </Link>
           ) 
           :
