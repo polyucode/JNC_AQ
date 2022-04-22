@@ -6,6 +6,10 @@
   align-items: center;
   flex-wrap: nowrap;
   padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
 }
 
 .menu-bars {
@@ -126,4 +130,8 @@ span {
   height: 60px;
   margin: 0;
   padding: 0;
+}
+
+.container-fluid {
+  margin-top: 60px;
 }

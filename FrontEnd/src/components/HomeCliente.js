@@ -6,6 +6,17 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
+import {
+    Chart,
+    ChartTitle,
+    ChartSeries,
+    ChartSeriesItem,
+    ChartCategoryAxis,
+    ChartCategoryAxisItem,
+} from "@progress/kendo-react-charts";
+import "hammerjs";
+
+import '@progress/kendo-theme-default/dist/all.css';
 import './HomeCliente.css';
 
 
@@ -14,7 +25,7 @@ function HomeCliente() {
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
 
-        <div style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
+        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
                 <div role="button" style={{padding: '5px'}}>
@@ -85,135 +96,164 @@ function HomeCliente() {
 
     const [schema, { onChange, addNode, removeNode }] = useSchema(initialSchema);
 
+    const categories = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul","Ago","Sep","Oct","Nov","Dic"];
+
+    const ChartContainer = () => (
+        <Chart>
+          <ChartCategoryAxis>
+            <ChartCategoryAxisItem
+              title={{
+                text: "Meses",
+              }}
+              categories={categories}
+            />
+          </ChartCategoryAxis>
+          <ChartSeries>
+            <ChartSeriesItem type="line" data={[4.5, 4.4, 4.4, 4.3, 0, 0, 0, 0, 0, 0, 0, 0]} />
+            <ChartSeriesItem type="line" data={[25, 32, 26, 37, 0, 0, 0, 0, 0, 0, 0, 0]} />
+          </ChartSeries>
+        </Chart>
+      );
+
+      function prueba(id) {
+        console.log('Prueba: '+id);
+      }
 
     return (
         <div className="home-container">
             <h4>Hola! Hecha un vistazo al estado de tu planta</h4>
-            <div className="home-row-1">
-                <div className="home-diagrama">
-                    <h5>Diagrama de planta</h5>
-                    <hr />
-                    <div style={{ height: '22rem' }}>
-                        <Diagram schema={schema} onChange={onChange} />
+            <div className='home-container-elements'>
+                <div className="home-col-1">
+                    <div className="home-diagrama">
+                        <h5>Diagrama de planta</h5>
+                        <hr />
+                        <div style={{ height: '22rem' }}>
+                            <Diagram schema={schema} onChange={onChange} />
+                        </div>
                     </div>
+                    <div className="home-tabla-parametros-elemento">
+                        <h5>Parámetros del elemento: <b>Torre 1</b></h5>
+                        <hr />
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>Parámetro</th>
+                                    <th>Un.</th>
+                                    <th>Ene</th>
+                                    <th>Feb</th>
+                                    <th>Mar</th>
+                                    <th>Abr</th>
+                                    <th>May</th>
+                                    <th>Jun</th>
+                                    <th>Jul</th>
+                                    <th>Ago</th>
+                                    <th>Sep</th>
+                                    <th>Oct</th>
+                                    <th>Nov</th>
+                                    <th>Dic</th>
+                                </tr>
+                                <tr>
+                                    <td>pH</td>
+                                    <td>pH</td>
+                                    <td>4,5</td>
+                                    <td>4,4</td>
+                                    <td>4,4</td>
+                                    <td>4,3</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>Temperatura</td>
+                                    <td>ºC</td>
+                                    <td>25</td>
+                                    <td>32</td>
+                                    <td>26</td>
+                                    <td>37</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>  
                 </div>
-                <div className='home-calendario-mantenimiento'>
-                    <h5>Calendario de mantenimientos</h5>
-                    <hr />
-                    <FullCalendar
-                        plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
-                        headerToolbar={{
-                        left: 'today prev,next',
-                        center: 'title',
-                        right: 'resourceTimelineMonth'
-                        }}
-                        timeZone= 'UTC'
-                        initialView= 'resourceTimelineMonth'
-                        scrollTime= '08:00'
-                        aspectRatio= {1.5}
-                        weekends={false}
-                        height= {650}
-                        resourceAreaHeaderContent= 'Elementos'
-                        resources= {[
-                        {    
-                            id: 1,
-                            title: 'Elemento 1'
-                        },
-                        {    
-                            id: 2,
-                            title: 'Elemento 2'
-                        },
-                        {    
-                            id: 3,
-                            title: 'Elemento 3'
-                        },
-                        ]}
-                        events={ [
-                        {
-                            id: 1,
-                            title: 'Mantenimiento 1',
-                            start: '2022-03-01',
-                            end: '2022-03-06',
-                            resourceId: 1,
-                            color: 'red'
-                        },
-                        {
-                            id: 2,
-                            title: 'Mantenimiento 2',
-                            start: '2022-03-05',
-                            end: '2022-03-11',
-                            resourceId: 3,
-                            color: 'green'
-                        },
-                        {
-                            id: 3,
-                            title: 'Mantenimiento 3',
-                            start: '2022-03-15',
-                            end: '2022-03-23',
-                            resourceId: 2,
-                            color: 'orange'
-                        }
-                        ]}
-                        //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
-                    />
-                </div>
-            </div>
-            <div className="home-row-2">
-                <div className="home-tabla-parametros-elemento">
-                    <h5>Parámetros del elemento: <b>Torre 1</b></h5>
-                    <hr />
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Parámetro</th>
-                                <th>Un.</th>
-                                <th>Ene</th>
-                                <th>Feb</th>
-                                <th>Mar</th>
-                                <th>Abr</th>
-                                <th>May</th>
-                                <th>Jun</th>
-                                <th>Jul</th>
-                                <th>Ago</th>
-                                <th>Sep</th>
-                                <th>Oct</th>
-                                <th>Nov</th>
-                                <th>Dic</th>
-                            </tr>
-                            <tr>
-                                <td>pH</td>
-                                <td>pH</td>
-                                <td>4,5</td>
-                                <td>4,4</td>
-                                <td>4,4</td>
-                                <td>4,3</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td>Temperatura</td>
-                                <td>ºC</td>
-                                <td>25</td>
-                                <td>32</td>
-                                <td>26</td>
-                                <td>37</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div className="home-col-2">
+                    <div className='home-calendario-mantenimiento'>
+                        <h5>Calendario de mantenimientos</h5>
+                        <hr />
+                        <FullCalendar
+                            plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
+                            headerToolbar={{
+                            left: 'today prev,next',
+                            center: 'title',
+                            right: 'resourceTimelineMonth'
+                            }}
+                            timeZone= 'UTC'
+                            initialView= 'resourceTimelineMonth'
+                            scrollTime= '08:00'
+                            aspectRatio= {1.5}
+                            weekends={false}
+                            height= {350}
+                            resourceAreaHeaderContent= 'Elementos'
+                            resources= {[
+                            {    
+                                id: 1,
+                                title: 'Elemento 1'
+                            },
+                            {    
+                                id: 2,
+                                title: 'Elemento 2'
+                            },
+                            {    
+                                id: 3,
+                                title: 'Elemento 3'
+                            },
+                            ]}
+                            events={ [
+                            {
+                                id: 1,
+                                title: 'Mantenimiento 1',
+                                start: '2022-03-01',
+                                end: '2022-03-06',
+                                resourceId: 1,
+                                color: 'red'
+                            },
+                            {
+                                id: 2,
+                                title: 'Mantenimiento 2',
+                                start: '2022-03-05',
+                                end: '2022-03-11',
+                                resourceId: 3,
+                                color: 'green'
+                            },
+                            {
+                                id: 3,
+                                title: 'Mantenimiento 3',
+                                start: '2022-03-15',
+                                end: '2022-03-23',
+                                resourceId: 2,
+                                color: 'orange'
+                            }
+                            ]}
+                            //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
+                        />
+                    </div>
+                    <div className='home-grafico'>
+                        <h5>Parámetros del elemento (gráfico): <b>Torre 1</b></h5>
+                        <hr />
+                        <ChartContainer />
+                    </div>
                 </div>
             </div>
         </div>

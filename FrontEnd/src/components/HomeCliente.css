@@ -12,26 +12,28 @@ div.home-container > h4 {
     text-align: center;
 }
 
-div.home-row-1 {
-    margin-bottom: 32px;
+div.home-container-elements {
     display: flex;
 }
 
-div.home-row-2 {
-    box-sizing: border-box;
-    padding-bottom: 32px;
-}
-
-div.home-diagrama {
+div.home-col-1 {
     width: calc(50% - 6px);
     margin-right: 6px;
 }
 
-div.home-calendario-mantenimiento {
+div.home-col-2 {
     width: calc(50% - 6px);
     margin-left: 6px;
 }
 
-div.home-tabla-parametros-elemento {
-    width: 50%;
+div.home-diagrama {
+    margin-bottom: 32px;
 }
+
+div.home-calendario-mantenimiento {
+    margin-bottom: 32px;
+}
+
+/* div.home-grafico {
+    height: 500px;
+} */
