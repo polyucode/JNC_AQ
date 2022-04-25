@@ -133,6 +133,7 @@ function Usuarios() {
       },[])
     }
 
+    // Recoger Usuarios
     const peticionGet = async () => {
       axios.get("/usuario", token).then(response => {
         for(let i = 0; i < response.data.data.length; i++) {
@@ -145,6 +146,7 @@ function Usuarios() {
       })
     }
 
+    // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
     useEffect(() => {
       peticionGet();
       GetPerfiles();
@@ -158,6 +160,7 @@ function Usuarios() {
       setClientesTable(lookupClientes);
     },[clientes])
 
+    //Insertar usuario
     const peticionPost = async () => {
       usuarioSeleccionado.id = null;
       await axios.post("/usuario", usuarioSeleccionado, token)
@@ -170,6 +173,7 @@ function Usuarios() {
         })
     }
 
+    // Editar el usuario
     const peticionPut=async()=>{
       console.log(usuarioSeleccionado)
       await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
@@ -187,6 +191,7 @@ function Usuarios() {
       })
     }
   
+    // Borrar el usuario
     const peticionDelete=async()=>{
       console.log(UsuarioEliminar.length)
       console.log("id=" + UsuarioEliminar[0].id)
@@ -255,7 +260,7 @@ function Usuarios() {
           sx={{ width: 300}}
           renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
           onChange={handleChangePerfil}
-            />
+        />
 
         {/* Desplegable de Clientes */}
         <Autocomplete
@@ -286,6 +291,7 @@ function Usuarios() {
       setModalEditar(!modalEditar);
     }
 
+    // Cuadro de editar usuario
     const bodyEditar=(
       <div className={styles.modal}>
         <h3>Editar Usuario</h3>
@@ -405,7 +411,7 @@ function Usuarios() {
               }}
             actions={[
                 {
-                    icon: () => <AddCircle style={{ fill: "green"}}/>,
+                  icon: () => <AddCircle style={{ fill: "green"}}/>,
                   tooltip: "Añadir Usuario",
                   isFreeAction: true,
                   onClick: (e,data) => {

@@ -448,7 +448,7 @@ function Mantenimientos() {
       console.log("id=" + MantenimientoDetEliminar[0].id)
       var i = 0;
       while(i < MantenimientoDetEliminar.length){
-        await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[i].id, token)
+        await axios.delete("/servmantenimientodet"+ MantenimientoDetEliminar[i].id, token)
         .then(response=>{
           peticionGetDet();
           abrirCerrarModalEliminarDet();
@@ -468,11 +468,11 @@ function Mantenimientos() {
 
     const peticionPostDet = async () => {
       mantenimientoDetSeleccionado.id = 0;
-      console.log("DEt insertar : " + mantenimientoDetSeleccionado)
+      console.log("Det insertar : " + mantenimientoDetSeleccionado)
       await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado, token)
         .then(response => {
-          //abrirCerrarModalInsertarDet();
-          //peticionGetDet();
+          abrirCerrarModalInsertarDet();
+          peticionGetDet();
         }).catch(error => {
           console.log(error);
         })
