@@ -18,6 +18,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<ConfNivelesPlantasCliente> ConfNivelesPlantasClienteRepository { get; }
         IRepository<ConfPlantasCliente> ConfPlantasClienteRepository { get; }
         IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository { get; }
+        IRepository<ClientesContactos> ClientesContactosRepository { get; }
 
         void SaveChanges();
 

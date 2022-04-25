@@ -24,6 +24,7 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<ConfNivelesPlantasCliente, ConfNivelesPlantasClienteDTO>().ReverseMap();
             CreateMap<ConfPlantasCliente, ConfPlantasClienteDTO>().ReverseMap();
             CreateMap<ParametrosElementoPlantaCliente, ParametrosElementoPlantaClienteDto>().ReverseMap();
+            CreateMap<ClientesContactos, ClientesContactosDTO>().ReverseMap();
 
         }
 
