@@ -27,12 +27,12 @@ function handleClick(e)
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
-        <div className='navbar'>
+        <div className='navbar' id='navbar'>
           <Link to='#' className='menu-bars'>
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
-          <div style={{justifyContent:"left"}}>
-            <img style={{height:43,width:50}} src={logo} alt="Logo" />
+          <div className="logo-image"> {/* style={{justifyContent:"left"} */}
+            <img src={logo} alt="Logo" /> {/* style={{height:43,width:50}} */}
           </div>
           <div className='text-white navbar-titulo'>
           <h2 id="NavTitulo" >Inicio</h2>
@@ -41,7 +41,7 @@ function handleClick(e)
           {localStorage.getItem('UsuarioActual') === null ? 
           (
             <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
-              <FaIcons.FaUser/> 
+              <FaIcons.FaUser/>
             </Link>
           ) 
           :
