@@ -1,11 +1,20 @@
-import React from 'react';
+import React , {useState, useEffect} from "react";
+import axios from "axios";
 import { Tab, Box } from '@mui/material';
 import { TabContext, TabList } from '@mui/lab';
 
 import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
 
+const token = {
+    headers:{
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+};
+
 function PlantasTabla() {
+
+    const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
 
     const planta = {
         idCliente: '00256',
@@ -1297,6 +1306,16 @@ function PlantasTabla() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const GetConfParametrosElementoPlantaCliente = async () => {
+        axios.get("/parametroselementoplantacliente", token).then(response => {
+            setConfParametrosElementoPlantaCliente(response.data.data)
+        })
+    }
+
+    useEffect(() => {
+        GetConfParametrosElementoPlantaCliente();
+      }, [])
 
     return (
     <div className="contenedor">

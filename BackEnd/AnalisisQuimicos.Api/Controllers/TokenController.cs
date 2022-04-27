@@ -65,10 +65,11 @@ namespace AnalisisQuimicos.Api.Controllers
             //Payload
             var payload = new JwtPayload
             (
+
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
                 claims,
-                DateTime.Now,
+                DateTime.UtcNow, //Lo he cambiado porque me daba este error (idx12401 expires ' pii is hidden)
                 DateTime.UtcNow.AddMinutes(60)
 
             );
