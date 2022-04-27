@@ -121,11 +121,11 @@ function Clientes() {
 
 
   // Modal detalle 
-  const [modalInsertarDet, setModalInsertarDet]= useState(false);
+  const [modalInsertarContacto, setModalInsertarContacto]= useState(false);
 
-  const [modalEditarDet, setModalEditarDet]= useState(false);
+  const [modalEditarContacto, setModalEditarContacto]= useState(false);
 
-  const [modalEliminarDet, setModalEliminarDet]= useState(false);
+  const [modalEliminarContacto, setModalEliminarContacto]= useState(false);
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
@@ -439,11 +439,6 @@ function Clientes() {
     setModalEditar(!modalEditar);
   }
 
-  const abrirCerrarModalEliminarDet=()=>{
-    setModalEditar(!modalEditar);
-    setModalEliminarDet(!modalEliminarDet);
-  }
-
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
       <h3>Editar Cliente</h3>
@@ -536,7 +531,8 @@ function Clientes() {
                 tooltip: "Añadir contacto cliente",
                 isFreeAction: true,
                 onClick: (e, data) => {
-                  abrirCerrarModalInsertarDet();
+                  setContactoClienteEditar();
+                  abrirCerrarModalInsertarContacto();
                   console.log(dataDet)
                 },
               },
@@ -545,7 +541,7 @@ function Clientes() {
                 tooltip: "Eliminar contacto cliente",
                 onClick: (event, rowData) => {
                   setContactoClienteEliminar(FilasSeleccionadasDet);
-                  abrirCerrarModalEliminarDet();
+                  abrirCerrarModalEliminarContacto();
                 },
               },
               {
@@ -564,7 +560,7 @@ function Clientes() {
                       //   setclienteUsuarioEditar(false);
                       //   setestadoCboCliente(true);
                       // }
-                      abrirCerrarModalEditarDet();
+                      abrirCerrarModalEditarContacto();
                     },
                   },              
             ]}
@@ -601,20 +597,70 @@ function Clientes() {
       </div>
     </div>
   )
+  
 
   //modal eliminar cliente
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   }
 
-  const abrirCerrarModalInsertarDet=()=>{            
-    setModalInsertarDet(!modalInsertarDet);
+  //modal insertar contacto cliente
+  const abrirCerrarModalInsertarContacto=()=>{            
+    setModalInsertarContacto(!modalInsertarContacto);
   }
 
-  const abrirCerrarModalEditarDet=()=>{
+  //modal editar contacto cliente
+  const abrirCerrarModalEditarContacto=()=>{
     setModalInsertar(!modalInsertar);
-    setModalEditarDet(!modalEditarDet);
+    setModalEditarContacto(!modalEditarContacto);
   }
+
+  //modal eliminar contacto cliente
+  const abrirCerrarModalEliminarContacto=()=>{
+    setModalEditar(!modalEditar);
+    setModalEliminarContacto(!modalEliminarContacto);
+  }
+
+  const bodyInsertarContacto = (
+    <div className={styles.modal}>
+      <h3>Agregar Nuevo Contacto</h3>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} />
+        </div>
+        <div align="right">
+        <Button color="primary" onClick={() => peticionPut()}>Insertar</Button>
+        <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
+      </div>
+      </div>
+    </div>
+  )  
+
+  const bodyEliminarContacto = (
+    <div className={styles.modal}>
+      <p>Estás seguro que deseas eliminar el contacto ? </p>
+      <div align="right">
+        <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
+        <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
+
+      </div>
+    </div>
+  )
 
   const bodyEliminar = (
     <div className={styles.modal}>
@@ -751,6 +797,18 @@ function Clientes() {
         onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
 
+      </Modal>
+
+      <Modal
+        open={modalInsertarContacto}
+        onClose={abrirCerrarModalInsertarContacto}>
+        {bodyInsertarContacto}
+      </Modal>
+
+      <Modal
+        open={modalEliminarContacto}
+        onClose={abrirCerrarModalEliminarContacto}>
+        {bodyEliminarContacto}
       </Modal>
     </div>
   );
