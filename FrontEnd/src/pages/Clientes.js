@@ -19,6 +19,28 @@ const token = {
 };
 
 //estilos modal
+
+const useStylesEditarDet = makeStyles((theme) => ({
+  modal: {
+    position: 'absolute',
+    width: 1500,
+    height: 780,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  iconos:{
+    cursor: 'pointer'
+  }, 
+  inputMaterial:{
+    width: '100%'
+  }
+}));
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
@@ -97,6 +119,12 @@ function Clientes() {
 
   const [modalEliminar, setModalEliminar] = useState(false);
 
+
+  // Modal detalle 
+  const [modalInsertarDet, setModalInsertarDet]= useState(false);
+
+  const [modalEliminarDet, setModalEliminarDet]= useState(false);
+
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
     codigo: '',
@@ -135,10 +163,11 @@ function Clientes() {
   const [clienteClienteEditar, setclienteClienteEditar] = useState([]);
 
   const [ClienteEliminar, setClienteEliminar] = useState([]);
+  const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
-
+ 
   const [perfiles, setPerfiles] = useState([]);
 
   const [poblacion, setPoblacion] = useState([]);
@@ -150,6 +179,8 @@ function Clientes() {
   const [clientesTable, setClientesTable] = useState({});
 
   const styles = useStyles();
+
+  const stylesEditarDet = useStylesEditarDet();
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
 
@@ -253,6 +284,7 @@ function Clientes() {
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
+    console.log("Metodo POST Ejecutandose")
     console.log("El cliente seleccionado es:" + clienteSeleccionado)
     await axios.post("/cliente", clienteSeleccionado, token)
       .then(response => {
@@ -404,41 +436,46 @@ function Clientes() {
     setModalEditar(!modalEditar);
   }
 
+  const abrirCerrarModalEliminarDet=()=>{
+    setModalEditar(!modalEditar);
+    setModalEliminarDet(!modalEliminarDet);
+  }
+
   const bodyEditar = (
-    <div className={styles.modal}>
+    <div className={stylesEditarDet.modal}>
       <h3>Editar Cliente</h3>
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono1} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono2} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           {/* Desplegable de Comarca */}
           <Autocomplete
             disableClearable={true}
@@ -454,7 +491,7 @@ function Clientes() {
             }))}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           {/* Desplegable de Provincia */}
           <Autocomplete
             disableClearable={true}
@@ -470,7 +507,7 @@ function Clientes() {
             }))}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
           {/* Desplegable de Población */}
           <Autocomplete
             disableClearable={true}
@@ -487,7 +524,8 @@ function Clientes() {
           />
         </div>
       </div>
-      {/*<MaterialTable columns={columnasDet} data={dataDet}
+      <br/>
+      <MaterialTable columns={columnasDet} data={dataDet}
             localization={localization}
             actions={[
               {
@@ -495,7 +533,7 @@ function Clientes() {
                 tooltip: "Añadir contacto cliente",
                 isFreeAction: true,
                 onClick: (e, data) => {
-                  abrirCerrarModalInsertar();
+                  abrirCerrarModalInsertarDet();
                   console.log(dataDet)
                 },
               },
@@ -503,52 +541,15 @@ function Clientes() {
                 icon: () => <RemoveCircle style={{ fill: "red" }} />,
                 tooltip: "Eliminar contacto cliente",
                 onClick: (event, rowData) => {
-                  setContactoEliminar(FilasSeleccionadasDet);
+                  setContactoClienteEliminar(FilasSeleccionadasDet);
                   abrirCerrarModalEliminarDet();
                 },
               },
-              {
-                icon: () => <Edit />,
-                tooltip: "Editar detalle mantenimiento",
-                onClick: (e, data) => {
-                  setClienteMantenimientoDetEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-                  if (mantenimientoDetSeleccionado.realizado === true) {
-                    console.log("prueba fecha not null")
-                    setFechaRealizacion(new Date(mantenimientoDetSeleccionado.fechaRealizacion).getFullYear() + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getDate())).slice(-2))
-                  } else {
-                    setFechaRealizacion("")
-                  }
-                  console.log(mantenimientoDetSeleccionado)
-                  abrirCerrarModalEditarDet();
-                },
-              },
+                            
             ]}
 
-            // onRowClick={((evt, mantenimientoDetSeleccionado) => setMantenimientoDetSeleccionado(mantenimientoDetSeleccionado.tableData.id))}
-            onSelectionChange={(filas) => {
-              setFilasSeleccionadasDet(filas);
-              if (filas.length > 0)
-                setMantenimientoDetSeleccionado(filas[0]);
-            }
-            }
-            options={{
-              sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-              columnsButton: true,
-              rowStyle: rowData => ({
-                backgroundColor: (mantenimientoDetSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                whiteSpace: "nowrap"
-              }),
-              exportMenu: [{
-                label: 'Export PDF',
-                exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de detalles mantenimientos')
-              }, {
-                label: 'Export CSV',
-                exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de detalles mantenimientos')
-              }]
-            }}
-
-            title="Listado detalles de mantenimientos"
-          /> */}
+            title="Lista contactos del cliente"
+          />
       <br /><br />
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
@@ -560,6 +561,11 @@ function Clientes() {
   //modal eliminar cliente
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
+  }
+
+  const abrirCerrarModalInsertarDet=()=>{
+            
+    setModalInsertarDet(!modalInsertarDet);
   }
 
   const bodyEliminar = (

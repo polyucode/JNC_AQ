@@ -313,7 +313,7 @@ function Plantas() {
     }
     
     const GetElementosPlanta = async () => {
-        axios.get("/confplantascliente", token).then(response => {
+        axios.get("/elementosplanta", token).then(response => {
           setElementosPlanta(response.data.data)
         })
     }
