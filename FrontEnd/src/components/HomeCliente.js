@@ -197,8 +197,9 @@ function HomeCliente() {
                             headerToolbar={{
                             left: 'today prev,next',
                             center: 'title',
-                            right: 'resourceTimelineMonth'
+                            right: 'resourceTimelineYear,resourceTimelineMonth',
                             }}
+                            locale= 'esLocale'
                             timeZone= 'UTC'
                             initialView= 'resourceTimelineMonth'
                             scrollTime= '08:00'
