@@ -123,6 +123,8 @@ function Clientes() {
   // Modal detalle 
   const [modalInsertarDet, setModalInsertarDet]= useState(false);
 
+  const [modalEditarDet, setModalEditarDet]= useState(false);
+
   const [modalEliminarDet, setModalEliminarDet]= useState(false);
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
@@ -163,7 +165,8 @@ function Clientes() {
   const [clienteClienteEditar, setclienteClienteEditar] = useState([]);
 
   const [ClienteEliminar, setClienteEliminar] = useState([]);
-  const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
+  const [contactoClienteEditar, setContactoClienteEditar] = useState([]);
+  const [contactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
@@ -545,8 +548,49 @@ function Clientes() {
                   abrirCerrarModalEliminarDet();
                 },
               },
-                            
+              {
+                    icon: () => <Edit />,
+                    tooltip: "Editar detalle mantenimiento",
+                    onClick: (e, data) => {
+                      setContactoClienteEditar(FilasSeleccionadasDet[0]);                      
+                      // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+                      // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
+                      // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
+                      // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
+                      // if(FilasSeleccionadas[0].idPerfil === 2){
+                      //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+                      //   setestadoCboCliente(false);
+                      // }else{
+                      //   setclienteUsuarioEditar(false);
+                      //   setestadoCboCliente(true);
+                      // }
+                      abrirCerrarModalEditarDet();
+                    },
+                  },              
             ]}
+
+            onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}
+            onSelectionChange={(filas) => {
+              setFilasSeleccionadasDet(filas);
+              if(filas.length > 0)
+              setClienteSeleccionado(filas[0]);
+            }
+            }
+            options={{
+              sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
+              columnsButton: true,
+              rowStyle: rowData => ({
+                backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                whiteSpace: "nowrap"
+              }),
+              exportMenu: [{
+                label: 'Export PDF',
+                exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
+              }, {
+                label: 'Export CSV',
+                exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
+              }]
+            }}
 
             title="Lista contactos del cliente"
           />
@@ -563,9 +607,13 @@ function Clientes() {
     setModalEliminar(!modalEliminar);
   }
 
-  const abrirCerrarModalInsertarDet=()=>{
-            
+  const abrirCerrarModalInsertarDet=()=>{            
     setModalInsertarDet(!modalInsertarDet);
+  }
+
+  const abrirCerrarModalEditarDet=()=>{
+    setModalInsertar(!modalInsertar);
+    setModalEditarDet(!modalEditarDet);
   }
 
   const bodyEliminar = (

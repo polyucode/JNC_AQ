@@ -448,7 +448,7 @@ function Mantenimientos() {
       console.log("id=" + MantenimientoDetEliminar[0].id)
       var i = 0;
       while(i < MantenimientoDetEliminar.length){
-        await axios.delete("/servmantenimientodet"+ MantenimientoDetEliminar[i].id, token)
+        await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[i].id, token)
         .then(response=>{
           peticionGetDet();
           abrirCerrarModalEliminarDet();
@@ -1075,7 +1075,7 @@ function Mantenimientos() {
                 },
               ]}
 
-            // onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
+            onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
             onSelectionChange={(filas)=>{
               setFilasSeleccionadas(filas);
               if(filas.length > 0)
