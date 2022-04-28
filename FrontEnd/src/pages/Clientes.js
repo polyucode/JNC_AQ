@@ -155,6 +155,24 @@ function Clientes() {
 
   });
 
+  const [contactoSeleccionado, setContactoSeleccionado] = useState({
+
+    id: 0,
+    nombre: '',
+    telefono1: '',
+    extension: '',
+    telefono2: '',
+    email: '', 
+    idCliente: 0,
+    addDate: null,
+    addIdUser: null,
+    modDate: null,
+    modIdUser: null,
+    delDate: null,
+    delIdUser: null,
+    deleted: null,
+  });
+
   const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
   const [FilasSeleccionadasDet, setFilasSeleccionadasDet] = useState([]);
 
@@ -166,7 +184,7 @@ function Clientes() {
 
   const [ClienteEliminar, setClienteEliminar] = useState([]);
   const [contactoClienteEditar, setContactoClienteEditar] = useState([]);
-  const [contactoClienteEliminar, setContactoClienteEliminar] = useState([]);
+  const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
@@ -222,9 +240,9 @@ function Clientes() {
 
     //visibles
     { title: 'Nombre', field: 'nombre', filterPlaceholder: "Filtrar por nombre" },
-    { title: 'Telefono1', field: 'telefono1', type: 'numeric', filterPlaceholder: "Filtrar por telefono1" },
-    { title: 'Extension', field: 'extension', type: 'numeric', filterPlaceholder: "Filtrar por extension" },
-    { title: 'Telefono2', field: 'telefono2', type: 'numeric', filterPlaceholder: "Filtrar por telefono2" },
+    { title: 'Telefono1', field: 'telefono1', filterPlaceholder: "Filtrar por telefono1" },
+    { title: 'Extension', field: 'extension',  filterPlaceholder: "Filtrar por extension" },
+    { title: 'Telefono2', field: 'telefono2', filterPlaceholder: "Filtrar por telefono2" },
     { title: 'Cargo', field: 'cargo', filterPlaceholder: "Filtrar por cargo" },
     { title: 'Email', field: 'email', type: 'email', filterPlaceholder: "Filtrar por email" },
 
@@ -277,8 +295,16 @@ function Clientes() {
     })
   }
 
+  const peticionGetContacto = async () => {
+    console.log("MEtodo Get Ejecutandose")
+    axios.get("/clientescontactos", token).then(response => {
+      setDataDet(response.data.data)
+    })
+  }
+
   useEffect(() => {
     peticionGet();
+    peticionGetContacto();
     GetPerfiles();
     GetPoblacion();
     GetProvincia();
@@ -331,6 +357,52 @@ function Clientes() {
     }
   }
 
+  const peticionPostContacto = async () => {
+    console.log("Peticion Post ejecutandose");
+    contactoSeleccionado.id = null;
+    await axios.post("/clientescontactos", contactoSeleccionado, token)
+               .then(response => {
+                 abrirCerrarModalInsertarContacto();
+                 peticionGetContacto();
+               })
+               .catch(error => {
+                 console.log(error);
+               })
+    console.log(contactoSeleccionado)
+  }
+
+  const peticionDeleteContacto = async () => {
+    console.log("Peticion Delete ejecutandose")
+    var i = 0;
+    while (i < ContactoClienteEliminar.length) {
+      await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
+        .then(response => {
+          peticionGetContacto();
+          abrirCerrarModalEliminarContacto();
+        }).catch(error => {
+          console.log(error);
+        })
+      i++;
+    }
+  }
+
+  const peticionPutContacto = async () => {
+    console.log(contactoSeleccionado)
+    await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
+      .then(response => {
+        var contactoModificado = data;
+        contactoModificado.map(contacto => {
+          if (contacto.id === contactoSeleccionado.id) {
+            contacto = contactoSeleccionado
+          }
+        });
+        peticionGetContacto();
+        abrirCerrarModalEditarContacto();
+      }).catch(error => {
+        console.log(error);
+      })
+  }
+
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -339,6 +411,14 @@ function Clientes() {
   const handleChange = e => {
     const { name, value } = e.target;
     setClienteSeleccionado(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
+
+  const handleChangeContacto=e=>{
+    const {name, value}=e.target;
+    setContactoSeleccionado(prevState=>({
       ...prevState,
       [name]: value
     }));
@@ -531,7 +611,7 @@ function Clientes() {
                 tooltip: "Añadir contacto cliente",
                 isFreeAction: true,
                 onClick: (e, data) => {
-                  setContactoClienteEditar();
+                  //setContactoClienteEditar();
                   abrirCerrarModalInsertarContacto();
                   console.log(dataDet)
                 },
@@ -546,9 +626,9 @@ function Clientes() {
               },
               {
                     icon: () => <Edit />,
-                    tooltip: "Editar detalle mantenimiento",
+                    tooltip: "Editar detalle contacto",
                     onClick: (e, data) => {
-                      setContactoClienteEditar(FilasSeleccionadasDet[0]);                      
+                      setContactoClienteEditar(contactoSeleccionado[0]);                      
                       // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
                       // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
                       // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
@@ -565,18 +645,18 @@ function Clientes() {
                   },              
             ]}
 
-            onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}
+            onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
             onSelectionChange={(filas) => {
               setFilasSeleccionadasDet(filas);
               if(filas.length > 0)
-              setClienteSeleccionado(filas[0]);
+              setContactoSeleccionado(filas[0]);
             }
             }
             options={{
               sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
               columnsButton: true,
               rowStyle: rowData => ({
-                backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                 whiteSpace: "nowrap"
               }),
               exportMenu: [{
@@ -611,7 +691,6 @@ function Clientes() {
 
   //modal editar contacto cliente
   const abrirCerrarModalEditarContacto=()=>{
-    setModalInsertar(!modalInsertar);
     setModalEditarContacto(!modalEditarContacto);
   }
 
@@ -626,36 +705,66 @@ function Clientes() {
       <h3>Agregar Nuevo Contacto</h3>
       <div className="row g-3">
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
         </div>
         <div align="right">
-        <Button color="primary" onClick={() => peticionPut()}>Insertar</Button>
+        <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
         <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
       </div>
       </div>
     </div>
-  )  
+  )
+  
+  const bodyEditarContacto = (
+    <div className={styles.modal}>
+      <h3>Editar Contacto </h3>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Telefono1" name="telefono1" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono1} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.extension} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Telefono2" name="telefono2" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono2} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
+        </div>
+        <div className="col-md-6">
+          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
+        </div>
+        <div align="right">
+          <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>
+          <Button onClick={() => abrirCerrarModalEditarContacto()}>Cancelar</Button>
+        </div>
+      </div>
+    </div>
+  )
 
   const bodyEliminarContacto = (
     <div className={styles.modal}>
       <p>Estás seguro que deseas eliminar el contacto ? </p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
+        <Button color="secondary" onClick={() => peticionDeleteContacto()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
 
       </div>
@@ -809,6 +918,12 @@ function Clientes() {
         open={modalEliminarContacto}
         onClose={abrirCerrarModalEliminarContacto}>
         {bodyEliminarContacto}
+      </Modal>
+
+      <Modal
+        open={modalEditarContacto}
+        onClose={abrirCerrarModalEditarContacto}>
+        {bodyEditarContacto}
       </Modal>
     </div>
   );
