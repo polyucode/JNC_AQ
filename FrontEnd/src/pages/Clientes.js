@@ -197,8 +197,6 @@ function Clientes() {
 
   const [comarca, setComarca] = useState([]);
 
-  const [clientesTable, setClientesTable] = useState({});
-
   const styles = useStyles();
 
   const stylesEditarDet = useStylesEditarDet();
