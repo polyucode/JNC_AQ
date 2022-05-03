@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
-import {Modal, TextField, Button} from '@material-ui/core';
+import { Modal, TextField, Button } from '@material-ui/core';
+import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
+import { Switch } from '@mui/material';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import './Plantas.css';
 
@@ -59,6 +65,48 @@ function Plantas() {
         delIdUser: null,
         deleted: null,
     });*/
+
+    const AntSwitch = styled(Switch)(({ theme }) => ({
+        width: 35,
+        height: 16,
+        padding: 0,
+        display: 'flex',
+        '&:active': {
+            '& .MuiSwitch-thumb': {
+                width: 15,
+            },
+            '& .MuiSwitch-switchBase.Mui-checked': {
+                transform: 'translateX(9px)',
+            },
+        },
+        '& .MuiSwitch-switchBase': {
+            padding: 2,
+            '&.Mui-checked': {
+                transform: 'translateX(12px)',
+                color: '#fff',
+                '& + .MuiSwitch-track': {
+                    opacity: 1,
+                    backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
+                },
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+            width: 12,
+            height: 12,
+            borderRadius: 6,
+            transition: theme.transitions.create(['width'], {
+                duration: 200,
+            }),
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 16 / 2,
+            opacity: 1,
+            backgroundColor:
+                theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+            boxSizing: 'border-box',
+        },
+    }));
 
     const [confPlantasCliente, setConfPlantasCliente] = useState([]);
 
@@ -126,7 +174,7 @@ function Plantas() {
 
         // Preparamos una lista de elementos del nivel para actualizar
         let elementosNivel = listaElementos.filter((element) => element.nivel == id);
-
+        console.log(elementosNivel)
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
         elementosNivel.forEach((elemento) => {
@@ -135,19 +183,30 @@ function Plantas() {
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
 
         // Actualizamos la lista de análisis por elemento
-
-        if(listaElementos===[]){
-            ReactDOM.render("No hay datos en esta planta")
-        }else{
-            ReactDOM.render(
+        ReactDOM.render(
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-        }
-
+        console.log(listaElementos)
     }
 
     function eliminarElemento(id) {
+        console.log(id)
+        console.log(listaElementos)
+
+        listaElementos.pop()
+
+        let listaElementosNivel = [];
+        listaElementos.forEach((elemento) => {
+            listaElementosNivel.push(React.createElement('option', null, elemento.nombre + ' ' + elemento.numero));
+        });
+
+        ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
+
+        ReactDOM.render(
+            listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
+            document.getElementById('analisis-elemento-list')
+        );
 
     }
 
@@ -176,15 +235,15 @@ function Plantas() {
 
             // Creamos todos los componentes de la interfaz del nivel
             let elementos = [
-                React.createElement('h6', null , 'Nivel ' + (i + 1)),
+                React.createElement('h6', null, 'Nivel ' + (i + 1)),
                 React.createElement('hr', null, null),
                 React.createElement('select', { id: 'lista-nivel-' + (i + 1) }, listadoElementos),
                 React.createElement('button', { onClick: () => crearElemento(i + 1) }, '+'),
-                React.createElement('button', { onClick: () => eliminarElemento(i - 1) }, '-'),
+                React.createElement('button', { onClick: () => eliminarElemento(i + 1) }, '-'),
                 React.createElement('select', { class: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
                 React.createElement('input', { type: 'checkbox' }, null),
                 React.createElement('label', null, 'Ver inspector'),
-                React.createElement('button', { onClick: () => eliminarNivel()}, 'Eliminar')
+                React.createElement('button', { onClick: () => eliminarNivel() }, 'Eliminar')
             ]
 
             // Creamos el contenedor de planta principal para añadir todos los demás componentes
@@ -195,6 +254,7 @@ function Plantas() {
 
         // Finalmente renderizamos
         ReactDOM.render(listadoNiveles, document.getElementById('elementos-planta'));
+        console.log(listadoNiveles)
     }
 
     function eliminarNivel() {
@@ -204,9 +264,9 @@ function Plantas() {
 
     const GetClientes = async () => {
         axios.get("/cliente", token).then(response => {
-          const cliente = Object.entries(response.data.data).map(([key,value]) => (key, value))
-          setClientes();
-        },[])
+            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setClientes(cliente);
+        }, [])
     }
 
     function selAnalisisElemento() {
@@ -269,7 +329,7 @@ function Plantas() {
             setElementosPlanta(response.data.data)
         })
     }
-        
+
     useEffect(() => {
         GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
@@ -303,7 +363,7 @@ function Plantas() {
                                 renderInput={(params) => <TextField {...params} label="" name="codigo" />}
                                 onChange={(event, value) => setClientes(prevState => ({
                                     ...prevState,
-                                    idCodigo: value.id
+                                    idCliente: value.id
 
                                 }))}
                             />
@@ -313,12 +373,12 @@ function Plantas() {
                                 disableClearable={true}
                                 id="nombre"
                                 options={clientes}
-                                getOptionLabel={option => option.razonSocial}
+                                getOptionLabel={option => option.nombreComercial}
                                 sx={{ width: 250 }}
-                                renderInput={(params) => <TextField {...params} label="" name="nombre" />}
+                                renderInput={(params) => <TextField {...params} name="nombre" />}
                                 onChange={(event, value) => setClientes(prevState => ({
                                     ...prevState,
-                                    idNombre: value.id
+                                    idCliente: value.id
                                 }))}
                             />
                         </div>
@@ -352,11 +412,25 @@ function Plantas() {
                                 }
                             </select>
                             <div className='analisis-elemento-checks'>
-                                <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
-                                <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
-                                <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
-                                <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
-                                <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                                <h4> Necesita parametrización? </h4>
+                                <FormGroup>
+                                    <Stack direction="row" spacing={1} alignItems="center">
+                                        <Typography>No</Typography>
+                                        <AntSwitch defaultChecked />
+                                        <Typography>Si</Typography>
+                                    </Stack>
+                                </FormGroup>
+                                <br />
+                                {AntSwitch &&
+                                    <React.Fragment>
+                                        <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
+                                        <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
+                                        <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
+                                        <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
+                                        <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                                    </React.Fragment>
+                                }
+
                             </div>
                         </div>
                         <button onClick={() => console.log(listaElementos)}>Guardar</button>
