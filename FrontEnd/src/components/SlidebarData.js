@@ -41,5 +41,11 @@ export const SlidebarData = [
         icon: <MdOutlineConstruction/>,
         cName: 'nav-text'
     },
+    {
+        title: 'Mantenimiento (Tecnico)',
+        path: '/mantenimientoTecnico',
+        icon: <AiIcons.AiOutlineDatabase />,
+        cName: 'nav-text'
+    },
 
 ]

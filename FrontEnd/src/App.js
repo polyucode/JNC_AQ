@@ -12,6 +12,7 @@ import Clientes from './pages/Clientes';
 import Perfil from './pages/Perfil';
 import Plantas from './pages/Plantas';
 import PlantasTabla from './pages/PlantasTabla';
+import MantenimientoTecnico from './pages/MantenimientoTecnico';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path='/perfil' element={<Perfil />} />
           <Route path='/plantas' element={<Plantas />} />
           <Route path='/plantasTabla' element={<PlantasTabla />} />
+          <Route path="/mantenimientoTecnico" element={<MantenimientoTecnico />} />
         </Routes>
         </div>
 
