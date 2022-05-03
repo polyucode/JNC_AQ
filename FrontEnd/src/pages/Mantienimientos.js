@@ -328,7 +328,7 @@ function Mantenimientos() {
      }, [clientes,tecnicos,elementosplanta])
 
     const peticionPost = async () => {
-      console.log(mantenimientoCabSeleccionado, )
+      console.log(mantenimientoCabSeleccionado)
       mantenimientoCabSeleccionado.id = null;
       await axios.post("/servmantenimientocab", mantenimientoCabSeleccionado,token)
         .then(response => {
@@ -400,7 +400,7 @@ function Mantenimientos() {
     }
 
     const peticionPut=async()=>{
-      console.log(mantenimientoCabSeleccionado)
+      console.log("Metodo PUT" + mantenimientoCabSeleccionado)
       await axios.put("/servmantenimientocab?id=" + mantenimientoCabSeleccionado.id, mantenimientoCabSeleccionado, token)
       .then(response=>{
         var mantenimientoCabModificado = data;
@@ -468,11 +468,11 @@ function Mantenimientos() {
 
     const peticionPostDet = async () => {
       mantenimientoDetSeleccionado.id = 0;
-      console.log("DEt insertar : " + mantenimientoDetSeleccionado)
+      console.log("Det insertar : " + mantenimientoDetSeleccionado)
       await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado, token)
         .then(response => {
-          //abrirCerrarModalInsertarDet();
-          //peticionGetDet();
+          abrirCerrarModalInsertarDet();
+          peticionGetDet();
         }).catch(error => {
           console.log(error);
         })
@@ -1075,7 +1075,7 @@ function Mantenimientos() {
                 },
               ]}
 
-            // onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
+            onRowClick={((evt, mantenimientoCabSeleccionado) => setMantenimientoCabSeleccionado(mantenimientoCabSeleccionado.tableData.id))}  
             onSelectionChange={(filas)=>{
               setFilasSeleccionadas(filas);
               if(filas.length > 0)

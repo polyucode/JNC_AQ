@@ -50,3 +50,16 @@ C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.In
 C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CopyComplete
 C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
 C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.deps.json
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfo.cs
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CopyComplete
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
