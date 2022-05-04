@@ -201,7 +201,7 @@ function HomeCliente() {
                             }}
                             locale= 'esLocale'
                             timeZone= 'UTC'
-                            initialView= 'resourceTimelineMonth'
+                            initialView= 'resourceTimelineYear'
                             scrollTime= '08:00'
                             aspectRatio= {1.5}
                             weekends={false}
