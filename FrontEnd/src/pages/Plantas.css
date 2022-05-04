@@ -40,15 +40,15 @@ div.main-container > h5 {
     margin: 12px 0;
 }
 
-.row1 {
+.row1-1 {
     width: 100%;
     display: flex;
 }
 
-.col1 {
+.col1-1 {
     width: 40%;
 }
-.col2 {
+.col2-1 {
     width: 60%;
 }
 

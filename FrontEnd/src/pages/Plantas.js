@@ -68,7 +68,7 @@ function Plantas() {
     });*/
 
     const AntSwitch = styled(Switch)(({ theme }) => ({
-        width: 35,
+        width: 28,
         height: 16,
         padding: 0,
         display: 'flex',
@@ -144,16 +144,16 @@ function Plantas() {
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
 
-        <div style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
-            <div style={{display:'flex', justifyContent:'space-between'}}>
-                {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
-                <div role="button" style={{padding: '5px'}}>
-                {content}
+        <div style={{ background: data.background, border: '1px solid ' + data.selector, borderRadius: '5px', color: data.color }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {inputs.map((port) => React.cloneElement(port, { style: { width: '10px', height: '34px', background: data.selector } }))}
+                <div role="button" style={{ padding: '5px' }}>
+                    {content}
                 </div>
-                {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
+                {outputs.map((port) => React.cloneElement(port, { style: { width: '10px', height: '34px', background: data.selector } }))}
             </div>
         </div>
-    
+
     );
 
     const [schema, { onChange, addNode, removeNode }] = useSchema(createSchema({}));
@@ -374,68 +374,68 @@ function Plantas() {
         var output = [];
 
         // Según el nivel del elemento, asignamos estilos y entradas o salidas
-        if(elemento.nivel == 1){
+        if (elemento.nivel == 1) {
             var color = '#d1c4e9'; // 100
             var selector = '#b39ddb'; // 200
             var textoColor = '#4527a0'; // 800
             output = [
-                { id: 'port-'+contadorPort, alignment: 'right' }
+                { id: 'port-' + contadorPort, alignment: 'right' }
             ]
             contadorPort += 1;
         }
-        if(elemento.nivel == 2){
+        if (elemento.nivel == 2) {
             var color = '#c5cae9';
             var selector = '#9fa8da';
             var textoColor = '#283593';
             input = [
-                { id: 'port-'+contadorPort, alignment: 'left' }
+                { id: 'port-' + contadorPort, alignment: 'left' }
             ]
             output = [
-                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+                { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
             contadorPort += 2;
         }
-        if(elemento.nivel == 3){
+        if (elemento.nivel == 3) {
             var color = '#bbdefb';
             var selector = '#90caf9';
             var textoColor = '#1565c0';
             input = [
-                { id: 'port-'+contadorPort, alignment: 'left' }
+                { id: 'port-' + contadorPort, alignment: 'left' }
             ]
             output = [
-                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+                { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
             contadorPort += 2;
         }
-        if(elemento.nivel == 4){
+        if (elemento.nivel == 4) {
             var color = '#b3e5fc';
             var selector = '#81d4fa';
             var textoColor = '#0277bd';
             input = [
-                { id: 'port-'+contadorPort, alignment: 'left' }
+                { id: 'port-' + contadorPort, alignment: 'left' }
             ]
             output = [
-                { id: 'port-'+(contadorPort+1), alignment: 'right' }
+                { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
             contadorPort += 2;
         }
-        if(elemento.nivel == 5){
+        if (elemento.nivel == 5) {
             var color = '#b2ebf2';
             var selector = '#80deea';
             var textoColor = '#00838f';
             input = [
-                { id: 'port-'+contadorPort, alignment: 'left' }
+                { id: 'port-' + contadorPort, alignment: 'left' }
             ]
             contadorPort += 1;
         }
 
         // Creamos el nodo con los datos preparados
         var nodo = {
-            id: 'node-'+contadorNodo,
-            content: elemento.nombre+' '+elemento.numero,
-            coordinates: [150*contadorNodo, 60],
+            id: 'node-' + contadorNodo,
+            content: elemento.nombre + ' ' + elemento.numero,
+            coordinates: [150 * contadorNodo, 60],
             render: CustomRender,
-            data: {background: color, selector: selector, color: textoColor},
+            data: { background: color, selector: selector, color: textoColor },
             inputs: input,
             outputs: output
         };
@@ -454,11 +454,11 @@ function Plantas() {
     }
 
 
-    return(
-    
+    return (
+
         <div className="main-container">
-            <div className='row1'>
-                <div className='col1'>
+            <div className='row1-1'>
+                <div className='col1-1'>
                     <div className='cliente-niveles-container'>
 
                         {/* BUSQUEDA DE CLIENTES */}
@@ -549,7 +549,7 @@ function Plantas() {
                     </div>
 
                 </div>
-                <div className='col2'>
+                <div className='col2-1'>
 
                     {/* ELEMENTOS DE PLANTA */}
                     <div className='elementos-planta'>
@@ -575,7 +575,7 @@ function Plantas() {
         </div>
 
     )
-    
+
 }
 
 export default Plantas;
