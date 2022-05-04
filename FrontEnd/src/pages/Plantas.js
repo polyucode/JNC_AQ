@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
-import { Modal, TextField, Button } from '@material-ui/core';
+import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
+import { TextField } from '@material-ui/core';
 import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Switch } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -228,8 +228,8 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
 
-        console.log('Crear elemento');
-        crearNodo(elementoNuevo);
+        // console.log('Crear elemento');
+        // crearNodo(elementoNuevo);
 
     }
 
