@@ -24,8 +24,7 @@ function HomeCliente() {
 
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
-
-        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
+        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+ data.selector, borderRadius: '5px', color: data.color}}>
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
                 <div role="button" style={{padding: '5px'}}>
@@ -33,8 +32,7 @@ function HomeCliente() {
                 </div>
                 {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
             </div>
-        </div>
-    
+        </div>    
     );
 
     const initialSchema = createSchema({
@@ -45,7 +43,8 @@ function HomeCliente() {
                 coordinates: [20, 120],
                 render: CustomRender,
                 data: {background: '#d1c4e9', selector: '#b39ddb', color: '#4527a0'},
-                outputs: [ { id: 'port-1' } ]
+                outputs: [ { id: 'port-1' } ],
+                onClick: mostrarElementos()
             },
             {
                 id: 'node-2',
@@ -117,6 +116,10 @@ function HomeCliente() {
 
       function prueba(id) {
         console.log('Prueba: '+id);
+      }
+
+      function mostrarElementos () {
+          console.log("Me ha seleccionado")
       }
 
     return (

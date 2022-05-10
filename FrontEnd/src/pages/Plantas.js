@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Switch } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
-import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 
 import 'beautiful-react-diagrams/styles.css';
@@ -67,47 +67,7 @@ function Plantas() {
         deleted: null,
     });*/
 
-    const AntSwitch = styled(Switch)(({ theme }) => ({
-        width: 28,
-        height: 16,
-        padding: 0,
-        display: 'flex',
-        '&:active': {
-            '& .MuiSwitch-thumb': {
-                width: 15,
-            },
-            '& .MuiSwitch-switchBase.Mui-checked': {
-                transform: 'translateX(9px)',
-            },
-        },
-        '& .MuiSwitch-switchBase': {
-            padding: 2,
-            '&.Mui-checked': {
-                transform: 'translateX(12px)',
-                color: '#fff',
-                '& + .MuiSwitch-track': {
-                    opacity: 1,
-                    backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
-                },
-            },
-        },
-        '& .MuiSwitch-thumb': {
-            boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
-            width: 12,
-            height: 12,
-            borderRadius: 6,
-            transition: theme.transitions.create(['width'], {
-                duration: 200,
-            }),
-        },
-        '& .MuiSwitch-track': {
-            borderRadius: 16 / 2,
-            opacity: 1,
-            backgroundColor:
-                theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
-            boxSizing: 'border-box',
-        },
-    }));
+    const [checked, setChecked] = React.useState(true);
 
     const [confPlantasCliente, setConfPlantasCliente] = useState([]);
 
@@ -123,14 +83,15 @@ function Plantas() {
 
     const planta = {
         idCliente: '',
-        nombreCliente: '',
+        nombrePlanta: '',
         elementos: []
     }
     let listaElementos = planta.elementos;
 
     // Variables del analisis del elemento
-    const elementoAnalisisId = 0;
-    const elementoAnalisisProps = {
+    let elementoAnalisisId = 0;
+    let elementoAnalisisProps = {
+        requiereParametrizacion: false,
         fisicoQuimico: false,
         aerobios: false,
         legionela: false,
@@ -167,6 +128,7 @@ function Plantas() {
             posicion: 0,
             nivel: 0,
             propiedades: {
+                requiereParametrizacion: false,
                 fisicoQuimico: false,
                 aerobios: false,
                 legionela: false,
@@ -194,7 +156,7 @@ function Plantas() {
 
         // Preparamos una lista de elementos del nivel para actualizar
         let elementosNivel = listaElementos.filter((element) => element.nivel == id);
-        console.log(elementosNivel)
+
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
         elementosNivel.forEach((elemento) => {
@@ -207,12 +169,9 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-        console.log(listaElementos)
     }
 
     function eliminarElemento(id) {
-        console.log(id)
-        console.log(listaElementos)
 
         listaElementos.pop()
 
@@ -277,7 +236,6 @@ function Plantas() {
 
         // Finalmente renderizamos
         ReactDOM.render(listadoNiveles, document.getElementById('elementos-planta'));
-        console.log(listadoNiveles)
     }
 
     function eliminarNivel() {
@@ -297,14 +255,15 @@ function Plantas() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-
+        
         // Seteamos los checkboxs según los datos almacenados en el elemento
+        document.getElementById('ckb-parametrizacion').checked = elementoAnalisisProps.requiereParametrizacion;
         document.getElementById('ckb-fisico-quimico').checked = elementoAnalisisProps.fisicoQuimico;
         document.getElementById('ckb-aerobios').checked = elementoAnalisisProps.aerobios;
         document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
         document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
         document.getElementById('ckb-aguas-residuales').checked = elementoAnalisisProps.aguasResiduales;
-
+        
     }
 
     function changeAnalisisElemento(e) {
@@ -332,7 +291,6 @@ function Plantas() {
         // UNa vez actualizado, guardamos las propiedades en el elemento
         // por si el usuario cambia de elemento
         listaElementos[elementoAnalisisId].propiedades = elementoAnalisisProps;
-
     }
 
     const GetConfPlantasCliente = async () => {
@@ -453,6 +411,16 @@ function Plantas() {
 
     }
 
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+        console.log(event.target.checked)
+        elementoAnalisisProps.requiereParametrizacion = event.target.checked
+    };
+
+    const guardarPlanta = () => {
+        console.log(listaElementos)
+    }
+
 
     return (
 
@@ -480,19 +448,11 @@ function Plantas() {
                                 }))}
                             />
                             <br /><br />
-                            <p>Nombre</p>
-                            <Autocomplete
-                                disableClearable={true}
-                                id="nombre"
-                                options={clientes}
-                                getOptionLabel={option => option.nombreComercial}
-                                sx={{ width: 250 }}
-                                renderInput={(params) => <TextField {...params} name="nombre" />}
-                                onChange={(event, value) => setClientes(prevState => ({
-                                    ...prevState,
-                                    idCliente: value.id
-                                }))}
-                            />
+                            <div className='nombre-planta'>
+                                <h5>Nombre de la Planta</h5>
+                                <hr />
+                                <input type="text" id="nombre-planta" size="1" />
+                            </div>
                         </div>
 
                         {/* NUMERO DE NIVELES */}
@@ -525,27 +485,37 @@ function Plantas() {
                             </select>
                             <div className='analisis-elemento-checks'>
                                 <h4> Necesita parametrización? </h4>
-                                <FormGroup>
-                                    <Stack direction="row" spacing={1} alignItems="center">
-                                        <Typography>No</Typography>
-                                        <AntSwitch defaultChecked />
-                                        <Typography>Si</Typography>
-                                    </Stack>
-                                </FormGroup>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={checked}
+                                            onChange={handleChange}
+                                            inputProps={{ 'aria-label': 'controlled' }}
+                                        />
+                                    }
+                                    label="Si"
+                                    id="ckb-parametrizacion"
+                                />
                                 <br />
-                                {AntSwitch &&
+                                {checked ?
                                     <React.Fragment>
                                         <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
                                         <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
                                         <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
                                         <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
                                         <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                                    </React.Fragment> :
+                                    <React.Fragment>
+                                        <label><input type="checkbox" id="ckb-fisico-quimico" disabled/> Físico-Químico</label><br />
+                                        <label><input type="checkbox" id="ckb-aerobios" disabled/> Aerobios</label><br />
+                                        <label><input type="checkbox" id="ckb-legionela" disabled/> Legionela</label><br />
+                                        <label><input type="checkbox" id="ckb-agua-potable" disabled/> Agua Potable</label><br />
+                                        <label><input type="checkbox" id="ckb-aguas-residuales" disabled/> Aguas Residuales</label>
                                     </React.Fragment>
                                 }
-
                             </div>
                         </div>
-                        <button>Guardar</button>
+                        <button onClick={guardarPlanta}>Guardar</button>
                     </div>
 
                 </div>
@@ -556,6 +526,7 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
+                        <button> Guardar Datos </button>
                     </div>
 
                 </div>
