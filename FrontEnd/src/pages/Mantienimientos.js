@@ -309,7 +309,7 @@ function Mantenimientos() {
             const lookupClientes = {};
             clientes.map(fila=>lookupClientes[fila.id]=fila.nombreComercial);
             setClientesTable(lookupClientes);
-            //console.log("clientesTable " + JSON.stringify(clientesTable) )
+            console.log("clientesTable " + JSON.stringify(clientesTable) )
             const lookupElementosPlanta = {};
             elementosplanta.map(fila=>lookupElementosPlanta[fila.id]=fila.nombre);
             setElementosPlantaTable(lookupElementosPlanta);
