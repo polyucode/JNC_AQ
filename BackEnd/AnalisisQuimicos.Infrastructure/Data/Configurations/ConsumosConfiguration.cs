@@ -7,13 +7,13 @@ using System.Text;
 
 namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 {
-    public class ConsumoArticulosConfiguration : IEntityTypeConfiguration<ConsumoArticulos>
+    public class ConsumosConfiguration : IEntityTypeConfiguration<Consumos>
     {
-        public void Configure(EntityTypeBuilder<ConsumoArticulos> builder)
+        public void Configure(EntityTypeBuilder<Consumos> builder)
         {
             builder.HasKey(e => e.Id);
 
-            builder.ToTable("GES_ConsumoArticulos");
+            builder.ToTable("GES_Consumos");
 
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 

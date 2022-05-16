@@ -20,8 +20,8 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository { get; }
         IRepository<ClientesContactos> ClientesContactosRepository { get; }
         IRepository<OfertasClientes> OfertasClientesRepository { get; }
-        IRepository<Articulos> ArticulosRepository { get; }
-        IRepository<ConsumoArticulos> ConsumoArticulosRepository { get; }
+        IRepository<Productos> ProductosRepository { get; }
+        IRepository<Consumos> ConsumosRepository { get; }
 
         void SaveChanges();
 

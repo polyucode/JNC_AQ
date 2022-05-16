@@ -24,6 +24,22 @@ input[type=checkbox] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
 }
+input[type=number] {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+    margin-top: 5px;
+}
+input[type=number]::-webkit-outer-spin-button,
+
+input[type=number]::-webkit-inner-spin-button {
+
+    -webkit-appearance: none;
+}
+input[type=number] {
+
+    -moz-appearance:textfield;
+
+}
 select {
     border: 1px solid #DBDBDB;
 }
@@ -51,6 +67,10 @@ div.main-container > h5 {
 }
 .col2-1 {
     width: 60%;
+}
+
+.row2-2{
+    flex-direction: column;
 }
 
 .cliente-niveles-container {

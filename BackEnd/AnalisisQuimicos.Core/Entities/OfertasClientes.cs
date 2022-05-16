@@ -6,15 +6,15 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class OfertasClientes : BaseEntity
     {
-        public string CodigoCliente { get; set; }
-        public int? Numero { get; set; }
-        public string Articulo { get; set; }
+        public int? NumeroOferta { get; set; }
+        public int? CodigoCliente { get; set; }
+        public string Descripcion { get; set; }
         public int? Cantidad { get; set; }
         public decimal Precio { get; set; }
         public int? StockMin { get; set; }
         public int? StockMax { get; set; }
         public int? Consumidos { get; set; }
-        public int? FaltanEntregar { get; set; }
+        public int? FaltaEntregar { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinalizacion { get; set; }
         public int? IdCliente { get; set; }

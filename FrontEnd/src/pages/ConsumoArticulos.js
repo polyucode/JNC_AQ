@@ -209,7 +209,7 @@ function ConsumoArticulos() {
         const { name, value } = e.target;
         setConsumoSeleccionado(prevState => ({
             ...prevState,
-            [name]: value
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
 
@@ -227,7 +227,7 @@ function ConsumoArticulos() {
                     <TextField className={styles.inputMaterial} label="NumeroArticulo" name="numeroArticulo" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Cantidad" name="cantidad" onChange={handleChange} />
+                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} />
                 </div>
             </div>
             <div align="right">
@@ -251,7 +251,7 @@ function ConsumoArticulos() {
                     <TextField className={styles.inputMaterial} label="NumeroArticulo" name="numeroArticulo" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.numeroArticulo} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Cantidad" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
+                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
                 </div>
             </div>
             <div align="right">

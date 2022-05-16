@@ -4,12 +4,11 @@ using System.Text;
 
 namespace AnalisisQuimicos.Core.DTOs
 {
-    public class ConfPlantasClienteDTO
+    public class ProductosDTO
     {
-        public int? CodigoCliente { get; set; }
-        public int? IdPlanta { get; set; }
-        public string NombrePlanta { get; set; }
-        public int? NumNiveles { get; set; }
+        public int? Id { get; set; }
+        public int? CodigoProducto { get; set; }
+        public string Descripcion { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

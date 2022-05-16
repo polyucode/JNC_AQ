@@ -7,30 +7,30 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class ConsumoArticulosService : IRepository<ConsumoArticulos>
+    public class ConsumosService : IRepository<Consumos>
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
-        public ConsumoArticulosService(IUnidadDeTrabajo unidadDeTrabajo)
+        public ConsumosService(IUnidadDeTrabajo unidadDeTrabajo)
         {
             _unidadDeTrabajo = unidadDeTrabajo;
         }
 
         public async Task Delete(int id)
         {
-            await _unidadDeTrabajo.ConsumoArticulosRepository.Delete(id);
+            await _unidadDeTrabajo.ConsumosRepository.Delete(id);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
 
-        public async Task<ConsumoArticulos> GetById(int id)
+        public async Task<Consumos> GetById(int id)
         {
-            return await _unidadDeTrabajo.ConsumoArticulosRepository.GetById(id);
+            return await _unidadDeTrabajo.ConsumosRepository.GetById(id);
         }
 
-        public IEnumerable<ConsumoArticulos> GetAll() //ClientesContactosQueryFilter filtro
+        public IEnumerable<Consumos> GetAll() //ClientesContactosQueryFilter filtro
         {
-            var ConsumoArticulos = _unidadDeTrabajo.ConsumoArticulosRepository.GetAll();
+            var Consumos = _unidadDeTrabajo.ConsumosRepository.GetAll();
             //if (filtro.Nombre != null)
             //{
             //    ClientesContactos = ClientesContactos.Where(x => x.Nombre.ToLower().Contains(filtro.Nombre.ToLower()));
@@ -52,23 +52,23 @@ namespace AnalisisQuimicos.Core.Services
             //{
             //    ClientesContactos = ClientesContactos.Where(x => x.IdPerfil == filtro.IdPerfil);
             //}
-            return ConsumoArticulos;
+            return Consumos;
         }
 
-        public async Task Add(ConsumoArticulos articulo)
+        public async Task Add(Consumos consumo)
         {
             //if (cliente.Nombre == "NoPermitir")
             //{
             //    throw new BussinesException("No se puede añadir un cliente con ese nombre");
             //}
-            await _unidadDeTrabajo.ConsumoArticulosRepository.Add(articulo);
+            await _unidadDeTrabajo.ConsumosRepository.Add(consumo);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
 
-        public async void Update(ConsumoArticulos articulo)
+        public async void Update(Consumos consumo)
         {
-            _unidadDeTrabajo.ConsumoArticulosRepository.Update(articulo);
+            _unidadDeTrabajo.ConsumosRepository.Update(consumo);
             await _unidadDeTrabajo.SaveChangesAsync();
         }
     }

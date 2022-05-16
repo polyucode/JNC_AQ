@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\ArticulosDTO.cs" />
+    <Compile Remove="Entities\Articulos.cs" />
+    <Compile Remove="Services\ArticulosService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Enumeraciones\" />
   </ItemGroup>
 

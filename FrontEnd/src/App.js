@@ -14,7 +14,7 @@ import Plantas from './pages/Plantas';
 import PlantasTabla from './pages/PlantasTabla';
 import MantenimientoTecnico from './pages/MantenimientoTecnico';
 import OfertasClientes from './pages/OfertasClientes';
-import Articulos from './pages/Articulos';
+import Productos from './pages/Productos';
 import ConsumoArticulos from './pages/ConsumoArticulos'
 
 export default function App() {
@@ -34,7 +34,7 @@ export default function App() {
           <Route path='/plantasTabla' element={<PlantasTabla />} />
           <Route path="/mantenimientoTecnico" element={<MantenimientoTecnico />} />
           <Route path="/ofertas" element={<OfertasClientes />} />
-          <Route path='/articulos' element={<Articulos />} />
+          <Route path='/productos' element={<Productos />} />
           <Route path='/consumoarticulos' element={<ConsumoArticulos />} />
         </Routes>
         </div>

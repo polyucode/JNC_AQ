@@ -7,7 +7,6 @@ namespace AnalisisQuimicos.Core.DTOs
     public class ClienteDto
     {
         public int? Id { get; set; }
-
         public string Codigo { get; set; }
         public string Cif { get; set; }
         public string RazonSocial { get; set; }

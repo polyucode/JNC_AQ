@@ -8,7 +8,6 @@ namespace AnalisisQuimicos.Core.Entities
     {
         public string CodigoArticulo { get; set; }
         public string Nombre { get; set; }
-        public string Stock { get; set; }
-
+        public int? Stock { get; set; }
     }
 }

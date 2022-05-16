@@ -54,8 +54,8 @@ export const SlidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Articulos',
-        path: '/articulos',
+        title: 'Productos',
+        path: '/productos',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
