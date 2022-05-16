@@ -345,7 +345,6 @@ function Plantas() {
             confPlantasCliente.id = null;
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
-                    setConfPlantasCliente(confPlantasCliente)
                 })
                 .catch(error => {
                     console.log(error)
