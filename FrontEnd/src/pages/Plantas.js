@@ -27,7 +27,7 @@ function Plantas() {
         CodigoCliente: 0,
         NombrePlanta: "",
         NumNiveles: 0,
-        Id_Planta: 0,
+        IdPlanta: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -152,6 +152,7 @@ function Plantas() {
         // Añadimos el nivel
         elementoNuevo.nivel = id;
 
+        
         // Añadimos el elemento nuevo a la lista principal
         listaElementos.push(elementoNuevo);
 
@@ -171,7 +172,8 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
         
-        //crearNodo(elementoNuevo);
+        
+        crearNodo(elementoNuevo)
     }
 
     function eliminarElemento(id) {
@@ -189,7 +191,8 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-
+            
+        removeNode();
         // console.log('Crear elemento');
 
     }
@@ -312,6 +315,7 @@ function Plantas() {
     }
 
     useEffect(() => {
+        GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
@@ -327,12 +331,15 @@ function Plantas() {
         if (confPlantasCliente.NumNiveles > 5) {
             alert('El número máximo de niveles que se pueden crear son 5');
             return;
-        } else {
-            console.log(confPlantasCliente)
-            confPlantasCliente.id = null;
+        }else if(confPlantasCliente.CodigoCliente == null || confPlantasCliente.NombrePlanta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null){
+            alert('Faltan introducir datos correctos para crear los niveles');
+            return;
+        } 
+        else {
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
-                    console.log(response)
+                    return response,
+                    crearNiveles();
                 })
                 .catch(error => {
                     console.log(error)
@@ -417,15 +424,16 @@ function Plantas() {
 
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
+        contadorNodo += 1;
+
         schema.nodes.forEach((node) => {
-            console.log(node.id);
+            console.log(node);
         })
 
+        console.log(schema);
         addNode(nodo);
 
-        console.log(schema);
-
-        contadorNodo += 1;
+        
 
     }
 
@@ -464,7 +472,7 @@ function Plantas() {
                                 renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="CodigoCliente" />}
                                 onChange={(event, value) => setConfPlantasCliente(prevState => ({
                                     ...prevState,
-                                    CodigoCliente: value.codigo
+                                    CodigoCliente: parseInt(value.codigo)
                                 }))}
                             />
                             <br /><br />
@@ -484,8 +492,7 @@ function Plantas() {
                                 <input id="numero-niveles" size="2" type="number" min="0" name="NumNiveles" onChange={handleChange} />
                             </center>
                             <div className='botones'>
-                                <button onClick={peticionPost}>Guardar datos de la planta </button>
-                                <button onClick={crearNiveles}>Aceptar</button>
+                                <button onClick={peticionPost}>Crear Niveles </button>
                             </div>
                         </div>
 

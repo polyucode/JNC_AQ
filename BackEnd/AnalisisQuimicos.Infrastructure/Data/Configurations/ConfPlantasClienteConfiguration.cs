@@ -21,8 +21,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
-            builder.Property(e => e.IdPlanta).HasColumnName("Id_Planta");
-
             builder.Property(e => e.NombrePlanta).HasColumnName("NombrePlanta");
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
