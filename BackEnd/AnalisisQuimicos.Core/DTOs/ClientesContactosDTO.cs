@@ -7,13 +7,12 @@ namespace AnalisisQuimicos.Core.DTOs
     public class ClientesContactosDTO
     {
         public int? Id { get; set; }
+        public int? CodigoCliente { get; set; }
         public string Nombre { get; set; }
-        public string Telefono1 { get; set; }
-        public string Extension { get; set; }
-        public string Telefono2 { get; set; }
-        public string Cargo { get; set; }
+        public string Telefono { get; set; }
         public string Email { get; set; }
-        public int? IdCliente { get; set; }
+        public string Cargo { get; set; }
+        public string Comentarios { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

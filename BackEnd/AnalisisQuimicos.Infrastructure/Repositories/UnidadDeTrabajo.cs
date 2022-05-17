@@ -25,6 +25,9 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<ConfPlantasCliente> _confPlantasClienteRepository;
         private readonly IRepository<ParametrosElementoPlantaCliente> _parametrosElementoPlantaClienteRepository;
         private readonly IRepository<ClientesContactos> _clientesContactosRepository;
+        private readonly IRepository<OfertasClientes> _ofertasClientesRepository;
+        private readonly IRepository<Productos> _productosRepository;
+        private readonly IRepository<Consumos> _consumosRepository;
 
         public UnidadDeTrabajo(YucodeDevelopmentJNC_AQContext context)
         {
@@ -55,6 +58,11 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository => _parametrosElementoPlantaClienteRepository ?? new BaseRepository<ParametrosElementoPlantaCliente>(_context);
 
         public IRepository<ClientesContactos> ClientesContactosRepository => _clientesContactosRepository ?? new BaseRepository<ClientesContactos>(_context);
+
+        public IRepository<OfertasClientes> OfertasClientesRepository => _ofertasClientesRepository ?? new BaseRepository<OfertasClientes>(_context);
+
+        public IRepository<Productos> ProductosRepository => _productosRepository ?? new BaseRepository<Productos>(_context);
+        public IRepository<Consumos> ConsumosRepository => _consumosRepository ?? new BaseRepository<Consumos>(_context);
 
         public void Dispose()
         {

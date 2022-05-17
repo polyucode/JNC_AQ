@@ -24,8 +24,7 @@ function HomeCliente() {
 
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
-
-        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+data.selector, borderRadius: '5px', color: data.color}}>
+        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+ data.selector, borderRadius: '5px', color: data.color}}>
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
                 <div role="button" style={{padding: '5px'}}>
@@ -33,19 +32,19 @@ function HomeCliente() {
                 </div>
                 {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
             </div>
-        </div>
-    
+        </div>    
     );
 
     const initialSchema = createSchema({
         nodes: [
-            {
+            /*{
                 id: 'node-1',
                 content: 'Osmosis 1',
                 coordinates: [20, 120],
                 render: CustomRender,
                 data: {background: '#d1c4e9', selector: '#b39ddb', color: '#4527a0'},
-                outputs: [ { id: 'port-1' } ]
+                outputs: [ { id: 'port-1' } ],
+                onClick: mostrarElementos()
             },
             {
                 id: 'node-2',
@@ -91,6 +90,7 @@ function HomeCliente() {
         { input: 'port-3', output: 'port-8' },
         { input: 'port-5', output: 'port-8' },
         { input: 'port-7', output: 'port-8' },
+        */
         ]
     })
 
@@ -117,6 +117,10 @@ function HomeCliente() {
 
       function prueba(id) {
         console.log('Prueba: '+id);
+      }
+
+      function mostrarElementos () {
+          console.log("Me ha seleccionado")
       }
 
     return (
@@ -201,7 +205,7 @@ function HomeCliente() {
                             }}
                             locale= 'esLocale'
                             timeZone= 'UTC'
-                            initialView= 'resourceTimelineMonth'
+                            initialView= 'resourceTimelineYear'
                             scrollTime= '08:00'
                             aspectRatio= {1.5}
                             weekends={false}

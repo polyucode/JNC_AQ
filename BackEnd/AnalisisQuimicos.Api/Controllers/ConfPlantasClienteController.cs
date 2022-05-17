@@ -31,8 +31,8 @@ namespace AnalisisQuimicos.Api.Controllers
         public IActionResult GetAll()
         {
             var confPlantasCliente = _confPlantasClienteService.GetAll();
-            var confPlantasClienteDto = _mapper.Map<IEnumerable<ConfPlantasCliente>>(confPlantasCliente);
-            var response = new ApiResponses<IEnumerable<ConfPlantasCliente>>(confPlantasClienteDto);
+            var confPlantasClienteDto = _mapper.Map<IEnumerable<ConfPlantasClienteDTO>>(confPlantasCliente);
+            var response = new ApiResponses<IEnumerable<ConfPlantasClienteDTO>>(confPlantasClienteDto);
             return Ok(response);
         }
 
@@ -41,25 +41,25 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var cliente = await _confPlantasClienteService.GetById(id);
-            var clienteDto = _mapper.Map<ConfPlantasCliente>(cliente);
-            var response = new ApiResponses<ConfPlantasCliente>(clienteDto);
+            var clienteDto = _mapper.Map<ConfPlantasClienteDTO>(cliente);
+            var response = new ApiResponses<ConfPlantasClienteDTO>(clienteDto);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(ConfPlantasCliente confPlantasClienteeDto)
+        public async Task<IActionResult> Insert(ConfPlantasClienteDTO confPlantasClienteDto)
         {
-            var confPlantasCliente = _mapper.Map<ConfPlantasCliente>(confPlantasClienteeDto);
+            var confPlantasCliente = _mapper.Map<ConfPlantasCliente>(confPlantasClienteDto);
 
             await _confPlantasClienteService.Add(confPlantasCliente);
 
-            confPlantasClienteeDto = _mapper.Map<ConfPlantasCliente>(confPlantasCliente);
-            var response = new ApiResponses<ConfPlantasCliente>(confPlantasClienteeDto);
+            confPlantasClienteDto = _mapper.Map<ConfPlantasClienteDTO>(confPlantasCliente);
+            var response = new ApiResponses<ConfPlantasClienteDTO>(confPlantasClienteDto);
             return Ok(response);
         }
 
         [HttpPut]
-        public void Update(int id, ConfPlantasCliente confPlantasClienteeDto)
+        public void Update(int id, ConfPlantasClienteDTO confPlantasClienteeDto)
         {
             var confPlantasCliente = _mapper.Map<ConfPlantasCliente>(confPlantasClienteeDto);
 
