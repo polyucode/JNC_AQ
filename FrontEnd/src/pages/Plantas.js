@@ -27,6 +27,7 @@ function Plantas() {
         CodigoCliente: 0,
         NombrePlanta: "",
         NumNiveles: 0,
+        Id_Planta: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -169,22 +170,8 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-
-        let elementoNuevo2 = {
-            nombre: elementoNuevo.nombre,
-            numero: elementoNuevo.numero,
-            posicion: elementoNuevo.posicion,
-            nivel: elementoNuevo.nivel,
-            propiedades: {
-                fisicoQuimico: elementoNuevo.propiedades.fisicoQuimico,
-                aerobios: elementoNuevo.propiedades.aerobios,
-                legionela: elementoNuevo.propiedades.legionela,
-                aguaPotable: elementoNuevo.propiedades.aguaPotable,
-                aguasResiduales: elementoNuevo.propiedades.aguasResiduales
-            }
-        }
-
-        crearNodo(elementoNuevo2);
+        
+        //crearNodo(elementoNuevo);
     }
 
     function eliminarElemento(id) {
@@ -345,6 +332,7 @@ function Plantas() {
             confPlantasCliente.id = null;
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
+                    console.log(response)
                 })
                 .catch(error => {
                     console.log(error)
@@ -473,7 +461,7 @@ function Plantas() {
                                 options={clientes}
                                 getOptionLabel={option => option.codigo}
                                 sx={{ width: 250 }}
-                                renderInput={(params) => <TextField {...params} type="number" label="" name="CodigoCliente" />}
+                                renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="CodigoCliente" />}
                                 onChange={(event, value) => setConfPlantasCliente(prevState => ({
                                     ...prevState,
                                     CodigoCliente: value.codigo
