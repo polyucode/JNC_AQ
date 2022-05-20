@@ -35,23 +35,17 @@ div.main-container {
 }
 
 .col1 {
-    width: 25%;
-    box-sizing: border-box;
-    padding: 0 8px;
-}
-
-.col2 {
-    width: 25%;
+    width: 60%;
     box-sizing: border-box;
     padding: 0 8px;
 }
 .col3 {
-    width: 25%;
+    width: 30%;
     box-sizing: border-box;
     padding: 0 8px;
 }
 .col4 {
-    width: 25%;
+    width: 20%;
     box-sizing: border-box;
     padding: 0 8px;
 }

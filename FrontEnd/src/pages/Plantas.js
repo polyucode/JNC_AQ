@@ -152,7 +152,7 @@ function Plantas() {
         // Añadimos el nivel
         elementoNuevo.nivel = id;
 
-        
+
         // Añadimos el elemento nuevo a la lista principal
         listaElementos.push(elementoNuevo);
 
@@ -166,14 +166,15 @@ function Plantas() {
         });
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
 
+
         // Actualizamos la lista de análisis por elemento
         ReactDOM.render(
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-        
-        
-        crearNodo(elementoNuevo)
+
+
+        //crearNodo(elementoNuevo)
     }
 
     function eliminarElemento(id) {
@@ -191,7 +192,7 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-            
+
         removeNode();
         // console.log('Crear elemento');
 
@@ -266,7 +267,6 @@ function Plantas() {
         document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
         document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
         document.getElementById('ckb-aguas-residuales').checked = elementoAnalisisProps.aguasResiduales;
-
     }
 
     function changeAnalisisElemento(e) {
@@ -331,15 +331,15 @@ function Plantas() {
         if (confPlantasCliente.NumNiveles > 5) {
             alert('El número máximo de niveles que se pueden crear son 5');
             return;
-        }else if(confPlantasCliente.CodigoCliente == null || confPlantasCliente.NombrePlanta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null){
+        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.NombrePlanta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
             alert('Faltan introducir datos correctos para crear los niveles');
             return;
-        } 
+        }
         else {
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
                     return response,
-                    crearNiveles();
+                        crearNiveles();
                 })
                 .catch(error => {
                     console.log(error)
@@ -433,7 +433,7 @@ function Plantas() {
         console.log(schema);
         addNode(nodo);
 
-        
+
 
     }
 

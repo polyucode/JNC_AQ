@@ -60,8 +60,8 @@ function MantenimientoTecnico() {
         setContextMenu(null);
     };
 
-    function createData(parametro, unidad) {
-        return { parametro, unidad };
+    function createData(parametro, unidad, valor) {
+        return { parametro, unidad, valor};
     }
       
     const rows = [
@@ -110,6 +110,8 @@ function MantenimientoTecnico() {
                                         <TableCell><b>Parámetro</b></TableCell>
                                         <TableCell><b>Un.</b></TableCell>
                                         <TableCell><b>Valor</b></TableCell>
+                                        <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
+                                        <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -120,199 +122,19 @@ function MantenimientoTecnico() {
                                             </TableCell>
                                             <TableCell>{row.unidad}</TableCell>
                                             <TableCell>
-                                                <TextField id="filled-basic" hiddenLabel variant="filled" size="small" />
+                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
+                                            </TableCell>
+                                            <TableCell>
+                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
+                                            </TableCell>
+                                            <TableCell>
+                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
                                             </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                    </div>
-                    <h5>Análisis</h5>
-                    <hr />
-                    <div className='tipo-analisis-grupo'>
-                        <div className='tipo-analisis-aerobio'>
-                            <p><b>Aerobio</b></p>
-                            <FormControlLabel control={<Switch />} label="Es apto" />
-                        </div>
-                        <div className='tipo-analisis-legionela'>
-                            <p><b>Legionela</b></p>
-                            <FormControlLabel control={<Switch />} label="Es apto" />
-                        </div>
-                    </div>
-                </div>
-                <div className='col2'>
-                    <h5>Comentarios de Planta</h5>
-                    <hr />
-                    <div className='box-com-contenedor'>
-                    <List>
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Este es otro mensaje. Así es como se verían."
-                                secondary="Otro Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Hola, esto es un mensaje de prueba."
-                                secondary="Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Hola, este es un mensaje completamente random de prueba."
-                                secondary="Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Este es otro mensaje. Así es como se verían."
-                                secondary="Otro Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Mira, estás leyendo un mensaje de prueba."
-                                secondary="Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="He pasado por aquí haciendo pruebas."
-                                secondary="Aitor Subarroca"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Hola, este es un mensaje completamente random de prueba."
-                                secondary="Usuario Random"
-                            />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                            <ListItemAvatar>
-                                <Avatar>
-                                <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="Madre mia, cuantos mensajes de prueba."
-                                secondary="El Gran Usuario Random"
-                            />
-                            </ListItem>
-                        </List>
-                    </div>
-                    <div className='box-com-crear'>
-                        <TextField
-                            id="filled-multiline-static"
-                            label="Introduce un comentario"
-                            multiline
-                            rows={4}
-                            variant="filled"
-                            style={{marginBottom: '18px'}}
-                        />
-                        <Button
-                            variant="contained"
-                            startIcon={<AddOutlinedIcon/>}
-                            style={{width: '50%'}}
-                        >Añadir</Button>
                     </div>
                 </div>
                 <div className='col3'>

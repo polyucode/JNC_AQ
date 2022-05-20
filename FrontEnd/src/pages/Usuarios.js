@@ -66,8 +66,6 @@ function Usuarios() {
       delDate: null,
       delIdUser: null,
       deleted: null,
-
-
     });
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);

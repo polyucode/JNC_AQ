@@ -33,10 +33,10 @@ const useStylesEditarDet = makeStyles((theme) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)'
   },
-  iconos:{
+  iconos: {
     cursor: 'pointer'
-  }, 
-  inputMaterial:{
+  },
+  inputMaterial: {
     width: '100%'
   }
 }));
@@ -61,54 +61,54 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-  // tablas español
-  const localization = {
-    body: {
-      emptyDataSourceMessage: 'No hay datos por mostrar',
-      addTooltip: 'Añadir',
-      deleteTooltip: 'Eliminar',
-      editTooltip: 'Editar',
-      filterRow: {
-        filterTooltip: 'Filtrar',
-      },
-      editRow: {
-        deleteText: '¿Segura(o) que quiere eliminar?',
-        cancelTooltip: 'Cancelar',
-        saveTooltip: 'Guardar',
-      },
+// tablas español
+const localization = {
+  body: {
+    emptyDataSourceMessage: 'No hay datos por mostrar',
+    addTooltip: 'Añadir',
+    deleteTooltip: 'Eliminar',
+    editTooltip: 'Editar',
+    filterRow: {
+      filterTooltip: 'Filtrar',
     },
-    grouping: {
-      placeholder: "Arrastre un encabezado aquí para agrupar",
-      groupedBy: 'Agrupado por',
+    editRow: {
+      deleteText: '¿Segura(o) que quiere eliminar?',
+      cancelTooltip: 'Cancelar',
+      saveTooltip: 'Guardar',
     },
-    header: {
-      actions: 'Acciones',
-    },
-    pagination: {
-      firstAriaLabel: 'Primera página',
-      firstTooltip: 'Primera página',
-      labelDisplayedRows: '{from}-{to} de {count}',
-      labelRowsPerPage: 'Filas por página:',
-      labelRowsSelect: 'filas',
-      lastAriaLabel: 'Ultima página',
-      lastTooltip: 'Ultima página',
-      nextAriaLabel: 'Pagina siguiente',
-      nextTooltip: 'Pagina siguiente',
-      previousAriaLabel: 'Pagina anterior',
-      previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-      addRemoveColumns: 'Agregar o eliminar columnas',
-      exportAriaLabel: 'Exportar',
-      exportName: 'Exportar a CSV',
-      exportTitle: 'Exportar',
-      nRowsSelected: '{0} filas seleccionadas',
-      searchPlaceholder: 'Buscar',
-      searchTooltip: 'Buscar',
-      showColumnsAriaLabel: 'Mostrar columnas',
-      showColumnsTitle: 'Mostrar columnas',
-    },
-  }
+  },
+  grouping: {
+    placeholder: "Arrastre un encabezado aquí para agrupar",
+    groupedBy: 'Agrupado por',
+  },
+  header: {
+    actions: 'Acciones',
+  },
+  pagination: {
+    firstAriaLabel: 'Primera página',
+    firstTooltip: 'Primera página',
+    labelDisplayedRows: '{from}-{to} de {count}',
+    labelRowsPerPage: 'Filas por página:',
+    labelRowsSelect: 'filas',
+    lastAriaLabel: 'Ultima página',
+    lastTooltip: 'Ultima página',
+    nextAriaLabel: 'Pagina siguiente',
+    nextTooltip: 'Pagina siguiente',
+    previousAriaLabel: 'Pagina anterior',
+    previousTooltip: 'Pagina anterior',
+  },
+  toolbar: {
+    addRemoveColumns: 'Agregar o eliminar columnas',
+    exportAriaLabel: 'Exportar',
+    exportName: 'Exportar a CSV',
+    exportTitle: 'Exportar',
+    nRowsSelected: '{0} filas seleccionadas',
+    searchPlaceholder: 'Buscar',
+    searchTooltip: 'Buscar',
+    showColumnsAriaLabel: 'Mostrar columnas',
+    showColumnsTitle: 'Mostrar columnas',
+  },
+}
 
 function Clientes() {
 
@@ -121,11 +121,11 @@ function Clientes() {
 
 
   // Modal detalle 
-  const [modalInsertarContacto, setModalInsertarContacto]= useState(false);
+  const [modalInsertarContacto, setModalInsertarContacto] = useState(false);
 
-  const [modalEditarContacto, setModalEditarContacto]= useState(false);
+  const [modalEditarContacto, setModalEditarContacto] = useState(false);
 
-  const [modalEliminarContacto, setModalEliminarContacto]= useState(false);
+  const [modalEliminarContacto, setModalEliminarContacto] = useState(false);
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
@@ -159,11 +159,11 @@ function Clientes() {
 
     id: 0,
     nombre: '',
-    telefono1: '',
-    extension: '',
-    telefono2: '',
-    email: '', 
-    idCliente: 0,
+    telefono: '',
+    email: '',
+    cargo: '',
+    comentarios: '',
+    idCliente: clienteSeleccionado.id,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -188,7 +188,7 @@ function Clientes() {
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
- 
+
   const [perfiles, setPerfiles] = useState([]);
 
   const [poblacion, setPoblacion] = useState([]);
@@ -238,15 +238,13 @@ function Clientes() {
 
     //visibles
     { title: 'Nombre', field: 'nombre', filterPlaceholder: "Filtrar por nombre" },
-    { title: 'Telefono1', field: 'telefono1', filterPlaceholder: "Filtrar por telefono1" },
-    { title: 'Extension', field: 'extension',  filterPlaceholder: "Filtrar por extension" },
-    { title: 'Telefono2', field: 'telefono2', filterPlaceholder: "Filtrar por telefono2" },
-    { title: 'Cargo', field: 'cargo', filterPlaceholder: "Filtrar por cargo" },
+    { title: 'Telefono', field: 'telefono', filterPlaceholder: "Filtrar por telefono" },
     { title: 'Email', field: 'email', type: 'email', filterPlaceholder: "Filtrar por email" },
-
+    { title: 'Cargo', field: 'cargo', filterPlaceholder: "Filtrar por cargo" },
+    { title: 'Comentarios', field: 'comentarios', filterPlaceholder: "Filtrar por comentarios" },
 
     //Ocultas
-    { title: 'Id Cliente', field: 'idCli', type: 'numeric', filterPlaceholder: "Filtrar por Id Cliente", hidden: true, },
+    { title: 'Id Cliente', field: 'idCliente', type: 'numeric', filterPlaceholder: "Filtrar por IdCliente", hidden: true, },
     { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder: "Filtrar por fecha creacion", hidden: true },
     { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder: "Filtrar por Usuario creación", hidden: true },
     { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder: "Filtrar por Fecha modificación", hidden: true },
@@ -358,14 +356,15 @@ function Clientes() {
   const peticionPostContacto = async () => {
     console.log("Peticion Post ejecutandose");
     contactoSeleccionado.id = null;
+    console.log(clienteSeleccionado)
     await axios.post("/clientescontactos", contactoSeleccionado, token)
-               .then(response => {
-                 abrirCerrarModalInsertarContacto();
-                 peticionGetContacto();
-               })
-               .catch(error => {
-                 console.log(error);
-               })
+      .then(response => {
+        abrirCerrarModalInsertarContacto();
+        peticionGetContacto();
+      })
+      .catch(error => {
+        console.log(error);
+      })
     console.log(contactoSeleccionado)
   }
 
@@ -414,9 +413,9 @@ function Clientes() {
     }));
   }
 
-  const handleChangeContacto=e=>{
-    const {name, value}=e.target;
-    setContactoSeleccionado(prevState=>({
+  const handleChangeContacto = e => {
+    const { name, value } = e.target;
+    setContactoSeleccionado(prevState => ({
       ...prevState,
       [name]: value
     }));
@@ -600,74 +599,74 @@ function Clientes() {
           />
         </div>
       </div>
-      <br/>
+      <br />
       <MaterialTable columns={columnasDet} data={dataDet}
-            localization={localization}
-            actions={[
-              {
-                icon: () => <AddCircle style={{ fill: "green" }} />,
-                tooltip: "Añadir contacto cliente",
-                isFreeAction: true,
-                onClick: (e, data) => {
-                  //setContactoClienteEditar();
-                  abrirCerrarModalInsertarContacto();
-                  console.log(dataDet)
-                },
-              },
-              {
-                icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                tooltip: "Eliminar contacto cliente",
-                onClick: (event, rowData) => {
-                  setContactoClienteEliminar(FilasSeleccionadasDet);
-                  abrirCerrarModalEliminarContacto();
-                },
-              },
-              {
-                    icon: () => <Edit />,
-                    tooltip: "Editar detalle contacto",
-                    onClick: (e, data) => {
-                      setContactoClienteEditar(contactoSeleccionado[0]);                      
-                      // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-                      // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
-                      // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-                      // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
-                      // if(FilasSeleccionadas[0].idPerfil === 2){
-                      //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
-                      //   setestadoCboCliente(false);
-                      // }else{
-                      //   setclienteUsuarioEditar(false);
-                      //   setestadoCboCliente(true);
-                      // }
-                      abrirCerrarModalEditarContacto();
-                    },
-                  },              
-            ]}
+        localization={localization}
+        actions={[
+          {
+            icon: () => <AddCircle style={{ fill: "green" }} />,
+            tooltip: "Añadir contacto cliente",
+            isFreeAction: true,
+            onClick: (e, data) => {
+              //setContactoClienteEditar();
+              abrirCerrarModalInsertarContacto();
+              console.log(dataDet)
+            },
+          },
+          {
+            icon: () => <RemoveCircle style={{ fill: "red" }} />,
+            tooltip: "Eliminar contacto cliente",
+            onClick: (event, rowData) => {
+              setContactoClienteEliminar(FilasSeleccionadasDet);
+              abrirCerrarModalEliminarContacto();
+            },
+          },
+          {
+            icon: () => <Edit />,
+            tooltip: "Editar detalle contacto",
+            onClick: (e, data) => {
+              setContactoClienteEditar(contactoSeleccionado[0]);
+              // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+              // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
+              // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
+              // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
+              // if(FilasSeleccionadas[0].idPerfil === 2){
+              //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+              //   setestadoCboCliente(false);
+              // }else{
+              //   setclienteUsuarioEditar(false);
+              //   setestadoCboCliente(true);
+              // }
+              abrirCerrarModalEditarContacto();
+            },
+          },
+        ]}
 
-            onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
-            onSelectionChange={(filas) => {
-              setFilasSeleccionadasDet(filas);
-              if(filas.length > 0)
-              setContactoSeleccionado(filas[0]);
-            }
-            }
-            options={{
-              sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-              columnsButton: true,
-              rowStyle: rowData => ({
-                backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                whiteSpace: "nowrap"
-              }),
-              exportMenu: [{
-                label: 'Export PDF',
-                exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
-              }, {
-                label: 'Export CSV',
-                exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
-              }]
-            }}
+        onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
+        onSelectionChange={(filas) => {
+          setFilasSeleccionadasDet(filas);
+          if (filas.length > 0)
+            setContactoSeleccionado(filas[0]);
+        }
+        }
+        options={{
+          sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
+          columnsButton: true,
+          rowStyle: rowData => ({
+            backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+            whiteSpace: "nowrap"
+          }),
+          exportMenu: [{
+            label: 'Export PDF',
+            exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
+          }, {
+            label: 'Export CSV',
+            exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
+          }]
+        }}
 
-            title="Lista contactos del cliente"
-          />
+        title="Lista contactos del cliente"
+      />
       <br /><br />
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
@@ -675,7 +674,7 @@ function Clientes() {
       </div>
     </div>
   )
-  
+
 
   //modal eliminar cliente
   const abrirCerrarModalEliminar = () => {
@@ -683,17 +682,17 @@ function Clientes() {
   }
 
   //modal insertar contacto cliente
-  const abrirCerrarModalInsertarContacto=()=>{            
+  const abrirCerrarModalInsertarContacto = () => {
     setModalInsertarContacto(!modalInsertarContacto);
   }
 
   //modal editar contacto cliente
-  const abrirCerrarModalEditarContacto=()=>{
+  const abrirCerrarModalEditarContacto = () => {
     setModalEditarContacto(!modalEditarContacto);
   }
 
   //modal eliminar contacto cliente
-  const abrirCerrarModalEliminarContacto=()=>{
+  const abrirCerrarModalEliminarContacto = () => {
     setModalEditar(!modalEditar);
     setModalEliminarContacto(!modalEliminarContacto);
   }
@@ -702,53 +701,47 @@ function Clientes() {
     <div className={styles.modal}>
       <h3>Agregar Nuevo Contacto</h3>
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-12">
           <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChangeContacto} />
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChangeContacto} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-12">
           <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
         </div>
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
+        </div>
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} />
+        </div>
         <div align="right">
-        <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
-        <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
-      </div>
+          <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
+          <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
+        </div>
       </div>
     </div>
   )
-  
+
   const bodyEditarContacto = (
     <div className={styles.modal}>
       <h3>Editar Contacto </h3>
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-12">
           <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Telefono1" name="telefono1" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono1} />
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Extension" name="extension" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.extension} />
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Telefono2" name="telefono2" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono2} />
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-12">
           <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
+        <div className="col-md-12">
+          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
         </div>
         <div align="right">
           <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>

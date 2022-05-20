@@ -41,8 +41,8 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var cliente = await _confNivelesPlantasClienteService.GetById(id);
-            var clienteDto = _mapper.Map<ConfNivelesPlantasCliente>(cliente);
-            var response = new ApiResponses<ConfNivelesPlantasCliente>(clienteDto);
+            var clienteDto = _mapper.Map<ConfNivelesPlantasClienteDTO>(cliente);
+            var response = new ApiResponses<ConfNivelesPlantasClienteDTO>(clienteDto);
             return Ok(response);
         }
 

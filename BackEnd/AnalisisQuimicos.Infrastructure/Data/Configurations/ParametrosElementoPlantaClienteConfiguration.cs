@@ -75,6 +75,17 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Conductivitat_VerInspector).HasColumnName("Conductivitat_VerInspector");
 
 
+            builder.Property(e => e.TDS_LimInf).HasColumnName("TDS_LimInf");
+
+            builder.Property(e => e.TDS_LimSup).HasColumnName("TDS_LimSup");
+
+            builder.Property(e => e.TDS_Unidades).HasColumnName("TDS_Unidades");
+
+            builder.Property(e => e.TDS_Activo).HasColumnName("TDS_Activo");
+
+            builder.Property(e => e.TDS_VerInspector).HasColumnName("TDS_VerInspector");
+
+
             builder.Property(e => e.AlcalinitatM_LimInf).HasColumnName("AlcalinitatM_LimInf");
 
             builder.Property(e => e.AlcalinitatM_LimSup).HasColumnName("AlcalinitatM_LimSup");
@@ -152,15 +163,26 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Clorurs_VerInspector).HasColumnName("Clorurs_VerInspector");
 
 
-            builder.Property(e => e.Sulfots_LimInf).HasColumnName("Sulfots_LimInf");
+            builder.Property(e => e.Sulfats_LimInf).HasColumnName("Sulfats_LimInf");
 
-            builder.Property(e => e.Sulfots_LimSup).HasColumnName("Sulfots_LimSup");
+            builder.Property(e => e.Sulfats_LimSup).HasColumnName("Sulfats_LimSup");
 
-            builder.Property(e => e.Sulfots_Unidades).HasColumnName("Sulfots_Unidades");
+            builder.Property(e => e.Sulfats_Unidades).HasColumnName("Sulfats_Unidades");
 
-            builder.Property(e => e.Sulfots_Activo).HasColumnName("Sulfots_Activo");
+            builder.Property(e => e.Sulfats_Activo).HasColumnName("Sulfats_Activo");
 
-            builder.Property(e => e.Sulfots_VerInspector).HasColumnName("Sulfots_VerInspector");
+            builder.Property(e => e.Sulfats_VerInspector).HasColumnName("Sulfats_VerInspector");
+
+
+            builder.Property(e => e.Silicats_LimInf).HasColumnName("Silicats_LimInf");
+
+            builder.Property(e => e.Silicats_LimSup).HasColumnName("Silicats_LimSup");
+
+            builder.Property(e => e.Silicats_Unidades).HasColumnName("Silicats_Unidades");
+
+            builder.Property(e => e.Silicats_Activo).HasColumnName("Silicats_Activo");
+
+            builder.Property(e => e.Silicats_VerInspector).HasColumnName("Silicats_VerInspector");
 
 
             builder.Property(e => e.ClorLliure_LimInf).HasColumnName("ClorLliure_LimInf");
@@ -205,6 +227,39 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Sulfits_Activo).HasColumnName("Sulfits_Activo");
 
             builder.Property(e => e.Sulfits_VerInspector).HasColumnName("Sulfits_VerInspector");
+
+
+            builder.Property(e => e.Ortofosfats_LimInf).HasColumnName("Ortofosfats_LimInf");
+
+            builder.Property(e => e.Ortofosfats_LimSup).HasColumnName("Ortofosfats_LimSup");
+
+            builder.Property(e => e.Ortofosfats_Unidades).HasColumnName("Ortofosfats_Unidades");
+
+            builder.Property(e => e.Ortofosfats_Activo).HasColumnName("Ortofosfats_Activo");
+
+            builder.Property(e => e.Ortofosfats_VerInspector).HasColumnName("Ortofosfats_VerInspector");
+
+
+            builder.Property(e => e.Mo_LimInf).HasColumnName("Mo_LimInf");
+
+            builder.Property(e => e.Mo_LimSup).HasColumnName("Mo_LimSup");
+
+            builder.Property(e => e.Mo_Unidades).HasColumnName("Mo_Unidades");
+
+            builder.Property(e => e.Mo_Activo).HasColumnName("Mo_Activo");
+
+            builder.Property(e => e.Mo_VerInspector).HasColumnName("Mo_VerInspector");
+
+
+            builder.Property(e => e.Isotiazolona_LimInf).HasColumnName("Isotiazolona_LimInf");
+
+            builder.Property(e => e.Isotiazolona_LimSup).HasColumnName("Isotiazolona_LimSup");
+
+            builder.Property(e => e.Isotiazolona_Unidades).HasColumnName("Isotiazolona_Unidades");
+
+            builder.Property(e => e.Isotiazolona_Activo).HasColumnName("Isotiazolona_Activo");
+
+            builder.Property(e => e.Isotiazolona_VerInspector).HasColumnName("Isotiazolona_VerInspector");
 
 
             builder.Property(e => e.Campo1_Nombre).HasColumnName("Campo1_Nombre");

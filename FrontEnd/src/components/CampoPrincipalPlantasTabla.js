@@ -4,7 +4,7 @@ class CampoPrincipalPlantasTabla extends React.Component {
 
     constructor(props) {
         super(props);
-
+        
         this.state = this.props.datos;
 
         this.handleActivo = this.handleActivo.bind(this);
@@ -34,7 +34,7 @@ class CampoPrincipalPlantasTabla extends React.Component {
 
     handleActivo(e) {
 
-        // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
+        // Comprobamos si la casilla está marcada. Si no lo está deshabilitamos los inputs
         if(e.target.checked) {
             document.getElementById(this.props.nombre+'-limit-inf').removeAttribute('disabled');
             document.getElementById(this.props.nombre+'-limit-sup').removeAttribute('disabled');
@@ -55,7 +55,6 @@ class CampoPrincipalPlantasTabla extends React.Component {
     };
 
     handleVerInspector(e) {
-
         // Actualiza el valor en la variable
         this.setState({
             VerInspector: e.target.checked
@@ -63,12 +62,13 @@ class CampoPrincipalPlantasTabla extends React.Component {
 
     }
 
-    handleUnidad() {
-        console.log('Unidad');
+    handleUnidad(e) {
+        this.setState({
+            Unidades: e.target.value
+        })
     }
     
     handleLimitInferior(e) {
-
         // Actualiza el valor en la variable
         this.setState({
             LimInf: e.target.value
@@ -77,7 +77,6 @@ class CampoPrincipalPlantasTabla extends React.Component {
     }
 
     handleLimitSuperior(e) {
-        
         // Actualiza el valor en la variable
         this.setState({
             LimSup: e.target.value
@@ -91,11 +90,14 @@ class CampoPrincipalPlantasTabla extends React.Component {
                 <td><input type="text" size="3" id={this.props.nombre+'-limit-inf'} value={this.state.LimInf} onChange={this.handleLimitInferior} /></td>
                 <td><input type="text" size="3" id={this.props.nombre+'-limit-sup'} value={this.state.LimSup} onChange={this.handleLimitSuperior}  /></td>
                 <td>
-                    <select id={this.props.nombre+'-unidades'}>
+                    <select id={this.props.nombre+'-unidades'} onChange={this.handleUnidad} value={this.state.Unidades}>
                         <option value='m3'>m3</option>
-                        <option value='Un. p'>Un. p</option>
+                        <option value='Un. pH'>Un. pH</option>
                         <option value='ºC'>ºC</option>
                         <option value='mg/l'>mg/l</option>
+                        <option value='mg/l CaCO3'>mg/l CaCO3</option>
+                        <option value='N.T.U'>N.T.U</option>
+                        <option value='µS/cm'>µS/cm</option>
                     </select>
                 </td>
                 <td><center><input type="checkbox" id={this.props.nombre+'-activo'} onChange={this.handleActivo} checked={this.state.Activo} /></center></td>
