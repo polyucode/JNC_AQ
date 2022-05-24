@@ -11,7 +11,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ConfNivelesPlantasCliente> builder)
         {
-            builder.HasNoKey();
+            builder.HasKey(e => e.Id);
 
             builder.ToTable("GES_Conf_NivelesPlantasCliente");
 

@@ -37,11 +37,11 @@ function Plantas() {
         deleted: null,
     });
 
-    /*
+
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
         id: 0,
-        IdCliente: 0,
-        IdPlanta: 0,
+        CodigoCliente: 0,
+        Id_Planta: 0,
         Nivel: 0,
         Id_Elemento: 0,
         Orden: 0,
@@ -55,25 +55,25 @@ function Plantas() {
         delIdUser: null,
         deleted: null,
     });
-
-    const [elementosPlanta, setElementosPlanta] = useState({
-        id: 0,
-        Nombre: "",
-        Maestro: false,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-    });*/
+    /*
+       const [elementosPlanta, setElementosPlanta] = useState({
+           id: 0,
+           Nombre: "",
+           Maestro: false,
+           addDate: null,
+           addIdUser: null,
+           modDate: null,
+           modIdUser: null,
+           delDate: null,
+           delIdUser: null,
+           deleted: null,
+       });*/
 
     const [checked, setChecked] = React.useState(true);
 
     //const [confPlantasCliente, setConfPlantasCliente] = useState([]);
 
-    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+    //const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
     const [elementosPlanta, setElementosPlanta] = useState([]);
 
@@ -134,7 +134,15 @@ function Plantas() {
                 aerobios: false,
                 legionela: false,
                 aguaPotable: false,
-                aguasResiduales: false
+                aguasResiduales: false,
+                desinfecciones: false,
+                osmosis: false,
+                aguaPozo: false,
+                acs: false,
+                maquinaFrio: false,
+                mediciones: false,
+                controlGas: false,
+                otros: false
             }
         }
 
@@ -192,8 +200,6 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-
-        removeNode();
         // console.log('Crear elemento');
 
     }
@@ -267,6 +273,14 @@ function Plantas() {
         document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
         document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
         document.getElementById('ckb-aguas-residuales').checked = elementoAnalisisProps.aguasResiduales;
+        document.getElementById('ckb-desinfecciones').checked = elementoAnalisisProps.desinfecciones;
+        document.getElementById('ckb-osmosis').checked = elementoAnalisisProps.osmosis;
+        document.getElementById('ckb-agua-pozo').checked = elementoAnalisisProps.aguaPozo;
+        document.getElementById('ckb-acs').checked = elementoAnalisisProps.acs;
+        document.getElementById('ckb-maquina-frio').checked = elementoAnalisisProps.maquinaFrio;
+        document.getElementById('ckb-mediciones').checked = elementoAnalisisProps.mediciones;
+        document.getElementById('ckb-fuga-gas').checked = elementoAnalisisProps.controlGas;
+        document.getElementById('ckb-otros').checked = elementoAnalisisProps.otros;
     }
 
     function changeAnalisisElemento(e) {
@@ -288,6 +302,30 @@ function Plantas() {
                 break;
             case 'ckb-aguas-residuales':
                 elementoAnalisisProps.aguasResiduales = e.target.checked;
+                break;
+            case 'ckb-desinfecciones':
+                elementoAnalisisProps.desinfecciones = e.target.checked;
+                break;
+            case 'ckb-osmosis':
+                elementoAnalisisProps.osmosis = e.target.checked;
+                break;
+            case 'ckb-agua-pozo':
+                elementoAnalisisProps.aguaPozo = e.target.checked;
+                break;
+            case 'ckb-acs':
+                elementoAnalisisProps.acs = e.target.checked;
+                break;
+            case 'ckb-maquina-frio':
+                elementoAnalisisProps.maquinaFrio = e.target.checked;
+                break;
+            case 'ckb-mediciones':
+                elementoAnalisisProps.mediciones = e.target.checked;
+                break;
+            case 'ckb-fuga-gas':
+                elementoAnalisisProps.controlGas = e.target.checked;
+                break;
+            case 'ckb-otros':
+                elementoAnalisisProps.otros = e.target.checked;
                 break;
         }
 
@@ -437,8 +475,14 @@ function Plantas() {
 
     }
 
-    const guardarPlanta = () => {
-        console.log(listaElementos)
+    const guardarNiveles = async () => {
+        await axios.post("/confnivelesplantascliente", confNivelesPlantaCliente, token)
+            .then(response => {
+                return response
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     const handleChange = e => {
@@ -516,11 +560,19 @@ function Plantas() {
                                     <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
                                     <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
                                     <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
-                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label><br />
+                                    <label><input type="checkbox" id="ckb-desinfecciones" onChange={changeAnalisisElemento} /> Desinfecciones</label><br />
+                                    <label><input type="checkbox" id="ckb-osmosis" onChange={changeAnalisisElemento} /> Osmosis </label><br />
+                                    <label><input type="checkbox" id="ckb-agua-pozo" onChange={changeAnalisisElemento} /> Agua Pozo</label><br />
+                                    <label><input type="checkbox" id="ckb-acs" onChange={changeAnalisisElemento} /> ACS</label><br />
+                                    <label><input type="checkbox" id="ckb-maquina-frio" onChange={changeAnalisisElemento} /> Mantenimiento Maq Frio </label><br />
+                                    <label><input type="checkbox" id="ckb-mediciones" onChange={changeAnalisisElemento} /> Mediciones</label><br />
+                                    <label><input type="checkbox" id="ckb-fuga-gas" onChange={changeAnalisisElemento} /> Control fuga de gas</label><br />
+                                    <label><input type="checkbox" id="ckb-otros" onChange={changeAnalisisElemento} /> Otros</label><br />
                                 </React.Fragment>
                             </div>
                         </div>
-                        <button onClick={guardarPlanta}>Guardar</button>
+                        <button>Guardar</button>
                     </div>
 
                 </div>
@@ -531,7 +583,7 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button> Guardar Datos </button>
+                        <button onClick={guardarNiveles}> Guardar Datos </button>
                     </div>
 
                 </div>
