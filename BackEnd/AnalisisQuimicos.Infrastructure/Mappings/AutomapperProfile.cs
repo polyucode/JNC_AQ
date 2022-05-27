@@ -11,6 +11,7 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
     {
         public AutomapperProfile()
         {
+            CreateMap<Analisis, AnalisisDTO>().ReverseMap();
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
             CreateMap<Clientes, ClienteDto>().ReverseMap();
             CreateMap<Perfiles, PerfilDto>().ReverseMap();

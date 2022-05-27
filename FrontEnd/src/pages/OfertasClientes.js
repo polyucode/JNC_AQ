@@ -101,8 +101,9 @@ function OfertasClientes() {
 
     const [ofertaSeleccionada, setOfertaSeleccionada] = useState({
         id: 0,
+        numeroOferta: 0,
+        pedido: 0,
         codigoCliente: 0,
-        numero: 0,
         articulo: '',
         cantidad: 0,
         precio: 0,
@@ -141,6 +142,7 @@ function OfertasClientes() {
 
         //Visibles
         { title: 'NumeroOferta', field: 'numeroOferta', filterPlaceholder: "Filtrar por numero oferta" },
+        { title: 'Pedido', field: 'pedido', filterPlaceholder: "Filtrar por pedido" },
         { title: 'CodigoCliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
         { title: 'Descripcion', field: 'descripcion', filterPlaceholder: "Filtrar por Descripcion" },
         { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
@@ -262,7 +264,10 @@ function OfertasClientes() {
             <h3>Agregar Nueva Oferta</h3>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numero" onChange={handleChange} />
+                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
                     <Autocomplete
@@ -271,10 +276,10 @@ function OfertasClientes() {
                         options={clientes}
                         getOptionLabel={option => option.codigo}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
-                            idCliente: value.id
+                            codigoCliente: parseInt(value.codigo)
                         }))}
                     />
                 </div>
@@ -339,6 +344,12 @@ function OfertasClientes() {
             <h3>Editar Oferta</h3>
             <div className="row g-3">
                 <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
+                </div>
+                <div className="col-md-6">
                     <Autocomplete
                         disableClearable={true}
                         id="CodigoCliente"
@@ -352,9 +363,6 @@ function OfertasClientes() {
                             idCliente: value.id
                         }))}
                     />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Numero" name="numero" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numero} />
                 </div>
                 <div className="col-md-6">
                     <TextField className={styles.inputMaterial} label="Articulo" name="articulo" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.articulo} />

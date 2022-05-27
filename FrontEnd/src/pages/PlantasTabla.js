@@ -8,6 +8,9 @@ import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
@@ -70,7 +73,7 @@ const localization = {
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
-        width: 700,
+        width: 1000,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -103,8 +106,7 @@ function PlantasTabla() {
 
         id: 0,
         periodo: null,
-        oferta: 0,
-        pedido: 0,
+        idAnalisis: 0,
         fecha: null,
         realizado: false,
         operario: '',
@@ -126,27 +128,40 @@ function PlantasTabla() {
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
 
+    const [oferta, setOferta] = useState([]);
+
+    const [clientes, setClientes] = useState([]);
+
+    const [analisis, setAnalisis] = useState([]);
+    const [analisisTable, setAnalisisTable] = useState({});
+
+    const [periodo, setPeriodo] = useState("");
+    const [fecha, setFecha] = useState("");
+
+
+    const [actualState, changeCheckState] = useState(false);
+    const [actualState2, changeActualState] = useState(false);
+
     const columnas = [
 
         //visibles
         { title: 'Periodo', field: 'periodo', type: 'date', filterPlaceholder: "Filtrar por periodo" },
-        { title: 'Oferta', field: 'oferta', type: 'numeric', filterPlaceholder: "Filtrar por oferta" },
-        { title: 'Pedido', field: 'pedido', type: 'numeric', filterPlaceholder: "Filtrar por pedido" },
+        { title: 'Analisis', field: 'idAnalisis', lookup: analisisTable, filterPlaceholder: "Filtrar por analisis" },
         { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
         { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por fecah operario" },
+        { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por operario" },
         { title: 'Protocolo', field: 'protocolo' },
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' }
     ];
 
     const [data, setData] = useState([]);
+    const [data2, setData2] = useState([]);
 
     const styles = useStyles();
 
     const planta = {
-        idCliente: '00256',
-        nombreCliente: 'Seat',
+        codigoCliente: '',
         elementos: [{
             nombre: 'Torre',
             numero: 1,
@@ -1636,33 +1651,73 @@ function PlantasTabla() {
         }]
     }
     let listaElementos = planta.elementos;
-    
-    const handleChangeInput=e=>{
-        const {name, value}=e.target;
-        setAnalisisSeleccionado(prevState=>({
-          ...prevState,
-          [name]: value
+
+    const handleChangeInput = e => {
+        const { name, value } = e.target;
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
         }));
+    }
+
+    const handleChangeCheckbox = e => {
+        changeCheckState(e.target.checked)
+        console.log(e.target.checked)
+    }
+
+    const handleChangeCheckbox2 = e => {
+        changeActualState(e.target.checked)
+        console.log(e.target.checked)
     }
 
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Analisis</h3>
-            <div className="row g-3">
+            <div className="row g-4">
+                <div className="col-md-4">
+                    <TextField
+                        id="periodo"
+                        label="Periodo"
+                        type="date"
+                        name="periodo"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <Autocomplete
+                        disableClearable={true}
+                        id="idAnalisis"
+                        options={analisis}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Analisis" name="idAnalisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            idAnalisis: value.id
+                        }))}
+                    />
+                </div>
+
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Periodo" name="periodo" onChange={handleChangeInput} />
+                    <TextField
+                        id="fecha"
+                        label="Fecha"
+                        type="date"
+                        name="fecha"
+                        format="mm-yy"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Oferta" name="oferta" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Pedido" name="pedido" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Fecha" name="fecha" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeInput} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-6">
                     <TextField className={styles.inputMaterial} label="Operario" name="operario" onChange={handleChangeInput} />
@@ -1674,7 +1729,7 @@ function PlantasTabla() {
                     <TextField className={styles.inputMaterial} label="Observaciones" name="observaciones" onChange={handleChangeInput} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeInput} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
                 </div>
             </div>
             <div align="right">
@@ -1689,7 +1744,17 @@ function PlantasTabla() {
             <h3>Editar Analisis</h3>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+                    <TextField
+                        id="periodo"
+                        label="Periodo"
+                        type="date"
+                        name="periodo"
+                        sx={{ width: 220 }}
+                        onChange={(e) => setPeriodo(e.target.value)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
                 <div className="col-md-6">
                     <TextField className={styles.inputMaterial} label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
@@ -1723,16 +1788,16 @@ function PlantasTabla() {
         </div>
     )
 
-    const bodyEliminar=(
-            
+    const bodyEliminar = (
+
         <div className={styles.modal}>
-          <p>Estás seguro que deseas eliminar el analisis ? </p>
-          <div align="right">
-            <Button color="secondary" onClick={()=>peticionDelete()}>Sí</Button>
-            <Button onClick={()=>abrirCerrarModalEliminar()}>No</Button>   
-          </div>
+            <p>Estás seguro que deseas eliminar el analisis ? </p>
+            <div align="right">
+                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
+                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
+            </div>
         </div>
-      )
+    )
 
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
@@ -1752,63 +1817,93 @@ function PlantasTabla() {
         setValue(newValue);
     };
 
+    const GetClientes = async () => {
+        axios.get("/cliente", token).then(response => {
+            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setClientes(cliente);
+        }, [])
+    }
+
+    const GetAnalisis = async () => {
+        axios.get("/analisis", token).then(response => {
+            const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setAnalisis(analisi);
+        }, [])
+    }
+
+    const GetOfertas = async () => {
+        axios.get("/ofertasclientes", token).then(response => {
+            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOferta(oferta);
+        }, [])
+    }
+
     const GetConfParametrosElementoPlantaCliente = async () => {
         axios.get("/parametroselementoplantacliente", token).then(response => {
-            setConfParametrosElementoPlantaCliente(response.data.data)
+            setData2(response.data.data)
         })
     }
 
     const GetParametrosAnalisisPlanta = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setParametrosAnalisisPlanta(response.data.data)
+            setData(response.data.data)
         })
     }
 
     useEffect(() => {
-        GetConfParametrosElementoPlantaCliente();
+        const lookupAnalisis = {};
+        analisis.map(fila => lookupAnalisis[fila.id] = fila.nombre);
+        setAnalisisTable(lookupAnalisis);
+
         GetParametrosAnalisisPlanta();
-    }, [])
+        GetConfParametrosElementoPlantaCliente();
+        GetOfertas();
+        GetClientes();
+        GetAnalisis();
+    }, [analisis])
 
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
+        console.log(analisisSeleccionado)
         await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-          .then(response => {
-            //setData(data.concat(response.data));
-            abrirCerrarModalInsertar();
-            GetParametrosAnalisisPlanta();
-          }).catch(error => {
-            console.log(error);
-          })
+            .then(response => {
+                //setData(data.concat(response.data));
+                abrirCerrarModalInsertar();
+                GetParametrosAnalisisPlanta();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     const peticionPut = async () => {
+        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-          .then(response => {
-            var analisisModificado = data;
-            analisisModificado.map(analisi => {
-              if (analisi.id === analisisSeleccionado.id) {
-                analisi = analisisSeleccionado
-              }
-            });
-            GetParametrosAnalisisPlanta();
-            abrirCerrarModalEditar();
-          }).catch(error => {
-            console.log(error);
-          })
+            .then(response => {
+                var analisisModificado = data;
+                analisisModificado.map(analisi => {
+                    if (analisi.id === analisisSeleccionado.id) {
+                        analisi = analisisSeleccionado
+                    }
+                });
+                GetParametrosAnalisisPlanta();
+                abrirCerrarModalEditar();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     const peticionDelete = async () => {
         console.log("id=" + analisisEliminar[0].id)
         var i = 0;
         while (i < analisisEliminar.length) {
-          await axios.delete("/parametrosanalisisplanta/" + analisisEliminar[i].id, token)
-            .then(response => {
-              GetParametrosAnalisisPlanta();
-              abrirCerrarModalEliminar();
-            }).catch(error => {
-              console.log(error);
-            })
-          i++;
+            await axios.delete("/parametrosanalisisplanta/" + analisisEliminar[i].id, token)
+                .then(response => {
+                    GetParametrosAnalisisPlanta();
+                    abrirCerrarModalEliminar();
+                }).catch(error => {
+                    console.log(error);
+                })
+            i++;
         }
     }
 
@@ -1821,11 +1916,37 @@ function PlantasTabla() {
                     <tbody>
                         <tr>
                             <th>Código</th>
-                            <th>Nombre</th>
+                            <th>Oferta</th>
                         </tr>
                         <tr>
-                            <td>{planta.idCliente}</td>
-                            <td>{planta.nombreCliente}</td>
+                            <td>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="Cliente"
+                                    options={clientes}
+                                    getOptionLabel={option => option.codigo}
+                                    sx={{ width: 200 }}
+                                    renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                        ...prevState,
+                                        codigoCliente: parseInt(value.codigo)
+                                    }))}
+                                />
+                            </td>
+                            <td>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="Oferta"
+                                    options={oferta}
+                                    getOptionLabel={option => option.numeroOferta}
+                                    sx={{ width: 200 }}
+                                    renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
+                                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                        ...prevState,
+                                        oferta: parseInt(value.numeroOferta)
+                                    }))}
+                                />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -1839,87 +1960,15 @@ function PlantasTabla() {
                             }
                         </TabList>
                     </Box>
-                    {/*
-                    listaElementos.map((elemento,index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
-                */}
-                    <MaterialTable columns={columnas} data={data}
-                        localization={localization}
-                        actions={[
-                            {
-                                icon: () => <AddCircle style={{ fill: "green" }} />,
-                                tooltip: "Añadir analisis",
-                                isFreeAction: true,
-                                onClick: (e, data) => {
-                                    abrirCerrarModalInsertar();
-                                },
-                            },
-                            {
-                                icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                tooltip: "Eliminar analisis",
-                                onClick: (event, rowData) => {
-                                    setAnalisisEliminar(FilasSeleccionadas);
-                                    abrirCerrarModalEliminar();
-                                },
-                            },
-                            {
-                                icon: () => <Edit />,
-                                tooltip: "Editar analisis",
-                                onClick: (e, data) => {
-                                    //setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                    abrirCerrarModalEditar();
-                                },
-                            },
-                        ]}
-
-                        // onRowClick={((evt, mantenimientoDetSeleccionado) => setMantenimientoDetSeleccionado(mantenimientoDetSeleccionado.tableData.id))}
-                        onSelectionChange={(filas) => {
-                            setFilasSeleccionadas(filas);
-                            if (filas.length > 0)
-                                setAnalisisSeleccionado(filas[0]);
-                        }
-                        }
-                        options={{
-                            sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-                            columnsButton: true,
-                            rowStyle: rowData => ({
-                                backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                whiteSpace: "nowrap"
-                            }),
-                            exportMenu: [{
-                                label: 'Export PDF',
-                                exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de detalles mantenimientos')
-                            }, {
-                                label: 'Export CSV',
-                                exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de detalles mantenimientos')
-                            }]
-                        }}
-
-                        title="Listado de analisis"
-                    />
+                    {
+                        listaElementos.map((elemento, index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
+                    }
                 </TabContext>
             </Box>
             <div className='botones-menu'>
                 <button>Cancelar</button>
                 <button>Aceptar</button>
             </div>
-
-            <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
-
-            <Modal
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
-
-            <Modal
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
         </div>
     );
 }

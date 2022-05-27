@@ -80,6 +80,8 @@ function Plantas() {
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
 
+    const [oferta, setOferta] = useState([]);
+
     const [nombreCliente, setNombreCliente] = useState([]);
 
     const [data, setData] = useState([]);
@@ -98,7 +100,15 @@ function Plantas() {
         aerobios: false,
         legionela: false,
         aguaPotable: false,
-        aguasResiduales: false
+        aguasResiduales: false,
+        desinfecciones: false,
+        osmosis: false,
+        aguaPozo: false,
+        acs: false,
+        maquinaFrio: false,
+        mediciones: false,
+        controlGas: false,
+        otros: false
     };
 
     // Variables para los nodos del diagrama
@@ -352,11 +362,19 @@ function Plantas() {
         })
     }
 
+    const GetOfertas = async () => {
+        axios.get("/ofertasclientes", token).then(response => {
+            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOferta(oferta);
+        }, [])
+    }
+
     useEffect(() => {
         GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
+        GetOfertas();
         //peticionGet();
         //GetPerfiles();
         //GetPoblacion();
@@ -369,7 +387,7 @@ function Plantas() {
         if (confPlantasCliente.NumNiveles > 5) {
             alert('El número máximo de niveles que se pueden crear son 5');
             return;
-        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.NombrePlanta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
+        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.oferta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
             alert('Faltan introducir datos correctos para crear los niveles');
             return;
         }
@@ -521,9 +539,20 @@ function Plantas() {
                             />
                             <br /><br />
                             <div className='nombre-planta'>
-                                <h5>Nombre de la Planta</h5>
+                                <h5>Numero de Oferta</h5>
                                 <hr />
-                                <input type="text" id="nombre-planta" size="1" name="NombrePlanta" onChange={handleChange} />
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="oferta"
+                                    options={oferta}
+                                    getOptionLabel={option => option.numeroOferta}
+                                    sx={{ width: 250 }}
+                                    renderInput={(params) => <TextField {...params} type="number" name="numeroOferta" />}
+                                    onChange={(event, value) => setConfPlantasCliente(prevState => ({
+                                        ...prevState,
+                                        oferta: parseInt(value.numeroOferta)
+                                    }))}
+                                />
                             </div>
                         </div>
 

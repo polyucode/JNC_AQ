@@ -6,9 +6,12 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class ParametrosAnalisisPlanta : BaseEntity
     {
-        public DateTime? Periodo { get; set; }
+        public int? CodigoCliente { get; set; }
         public int? Oferta { get; set; }
         public int? Pedido { get; set; }
+        public int? IdElemento { get; set; }
+        public DateTime? Periodo { get; set; }
+        public int? IdAnalisis { get; set; }
         public DateTime? Fecha { get; set; }
         public bool? Realizado { get; set; }
         public string Operario { get; set; }

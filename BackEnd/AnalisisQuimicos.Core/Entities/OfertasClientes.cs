@@ -7,6 +7,7 @@ namespace AnalisisQuimicos.Core.Entities
     public partial class OfertasClientes : BaseEntity
     {
         public int? NumeroOferta { get; set; }
+        public int? Pedido { get; set; }
         public int? CodigoCliente { get; set; }
         public string Descripcion { get; set; }
         public int? Cantidad { get; set; }
@@ -17,6 +18,5 @@ namespace AnalisisQuimicos.Core.Entities
         public int? FaltaEntregar { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinalizacion { get; set; }
-        public int? IdCliente { get; set; }
     }
 }

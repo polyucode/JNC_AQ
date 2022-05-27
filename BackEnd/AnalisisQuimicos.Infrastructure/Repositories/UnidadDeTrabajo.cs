@@ -13,6 +13,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         private readonly YucodeDevelopmentJNC_AQContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IRepository<Analisis> _analisisRepository;
         private readonly IRepository<Clientes> _clienteRepository;
         private readonly IRepository<Comarcas> _comarcaRepository;
         private readonly IRepository<Perfiles> _perfilRepository;
@@ -37,6 +38,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         }
 
         public IUsuarioRepository UsuarioRepository => _usuarioRepository ?? new UsuarioRepository(_context);
+
+        public IRepository<Analisis> AnalisisRepository => _analisisRepository ?? new BaseRepository<Analisis>(_context);
 
         public IRepository<Clientes> ClienteRepository => _clienteRepository ?? new BaseRepository<Clientes>(_context);
 
