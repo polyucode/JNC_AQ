@@ -81,6 +81,8 @@ function Plantas() {
 
     const [oferta, setOferta] = useState([]);
 
+    const [analisis, setAnalisis] = useState([]);
+
     const [nombreCliente, setNombreCliente] = useState([]);
 
     const [data, setData] = useState([]);
@@ -92,23 +94,11 @@ function Plantas() {
     }
     let listaElementos = planta.elementos;
 
+    const tipoAnalisis = [];
+    analisis.map(analisi => tipoAnalisis.push({id: analisi.id, nombre: analisi.nombre, value: false}))
     // Variables del analisis del elemento
     let elementoAnalisisId = 0;
-    let elementoAnalisisProps = {
-        fisicoQuimico: false,
-        aerobios: false,
-        legionela: false,
-        aguaPotable: false,
-        aguasResiduales: false,
-        desinfecciones: false,
-        osmosis: false,
-        aguaPozo: false,
-        acs: false,
-        maquinaFrio: false,
-        mediciones: false,
-        controlGas: false,
-        otros: false
-    };
+    let elementoAnalisisProps = tipoAnalisis;
 
     // Variables para los nodos del diagrama
     let contadorNodo = 1;
@@ -132,28 +122,19 @@ function Plantas() {
 
     function crearElemento(id) {
 
+        const tipoAnalisis = [];
+        analisis.map(analisi => tipoAnalisis.push({id: analisi.id, nombre: analisi.nombre, value: false}))
+
+        console.log(tipoAnalisis);
         // Preparamos una variable para el elemento nuevo
         let elementoNuevo = {
             nombre: '',
             numero: 0,
             posicion: 0,
             nivel: 0,
-            propiedades: {
-                fisicoQuimico: false,
-                aerobios: false,
-                legionela: false,
-                aguaPotable: false,
-                aguasResiduales: false,
-                desinfecciones: false,
-                osmosis: false,
-                aguaPozo: false,
-                acs: false,
-                maquinaFrio: false,
-                mediciones: false,
-                controlGas: false,
-                otros: false
-            }
+            propiedades: tipoAnalisis
         }
+        console.log(elementoNuevo)
 
         // Añadimos el nombre del elemento
         elementoNuevo.nombre = document.getElementById('lista-nivel-' + id).value;
@@ -190,6 +171,7 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
 
+        console.log(analisis)
 
         //crearNodo(elementoNuevo)
     }
@@ -209,8 +191,6 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-        // console.log('Crear elemento');
-
     }
 
     function crearNiveles() {
@@ -275,9 +255,9 @@ function Plantas() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-
+        elementoAnalisisProps.map(analisi => document.getElementById(analisi.id).checked = elementoAnalisisProps.nombre)
         // Seteamos los checkboxs según los datos almacenados en el elemento
-        document.getElementById('ckb-fisico-quimico').checked = elementoAnalisisProps.fisicoQuimico;
+        /*document.getElementById('ckb-fisico-quimico').checked = elementoAnalisisProps.fisicoQuimico;
         document.getElementById('ckb-aerobios').checked = elementoAnalisisProps.aerobios;
         document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
         document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
@@ -289,10 +269,14 @@ function Plantas() {
         document.getElementById('ckb-maquina-frio').checked = elementoAnalisisProps.maquinaFrio;
         document.getElementById('ckb-mediciones').checked = elementoAnalisisProps.mediciones;
         document.getElementById('ckb-fuga-gas').checked = elementoAnalisisProps.controlGas;
-        document.getElementById('ckb-otros').checked = elementoAnalisisProps.otros;
+        document.getElementById('ckb-otros').checked = elementoAnalisisProps.otros;*/
     }
 
     function changeAnalisisElemento(e) {
+        console.log(e.target)
+        //console.log()
+
+        listaElementos[elementoAnalisisId].propiedades[e.target.id - 1].value = e.target.checked
 
         // Cuando cambia el valor de un checkbox, vemos cual de ellos ha sido
         // y actualizamos el valor de la propiedad del elemento
@@ -368,12 +352,21 @@ function Plantas() {
         }, [])
     }
 
+    const GetAnalisis = async () => {
+        axios.get("/analisis", token).then(response => {
+            const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setAnalisis(analisi);
+            console.log(analisi)
+        }, [])
+    }
+
     useEffect(() => {
         GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
         GetOfertas();
+        GetAnalisis();
         //peticionGet();
         //GetPerfiles();
         //GetPoblacion();
@@ -588,7 +581,10 @@ function Plantas() {
                                 }
                             </select>
                             <div className='analisis-elemento-checks'>
-                                <React.Fragment>
+                                {
+                                    analisis.map((analisi, index) => <div key={index}><input type="checkbox" id={analisi.id} onChange={changeAnalisisElemento}/> {analisi.nombre} </div>)
+                                }
+                                {/*<React.Fragment>
                                     <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
                                     <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
                                     <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
@@ -602,7 +598,7 @@ function Plantas() {
                                     <label><input type="checkbox" id="ckb-mediciones" onChange={changeAnalisisElemento} /> Mediciones</label><br />
                                     <label><input type="checkbox" id="ckb-fuga-gas" onChange={changeAnalisisElemento} /> Control fuga de gas</label><br />
                                     <label><input type="checkbox" id="ckb-otros" onChange={changeAnalisisElemento} /> Otros</label><br />
-                                </React.Fragment>
+                            </React.Fragment>*/}
                             </div>
                         </div>
                         <button>Guardar</button>
