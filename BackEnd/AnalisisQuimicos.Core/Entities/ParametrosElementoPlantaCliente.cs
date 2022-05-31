@@ -30,6 +30,11 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Conductivitat_Unidades { get; set; }
         public bool? Conductivitat_Activo { get; set; }
         public bool? Conductivitat_VerInspector { get; set; }
+        public double? TDS_LimInf { get; set; }
+        public double? TDS_LimSup { get; set; }
+        public int? TDS_Unidades { get; set; }
+        public bool? TDS_Activo { get; set; }
+        public bool? TDS_VerInspector { get; set; }
         public double? AlcalinitatM_LimInf { get; set; }
         public double? AlcalinitatM_LimSup { get; set; }
         public int? AlcalinitatM_Unidades { get; set; }
@@ -65,11 +70,16 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Clorurs_Unidades { get; set; }
         public bool? Clorurs_Activo { get; set; }
         public bool? Clorurs_VerInspector { get; set; }
-        public double? Sulfots_LimInf { get; set; }
-        public double? Sulfots_LimSup { get; set; }
-        public int? Sulfots_Unidades { get; set; }
-        public bool? Sulfots_Activo { get; set; }
-        public bool? Sulfots_VerInspector { get; set; }
+        public double? Sulfats_LimInf { get; set; }
+        public double? Sulfats_LimSup { get; set; }
+        public int? Sulfats_Unidades { get; set; }
+        public bool? Sulfats_Activo { get; set; }
+        public bool? Sulfats_VerInspector { get; set; }
+        public float? Silicats_LimInf { get; set; }
+        public float? Silicats_LimSup { get; set; }
+        public int? Silicats_Unidades { get; set; }
+        public bool? Silicats_Activo { get; set; }
+        public bool? Silicats_VerInspector { get; set; }
         public double? ClorLliure_LimInf { get; set; }
         public double? ClorLliure_LimSup { get; set; }
         public int? ClorLliure_Unidades { get; set; }
@@ -90,6 +100,21 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Sulfits_Unidades { get; set; }
         public bool? Sulfits_Activo { get; set; }
         public bool? Sulfits_VerInspector { get; set; }
+        public float? Ortofosfats_LimInf { get; set; }
+        public float? Ortofosfats_LimSup { get; set; }
+        public int? Ortofosfats_Unidades { get; set; }
+        public bool? Ortofosfats_Activo { get; set; }
+        public bool? Ortofosfats_VerInspector { get; set; }
+        public float? Mo_LimInf { get; set; }
+        public float? Mo_LimSup { get; set; }
+        public int? Mo_Unidades { get; set; }
+        public bool? Mo_Activo { get; set; }
+        public bool? Mo_VerInspector { get; set; }
+        public float? Isotiazolona_LimInf { get; set; }
+        public float? Isotiazolona_LimSup { get; set; }
+        public int? Isotiazolona_Unidades { get; set; }
+        public bool? Isotiazolona_Activo { get; set; }
+        public bool? Isotiazolona_VerInspector { get; set; }
         public string Campo1_Nombre { get; set; }
         public double? Campo1_LimInf { get; set; }
         public double? Campo1_LimSup { get; set; }

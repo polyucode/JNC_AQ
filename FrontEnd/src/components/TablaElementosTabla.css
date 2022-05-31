@@ -5,3 +5,7 @@ span {
 .tabla-tecnico {
     width: 25%;
 }
+
+tbody, td, th, thead, tr {
+    width: 650px;
+}

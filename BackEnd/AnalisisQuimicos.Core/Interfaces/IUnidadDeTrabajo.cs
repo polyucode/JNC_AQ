@@ -7,6 +7,7 @@ namespace AnalisisQuimicos.Core.Interfaces
     public interface IUnidadDeTrabajo :IDisposable
     {
         IUsuarioRepository UsuarioRepository { get; }
+        IRepository<Analisis> AnalisisRepository { get; }
         IRepository<Clientes> ClienteRepository { get; }
         IRepository<Perfiles> PerfilRepository { get; }
         IRepository<ServMantenimientoCab> ServMantenimientoCabRepository { get; }
@@ -18,6 +19,8 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<ConfNivelesPlantasCliente> ConfNivelesPlantasClienteRepository { get; }
         IRepository<ConfPlantasCliente> ConfPlantasClienteRepository { get; }
         IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository { get; }
+        IRepository<ParametrosAnalisisPlanta> ParametrosAnalisisPlantaRepository { get; }
+        IRepository<AnalisisNivelesPlantasCliente> AnalisisNivelesPlantasClienteRepository { get; }
         IRepository<ClientesContactos> ClientesContactosRepository { get; }
         IRepository<OfertasClientes> OfertasClientesRepository { get; }
         IRepository<Productos> ProductosRepository { get; }

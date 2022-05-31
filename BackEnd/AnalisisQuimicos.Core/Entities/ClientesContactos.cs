@@ -6,12 +6,11 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class ClientesContactos : BaseEntity
     {
-            public int? CodigoCliente { get; set; }
             public string Nombre { get; set; }
             public string Telefono { get; set; }
             public string Email { get; set; }
             public string Cargo { get; set; }
             public string Comentarios { get; set; }
-
+            public int? IdCliente { get; set; }
     }
 }

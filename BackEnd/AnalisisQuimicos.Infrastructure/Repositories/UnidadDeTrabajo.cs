@@ -13,6 +13,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         private readonly YucodeDevelopmentJNC_AQContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IRepository<Analisis> _analisisRepository;
         private readonly IRepository<Clientes> _clienteRepository;
         private readonly IRepository<Comarcas> _comarcaRepository;
         private readonly IRepository<Perfiles> _perfilRepository;
@@ -24,6 +25,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<ConfNivelesPlantasCliente> _confNivelesPlantasClienteRepository;
         private readonly IRepository<ConfPlantasCliente> _confPlantasClienteRepository;
         private readonly IRepository<ParametrosElementoPlantaCliente> _parametrosElementoPlantaClienteRepository;
+        private readonly IRepository<ParametrosAnalisisPlanta> _parametrosAnalisisPlantaRepository;
+        private readonly IRepository<AnalisisNivelesPlantasCliente> _analisisNivelesPlantasClienteRepository;
         private readonly IRepository<ClientesContactos> _clientesContactosRepository;
         private readonly IRepository<OfertasClientes> _ofertasClientesRepository;
         private readonly IRepository<Productos> _productosRepository;
@@ -35,6 +38,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         }
 
         public IUsuarioRepository UsuarioRepository => _usuarioRepository ?? new UsuarioRepository(_context);
+
+        public IRepository<Analisis> AnalisisRepository => _analisisRepository ?? new BaseRepository<Analisis>(_context);
 
         public IRepository<Clientes> ClienteRepository => _clienteRepository ?? new BaseRepository<Clientes>(_context);
 
@@ -57,6 +62,9 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         public IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository => _parametrosElementoPlantaClienteRepository ?? new BaseRepository<ParametrosElementoPlantaCliente>(_context);
 
+        public IRepository<ParametrosAnalisisPlanta> ParametrosAnalisisPlantaRepository => _parametrosAnalisisPlantaRepository ?? new BaseRepository<ParametrosAnalisisPlanta>(_context);
+
+        public IRepository<AnalisisNivelesPlantasCliente> AnalisisNivelesPlantasClienteRepository => _analisisNivelesPlantasClienteRepository ?? new BaseRepository<AnalisisNivelesPlantasCliente>(_context);
         public IRepository<ClientesContactos> ClientesContactosRepository => _clientesContactosRepository ?? new BaseRepository<ClientesContactos>(_context);
 
         public IRepository<OfertasClientes> OfertasClientesRepository => _ofertasClientesRepository ?? new BaseRepository<OfertasClientes>(_context);

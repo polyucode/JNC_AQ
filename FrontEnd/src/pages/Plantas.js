@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
 import { TextField } from '@material-ui/core';
-import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Switch } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
@@ -28,7 +27,7 @@ function Plantas() {
         CodigoCliente: 0,
         NombrePlanta: "",
         NumNiveles: 0,
-        Id_Planta: 0,
+        IdPlanta: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -38,11 +37,11 @@ function Plantas() {
         deleted: null,
     });
 
-    /*
+
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
         id: 0,
-        IdCliente: 0,
-        IdPlanta: 0,
+        CodigoCliente: 0,
+        Id_Planta: 0,
         Nivel: 0,
         Id_Elemento: 0,
         Orden: 0,
@@ -56,30 +55,32 @@ function Plantas() {
         delIdUser: null,
         deleted: null,
     });
-
-    const [elementosPlanta, setElementosPlanta] = useState({
-        id: 0,
-        Nombre: "",
-        Maestro: false,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-    });*/
+    /*
+       const [elementosPlanta, setElementosPlanta] = useState({
+           id: 0,
+           Nombre: "",
+           Maestro: false,
+           addDate: null,
+           addIdUser: null,
+           modDate: null,
+           modIdUser: null,
+           delDate: null,
+           delIdUser: null,
+           deleted: null,
+       });*/
 
     const [checked, setChecked] = React.useState(true);
 
     //const [confPlantasCliente, setConfPlantasCliente] = useState([]);
 
-    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+    //const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
     const [elementosPlanta, setElementosPlanta] = useState([]);
 
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
+
+    const [oferta, setOferta] = useState([]);
 
     const [nombreCliente, setNombreCliente] = useState([]);
 
@@ -99,7 +100,15 @@ function Plantas() {
         aerobios: false,
         legionela: false,
         aguaPotable: false,
-        aguasResiduales: false
+        aguasResiduales: false,
+        desinfecciones: false,
+        osmosis: false,
+        aguaPozo: false,
+        acs: false,
+        maquinaFrio: false,
+        mediciones: false,
+        controlGas: false,
+        otros: false
     };
 
     // Variables para los nodos del diagrama
@@ -135,7 +144,15 @@ function Plantas() {
                 aerobios: false,
                 legionela: false,
                 aguaPotable: false,
-                aguasResiduales: false
+                aguasResiduales: false,
+                desinfecciones: false,
+                osmosis: false,
+                aguaPozo: false,
+                acs: false,
+                maquinaFrio: false,
+                mediciones: false,
+                controlGas: false,
+                otros: false
             }
         }
 
@@ -153,6 +170,7 @@ function Plantas() {
         // Añadimos el nivel
         elementoNuevo.nivel = id;
 
+
         // Añadimos el elemento nuevo a la lista principal
         listaElementos.push(elementoNuevo);
 
@@ -166,13 +184,15 @@ function Plantas() {
         });
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
 
+
         // Actualizamos la lista de análisis por elemento
         ReactDOM.render(
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-        
-        //crearNodo(elementoNuevo);
+
+
+        //crearNodo(elementoNuevo)
     }
 
     function eliminarElemento(id) {
@@ -190,7 +210,6 @@ function Plantas() {
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-
         // console.log('Crear elemento');
         // crearNodo(elementoNuevo);
 
@@ -265,7 +284,14 @@ function Plantas() {
         document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
         document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
         document.getElementById('ckb-aguas-residuales').checked = elementoAnalisisProps.aguasResiduales;
-
+        document.getElementById('ckb-desinfecciones').checked = elementoAnalisisProps.desinfecciones;
+        document.getElementById('ckb-osmosis').checked = elementoAnalisisProps.osmosis;
+        document.getElementById('ckb-agua-pozo').checked = elementoAnalisisProps.aguaPozo;
+        document.getElementById('ckb-acs').checked = elementoAnalisisProps.acs;
+        document.getElementById('ckb-maquina-frio').checked = elementoAnalisisProps.maquinaFrio;
+        document.getElementById('ckb-mediciones').checked = elementoAnalisisProps.mediciones;
+        document.getElementById('ckb-fuga-gas').checked = elementoAnalisisProps.controlGas;
+        document.getElementById('ckb-otros').checked = elementoAnalisisProps.otros;
     }
 
     function changeAnalisisElemento(e) {
@@ -287,6 +313,30 @@ function Plantas() {
                 break;
             case 'ckb-aguas-residuales':
                 elementoAnalisisProps.aguasResiduales = e.target.checked;
+                break;
+            case 'ckb-desinfecciones':
+                elementoAnalisisProps.desinfecciones = e.target.checked;
+                break;
+            case 'ckb-osmosis':
+                elementoAnalisisProps.osmosis = e.target.checked;
+                break;
+            case 'ckb-agua-pozo':
+                elementoAnalisisProps.aguaPozo = e.target.checked;
+                break;
+            case 'ckb-acs':
+                elementoAnalisisProps.acs = e.target.checked;
+                break;
+            case 'ckb-maquina-frio':
+                elementoAnalisisProps.maquinaFrio = e.target.checked;
+                break;
+            case 'ckb-mediciones':
+                elementoAnalisisProps.mediciones = e.target.checked;
+                break;
+            case 'ckb-fuga-gas':
+                elementoAnalisisProps.controlGas = e.target.checked;
+                break;
+            case 'ckb-otros':
+                elementoAnalisisProps.otros = e.target.checked;
                 break;
         }
 
@@ -313,10 +363,19 @@ function Plantas() {
         })
     }
 
+    const GetOfertas = async () => {
+        axios.get("/ofertasclientes", token).then(response => {
+            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOferta(oferta);
+        }, [])
+    }
+
     useEffect(() => {
+        GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
+        GetOfertas();
         //peticionGet();
         //GetPerfiles();
         //GetPoblacion();
@@ -329,12 +388,15 @@ function Plantas() {
         if (confPlantasCliente.NumNiveles > 5) {
             alert('El número máximo de niveles que se pueden crear son 5');
             return;
-        } else {
-            console.log(confPlantasCliente)
-            confPlantasCliente.id = null;
+        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.oferta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
+            alert('Faltan introducir datos correctos para crear los niveles');
+            return;
+        }
+        else {
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
-                    console.log(response)
+                    return response,
+                        crearNiveles();
                 })
                 .catch(error => {
                     console.log(error)
@@ -419,20 +481,27 @@ function Plantas() {
 
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
+        contadorNodo += 1;
+
         schema.nodes.forEach((node) => {
-            console.log(node.id);
+            console.log(node);
         })
 
+        console.log(schema);
         addNode(nodo);
 
-        console.log(schema);
 
-        contadorNodo += 1;
 
     }
 
-    const guardarPlanta = () => {
-        console.log(listaElementos)
+    const guardarNiveles = async () => {
+        await axios.post("/confnivelesplantascliente", confNivelesPlantaCliente, token)
+            .then(response => {
+                return response
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     const handleChange = e => {
@@ -466,14 +535,30 @@ function Plantas() {
                                 renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="CodigoCliente" />}
                                 onChange={(event, value) => setConfPlantasCliente(prevState => ({
                                     ...prevState,
-                                    CodigoCliente: value.codigo
+                                    CodigoCliente: parseInt(value.codigo)
                                 }))}
                             />
+                            <br/>
+                            {/*<div className="col-md-6">
+                                <p>Nombre</p>
+                                <TextField style={{width: 250}} name="nombre" onChange={handleChange} />
+                            </div>*/}
                             <br /><br />
                             <div className='nombre-planta'>
-                                <h5>Nombre de la Planta</h5>
+                                <h5>Numero de Oferta</h5>
                                 <hr />
-                                <input type="text" id="nombre-planta" size="1" name="NombrePlanta" onChange={handleChange} />
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="oferta"
+                                    options={oferta}
+                                    getOptionLabel={option => option.numeroOferta}
+                                    sx={{ width: 250 }}
+                                    renderInput={(params) => <TextField {...params} type="number" name="numeroOferta" />}
+                                    onChange={(event, value) => setConfPlantasCliente(prevState => ({
+                                        ...prevState,
+                                        oferta: parseInt(value.numeroOferta)
+                                    }))}
+                                />
                             </div>
                         </div>
 
@@ -486,8 +571,7 @@ function Plantas() {
                                 <input id="numero-niveles" size="2" type="number" min="0" name="NumNiveles" onChange={handleChange} />
                             </center>
                             <div className='botones'>
-                                <button onClick={peticionPost}>Guardar datos de la planta </button>
-                                <button onClick={crearNiveles}>Aceptar</button>
+                                <button onClick={peticionPost}>Crear Niveles </button>
                             </div>
                         </div>
 
@@ -511,11 +595,19 @@ function Plantas() {
                                     <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
                                     <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
                                     <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
-                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label>
+                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label><br />
+                                    <label><input type="checkbox" id="ckb-desinfecciones" onChange={changeAnalisisElemento} /> Desinfecciones</label><br />
+                                    <label><input type="checkbox" id="ckb-osmosis" onChange={changeAnalisisElemento} /> Osmosis </label><br />
+                                    <label><input type="checkbox" id="ckb-agua-pozo" onChange={changeAnalisisElemento} /> Agua Pozo</label><br />
+                                    <label><input type="checkbox" id="ckb-acs" onChange={changeAnalisisElemento} /> ACS</label><br />
+                                    <label><input type="checkbox" id="ckb-maquina-frio" onChange={changeAnalisisElemento} /> Mantenimiento Maq Frio </label><br />
+                                    <label><input type="checkbox" id="ckb-mediciones" onChange={changeAnalisisElemento} /> Mediciones</label><br />
+                                    <label><input type="checkbox" id="ckb-fuga-gas" onChange={changeAnalisisElemento} /> Control fuga de gas</label><br />
+                                    <label><input type="checkbox" id="ckb-otros" onChange={changeAnalisisElemento} /> Otros</label><br />
                                 </React.Fragment>
                             </div>
                         </div>
-                        <button onClick={guardarPlanta}>Guardar</button>
+                        <button>Guardar</button>
                     </div>
 
                 </div>
@@ -526,7 +618,7 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button> Guardar Datos </button>
+                        <button onClick={guardarNiveles}> Guardar Datos </button>
                     </div>
 
                 </div>

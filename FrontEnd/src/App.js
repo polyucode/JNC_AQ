@@ -16,6 +16,7 @@ import MantenimientoTecnico from './pages/MantenimientoTecnico';
 import OfertasClientes from './pages/OfertasClientes';
 import Productos from './pages/Productos';
 import ConsumoArticulos from './pages/ConsumoArticulos'
+import Visualizacion from './pages/Visualizacion';
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/ofertas" element={<OfertasClientes />} />
           <Route path='/productos' element={<Productos />} />
           <Route path='/consumoarticulos' element={<ConsumoArticulos />} />
+          <Route path='/visualizacion' element={<Visualizacion />} />
         </Routes>
         </div>
 

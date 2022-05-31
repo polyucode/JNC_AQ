@@ -52,9 +52,15 @@ namespace AnalisisQuimicos.Api
                 options.UseSqlServer(Configuration.GetConnectionString("ConStringAnalisisQuimicos"))
                 );
 
+            //services.AddDbContext<JNCT1Context>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("ConStringJNegre"))
+            //    );
+
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            //services.AddScoped(typeof(IRepository<>), typeof(BaseRepositoryJNegre<>));
             services.AddTransient<IUnidadDeTrabajo, UnidadDeTrabajo>();
+            //services.AddTransient<IUnidadDeTrabajoJNegre, UnidadDeTrabajoJNegre>();
             services.AddTransient<IPasswordService, PasswordService>();
 
             services.AddAuthentication(options =>

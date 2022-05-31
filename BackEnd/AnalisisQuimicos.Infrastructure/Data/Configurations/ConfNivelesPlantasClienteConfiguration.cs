@@ -11,11 +11,11 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ConfNivelesPlantasCliente> builder)
         {
-            builder.HasNoKey();
+            builder.HasKey(e => e.Id);
 
             builder.ToTable("GES_Conf_NivelesPlantasCliente");
 
-            builder.Property(e => e.Id_Cliente).HasColumnName("Id_Cliente");
+            builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
             builder.Property(e => e.Id_Planta).HasColumnName("Id_Planta");
 

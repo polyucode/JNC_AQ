@@ -40,7 +40,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
     modal: {
       position: 'absolute',
       width: 1500,
-      height: 780,
+      height: 850,
       backgroundColor: theme.palette.background.paper,
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
@@ -218,9 +218,9 @@ function Mantenimientos() {
     const columnas= [
 
       //visibles
-      { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
-      { title: 'Técnico', field: 'idTecnicoAsignado',lookup:tecnicosTable, type: 'numeric',filterPlaceholder:"Filtrar por técnico" },
-      { title: 'Elemetno de planta', field: 'idElementoPlanta', type: 'numeric',lookup:elementosplantaTable,filterPlaceholder:"Filtrar por elemento" },
+      { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente", cellStyle: { textAlign: "left" } },
+      { title: 'Técnico', field: 'idTecnicoAsignado',lookup:tecnicosTable, type: 'numeric',filterPlaceholder:"Filtrar por técnico", cellStyle: { textAlign: "left" } },
+      { title: 'Elemetno de planta', field: 'idElementoPlanta', type: 'numeric',lookup:elementosplantaTable,filterPlaceholder:"Filtrar por elemento", cellStyle: { textAlign: "left" } },
       { title: 'Número de oferta', field: 'numOferta', filterPlaceholder:"Filtrar por oferta" },
       { title: 'Tipo', field: 'tipo',lookup:tiposTable, filterPlaceholder:"Filtrar por tipo"},
 
@@ -278,7 +278,6 @@ function Mantenimientos() {
 
     const GetElementosPlanta = async () => {
         axios.get("/elementosplanta", token).then(response => {
-          console.log(response.data.data);
           const elemento = Object.entries(response.data.data).map(([key,value]) => (key, value))
           setElementosPlanta(elemento);
         },[])
@@ -815,7 +814,7 @@ function Mantenimientos() {
                 }
                 }
                 options={{
-                  sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
+                  sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
                   columnsButton: true,
                   rowStyle: rowData => ({
                     backgroundColor: (mantenimientoDetSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
