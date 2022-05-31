@@ -102,11 +102,7 @@ function Visualizacion() {
     const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
 
         id: 0,
-        codigoCliente: 0,
-        oferta: 0,
-        idElemento: 0,
         periodo: null,
-        idAnalisis: 0,
         fecha: null,
         realizado: false,
         operario: '',
@@ -418,10 +414,10 @@ function Visualizacion() {
                     options={oferta}
                     getOptionLabel={option => option.numeroOferta}
                     sx={{ width: 250 }}
-                    renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
+                    renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                         ...prevState,
-                        oferta: parseInt(value.numeroOferta)
+                        oferta: value.numeroOferta
                     }))}
                 />
                 <Autocomplete
@@ -464,13 +460,13 @@ function Visualizacion() {
                                     icon: () => <Edit />,
                                     tooltip: "Editar analisis",
                                     onClick: (e, data) => {
-                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].id));
                                         abrirCerrarModalEditar();
                                     },
                                 },
                             ]}
 
-                            //onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
                             onSelectionChange={(filas) => {
                                 console.log(FilasSeleccionadas)
                                 setFilasSeleccionadas(filas);
@@ -671,6 +667,7 @@ function Visualizacion() {
                         />
                     </div>
                 </div>
+                        
             </div>
             <Modal
                 open={modalInsertar}

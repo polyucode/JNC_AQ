@@ -11,7 +11,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<AnalisisNivelesPlantasCliente> builder)
         {
-            builder.HasNoKey();
+            builder.HasKey(e => e.Id);
 
             builder.ToTable("GES_Conf_Analisis_NivelesPlantasCliente");
 
@@ -21,15 +21,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.IdPlanta).HasColumnName("Id_Planta");
 
-            builder.Property(e => e.Prop_FisicoQuimico).HasColumnName("Prop_FisicoQuimico");
-
-            builder.Property(e => e.Prop_Aerobios).HasColumnName("Prop_Aerobios");
-
-            builder.Property(e => e.Prop_Legionela).HasColumnName("Prop_Legionela");
-
-            builder.Property(e => e.Prop_AguaPotable).HasColumnName("Prop_AguaPotable");
-
-            builder.Property(e => e.Prop_AguasResiduales).HasColumnName("Prop_AguasResiduales");
+            builder.Property(e => e.IdAnalisis).HasColumnName("Id_Analisis");
 
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 

@@ -100,33 +100,6 @@ function PlantasTabla() {
 
     const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
 
-    const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
-
-    const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
-
-        id: 0,
-        periodo: null,
-        idAnalisis: 0,
-        fecha: null,
-        realizado: false,
-        operario: '',
-        protocolo: '',
-        observaciones: '',
-        facturado: false,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-
-    });
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-
-    const [analisisEliminar, setAnalisisEliminar] = useState([]);
-    const [analisisEditar, setAnalisisEditar] = useState([]);
 
     const [oferta, setOferta] = useState([]);
 
@@ -1652,165 +1625,6 @@ function PlantasTabla() {
     }
     let listaElementos = planta.elementos;
 
-    const handleChangeInput = e => {
-        const { name, value } = e.target;
-        setAnalisisSeleccionado(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-
-    const handleChangeCheckbox = e => {
-        changeCheckState(e.target.checked)
-        console.log(e.target.checked)
-    }
-
-    const handleChangeCheckbox2 = e => {
-        changeActualState(e.target.checked)
-        console.log(e.target.checked)
-    }
-
-    const bodyInsertar = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <div className="row g-4">
-                <div className="col-md-4">
-                    <TextField
-                        id="periodo"
-                        label="Periodo"
-                        type="date"
-                        name="periodo"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <Autocomplete
-                        disableClearable={true}
-                        id="idAnalisis"
-                        options={analisis}
-                        getOptionLabel={option => option.nombre}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="Analisis" name="idAnalisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            idAnalisis: value.id
-                        }))}
-                    />
-                </div>
-
-                <div className="col-md-6">
-                    <TextField
-                        id="fecha"
-                        label="Fecha"
-                        type="date"
-                        name="fecha"
-                        format="mm-yy"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Operario" name="operario" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Protocolo" name="protocolo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Observaciones" name="observaciones" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-6">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEditar = (
-        <div className={styles.modal}>
-            <h3>Editar Analisis</h3>
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <TextField
-                        id="periodo"
-                        label="Periodo"
-                        type="date"
-                        name="periodo"
-                        sx={{ width: 220 }}
-                        onChange={(e) => setPeriodo(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Pedido" name="pedido" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.pedido} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Fecha" name="fecha" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.fecha} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.realizado} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Operario" name="operario" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.operario} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Protocolo" name="protocolo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.protocolo} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Observaciones" name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.facturado} />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEliminar = (
-
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el analisis ? </p>
-            <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-            </div>
-        </div>
-    )
-
-    const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
-    }
-
-    const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
-    }
-
-    const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
-    }
-
     const [value, setValue] = React.useState('0');
 
     const handleChange = (event, newValue) => {
@@ -1821,13 +1635,6 @@ function PlantasTabla() {
         axios.get("/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
-        }, [])
-    }
-
-    const GetAnalisis = async () => {
-        axios.get("/analisis", token).then(response => {
-            const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setAnalisis(analisi);
         }, [])
     }
 
@@ -1851,61 +1658,11 @@ function PlantasTabla() {
     }
 
     useEffect(() => {
-        const lookupAnalisis = {};
-        analisis.map(fila => lookupAnalisis[fila.id] = fila.nombre);
-        setAnalisisTable(lookupAnalisis);
-
         GetParametrosAnalisisPlanta();
         GetConfParametrosElementoPlantaCliente();
         GetOfertas();
         GetClientes();
-        GetAnalisis();
-    }, [analisis])
-
-    const peticionPost = async () => {
-        analisisSeleccionado.id = null;
-        console.log(analisisSeleccionado)
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                //setData(data.concat(response.data));
-                abrirCerrarModalInsertar();
-                GetParametrosAnalisisPlanta();
-            }).catch(error => {
-                console.log(error);
-            })
-    }
-
-    const peticionPut = async () => {
-        console.log(analisisSeleccionado)
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                GetParametrosAnalisisPlanta();
-                abrirCerrarModalEditar();
-            }).catch(error => {
-                console.log(error);
-            })
-    }
-
-    const peticionDelete = async () => {
-        console.log("id=" + analisisEliminar[0].id)
-        var i = 0;
-        while (i < analisisEliminar.length) {
-            await axios.delete("/parametrosanalisisplanta/" + analisisEliminar[i].id, token)
-                .then(response => {
-                    GetParametrosAnalisisPlanta();
-                    abrirCerrarModalEliminar();
-                }).catch(error => {
-                    console.log(error);
-                })
-            i++;
-        }
-    }
+    }, [])
 
     return (
         <div className="contenedor">
@@ -1927,7 +1684,7 @@ function PlantasTabla() {
                                     getOptionLabel={option => option.codigo}
                                     sx={{ width: 200 }}
                                     renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
-                                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
                                         ...prevState,
                                         codigoCliente: parseInt(value.codigo)
                                     }))}
@@ -1941,7 +1698,7 @@ function PlantasTabla() {
                                     getOptionLabel={option => option.numeroOferta}
                                     sx={{ width: 200 }}
                                     renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
-                                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
                                         ...prevState,
                                         oferta: parseInt(value.numeroOferta)
                                     }))}

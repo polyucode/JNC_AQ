@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
 import { TextField } from '@material-ui/core';
-import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Switch } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
@@ -537,6 +536,11 @@ function Plantas() {
                                     CodigoCliente: parseInt(value.codigo)
                                 }))}
                             />
+                            <br/>
+                            {/*<div className="col-md-6">
+                                <p>Nombre</p>
+                                <TextField style={{width: 250}} name="nombre" onChange={handleChange} />
+                            </div>*/}
                             <br /><br />
                             <div className='nombre-planta'>
                                 <h5>Numero de Oferta</h5>

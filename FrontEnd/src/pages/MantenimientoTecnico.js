@@ -212,7 +212,7 @@ function MantenimientoTecnico() {
                         <Button
                             variant="contained"
                             startIcon={<AddOutlinedIcon/>}
-                            style={{width: '50%'}}
+                            style={{width: '100%'}}
                         >Añadir</Button>
                     </div>
                 </div>
