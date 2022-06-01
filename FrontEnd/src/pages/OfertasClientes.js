@@ -101,7 +101,7 @@ function OfertasClientes() {
 
     const [ofertaSeleccionada, setOfertaSeleccionada] = useState({
         id: 0,
-        numeroOferta: 0,
+        numeroOferta: '',
         pedido: 0,
         codigoCliente: 0,
         articulo: '',
@@ -141,7 +141,7 @@ function OfertasClientes() {
     const columnas = [
 
         //Visibles
-        { title: 'NumeroOferta', field: 'numeroOferta', filterPlaceholder: "Filtrar por numero oferta" },
+        { title: 'NumeroOferta', field: 'numeroOferta', type: 'numeric' , filterPlaceholder: "Filtrar por numero oferta" },
         { title: 'Pedido', field: 'pedido', filterPlaceholder: "Filtrar por pedido" },
         { title: 'CodigoCliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
         { title: 'Descripcion', field: 'descripcion', filterPlaceholder: "Filtrar por Descripcion" },

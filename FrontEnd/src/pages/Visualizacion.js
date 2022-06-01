@@ -116,7 +116,6 @@ function Visualizacion() {
         delDate: null,
         delIdUser: null,
         deleted: null,
-
     });
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
@@ -197,7 +196,6 @@ function Visualizacion() {
                         label="Fecha"
                         type="date"
                         name="fecha"
-                        format="mm-yy"
                         sx={{ width: 220 }}
                         onChange={handleChangeInput}
                         InputLabelProps={{
@@ -334,16 +332,22 @@ function Visualizacion() {
         })
     }
 
+    const getAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            setData(response.data.data)
+        })
+    }
+
     useEffect(() => {
         const lookupAnalisis = {};
         analisis.map(fila => lookupAnalisis[fila.id] = fila.nombre);
         setAnalisisTable(lookupAnalisis);
-
         GetParametrosAnalisisPlanta();
         GetOfertas();
         GetClientes();
         GetAnalisis();
         GetElementos();
+        getAnalisisNivelesPlantasCliente();
     }, [analisis])
 
     const peticionPost = async () => {

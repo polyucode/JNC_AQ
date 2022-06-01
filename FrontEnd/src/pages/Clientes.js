@@ -129,7 +129,7 @@ function Clientes() {
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
-    codigo: '',
+    codigo: 0,
     cif: '',
     razonSocial: '',
     nombreComercial: '',
@@ -409,7 +409,7 @@ function Clientes() {
     const { name, value } = e.target;
     setClienteSeleccionado(prevState => ({
       ...prevState,
-      [name]: value
+      [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
     }));
   }
 
@@ -426,7 +426,7 @@ function Clientes() {
       <h3>Agregar Nuevo Cliente</h3>
       <div className="row g-3">
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} />
+          <TextField className={styles.inputMaterial} type="number" label="Codigo" name="codigo" onChange={handleChange} />
         </div>
         <div className="col-md-6">
           <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} />
@@ -521,7 +521,7 @@ function Clientes() {
       <h3>Editar Cliente</h3>
       <div className="row g-3">
         <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+          <TextField className={styles.inputMaterial} type="number" label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
         </div>
         <div className="col-md-2">
           <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />

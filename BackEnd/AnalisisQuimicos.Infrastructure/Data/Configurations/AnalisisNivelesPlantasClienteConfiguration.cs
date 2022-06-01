@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.ToTable("GES_Conf_Analisis_NivelesPlantasCliente");
 
-            builder.Property(e => e.IdCliente).HasColumnName("Id_Cliente");
+            builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
             builder.Property(e => e.IdElemento).HasColumnName("Id_Elemento");
 

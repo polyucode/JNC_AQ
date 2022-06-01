@@ -23,10 +23,9 @@ function Plantas() {
 
     const [confPlantasCliente, setConfPlantasCliente] = useState({
         id: 0,
-        CodigoCliente: 0,
-        NombrePlanta: "",
-        NumNiveles: 0,
-        IdPlanta: 0,
+        codigoCliente: 0,
+        oferta: 0,
+        numNiveles: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -43,7 +42,7 @@ function Plantas() {
         Id_Planta: 0,
         Nivel: 0,
         Id_Elemento: 0,
-        Orden: 0,
+        Orden: "",
         Visible: false,
         Conecta: "",
         addDate: null,
@@ -52,8 +51,24 @@ function Plantas() {
         modIdUser: null,
         delDate: null,
         delIdUser: null,
+        deleted: null
+    });
+
+    const [confAnalisisNivelesPlantaCliente, setAnalisisConfNivelesPlantaCliente] = useState({
+        id: 0,
+        CodigoCliente: 0,
+        Id_Planta: 0,
+        Id_Elemento: 0,
+        Id_Analisis: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
         deleted: null,
     });
+
     /*
        const [elementosPlanta, setElementosPlanta] = useState({
            id: 0,
@@ -89,13 +104,13 @@ function Plantas() {
 
     const planta = {
         codigoCliente: 0,
-        nombrePlanta: '',
+        oferta: 0,
         elementos: []
     }
     let listaElementos = planta.elementos;
 
     const tipoAnalisis = [];
-    analisis.map(analisi => tipoAnalisis.push({id: analisi.id, nombre: analisi.nombre, value: false}))
+    analisis.map(analisi => tipoAnalisis.push({ id: analisi.id, nombre: analisi.nombre, value: false }))
     // Variables del analisis del elemento
     let elementoAnalisisId = 0;
     let elementoAnalisisProps = tipoAnalisis;
@@ -123,7 +138,7 @@ function Plantas() {
     function crearElemento(id) {
 
         const tipoAnalisis = [];
-        analisis.map(analisi => tipoAnalisis.push({id: analisi.id, nombre: analisi.nombre, value: false}))
+        analisis.map(analisi => tipoAnalisis.push({ id: analisi.id, nombre: analisi.nombre, value: false }))
 
         console.log(tipoAnalisis);
         // Preparamos una variable para el elemento nuevo
@@ -251,11 +266,10 @@ function Plantas() {
     }
 
     function selAnalisisElemento() {
-        console.log(listaElementos[elementoAnalisisId])
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-        elementoAnalisisProps.map(analisi => document.getElementById(analisi.id).checked = elementoAnalisisProps.nombre)
+        elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
         // Seteamos los checkboxs según los datos almacenados en el elemento
         /*document.getElementById('ckb-fisico-quimico').checked = elementoAnalisisProps.fisicoQuimico;
         document.getElementById('ckb-aerobios').checked = elementoAnalisisProps.aerobios;
@@ -273,52 +287,47 @@ function Plantas() {
     }
 
     function changeAnalisisElemento(e) {
-        console.log(e.target)
         //console.log()
-
         listaElementos[elementoAnalisisId].propiedades[e.target.id - 1].value = e.target.checked
-
+        elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         // Cuando cambia el valor de un checkbox, vemos cual de ellos ha sido
         // y actualizamos el valor de la propiedad del elemento
         switch (e.target.id) {
-            case 'ckb-fisico-quimico':
-                elementoAnalisisProps.fisicoQuimico = e.target.checked;
+            case '1':
+                elementoAnalisisProps[0].value = e.target.checked;
                 break;
-            case 'ckb-aerobios':
-                elementoAnalisisProps.aerobios = e.target.checked;
+            case '2':
+                elementoAnalisisProps[1].value = e.target.checked;
                 break;
-            case 'ckb-legionela':
-                elementoAnalisisProps.legionela = e.target.checked;
+            case '3':
+                elementoAnalisisProps[2].value = e.target.checked;
                 break;
-            case 'ckb-agua-potable':
-                elementoAnalisisProps.aguaPotable = e.target.checked;
+            case '4':
+                elementoAnalisisProps[3].value = e.target.checked;
                 break;
-            case 'ckb-aguas-residuales':
-                elementoAnalisisProps.aguasResiduales = e.target.checked;
+            case '5':
+                elementoAnalisisProps[4].value = e.target.checked;
                 break;
-            case 'ckb-desinfecciones':
-                elementoAnalisisProps.desinfecciones = e.target.checked;
+            case '6':
+                elementoAnalisisProps[5].value = e.target.checked;
                 break;
-            case 'ckb-osmosis':
-                elementoAnalisisProps.osmosis = e.target.checked;
+            case '7':
+                elementoAnalisisProps[6].value = e.target.checked;
                 break;
-            case 'ckb-agua-pozo':
-                elementoAnalisisProps.aguaPozo = e.target.checked;
+            case '8':
+                elementoAnalisisProps[7].value = e.target.checked;
                 break;
-            case 'ckb-acs':
-                elementoAnalisisProps.acs = e.target.checked;
+            case '9':
+                elementoAnalisisProps[8].value = e.target.checked;
                 break;
-            case 'ckb-maquina-frio':
-                elementoAnalisisProps.maquinaFrio = e.target.checked;
+            case '10':
+                elementoAnalisisProps[9].value = e.target.checked;
                 break;
-            case 'ckb-mediciones':
-                elementoAnalisisProps.mediciones = e.target.checked;
+            case '11':
+                elementoAnalisisProps[10].value = e.target.checked;
                 break;
-            case 'ckb-fuga-gas':
-                elementoAnalisisProps.controlGas = e.target.checked;
-                break;
-            case 'ckb-otros':
-                elementoAnalisisProps.otros = e.target.checked;
+            case '12':
+                elementoAnalisisProps[11].value = e.target.checked;
                 break;
         }
 
@@ -356,12 +365,11 @@ function Plantas() {
         axios.get("/analisis", token).then(response => {
             const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisis(analisi);
-            console.log(analisi)
         }, [])
     }
 
     useEffect(() => {
-        GetConfPlantasCliente();
+        //GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
@@ -386,6 +394,12 @@ function Plantas() {
         else {
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
+                    /*console.log(response)
+                    setConfPlantasCliente({
+                        ...response.data.data,
+                        id: response.data.data.id
+                    })
+                    console.log(confPlantasCliente)*/
                     return response,
                         crearNiveles();
                 })
@@ -393,6 +407,47 @@ function Plantas() {
                     console.log(error)
                 })
         }
+    }
+
+    async function peticionPost2() {
+
+        listaElementos.map((elemento) => {
+            const elem = {
+                id: null,
+                CodigoCliente: confPlantasCliente.CodigoCliente,
+                Id_Planta: null,
+                Nivel: elemento.nivel,
+                Id_Elemento: null,
+                Orden: elemento.orden,
+                Visible: false,
+                Conecta: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            }
+            console.log(elem);
+        })
+        /*{
+            id: 0,
+            CodigoCliente: 0,
+            Id_Planta: 0,
+            Nivel: 0,
+            Id_Elemento: 0,
+            Orden: 0,
+            Visible: false,
+            Conecta: "",
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        }*/
     }
 
     function crearNodo(elemento) {
@@ -529,13 +584,13 @@ function Plantas() {
                                     CodigoCliente: parseInt(value.codigo)
                                 }))}
                             />
-                            <br/>
+                            <br />
                             {/*<div className="col-md-6">
                                 <p>Nombre</p>
                                 <TextField style={{width: 250}} name="nombre" onChange={handleChange} />
                             </div>*/}
                             <br /><br />
-                            <div className='nombre-planta'>
+                            <div className='numero-oferta'>
                                 <h5>Numero de Oferta</h5>
                                 <hr />
                                 <Autocomplete
@@ -544,7 +599,7 @@ function Plantas() {
                                     options={oferta}
                                     getOptionLabel={option => option.numeroOferta}
                                     sx={{ width: 250 }}
-                                    renderInput={(params) => <TextField {...params} type="number" name="numeroOferta" />}
+                                    renderInput={(params) => <TextField {...params} type="number" name="oferta" />}
                                     onChange={(event, value) => setConfPlantasCliente(prevState => ({
                                         ...prevState,
                                         oferta: parseInt(value.numeroOferta)
@@ -582,7 +637,7 @@ function Plantas() {
                             </select>
                             <div className='analisis-elemento-checks'>
                                 {
-                                    analisis.map((analisi, index) => <div key={index}><input type="checkbox" id={analisi.id} onChange={changeAnalisisElemento}/> {analisi.nombre} </div>)
+                                    analisis.map((analisi, index) => <div key={index}><input type="checkbox" id={analisi.id} onChange={changeAnalisisElemento} /> {analisi.nombre} </div>)
                                 }
                                 {/*<React.Fragment>
                                     <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
@@ -601,7 +656,7 @@ function Plantas() {
                             </React.Fragment>*/}
                             </div>
                         </div>
-                        <button>Guardar</button>
+                        <button onClick={peticionPost2}>Guardar</button>
                     </div>
 
                 </div>
