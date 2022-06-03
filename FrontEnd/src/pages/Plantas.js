@@ -23,9 +23,9 @@ function Plantas() {
 
     const [confPlantasCliente, setConfPlantasCliente] = useState({
         id: 0,
-        codigoCliente: 0,
+        CodigoCliente: 0,
         oferta: 0,
-        numNiveles: 0,
+        NumNiveles: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -33,25 +33,6 @@ function Plantas() {
         delDate: null,
         delIdUser: null,
         deleted: null,
-    });
-
-
-    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
-        id: 0,
-        CodigoCliente: 0,
-        Id_Planta: 0,
-        Nivel: 0,
-        Id_Elemento: 0,
-        Orden: "",
-        Visible: false,
-        Conecta: "",
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null
     });
 
     const [confAnalisisNivelesPlantaCliente, setAnalisisConfNivelesPlantaCliente] = useState({
@@ -69,10 +50,10 @@ function Plantas() {
         deleted: null,
     });
 
-    /*
-       const [elementosPlanta, setElementosPlanta] = useState({
+    /*   const [elementosPlanta, setElementosPlanta] = useState({
            id: 0,
            Nombre: "",
+           Numero: 0,
            Maestro: false,
            addDate: null,
            addIdUser: null,
@@ -87,7 +68,7 @@ function Plantas() {
 
     //const [confPlantasCliente, setConfPlantasCliente] = useState([]);
 
-    //const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+    const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
     const [elementosPlanta, setElementosPlanta] = useState([]);
 
@@ -95,6 +76,8 @@ function Plantas() {
     const [clientesTable, setClientesTable] = useState({});
 
     const [oferta, setOferta] = useState([]);
+
+    const [elemento, setElemento] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
 
@@ -140,23 +123,28 @@ function Plantas() {
         const tipoAnalisis = [];
         analisis.map(analisi => tipoAnalisis.push({ id: analisi.id, nombre: analisi.nombre, value: false }))
 
-        console.log(tipoAnalisis);
+        const tipoElemento = [];
+        elemento.map(elem => tipoElemento.push({id: elem.id, nombre: elem.nombre, numero: elem.numero }) )
+
+        console.log(tipoElemento)
         // Preparamos una variable para el elemento nuevo
         let elementoNuevo = {
+            id: 0,
             nombre: '',
             numero: 0,
             posicion: 0,
             nivel: 0,
-            propiedades: tipoAnalisis
+            propiedades: tipoAnalisis,
+            tipoElemento: 0
         }
-        console.log(elementoNuevo)
 
+        
         // Añadimos el nombre del elemento
         elementoNuevo.nombre = document.getElementById('lista-nivel-' + id).value;
-
         // Añadimos el número para elementos repetidos
         let elementosRepetidos = listaElementos.filter((element) => element.nombre == elementoNuevo.nombre).length;
         elementoNuevo.numero = elementosRepetidos + 1;
+
 
         // Añadimos la posición del elemento en el nivel (por defecto el último)
         let posicionElemento = listaElementos.filter((element) => element.nivel == id).length;
@@ -164,29 +152,31 @@ function Plantas() {
 
         // Añadimos el nivel
         elementoNuevo.nivel = id;
-
-
         // Añadimos el elemento nuevo a la lista principal
         listaElementos.push(elementoNuevo);
-
+        console.log(id)
         // Preparamos una lista de elementos del nivel para actualizar
         let elementosNivel = listaElementos.filter((element) => element.nivel == id);
+        console.log(elementosNivel)
 
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
         elementosNivel.forEach((elemento) => {
             listaElementosNivel.push(React.createElement('option', null, elemento.nombre + ' ' + elemento.numero));
         });
+
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
 
-
+        for(id = 0; id < elemento.length ; id++){
+            if(tipoElemento[id].nombre === elementoNuevo.nombre && tipoElemento[id].numero === elementoNuevo.numero){
+                elementoNuevo.id = tipoElemento[id].id
+            }
+        }
         // Actualizamos la lista de análisis por elemento
         ReactDOM.render(
             listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
             document.getElementById('analisis-elemento-list')
         );
-
-        console.log(analisis)
 
         //crearNodo(elementoNuevo)
     }
@@ -209,7 +199,7 @@ function Plantas() {
     }
 
     function crearNiveles() {
-
+        console.log(elemento)
         // Obtenemos el valor de la cantidad de niveles a crear
         let numNiveles = document.getElementById('numero-niveles').value;
         let listadoNiveles = [];
@@ -221,15 +211,16 @@ function Plantas() {
 
         // Generamos en el DOM la interfaz de los niveles
         for (let i = 0; i < numNiveles; i++) {
+            let listadoElementos = [
+                React.createElement('option', {value: "Osmosis" }, "Osmosis"),
+                React.createElement('option', {value: "Caldera" }, "Caldera"),
+                React.createElement('option', {value: "Torre" }, "Torre"),
+                React.createElement('option', {value: "Refrigeracion" }, "Refrigeracion"),
+                React.createElement('option', {value: "Deposito" }, "Deposito")
+            ]
 
             // Creamos el listado de elementos disponibles
-            let listadoElementos = [
-                React.createElement('option', { value: 'Osmosis' }, 'Osmosis'),
-                React.createElement('option', { value: 'Depósito' }, 'Depósito'),
-                React.createElement('option', { value: 'Refrigeración' }, 'Refrigeración'),
-                React.createElement('option', { value: 'Torre' }, 'Torre'),
-                React.createElement('option', { value: 'Caldera' }, 'Caldera')
-            ];
+
 
             // Creamos todos los componentes de la interfaz del nivel
             let elementos = [
@@ -350,7 +341,8 @@ function Plantas() {
 
     const GetElementosPlanta = async () => {
         axios.get("/elementosplanta", token).then(response => {
-            setElementosPlanta(response.data.data)
+            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setElemento(elemento);
         })
     }
 
@@ -394,13 +386,8 @@ function Plantas() {
         else {
             await axios.post("/confplantascliente", confPlantasCliente, token)
                 .then(response => {
-                    /*console.log(response)
-                    setConfPlantasCliente({
-                        ...response.data.data,
-                        id: response.data.data.id
-                    })
-                    console.log(confPlantasCliente)*/
-                    return response,
+                    confPlantasCliente.id = response.data.data.id
+                    return response.data.data,
                         crearNiveles();
                 })
                 .catch(error => {
@@ -409,15 +396,26 @@ function Plantas() {
         }
     }
 
-    async function peticionPost2() {
+    /*const postElemento = async () => {
+        await axios.post("/elementosplanta", elementosPlanta, token)
+            .then(response => {
+                console.log(response)
+                return response.data.data
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }*/
+
+    async function datosElementos() {
 
         listaElementos.map((elemento) => {
             const elem = {
-                id: null,
+                id: 0,
                 CodigoCliente: confPlantasCliente.CodigoCliente,
-                Id_Planta: null,
+                Id_Planta: confPlantasCliente.id,
                 Nivel: elemento.nivel,
-                Id_Elemento: null,
+                Id_Elemento: elemento.id,
                 Orden: elemento.orden,
                 Visible: false,
                 Conecta: "",
@@ -429,8 +427,15 @@ function Plantas() {
                 delIdUser: null,
                 deleted: null
             }
-            console.log(elem);
+            axios.post("/confnivelesplantascliente", elem, token)
+                .then(response => {
+                    return response
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         })
+        
         /*{
             id: 0,
             CodigoCliente: 0,
@@ -656,7 +661,7 @@ function Plantas() {
                             </React.Fragment>*/}
                             </div>
                         </div>
-                        <button onClick={peticionPost2}>Guardar</button>
+                        <button onClick={datosElementos}>Guardar</button>
                     </div>
 
                 </div>
@@ -667,7 +672,7 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button onClick={guardarNiveles}> Guardar Datos </button>
+                        <button> Guardar Datos </button>
                     </div>
 
                 </div>
