@@ -292,13 +292,13 @@ function Clientes() {
   }
 
   const peticionGetContacto = async () => {
-    console.log("MEtodo Get Ejecutandose")
     axios.get("/clientescontactos", token).then(response => {
       setDataDet(response.data.data)
     })
   }
 
   useEffect(() => {
+    console.log("Prueba USE EFFECT")
     peticionGet();
     peticionGetContacto();
     GetPerfiles();
@@ -407,6 +407,7 @@ function Clientes() {
 
   const handleChange = e => {
     const { name, value } = e.target;
+    console.log(e.target)
     setClienteSeleccionado(prevState => ({
       ...prevState,
       [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value

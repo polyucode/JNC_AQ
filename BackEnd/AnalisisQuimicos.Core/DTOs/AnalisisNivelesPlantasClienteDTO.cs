@@ -7,6 +7,7 @@ namespace AnalisisQuimicos.Core.DTOs
     public class AnalisisNivelesPlantasClienteDTO
     {
         public int? CodigoCliente { get; set; }
+        public int? Oferta { get; set; }
         public int? IdPlanta { get; set; }
         public int? IdElemento { get; set; }
         public int? IdAnalisis { get; set; }

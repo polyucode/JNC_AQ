@@ -6,6 +6,7 @@ namespace AnalisisQuimicos.Core.Entities
     public partial class AnalisisNivelesPlantasCliente : BaseEntity
     {
         public int? CodigoCliente { get; set; }
+        public int? Oferta { get; set; }
         public int? IdPlanta { get; set; }
         public int? IdElemento { get; set; }
         public int? IdAnalisis { get; set; }

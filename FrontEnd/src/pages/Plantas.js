@@ -124,7 +124,7 @@ function Plantas() {
         analisis.map(analisi => tipoAnalisis.push({ id: analisi.id, nombre: analisi.nombre, value: false }))
 
         const tipoElemento = [];
-        elemento.map(elem => tipoElemento.push({id: elem.id, nombre: elem.nombre, numero: elem.numero }) )
+        elemento.map(elem => tipoElemento.push({ id: elem.id, nombre: elem.nombre, numero: elem.numero }))
 
         console.log(tipoElemento)
         // Preparamos una variable para el elemento nuevo
@@ -135,10 +135,9 @@ function Plantas() {
             posicion: 0,
             nivel: 0,
             propiedades: tipoAnalisis,
-            tipoElemento: 0
         }
 
-        
+
         // Añadimos el nombre del elemento
         elementoNuevo.nombre = document.getElementById('lista-nivel-' + id).value;
         // Añadimos el número para elementos repetidos
@@ -167,8 +166,8 @@ function Plantas() {
 
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
 
-        for(id = 0; id < elemento.length ; id++){
-            if(tipoElemento[id].nombre === elementoNuevo.nombre && tipoElemento[id].numero === elementoNuevo.numero){
+        for (id = 0; id < elemento.length; id++) {
+            if (tipoElemento[id].nombre === elementoNuevo.nombre && tipoElemento[id].numero === elementoNuevo.numero) {
                 elementoNuevo.id = tipoElemento[id].id
             }
         }
@@ -212,11 +211,11 @@ function Plantas() {
         // Generamos en el DOM la interfaz de los niveles
         for (let i = 0; i < numNiveles; i++) {
             let listadoElementos = [
-                React.createElement('option', {value: "Osmosis" }, "Osmosis"),
-                React.createElement('option', {value: "Caldera" }, "Caldera"),
-                React.createElement('option', {value: "Torre" }, "Torre"),
-                React.createElement('option', {value: "Refrigeracion" }, "Refrigeracion"),
-                React.createElement('option', {value: "Deposito" }, "Deposito")
+                React.createElement('option', { value: "Osmosis" }, "Osmosis"),
+                React.createElement('option', { value: "Caldera" }, "Caldera"),
+                React.createElement('option', { value: "Torre" }, "Torre"),
+                React.createElement('option', { value: "Refrigeracion" }, "Refrigeracion"),
+                React.createElement('option', { value: "Deposito" }, "Deposito")
             ]
 
             // Creamos el listado de elementos disponibles
@@ -408,15 +407,14 @@ function Plantas() {
     }*/
 
     async function datosElementos() {
-
         listaElementos.map((elemento) => {
             const elem = {
                 id: 0,
                 CodigoCliente: confPlantasCliente.CodigoCliente,
+                Oferta: confPlantasCliente.oferta,
                 Id_Planta: confPlantasCliente.id,
                 Nivel: elemento.nivel,
                 Id_Elemento: elemento.id,
-                Orden: elemento.orden,
                 Visible: false,
                 Conecta: "",
                 addDate: null,
@@ -435,24 +433,30 @@ function Plantas() {
                     console.log(error)
                 })
         })
-        
-        /*{
-            id: 0,
-            CodigoCliente: 0,
-            Id_Planta: 0,
-            Nivel: 0,
-            Id_Elemento: 0,
-            Orden: 0,
-            Visible: false,
-            Conecta: "",
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        }*/
+    }
+
+    async function datosAnalisisElementos() {
+        console.log(listaElementos)
+        console.log(listaElementos[elementoAnalisisId])
+        if (listaElementos[elementoAnalisisId].propiedades.value == true) {
+            listaElementos.map((elemento) => {
+                const analisisElem = {
+                    id: 0,
+                    CodigoCliente: confPlantasCliente.CodigoCliente,
+                    Id_Planta: confPlantasCliente.id,
+                    Id_Elemento: elemento.id,
+                    Id_Analisis: null,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+                console.log(analisisElem)
+            })
+        }
     }
 
     function crearNodo(elemento) {
@@ -661,7 +665,7 @@ function Plantas() {
                             </React.Fragment>*/}
                             </div>
                         </div>
-                        <button onClick={datosElementos}>Guardar</button>
+                        <button onClick={datosAnalisisElementos}>Guardar</button>
                     </div>
 
                 </div>
@@ -672,7 +676,7 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button> Guardar Datos </button>
+                        <button onClick={datosElementos}> Guardar Datos </button>
                     </div>
 
                 </div>
