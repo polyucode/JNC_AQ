@@ -106,6 +106,7 @@ function Visualizacion() {
         oferta: 0,
         idElemento: 0,
         periodo: null,
+        idAnalisis: 0,
         fecha: null,
         realizado: false,
         operario: '',
@@ -121,9 +122,20 @@ function Visualizacion() {
         deleted: null,
     });
 
-
-
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+
+    const [FilasSeleccionadas1, setFilasSeleccionadas1] = useState([]);
+    const [FilasSeleccionadas2, setFilasSeleccionadas2] = useState([]);
+    const [FilasSeleccionadas3, setFilasSeleccionadas3] = useState([]);
+    const [FilasSeleccionadas4, setFilasSeleccionadas4] = useState([]);
+    const [FilasSeleccionadas5, setFilasSeleccionadas5] = useState([]);
+    const [FilasSeleccionadas6, setFilasSeleccionadas6] = useState([]);
+    const [FilasSeleccionadas7, setFilasSeleccionadas7] = useState([]);
+    const [FilasSeleccionadas8, setFilasSeleccionadas8] = useState([]);
+    const [FilasSeleccionadas9, setFilasSeleccionadas9] = useState([]);
+    const [FilasSeleccionadas10, setFilasSeleccionadas10] = useState([]);
+    const [FilasSeleccionadas11, setFilasSeleccionadas11] = useState([]);
+    const [FilasSeleccionadas12, setFilasSeleccionadas12] = useState([]);
 
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
@@ -171,6 +183,8 @@ function Visualizacion() {
     const [data11, setData11] = useState([]);
     const [data12, setData12] = useState([]);
 
+    const [dataTablas, setDataTablas] = useState([]);
+
     const styles = useStyles();
 
     const handleChangeInput = e => {
@@ -208,16 +222,16 @@ function Visualizacion() {
                         }}
                     />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField className={styles.inputMaterial} label="CodigoCliente" name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField className={styles.inputMaterial} label="Oferta" name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField className={styles.inputMaterial} label="IdElemento" name="idElemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.idElemento} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField
                         id="fecha"
                         label="Fecha"
@@ -230,7 +244,7 @@ function Visualizacion() {
                         }}
                     />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-6">
@@ -257,7 +271,7 @@ function Visualizacion() {
         <div className={styles.modal}>
             <h3>Editar Analisis</h3>
             <div className="row g-3">
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField
                         id="periodo"
                         label="Periodo"
@@ -270,10 +284,10 @@ function Visualizacion() {
                         }}
                     />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField className={styles.inputMaterial} label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <TextField className={styles.inputMaterial} label="Pedido" name="pedido" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.pedido} />
                 </div>
                 <div className="col-md-6">
@@ -314,6 +328,7 @@ function Visualizacion() {
     )
 
     const abrirCerrarModalInsertar = () => {
+
         setModalInsertar(!modalInsertar);
     }
 
@@ -353,6 +368,13 @@ function Visualizacion() {
         }, [])
     }
 
+    const GetAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setAnalisisNivelesPlantasCliente(analisisNiveles);
+        }, [])
+    }
+
     const GetParametrosAnalisisPlanta = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
             setData(response.data.data)
@@ -389,6 +411,8 @@ function Visualizacion() {
         GetClientes();
         GetAnalisis();
         GetElementos();
+        GetAnalisisNivelesPlantasCliente();
+        Tablas();
     }, [])
 
     const peticionPost = async () => {
@@ -436,71 +460,76 @@ function Visualizacion() {
         }
     }
 
-    const onChangeCliente = (e) => {
-        console.log("TEXT CONTENT" + e.target.textContent)
-        let filter = data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 1)
-        console.log(filter)
-
-        setDataCliente(data.filter(registro => registro.codigoCliente === e.target.textContent))
-        
+    const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 1))
-            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 2))
-            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 3))
-            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 4))
-            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 5))
-            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 6))
-            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 7))
-            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 8))
-            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 9))
-            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 10))
-            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 11))
-            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 12))
+            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 1 && analisis.oferta === analisisSeleccionado.oferta))
+            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 2 && analisis.oferta === analisisSeleccionado.oferta))
+            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 3 && analisis.oferta === analisisSeleccionado.oferta))
+            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 4 && analisis.oferta === analisisSeleccionado.oferta))
+            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 5 && analisis.oferta === analisisSeleccionado.oferta))
+            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 6 && analisis.oferta === analisisSeleccionado.oferta))
+            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 7 && analisis.oferta === analisisSeleccionado.oferta))
+            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 8 && analisis.oferta === analisisSeleccionado.oferta))
+            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 9 && analisis.oferta === analisisSeleccionado.oferta))
+            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 10 && analisis.oferta === analisisSeleccionado.oferta))
+            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 11 && analisis.oferta === analisisSeleccionado.oferta))
+            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.idAnalisis === 12 && analisis.oferta === analisisSeleccionado.oferta))
         }
 
-        const idAnalisis = [];
-        data.map((registro) => {
-            idAnalisis.push(registro.idAnalisis);
-        })
-        console.log(idAnalisis)
-    
+        setAnalisisSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.codigo
+        }))
     }
 
-    const onChangeOferta = e => {
-        console.log(data1)
+    const onChangeOferta = (e, value, name) => {
+
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 1))
-            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 2))
-            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 3))
-            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 4))
-            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 5))
-            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 6))
-            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 7))
-            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 8))
-            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 9))
-            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 10))
-            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 11))
-            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 12))
+            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
+            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.idAnalisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente))
         }
+
+        setAnalisisSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.numeroOferta
+        }))
     }
 
-    const onChangeElemento = e => {
-        console.log(e)
+    const onChangeElemento = (e, value, name) => {
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 1))
-            setData2(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 2))
-            setData3(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 3))
-            setData4(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 4))
-            setData5(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 5))
-            setData6(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 6))
-            setData7(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 7))
-            setData8(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 8))
-            setData9(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 9))
-            setData10(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 10))
-            setData11(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 11))
-            setData12(data.filter(analisis => analisis.idElemento === 31 && analisis.idAnalisis === 12))
+            setData1(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData2(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData3(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData4(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData5(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData6(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData7(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData8(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData9(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData10(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData11(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData12(data.filter(analisis => analisis.idElemento === value.id && analisis.idAnalisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
         }
+
+        setAnalisisSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.id
+        }))
+    }
+
+    function Tablas (){
+        setDataTablas(analisisNivelesPlantasCliente.filter(analisisPlanta => console.log(analisisPlanta)))
     }
 
     return (
@@ -515,7 +544,7 @@ function Visualizacion() {
                     getOptionLabel={option => option.codigo}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
-                    onChange={onChangeCliente}
+                    onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
                 />
                 <Autocomplete
                     disableClearable={true}
@@ -524,7 +553,7 @@ function Visualizacion() {
                     getOptionLabel={option => option.numeroOferta}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
-                    onChange={onChangeOferta}
+                    onChange={(event, value) => onChangeOferta(event, value, "oferta")}
                 />
                 <Autocomplete
                     disableClearable={true}
@@ -533,246 +562,255 @@ function Visualizacion() {
                     getOptionLabel={option => option.nombre}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="Elemento" />}
-                    onChange={onChangeElemento}
+                    onChange={(event, value) => onChangeElemento(event, value, "idElemento")}
                 />
             </div>
             <br />
             <div className='home-container-elements'>
                 <div className="home-col-1">
                     <div className="home-diagrama">
-                    {console.log(analisisSeleccionado)}
-                        <MaterialTable columns={columnas} data={data1}
-                            localization={localization}
-                            actions={[
-                                {
-                                    icon: () => <AddCircle style={{ fill: "green" }} />,
-                                    tooltip: "Añadir analisis",
-                                    isFreeAction: true,
-                                    onClick: (e, data) => {
-                                        abrirCerrarModalInsertar();
+                        {console.log(dataTablas)}
+                        {data1 &&
+                            <MaterialTable columns={columnas} data={data1}
+                                localization={localization}
+                                actions={[
+                                    {
+                                        icon: () => <AddCircle style={{ fill: "green" }} />,
+                                        tooltip: "Añadir analisis",
+                                        isFreeAction: true,
+                                        onClick: (e, data) => {
+                                            abrirCerrarModalInsertar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                    tooltip: "Eliminar analisis",
-                                    onClick: (event, rowData) => {
-                                        setAnalisisEliminar(FilasSeleccionadas);
-                                        abrirCerrarModalEliminar();
+                                    {
+                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                        tooltip: "Eliminar analisis",
+                                        onClick: (event, rowData) => {
+                                            setAnalisisEliminar(FilasSeleccionadas1);
+                                            abrirCerrarModalEliminar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <Edit />,
-                                    tooltip: "Editar analisis",
-                                    onClick: (e, data) => {
-                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].id));
-                                        abrirCerrarModalEditar();
+                                    {
+                                        icon: () => <Edit />,
+                                        tooltip: "Editar analisis",
+                                        onClick: (e, data) => {
+                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas1[0].id));
+                                            abrirCerrarModalEditar();
+                                        },
                                     },
-                                },
-                            ]}
+                                ]}
 
-                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
-                            onSelectionChange={(filas) => {
-                                console.log(FilasSeleccionadas)
-                                setFilasSeleccionadas(filas);
-                                if (filas.length > 0)
+                                onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                onSelectionChange={(filas) => {
+                                    setFilasSeleccionadas1(filas);
+
                                     setAnalisisSeleccionado(filas[0]);
-                            }
-                            }
-                            options={{
-                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                columnsButton: false,
-                                rowStyle: rowData => ({
-                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                    whiteSpace: "nowrap"
-                                }),
-                                exportMenu: [{
-                                    label: 'Export PDF',
-                                    exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de analisis')
-                                }, {
-                                    label: 'Export CSV',
-                                    exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de analisis')
-                                }]
-                            }}
+                                    console.log(analisisSeleccionado)
+                                }
+                                }
+                                options={{
+                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                    columnsButton: false,
+                                    rowStyle: rowData => ({
+                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                        whiteSpace: "nowrap"
+                                    }),
+                                    exportMenu: [{
+                                        label: 'Export PDF',
+                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de analisis')
+                                    }, {
+                                        label: 'Export CSV',
+                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de analisis')
+                                    }]
+                                }}
 
-                            title="Fisico Quimico"
-                        />
+                                title="Fisico Quimico"
+                            />
+                        }
                     </div>
+
                     <div className="home-tabla-parametros-elemento">
-                        <MaterialTable columns={columnas} data={data3}
-                            localization={localization}
-                            actions={[
-                                {
-                                    icon: () => <AddCircle style={{ fill: "green" }} />,
-                                    tooltip: "Añadir analisis",
-                                    isFreeAction: true,
-                                    onClick: (e, data) => {
-                                        abrirCerrarModalInsertar();
+                        {data3 &&
+                            <MaterialTable columns={columnas} data={data3}
+                                localization={localization}
+                                actions={[
+                                    {
+                                        icon: () => <AddCircle style={{ fill: "green" }} />,
+                                        tooltip: "Añadir analisis",
+                                        isFreeAction: true,
+                                        onClick: (e, data) => {
+                                            abrirCerrarModalInsertar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                    tooltip: "Eliminar analisis",
-                                    onClick: (event, rowData) => {
-                                        setAnalisisEliminar(FilasSeleccionadas);
-                                        abrirCerrarModalEliminar();
+                                    {
+                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                        tooltip: "Eliminar analisis",
+                                        onClick: (event, rowData) => {
+                                            setAnalisisEliminar(FilasSeleccionadas);
+                                            abrirCerrarModalEliminar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <Edit />,
-                                    tooltip: "Editar analisis",
-                                    onClick: (e, data) => {
-                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                        abrirCerrarModalEditar();
+                                    {
+                                        icon: () => <Edit />,
+                                        tooltip: "Editar analisis",
+                                        onClick: (e, data) => {
+                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                            abrirCerrarModalEditar();
+                                        },
                                     },
-                                },
-                            ]}
+                                ]}
 
-                            //onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
-                            onSelectionChange={(filas) => {
-                                console.log(FilasSeleccionadas)
-                                setFilasSeleccionadas(filas);
-                                if (filas.length > 0)
-                                    setAnalisisSeleccionado(filas[0]);
-                            }
-                            }
-                            options={{
-                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                columnsButton: false,
-                                rowStyle: rowData => ({
-                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                    whiteSpace: "nowrap"
-                                }),
-                                exportMenu: [{
-                                    label: 'Export PDF',
-                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
-                                }, {
-                                    label: 'Export CSV',
-                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
-                                }]
-                            }}
+                                //onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                onSelectionChange={(filas) => {
+                                    console.log(FilasSeleccionadas)
+                                    setFilasSeleccionadas(filas);
+                                    if (filas.length > 0)
+                                        setAnalisisSeleccionado(filas[0]);
+                                }
+                                }
+                                options={{
+                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                    columnsButton: false,
+                                    rowStyle: rowData => ({
+                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                        whiteSpace: "nowrap"
+                                    }),
+                                    exportMenu: [{
+                                        label: 'Export PDF',
+                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                    }, {
+                                        label: 'Export CSV',
+                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                    }]
+                                }}
 
-                            title="Legionela"
-                        />
+                                title="Legionela"
+                            />
+                        }
                     </div>
                 </div>
                 <div className="home-col-2">
-                    <div className='home-calendario-mantenimiento'>
-                        <MaterialTable columns={columnas} data={data2}
-                            localization={localization}
-                            actions={[
-                                {
-                                    icon: () => <AddCircle style={{ fill: "green" }} />,
-                                    tooltip: "Añadir analisis",
-                                    isFreeAction: true,
-                                    onClick: (e, data) => {
-                                        abrirCerrarModalInsertar();
+                    <div className='home-diagrama'>
+                        {data2.length > 0 &&
+                            <MaterialTable columns={columnas} data={data2}
+                                localization={localization}
+                                actions={[
+                                    {
+                                        icon: () => <AddCircle style={{ fill: "green" }} />,
+                                        tooltip: "Añadir analisis",
+                                        isFreeAction: true,
+                                        onClick: (e, data) => {
+                                            abrirCerrarModalInsertar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                    tooltip: "Eliminar analisis",
-                                    onClick: (event, rowData) => {
-                                        setAnalisisEliminar(FilasSeleccionadas);
-                                        abrirCerrarModalEliminar();
+                                    {
+                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                        tooltip: "Eliminar analisis",
+                                        onClick: (event, rowData) => {
+                                            setAnalisisEliminar(FilasSeleccionadas);
+                                            abrirCerrarModalEliminar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <Edit />,
-                                    tooltip: "Editar analisis",
-                                    onClick: (e, data) => {
-                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                        abrirCerrarModalEditar();
+                                    {
+                                        icon: () => <Edit />,
+                                        tooltip: "Editar analisis",
+                                        onClick: (e, data) => {
+                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                            abrirCerrarModalEditar();
+                                        },
                                     },
-                                },
-                            ]}
+                                ]}
 
-                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
-                            onSelectionChange={(filas) => {
-                                setFilasSeleccionadas(filas);
-                                if (filas.length > 0)
-                                    setAnalisisSeleccionado(filas[0]);
-                            }
-                            }
-                            options={{
-                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                columnsButton: false,
-                                rowStyle: rowData => ({
-                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                    whiteSpace: "nowrap"
-                                }),
-                                exportMenu: [{
-                                    label: 'Export PDF',
-                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
-                                }, {
-                                    label: 'Export CSV',
-                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
-                                }]
-                            }}
+                                onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                onSelectionChange={(filas) => {
+                                    setFilasSeleccionadas(filas);
+                                    if (filas.length > 0)
+                                        setAnalisisSeleccionado(filas[0]);
+                                }
+                                }
+                                options={{
+                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                    columnsButton: false,
+                                    rowStyle: rowData => ({
+                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                        whiteSpace: "nowrap"
+                                    }),
+                                    exportMenu: [{
+                                        label: 'Export PDF',
+                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                    }, {
+                                        label: 'Export CSV',
+                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                    }]
+                                }}
 
-                            title="Aerobios"
-                        />
+                                title="Aerobios"
+                            />
+                        }
                     </div>
-                    <div className='home-grafico'>
-                        <MaterialTable columns={columnas} data={data4}
-                            localization={localization}
-                            actions={[
-                                {
-                                    icon: () => <AddCircle style={{ fill: "green" }} />,
-                                    tooltip: "Añadir analisis",
-                                    isFreeAction: true,
-                                    onClick: (e, data) => {
-                                        abrirCerrarModalInsertar();
+                    <div className='home-tabla-parametros-elemento'>
+                        {data4.length > 0 &&
+                            <MaterialTable columns={columnas} data={data4}
+                                localization={localization}
+                                actions={[
+                                    {
+                                        icon: () => <AddCircle style={{ fill: "green" }} />,
+                                        tooltip: "Añadir analisis",
+                                        isFreeAction: true,
+                                        onClick: (e, data) => {
+                                            abrirCerrarModalInsertar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                    tooltip: "Eliminar analisis",
-                                    onClick: (event, rowData) => {
-                                        setAnalisisEliminar(FilasSeleccionadas);
-                                        abrirCerrarModalEliminar();
+                                    {
+                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                        tooltip: "Eliminar analisis",
+                                        onClick: (event, rowData) => {
+                                            setAnalisisEliminar(FilasSeleccionadas);
+                                            abrirCerrarModalEliminar();
+                                        },
                                     },
-                                },
-                                {
-                                    icon: () => <Edit />,
-                                    tooltip: "Editar analisis",
-                                    onClick: (e, data) => {
-                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                        abrirCerrarModalEditar();
+                                    {
+                                        icon: () => <Edit />,
+                                        tooltip: "Editar analisis",
+                                        onClick: (e, data) => {
+                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                            abrirCerrarModalEditar();
+                                        },
                                     },
-                                },
-                            ]}
+                                ]}
 
-                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
-                            onSelectionChange={(filas) => {
-                                console.log(FilasSeleccionadas)
-                                setFilasSeleccionadas(filas);
-                                if (filas.length > 0)
-                                    setAnalisisSeleccionado(filas[0]);
-                            }
-                            }
-                            options={{
-                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                columnsButton: false,
-                                rowStyle: rowData => ({
-                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                    whiteSpace: "nowrap"
-                                }),
-                                exportMenu: [{
-                                    label: 'Export PDF',
-                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
-                                }, {
-                                    label: 'Export CSV',
-                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
-                                }]
-                            }}
+                                onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                onSelectionChange={(filas) => {
+                                    console.log(FilasSeleccionadas)
+                                    setFilasSeleccionadas(filas);
+                                    if (filas.length > 0)
+                                        setAnalisisSeleccionado(filas[0]);
+                                }
+                                }
+                                options={{
+                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                    columnsButton: false,
+                                    rowStyle: rowData => ({
+                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                        whiteSpace: "nowrap"
+                                    }),
+                                    exportMenu: [{
+                                        label: 'Export PDF',
+                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                    }, {
+                                        label: 'Export CSV',
+                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                    }]
+                                }}
 
-                            title="Aguas Residuales"
-                        />
+                                title="Aguas Residuales"
+                            />
+                        }
                     </div>
                 </div>
 
             </div>
-            {/*<div className='home-container-elements'>
+            <div className='home-container-elements'>
                 <div className="home-col-1">
                     <div className="home-diagrama">
                         <MaterialTable columns={columnas} data={data5}
@@ -1240,7 +1278,7 @@ function Visualizacion() {
                 </div>
 
             </div>
-                        */}
+
             <Modal
                 open={modalInsertar}
                 onClose={abrirCerrarModalInsertar}>

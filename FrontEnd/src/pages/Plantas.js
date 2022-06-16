@@ -35,20 +35,7 @@ function Plantas() {
         deleted: null,
     });
 
-    const [confAnalisisNivelesPlantaCliente, setAnalisisConfNivelesPlantaCliente] = useState({
-        id: 0,
-        CodigoCliente: 0,
-        Id_Planta: 0,
-        Id_Elemento: 0,
-        Id_Analisis: 0,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-    });
+    const [confAnalisisNivelesPlantaCliente, setAnalisisConfNivelesPlantaCliente] = useState([]);
 
     /*   const [elementosPlanta, setElementosPlanta] = useState({
            id: 0,
@@ -153,10 +140,9 @@ function Plantas() {
         elementoNuevo.nivel = id;
         // Añadimos el elemento nuevo a la lista principal
         listaElementos.push(elementoNuevo);
-        console.log(id)
+
         // Preparamos una lista de elementos del nivel para actualizar
         let elementosNivel = listaElementos.filter((element) => element.nivel == id);
-        console.log(elementosNivel)
 
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
@@ -436,27 +422,36 @@ function Plantas() {
     }
 
     async function datosAnalisisElementos() {
-        console.log(listaElementos)
-        console.log(listaElementos[elementoAnalisisId])
-        if (listaElementos[elementoAnalisisId].propiedades.value == true) {
-            listaElementos.map((elemento) => {
-                const analisisElem = {
-                    id: 0,
-                    CodigoCliente: confPlantasCliente.CodigoCliente,
-                    Id_Planta: confPlantasCliente.id,
-                    Id_Elemento: elemento.id,
-                    Id_Analisis: null,
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null
+        datosElementos()
+        listaElementos.map((elemento) => {
+            elemento.propiedades.map((analisis) => {
+                if (analisis.value == true) {
+                    const analisisElem = {
+                        id: 0,
+                        CodigoCliente: confPlantasCliente.CodigoCliente,
+                        Oferta: confPlantasCliente.oferta,
+                        IdPlanta: confPlantasCliente.id,
+                        IdElemento: elemento.id,
+                        IdAnalisis: analisis.id,
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null
+                    }
+                    axios.post("/analisisnivelesplantascliente", analisisElem, token)
+                        .then(response => {
+                            return response
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                 }
-                console.log(analisisElem)
             })
-        }
+            window.location.reload();
+        })
     }
 
     function crearNodo(elemento) {
@@ -547,16 +542,6 @@ function Plantas() {
 
 
 
-    }
-
-    const guardarNiveles = async () => {
-        await axios.post("/confnivelesplantascliente", confNivelesPlantaCliente, token)
-            .then(response => {
-                return response
-            })
-            .catch(error => {
-                console.log(error)
-            })
     }
 
     const handleChange = e => {
@@ -676,7 +661,6 @@ function Plantas() {
                         <h5>Elementos de planta</h5>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button onClick={datosElementos}> Guardar Datos </button>
                     </div>
 
                 </div>

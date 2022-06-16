@@ -7,9 +7,16 @@ namespace AnalisisQuimicos.Core.DTOs
     public class ConsumosDTO
     {
         public int? Id { get; set; }
-        public int? NumeroOferta { get; set; }
-        public int? CodigoProducto { get; set; }
-        public int? Consumo { get; set; }
+        public int? CodigoCliente { get; set; }
+        public int? Oferta { get; set; }
+        public int? Producto { get; set; }
+        public string DescripcionProducto { get; set; }
+        public int? Cantidad { get; set; }
+        public int? Precio { get; set; }
+        public int? StockMin { get; set; }
+        public int? StockMax { get; set; }
+        public int? Consumidos { get; set; }
+        public int? FaltaEntregar { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

@@ -97,8 +97,6 @@ function Productos() {
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-
-
     const [productoSeleccionado, setProductoSeleccionado] = useState({
         id: 0,
         codigoProducto: 0,
@@ -142,7 +140,7 @@ function Productos() {
         productoSeleccionado.id = null;
         await axios.post("/productos", productoSeleccionado, token)
             .then(response => {
-                //setData(data.concat(response.data));
+                console.log(response)
                 abrirCerrarModalInsertar();
                 getProductos();
             }).catch(error => {
@@ -207,10 +205,10 @@ function Productos() {
             <h3>Agregar Nuevo Producto</h3>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoProducto" name="codigoProducto" onChange={handleChange} />
+                    <TextField className={styles.inputMaterial} type="number" label="CodigoProducto" name="codigoProducto" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="textbox" label="Descripcion" name="descripcion" onChange={handleChange} />
+                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} />
                 </div>
             </div>
             <div align="right">

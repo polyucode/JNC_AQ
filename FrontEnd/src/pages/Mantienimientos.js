@@ -287,8 +287,6 @@ function Mantenimientos() {
       axios.get("/servmantenimientocab", token).then(response => {
         setData(response.data.data)
       })
-
-
     }
 
     useEffect(() => {
@@ -444,7 +442,6 @@ function Mantenimientos() {
     }
 
     const peticionDeleteDet=async()=>{
-      console.log("id=" + MantenimientoDetEliminar[0].id)
       var i = 0;
       while(i < MantenimientoDetEliminar.length){
         await axios.delete("/servmantenimientodet/"+ MantenimientoDetEliminar[i].id, token)

@@ -163,7 +163,7 @@ function Clientes() {
     email: '',
     cargo: '',
     comentarios: '',
-    idCliente: clienteSeleccionado.id,
+    idCliente: 0,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -212,19 +212,14 @@ function Clientes() {
     { title: 'Cif', field: 'cif', filterPlaceholder: "Filtrar por cif" },
     { title: 'RazonSocial', field: 'razonSocial', filterPlaceholder: "Filtrar por Razón Social" },
     { title: 'NombreComercial', field: 'nombreComercial', filterPlaceholder: "Filtrar por nombre comercial" },
-
     { title: 'Telefono1', field: 'telefono1', filterPlaceholder: "Filtrar por teléfono" },
-
     { title: 'Movil', field: 'movil', filterPlaceholder: "Filtrar por movil" },
     { title: 'Email', field: 'email', filterPlaceholder: "Filtrar por email" },
 
     //Ocultas
     { title: 'Id', field: 'id', filterPlaceholder: "Filtrar por id", hidden: true },
-
-
     { title: 'Telefono2', field: 'telefono2', filterPlaceholder: "Filtrar por teléfono", hidden: true },
     { title: 'IdSector', field: 'idSector', filterPlaceholder: "Filtrar por id sector", hidden: true },
-
     { title: 'Direccion', field: 'direccion', filterPlaceholder: "Filtrar por dirección", hidden: true },
     { title: 'Poblacion', field: 'poblacion', filterPlaceholder: "Filtrar por población", hidden: true },
     { title: 'Provincia', field: 'provincia', filterPlaceholder: "Filtrar por provincia", hidden: true },

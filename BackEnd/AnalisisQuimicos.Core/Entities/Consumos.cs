@@ -6,8 +6,15 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class Consumos : BaseEntity
     {
-        public int? NumeroOferta { get; set; }
-        public int? CodigoProducto { get; set; }
-        public int? Consumo { get; set; }
+        public int? CodigoCliente { get; set; }
+        public int? Oferta { get; set; }
+        public int? Producto { get; set; }
+        public string DescripcionProducto { get; set; }
+        public int? Cantidad { get; set; }
+        public int? Precio { get; set; }
+        public int? StockMin { get; set; }
+        public int? StockMax { get; set; }
+        public int? Consumidos { get; set; }
+        public int? FaltaEntregar { get; set; }
     }
 }

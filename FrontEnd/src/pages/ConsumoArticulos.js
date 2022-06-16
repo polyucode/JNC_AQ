@@ -101,13 +101,15 @@ function ConsumoArticulos() {
 
     const [consumoSeleccionado, setConsumoSeleccionado] = useState({
         id: 0,
-        codigoCliente: '',
-        numeroOferta: '',
-        numeroArticulo: '',
-        cantidad: '',
-        idCliente: 0,
-        idOferta: 0,
-        idArticulo: 0,
+        codigoCliente: 0,
+        oferta: 0,
+        producto: 0,
+        cantidad: 0,
+        precio: 0,
+        stockMin: 0,
+        stockMax: 0,
+        consumidos: 0,
+        faltaEntregar: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -123,46 +125,81 @@ function ConsumoArticulos() {
 
     const [data, setData] = useState([]);
 
+    const [clientes, setClientes] = useState([]);
+    const [ofertas, setOfertas] = useState([]);
+    const [productos, setProductos] = useState([]);
+
+    const [clienteEditar, setClienteEditar] = useState([]);
+    const [ofertaEditar, setOfertaEditar] = useState([]);
+    const [productoEditar, setProductoEditar] = useState([]);
+
     const styles = useStyles();
 
     const columnas = [
 
         //Visibles
         { title: 'CodigoCliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
-        { title: 'NumeroOferta', field: 'numeroOferta', filterPlaceholder: "Filtrar por numero oferta" },
-        { title: 'NumeroArticulo', field: 'numeroArticulo', filterPlaceholder: "Filtrar por numero Articulo" },
+        { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por numero oferta" },
+        { title: 'Producto', field: 'producto', filterPlaceholder: "Filtrar por producto" },
+        { title: 'DescripcionProducto', field: 'descripcionProducto', hidden: true },
         { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
-
-        //Ocultas
-        { title: 'IdCliente', field: 'idcliente', hidden: true },
-        { title: 'IdOferta', field: 'idoferta', hidden: true },
-        { title: 'IdArticulo', field: 'idarticulo', hidden: true },
+        { title: 'Precio', field: 'precio', filterPlaceholder: "Filtrar por precio" },
+        { title: 'StockMin', field: 'stockMin', filterPlaceholder: "Filtrar por stockMin" },
+        { title: 'StockMax', field: 'stockMax', filterPlaceholder: "Filtrar por stockMax" },
+        { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
+        { title: 'FaltaEntregar', field: 'faltaEntregar', filterPlaceholder: "Filtrar por FaltaEntregar" },
 
     ];
-    const getConsumo = async () => {
-        axios.get("/consumoarticulos", token).then(response => {
+
+
+    const getConsumos = async () => {
+        axios.get("/consumos", token).then(response => {
             setData(response.data.data)
         })
     }
 
+    const getClientes = async () => {
+        axios.get("/cliente", token).then(response => {
+            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setClientes(cliente);
+        }, [])
+    }
+
+    const getProductos = async () => {
+        axios.get("/productos", token).then(response => {
+            const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setProductos(producto);
+        }, [])
+    }
+
+    const getOfertas = async () => {
+        axios.get("/ofertasclientes", token).then(response => {
+            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOfertas(oferta);
+        }, [])
+    }
+
     useEffect(() => {
-        getConsumo();
+        getConsumos();
+        getClientes();
+        getOfertas();
+        getProductos();
     }, [])
 
     const peticionPost = async () => {
         consumoSeleccionado.id = null;
-        await axios.post("/consumoarticulos", consumoSeleccionado, token)
+        await axios.post("/consumos", consumoSeleccionado, token)
             .then(response => {
                 //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
-                getConsumo();
+                getConsumos();
             }).catch(error => {
                 console.log(error);
             })
     }
 
     const peticionPut = async () => {
-        await axios.put("/consumoarticulos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
+        await axios.put("/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
             .then(response => {
                 var consumoModificado = data;
                 consumoModificado.map(consumo => {
@@ -170,7 +207,7 @@ function ConsumoArticulos() {
                         consumo = consumoSeleccionado
                     }
                 });
-                getConsumo();
+                getConsumos();
                 abrirCerrarModalEditar();
             }).catch(error => {
                 console.log(error);
@@ -180,9 +217,9 @@ function ConsumoArticulos() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ConsumoEliminar.length) {
-            await axios.delete("/consumoarticulos/" + ConsumoEliminar[i].id, token)
+            await axios.delete("/consumos/" + ConsumoEliminar[i].id, token)
                 .then(response => {
-                    getConsumo();
+                    getConsumos();
                     abrirCerrarModalEliminar();
                 }).catch(error => {
                     console.log(error);
@@ -218,16 +255,64 @@ function ConsumoArticulos() {
             <h3>Agregar Nuevo Consumo</h3>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoCliente" name="codigoCliente" onChange={handleChange} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="CodigoCliente"
+                        options={clientes}
+                        getOptionLabel={option => option.codigo}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            codigoCliente: parseInt(value.codigo)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="NumeroOferta" name="numeroOferta" onChange={handleChange} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="Oferta"
+                        options={ofertas}
+                        getOptionLabel={option => option.numeroOferta}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="Oferta" name="oferta" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            oferta: parseInt(value.numeroOferta)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="NumeroArticulo" name="numeroArticulo" onChange={handleChange} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="producto"
+                        options={productos}
+                        getOptionLabel={option => option.codigoProducto}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="Producto" name="producto" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            producto: parseInt(value.codigoProducto)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
                     <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Precio" name="precio" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChange} />
                 </div>
             </div>
             <div align="right">
@@ -242,16 +327,67 @@ function ConsumoArticulos() {
             <h3>Editar Consumo</h3>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoCliente" name="codigoCliente" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.codigoCliente} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="CodigoCliente"
+                        options={clientes}
+                        getOptionLabel={option => option.codigo}
+                        defaultValue={clienteEditar[0]}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            codigoCliente: parseInt(value.codigo)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="NumeroOferta" name="numeroOferta" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.numeroOferta} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="Oferta"
+                        options={ofertas}
+                        getOptionLabel={option => option.numeroOferta}
+                        defaultValue={ofertaEditar[0]}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="Oferta" name="oferta" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            oferta: parseInt(value.numeroOferta)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="NumeroArticulo" name="numeroArticulo" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.numeroArticulo} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="producto"
+                        options={productos}
+                        getOptionLabel={option => option.codigoProducto}
+                        defaultValue={productoEditar[0]}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} type="number" label="Producto" name="producto" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            producto: parseInt(value.codigoProducto)
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
                     <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Precio" name="precio" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.precio} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.stockMin} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.stockMax} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.consumidos} />
+                </div>
+                <div className="col-md-6">
+                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.faltaEntregar} />
                 </div>
             </div>
             <div align="right">
@@ -345,6 +481,10 @@ function ConsumoArticulos() {
                         icon: () => <Edit />,
                         tooltip: "Editar Consumo",
                         onClick: (e, data) => {
+                            getConsumos();
+                            setClienteEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente))
+                            setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === FilasSeleccionadas[0].oferta))
+                            setProductoEditar(productos.filter(producto => producto.codigoProducto === FilasSeleccionadas[0].producto))
                             abrirCerrarModalEditar();
                         },
                     },
@@ -353,7 +493,6 @@ function ConsumoArticulos() {
                 onRowClick={((evt, consumoSeleccionado) => setConsumoSeleccionado(consumoSeleccionado.tableData.id))}
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
-
                     setConsumoSeleccionado(filas[0]);
                 }
                 }
