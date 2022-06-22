@@ -11,7 +11,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { height } from "@mui/system";
+import MenuItem from '@mui/material/MenuItem';
 
+import './OfertasClientes.css';
 
 const token = {
     headers: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 900,
-        height: 550,
+        height: 660,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -45,7 +47,7 @@ const useStyles2 = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 1500,
-        height: 900,
+        height: 930,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -59,6 +61,27 @@ const useStyles2 = makeStyles((theme) => ({
     },
     inputMaterial: {
         width: '100%'
+    }
+}));
+
+const useStyles3 = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 800,
+        height: 120,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '30%'
     }
 }));
 
@@ -158,6 +181,8 @@ function OfertasClientes() {
         stockMax: 0,
         consumidos: 0,
         faltaEntregar: 0,
+        adr: '',
+        portes: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -166,6 +191,17 @@ function OfertasClientes() {
         delIdUser: null,
         deleted: null,
     });
+
+    const selections = [
+        {
+            value: 'Si',
+            label: 'Si',
+        },
+        {
+            value: 'No',
+            label: 'No',
+        }
+    ];
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
     const [FilasSeleccionadasProducto, setFilasSeleccionadasProducto] = useState([]);
@@ -200,7 +236,7 @@ function OfertasClientes() {
 
     const styles = useStyles();
     const styles2 = useStyles2();
-
+    const styles3 = useStyles3();
 
     const columnas = [
 
@@ -225,13 +261,14 @@ function OfertasClientes() {
         //Visibles
         { title: 'Codigo', field: 'producto', filterPlaceholder: "Filtrar por codigo" },
         { title: 'Descripcion', field: 'descripcionProducto', filterPlaceholder: "Filtrar por descripcion" },
-        { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por cantidad" },
+        { title: 'Estimacion', field: 'cantidad', filterPlaceholder: "Filtrar por cantidad" },
+        { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
+        { title: 'FaltaEntregar', field: 'faltaEntregar', filterPlaceholder: "Filtrar por FaltaEntregar" },
         { title: 'Precio', field: 'precio', filterPlaceholder: "Filtrar por precio" },
         { title: 'StockMin', field: 'stockMin', filterPlaceholder: "Filtrar por StockMin" },
         { title: 'StockMax', field: 'stockMax', filterPlaceholder: "Filtrar por StockMax" },
-        { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
-        { title: 'FaltaEntregar', field: 'faltaEntregar', filterPlaceholder: "Filtrar por FaltaEntregar" },
-
+        { title: 'ADR', field: 'adr', filterPlaceholder: "Filtrar por ADR" },
+        { title: 'Portes', field: 'portes', filterPlaceholder: "Filtrar por Portes" },
     ];
 
     const getConsumos = async () => {
@@ -262,10 +299,10 @@ function OfertasClientes() {
 
     function FiltrarDataProducto() {
         setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-        //return dataDet
     }
 
     useEffect(() => {
+        console.log("Entra en el use Effect")
         getProductos();
         getOfertas();
         getClientes();
@@ -326,6 +363,7 @@ function OfertasClientes() {
         productoSeleccionado.id = null;
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
+        console.log(productoSeleccionado)
         await axios.post("/consumos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
@@ -333,6 +371,7 @@ function OfertasClientes() {
             }).catch(error => {
                 console.log(error);
             })
+            console.log(productoSeleccionado)
     }
 
     const peticionPutProducto = async () => {
@@ -425,7 +464,6 @@ function OfertasClientes() {
         const { name, value } = e.target;
         setOfertaSeleccionada(prevState => ({
             ...prevState,
-            //[name]: value
             [e.target.name]: e.target.name === 'price' ? parseFloat(e.target.value) : e.target.value
         }));
     }
@@ -433,14 +471,22 @@ function OfertasClientes() {
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3>Agregar Nueva Oferta</h3>
+            <br />
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} />
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="numeroOferta" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} />
+                    <h5> Descripcion </h5>
+                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
+                    <h5> Pedido </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="pedido" onChange={handleChange} />
+                </div>
+                <div className="col-md-6">
+                    <h5> Codigo Cliente</h5>
                     <Autocomplete
                         type="number"
                         disableClearable={true}
@@ -448,7 +494,7 @@ function OfertasClientes() {
                         options={clientes}
                         getOptionLabel={option => parseInt(option.codigo)}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
+                        renderInput={(params) => <TextField {...params} type="number" name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
                             codigoCliente: parseInt(value.codigo)
@@ -456,18 +502,19 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
+                    <h5> Nombre Cliente </h5>
                     <Autocomplete
                         disableClearable={true}
                         type="number"
                         id="NombreCliente"
                         options={clientes}
                         getOptionLabel={(option) => {
-                            if(ofertaSeleccionada.codigoCliente === 1234){
+                            if (ofertaSeleccionada.codigoCliente === 1234) {
                                 option = "Jose"
                             }
                         }}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="nombreCliente" name="nombreCliente" />}
+                        renderInput={(params) => <TextField {...params} name="nombreCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
                             nombreCliente: value.razonSocial
@@ -475,12 +522,9 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
+                    <h5> Fecha Inicio </h5>
                     <TextField
                         id="fechainicio"
-                        label="Fecha Inicio"
                         type="date"
                         name="fechaInicio"
                         sx={{ width: 220 }}
@@ -491,10 +535,9 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
-                    {/* Fecha prevista */}
+                    <h5> Fecha Finalizacion </h5>
                     <TextField
                         id="fechafinalizacion"
-                        label="Fecha finalizacion"
                         type="date"
                         name="fechaFinalizacion"
                         sx={{ width: 220 }}
@@ -505,12 +548,15 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
+                    <h5> Contacto 1 </h5>
                     <TextField className={styles.inputMaterial} label="Contacto1" name="contacto1" onChange={handleChange} />
                 </div>
                 <div className="col-md-6">
+                    <h5> Contacto 2 </h5>
                     <TextField className={styles.inputMaterial} label="Contacto2" name="contacto2" onChange={handleChange} />
                 </div>
             </div>
+            <br />
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
@@ -521,17 +567,22 @@ function OfertasClientes() {
     const bodyEditar = (
         <div className={styles2.modal}>
             <h3>Oferta</h3>
+            <br />
             <div className="row g-3">
                 <div className="col-md-2">
-                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
+                    <h5> Numero Oferta </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="numeroOferta" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
                 </div>
                 <div className="col-md-10">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.descripcion} />
+                    <h5> Descripcion </h5>
+                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.descripcion} />
                 </div>
                 <div className="col-md-2">
-                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
+                    <h5> Pedido </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="pedido" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
                 </div>
                 <div className="col-md-2">
+                    <h5> Codigo Cliente </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="CodigoCliente"
@@ -539,7 +590,7 @@ function OfertasClientes() {
                         getOptionLabel={option => option.codigo}
                         defaultValue={clientesCodigoEditar[0]}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                        renderInput={(params) => <TextField {...params} name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
                             codigoCliente: parseInt(value.codigo)
@@ -547,6 +598,7 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-2">
+                    <h5> Nombre Cliente </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="NombreCliente"
@@ -554,7 +606,7 @@ function OfertasClientes() {
                         getOptionLabel={option => option.razonSocial}
                         defaultValue={clientesNombreEditar[0]}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} label="NombreCliente" name="nombreCliente" />}
+                        renderInput={(params) => <TextField {...params} name="nombreCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
                             nombreCliente: value.razonSocial
@@ -562,9 +614,9 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-2">
+                    <h5> Fecha Inicio </h5>
                     <TextField
                         id="fechainicio"
-                        label="Fecha Inicio"
                         type="date"
                         name="fechaInicio"
                         sx={{ width: 220 }}
@@ -576,9 +628,9 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-2">
+                    <h5> Fecha Finalizacion </h5>
                     <TextField
                         id="fechafinalizacion"
-                        label="Fecha finalizacion"
                         type="date"
                         name="fechaFinalizacion"
                         sx={{ width: 220 }}
@@ -590,14 +642,15 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <TextField className={styles.inputMaterial} label="Contacto1" name="contacto1" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto1} />
+                    <h5> Contacto 1 </h5>
+                    <TextField className={styles.inputMaterial} name="contacto1" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto1} />
                 </div>
                 <div className="col-md-4">
-                    <TextField className={styles.inputMaterial} label="Contacto2" name="contacto2" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto2} />
+                    <h5> Contacto 2 </h5>
+                    <TextField className={styles.inputMaterial} name="contacto2" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto2} />
                 </div>
             </div>
             <br />
-            {console.log(dataDet)}
             <MaterialTable columns={columnasProducto} data={dataDet}
                 localization={localization}
                 actions={[
@@ -660,19 +713,19 @@ function OfertasClientes() {
             />
             <br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
+                <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
             </div>
         </div>
     )
 
     const bodyEliminar = (
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar la oferta ? </p>
+        <div className={styles3.modal}>
+            <h6>Estás seguro que deseas eliminar la oferta ? </h6>
+            <br />
             <div align="right">
                 <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
                 <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-
             </div>
         </div>
     )
@@ -680,43 +733,73 @@ function OfertasClientes() {
     const bodyInsertarProducto = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Producto</h3>
+            <br />
             <div className="row g-3">
-                <div className="col-md-6">
+                <div className="col-md-3">
+                    <h5> Producto </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="producto"
                         options={productos}
                         getOptionLabel={option => option.codigoProducto}
-                        sx={{ width: 350 }}
-                        renderInput={(params) => <TextField {...params} type="number" label="Producto" name="producto" />}
+                        sx={{ width: 150 }}
+                        renderInput={(params) => <TextField {...params} type="number" name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
                             producto: parseInt(value.codigoProducto)
                         }))}
                     />
                 </div>
+                <div className="col-md-9">
+                    <h5> Descripcion </h5>
+                    <TextField className={styles.inputMaterial} name="descripcionProducto" onChange={handleChangeProducto} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Estimacion </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChangeProducto} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Consumidos </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Falta Entregar </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Precio </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangeProducto} />
+                </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcionProducto" onChange={handleChangeProducto} />
-                </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChangeProducto} />
-                </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Precio" name="precio" onChange={handleChangeProducto} />
+                    <h5> Stock Min </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="stockMin" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChangeProducto} />
+                    <h5> Stock Max </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="stockMax" onChange={handleChangeProducto} />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChangeProducto} />
+                <div className="col-md-12">
+                    <h5> ADR </h5>
+                    <TextField
+                        id='adr'
+                        className={styles3.inputMaterial}
+                        select
+                        name="adr"
+                        onChange={handleChangeProducto}
+                    >
+                        {selections.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChangeProducto} />
-                </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChangeProducto} />
+                <div className="col-md-12">
+                    <h5> Portes </h5>
+                    <TextField className={styles3.inputMaterial} type="number" name="portes" onChange={handleChangeProducto} />
                 </div>
             </div>
+            <br />
             <div align="right">
                 <Button color="primary" onClick={() => peticionPostProducto()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertarProducto()}>Cancelar</Button>
@@ -728,58 +811,88 @@ function OfertasClientes() {
     const bodyEditarProducto = (
         <div className={styles.modal}>
             <h3>Producto</h3>
+            <br />
             <div className="row g-3">
-                <div className="col-md-6">
+                <div className="col-md-3">
+                    <h5> Numero Producto </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="producto"
                         options={productos}
                         getOptionLabel={option => option.codigoProducto}
                         defaultValue={productoEditar[0]}
-                        sx={{ width: 350 }}
-                        renderInput={(params) => <TextField {...params} type="number" label="producto" name="producto" />}
+                        sx={{ width: 150 }}
+                        renderInput={(params) => <TextField {...params} type="number" name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
                             producto: parseInt(value.codigoProducto)
                         }))}
                     />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcionProducto" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.descripcionProducto} />
+                <div className="col-md-9">
+                    <h5> Descripcion </h5>
+                    <TextField className={styles.inputMaterial} name="descripcionProducto" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.descripcionProducto} />
                 </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.cantidad} />
+                <div className="col-md-3">
+                    <h5> Estimacion </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.cantidad} />
                 </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Precio" name="precio" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.precio} />
+                <div className="col-md-3">
+                    <h5> Consumidos </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.consumidos} />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.stockMin} />
+                <div className="col-md-3">
+                    <h5> Falta Entregar </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.faltaEntregar} />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.stockMax} />
+                <div className="col-md-3">
+                    <h5> Precio </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.precio} />
                 </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.consumidos} />
+                <div className="col-md-4">
+                    <h5> Stock Min </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="stockMin" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.stockMin} />
                 </div>
-                <div className="col-md-7">
-                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.faltaEntregar} />
+                <div className="col-md-4">
+                    <h5> Stock Max </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="stockMax" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.stockMax} />
+                </div>
+                <div className="col-md-12">
+                    <h5> ADR </h5>
+                    <TextField
+                        id='adr'
+                        className={styles3.inputMaterial}
+                        select
+                        name="adr"
+                        onChange={handleChangeProducto}
+                        value={productoSeleccionado.adr}
+                    >
+                        {selections.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
+                <div className="col-md-12">
+                    <h5> Portes </h5>
+                    <TextField className={styles3.inputMaterial} type="number" name="portes" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.portes} />
                 </div>
             </div>
             <div align="right">
-                <Button color="primary" onClick={() => peticionPutProducto()}>Editar</Button>
+                <Button color="primary" onClick={() => peticionPutProducto()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditarProducto()}>Cancelar</Button>
             </div>
         </div>
     )
 
     const bodyEliminarProducto = (
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el producto ? </p>
+        <div className={styles3.modal}>
+            <h6>Estás seguro que deseas eliminar el producto ? </h6>
+            <br />
             <div align="right">
                 <Button color="secondary" onClick={() => peticionDeleteProducto()}>Sí</Button>
                 <Button onClick={() => abrirCerrarModalEliminarProducto()}>No</Button>
-
             </div>
         </div>
     )
@@ -788,6 +901,7 @@ function OfertasClientes() {
 
     return (
         <div>
+            {console.log(data)}
             <MaterialTable columns={columnas} data={data}
                 localization={{
                     body: {
@@ -866,6 +980,7 @@ function OfertasClientes() {
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
                     // Copy row data and set checked state
+                    console.log(ofertaSeleccionada)
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getConsumos();
@@ -885,7 +1000,6 @@ function OfertasClientes() {
                         backgroundColor: (ofertaSeleccionada === rowData.tableData.id) ? '#EEE' : '#FFF',
                         whiteSpace: "nowrap"
                     }),
-
                     exportMenu: [{
                         label: 'Export PDF',
                         exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Ofertas')

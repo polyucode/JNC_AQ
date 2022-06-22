@@ -246,8 +246,6 @@ function Productos() {
         </div>
     )
 
-
-
     return (
         <div>
             <MaterialTable columns={columnas} data={data}

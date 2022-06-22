@@ -22,8 +22,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
 
-            builder.Property(e => e.NumOferta).HasMaxLength(50);
-
         }
     }
 }
