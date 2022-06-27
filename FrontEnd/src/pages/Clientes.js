@@ -293,7 +293,6 @@ function Clientes() {
   }
 
   useEffect(() => {
-    console.log("Prueba USE EFFECT")
     peticionGet();
     peticionGetContacto();
     GetPerfiles();
@@ -304,8 +303,6 @@ function Clientes() {
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    console.log("Metodo POST Ejecutandose")
-    console.log("El cliente seleccionado es:" + clienteSeleccionado)
     await axios.post("/cliente", clienteSeleccionado, token)
       .then(response => {
         //setData(data.concat(response.data));

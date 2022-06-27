@@ -18,6 +18,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Firma { get; set; }
         public int? IdCliente { get; set; }
         public int? IdPerfil { get; set; }
+        public int? CodigoOperario { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

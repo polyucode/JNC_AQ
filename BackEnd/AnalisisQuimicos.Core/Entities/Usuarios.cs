@@ -15,6 +15,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string Firma { get; set; }
         public int? IdCliente { get; set; }
         public int? IdPerfil { get; set; }
+        public int? CodigoOperario { get; set; }
 
     }
 }

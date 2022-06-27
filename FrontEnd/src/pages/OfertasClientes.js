@@ -980,7 +980,6 @@ function OfertasClientes() {
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
                     // Copy row data and set checked state
-                    console.log(ofertaSeleccionada)
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getConsumos();

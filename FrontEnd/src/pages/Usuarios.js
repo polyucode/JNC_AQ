@@ -98,8 +98,9 @@ function Usuarios() {
       { title: 'Usuario', field: 'usuario', filterPlaceholder:"Filtrar por usuario" },
       { title: 'Activo', field: 'activo', type: 'boolean' , filterPlaceholder:"Filtrar por activo"},
       { title: 'Firma', field: 'firma', filtering:false },
-      { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector",1004:"Técnico"},filterPlaceholder:"Filtrar por perfil" },
-      { title: 'Cliente', field: 'idCliente', type: 'numeric',lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
+      { title: 'Perfil', field: 'idPerfil', lookup:{1:"Administrador",2:"Cliente",3:"Informador",4:"Inspector",1004:"Técnico"},filterPlaceholder:"Filtrar por perfil" },
+      { title: 'Codigo Operario', field: 'codigoOperario', lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
+      { title: 'Cliente', field: 'idCliente', lookup:clientesTable,filterPlaceholder:"Filtrar por cliente" },
       
       //Ocultas
       { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder:"Filtrar por fecah creacion", hidden: true  },
