@@ -656,6 +656,7 @@ function Visualizacion() {
                     id="Oferta"
                     options={oferta}
                     getOptionLabel={option => option.numeroOferta}
+                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => onChangeOferta(event, value, "oferta")}

@@ -7,7 +7,7 @@ import Home from './pages/Home'
 import Login from './pages/Login';
 import Navbar from './components/Nabvar';
 import Usuarios from './pages/Usuarios';
-import Mantenimientos from './pages/Mantienimientos';
+import Tareas from './pages/Tareas';
 import Clientes from './pages/Clientes';
 import Perfil from './pages/Perfil';
 import Plantas from './pages/Plantas';
@@ -29,7 +29,7 @@ export default function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/usuarios' element={<Usuarios />} />
           <Route path='/clientes' element={<Clientes />} />
-          <Route path='/mantenimientos' element={<Mantenimientos />} />
+          <Route path='/tareas' element={<Tareas />} />
           <Route path='/perfil' element={<Perfil />} />
           <Route path='/plantas' element={<Plantas />} />
           <Route path='/plantasTabla' element={<PlantasTabla />} />

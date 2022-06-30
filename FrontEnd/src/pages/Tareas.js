@@ -11,6 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
 
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -32,7 +33,75 @@ const tipos = [
   { id: 1, nombre: "Mensual" },
   { id: 2, nombre: "Bimensual" },
   { id: 3, nombre: "Trimestral" },
-  { id: 4, nombre: "Semestral" }
+  { id: 4, nombre: "Semestral" },
+  { id: 5, nombre: "Anual" },
+  { id: 6, nombre: "Semanal" },
+  { id: 7, nombre: "Bisemanal" }
+]
+
+const selections = [
+  {
+    value: 'Si',
+    label: 'Si',
+  },
+  {
+    value: 'No',
+    label: 'No',
+  }
+];
+
+const final = [
+  {
+    value: 'PDF',
+    label: 'PDF',
+  },
+  {
+    value: 'Ok',
+    label: 'Ok',
+  }
+];
+
+const protocolos = [
+  {
+    value: 'Desinfeccion Parado 4B',
+    label: 'Desinfeccion Parado 4B'
+  },
+  {
+    value: 'Desinfeccion Continuo 4B',
+    label: 'Desinfeccion Continuo 4B'
+  },
+  {
+    value: 'Desinfeccion limpieza parado',
+    label: 'Desinfeccion limpieza parado'
+  },
+  {
+    value: 'Desinfeccion limpieza continuo',
+    label: 'Desinfeccion limpieza continuo'
+  },
+  {
+    value: 'Desinfeccion Protocolo 4C',
+    label: 'Desinfeccion Protocolo 4C'
+  },
+  {
+    value: 'Desinfeccion de aporte',
+    label: 'Desinfeccion de aporte'
+  },
+  {
+    value: 'Desinfeccion contraincendios',
+    label: 'Desinfeccion contraincendios'
+  },
+  {
+    value: 'Desinfeccion parado fuente ornamental',
+    label: 'Desinfeccion parado fuente ornamental'
+  },
+  {
+    value: 'Desinfeccion ACS (termico)',
+    label: 'Desinfeccion ACS (termico)'
+  },
+  {
+    value: 'Desinfeccion AFCH (cloracion)',
+    label: 'Desinfeccion AFCH (cloracion)'
+  }
 ]
 
 //estilos modal
@@ -40,7 +109,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 950,
+    height: 1000,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -53,7 +122,8 @@ const useStylesEditarDet = makeStyles((theme) => ({
     cursor: 'pointer'
   },
   inputMaterial: {
-    width: '100%'
+    width: '100%',
+    height: 50
   }
 }));
 
@@ -61,8 +131,8 @@ const useStylesEditarDet = makeStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
-    width: 850,
-    height: 550,
+    width: 1050,
+    height: 850,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -75,7 +145,51 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer'
   },
   inputMaterial: {
-    width: '100%'
+    width: '100%',
+    height: 75
+  }
+}));
+
+const useStyles2 = makeStyles((theme) => ({
+  modal: {
+    position: 'absolute',
+    width: 1150,
+    height: 750,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  iconos: {
+    cursor: 'pointer'
+  },
+  inputMaterial: {
+    width: '45%',
+    height: 60
+  }
+}));
+
+const useStylesEliminar = makeStyles((theme) => ({
+  modal: {
+    position: 'absolute',
+    width: 650,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  iconos: {
+    cursor: 'pointer'
+  },
+  inputMaterial: {
+    width: '100%',
+    height: 75
   }
 }));
 
@@ -128,7 +242,7 @@ const localization = {
   },
 }
 
-function Mantenimientos() {
+function Tareas() {
 
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -153,6 +267,7 @@ function Mantenimientos() {
     codigoCliente: 0,
     nombreCliente: "",
     operario: "",
+    protocolo: "",
     idElementoPlanta: 0,
     oferta: 0,
     idAnalisis: 0,
@@ -238,6 +353,8 @@ function Mantenimientos() {
 
   const [ofertas, setOfertas] = useState([]);
 
+  const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
+
   const [clientesTable, setClientesTable] = useState({});
 
   const [elementosplantaTable, setElementosPlantaTable] = useState({});
@@ -251,9 +368,16 @@ function Mantenimientos() {
   const [fechaprevista, setfechaprevista] = useState("");
   const [fechaRealizacion, setFechaRealizacion] = useState("");
 
+  const [estadoInput, setEstadoInput] = useState(true);
+  const [estadoValor, setEstadoValor] = useState(true);
+  const [estadoCancelado, setEstadoCancelado] = useState(true);
+
   const styles = useStyles();
+  const styles2 = useStyles2();
 
   const stylesEditarDet = useStylesEditarDet();
+  const stylesEliminar = useStylesEliminar();
+
 
 
   const columnas = [
@@ -326,8 +450,14 @@ function Mantenimientos() {
     }, [])
   }
 
+  const GetConfAnalisisNivelesPlantasCliente = async () => {
+    axios.get("/analisisnivelesplantascliente", token).then(response => {
+        setConfAnalisisNivelesPlantasCliente(response.data.data)
+    })
+}
+
   const peticionGet = async () => {
-    axios.get("/servmantenimientocab", token).then(response => {
+    axios.get("/tareas", token).then(response => {
       setData(response.data.data)
     })
   }
@@ -339,6 +469,7 @@ function Mantenimientos() {
     GetOperarios();
     GetAnalisis();
     GetOfertas();
+    GetConfAnalisisNivelesPlantasCliente();
   }, [])
 
 
@@ -360,11 +491,9 @@ function Mantenimientos() {
   }, [elementosplanta, analisis, tipos])
 
   const peticionPost = async () => {
-    console.log(tareaSeleccionada)
     tareaSeleccionada.id = null;
-    await axios.post("/servmantenimientocab", tareaSeleccionada, token)
+    await axios.post("/tareas", tareaSeleccionada, token)
       .then(response => {
-        console.log(response)
         //Creamos los detalles
         var date = new Date(fechaprevista);
 
@@ -380,7 +509,7 @@ function Mantenimientos() {
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
-            analisisSeleccionado.protocolo = "";
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
@@ -400,7 +529,7 @@ function Mantenimientos() {
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
-            analisisSeleccionado.protocolo = "";
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
@@ -420,7 +549,7 @@ function Mantenimientos() {
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
-            analisisSeleccionado.protocolo = "";
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
@@ -440,7 +569,7 @@ function Mantenimientos() {
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
-            analisisSeleccionado.protocolo = "";
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
@@ -453,10 +582,11 @@ function Mantenimientos() {
       }).catch(error => {
         console.log(error);
       })
+      
   }
 
   const peticionPut = async () => {
-    await axios.put("/servmantenimientocab?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
+    await axios.put("/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
       .then(response => {
         var tareaSeleccionada = data;
         tareaSeleccionada.map(tarea => {
@@ -471,45 +601,14 @@ function Mantenimientos() {
       })
   }
 
-  const peticionPutDet = async () => {
-    console.log(mantenimientoDetSeleccionado)
-    await axios.put("/servmantenimientodet?id=" + mantenimientoDetSeleccionado.id, mantenimientoDetSeleccionado, token)
-      .then(response => {
-        var mantenimientoDetSeleccionado = data;
-        mantenimientoDetSeleccionado.map(mantenimientoDet => {
-          if (mantenimientoDet.id === mantenimientoDetSeleccionado.id) {
-            mantenimientoDet = mantenimientoDetSeleccionado
-          }
-        });
-        peticionGetDet();
-        abrirCerrarModalEditarDet();
-      }).catch(error => {
-        console.log(error);
-      })
-  }
-
   const peticionDelete = async () => {
-    await axios.delete("/servmantenimientocab/" + TareaEliminar[0].id, token)
+    await axios.delete("/tareas/" + TareaEliminar[0].id, token)
       .then(response => {
         peticionGet();
         abrirCerrarModalEliminar();
       }).catch(error => {
         console.log(error);
       })
-  }
-
-  const peticionDeleteDet = async () => {
-    var i = 0;
-    while (i < MantenimientoDetEliminar.length) {
-      await axios.delete("/servmantenimientodet/" + MantenimientoDetEliminar[i].id, token)
-        .then(response => {
-          peticionGetDet();
-          abrirCerrarModalEliminarDet();
-        }).catch(error => {
-          console.log(error);
-        })
-      i++;
-    }
   }
 
 
@@ -560,28 +659,6 @@ function Mantenimientos() {
     }
   }
 
-
-
-  //peticiones mantenimiento detalle
-  const peticionGetDet = async () => {
-    axios.get("/servmantenimientodet", token).then(response => {
-      setDataDet(response.data.data.filter(servicio => servicio.idCab === tareaSeleccionada.id))
-    })
-  }
-
-  const peticionPostDet = async () => {
-    mantenimientoDetSeleccionado.id = 0;
-    console.log("Det insertar : " + mantenimientoDetSeleccionado)
-    await axios.post("/servmantenimientodet", mantenimientoDetSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertarDet();
-        peticionGetDet();
-      }).catch(error => {
-        console.log(error);
-      })
-  }
-
-
   //modal insertar mantenimientocab
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -602,6 +679,65 @@ function Mantenimientos() {
     }))
   }
 
+  const handleChangeCheck3 = (event, value) => {
+    setTareaSeleccionada(prevState => ({
+      ...prevState,
+      cancelado: value
+    }))
+    if(value == true){
+      setEstadoCancelado(false)
+    } else{
+      setEstadoCancelado(true)
+    }
+  }
+
+  const handleChangeVis = e => {
+    const { name, value } = e.target;
+    setAnalisisSeleccionado(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
+
+  const handleChangeCheck = (event, value) => {
+    console.log(value)
+    setAnalisisSeleccionado(prevState => ({
+      ...prevState,
+      realizado: value
+    }))
+  }
+
+  const handleChangeValor = (event, value) => {
+    setTareaSeleccionada(prevState => ({
+      ...prevState,
+      valor: value.props.value
+    }))
+    if (value.props.value === "Si") {
+      setEstadoValor(false)
+    } else {
+      setEstadoValor(true)
+    }
+  }
+
+  const handleChangeCheck2 = (event, value) => {
+    setAnalisisSeleccionado(prevState => ({
+      ...prevState,
+      facturado: value
+    }))
+  }
+
+  const handleChangeAnalisis = (event, value) => {
+    setTareaSeleccionada(prevState => ({
+      ...prevState,
+      idAnalisis: value.id
+    }))
+    if (value.id === 13 || value.id === 14) {
+      setEstadoInput(false)
+    } else {
+      setEstadoInput(true)
+    }
+  }
+
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar tarea</h3>
@@ -612,6 +748,7 @@ function Mantenimientos() {
           {/* Desplegable de Clientes */}
           <Autocomplete
             disableClearable={true}
+            className={styles2.inputMaterial}
             id="CboClientes"
             options={clientes}
             getOptionLabel={option => option.codigo}
@@ -630,7 +767,9 @@ function Mantenimientos() {
           <Autocomplete
             disableClearable={true}
             id="CboClientes"
+            className={styles2.inputMaterial}
             options={clientes}
+            filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.razonSocial}
             sx={{ width: 200 }}
             renderInput={(params) => <TextField {...params} name="nombreCliente" />}
@@ -646,14 +785,16 @@ function Mantenimientos() {
           <h5> Elemento de planta </h5>
           <Autocomplete
             disableClearable={true}
+            className={styles2.inputMaterial}
             id="CboElementosPlanta"
             options={elementosplanta}
-            getOptionLabel={option => option.nombre}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+            getOptionLabel={option => option.idElemento}
             sx={{ width: 250 }}
             renderInput={(params) => <TextField {...params} name="idElementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              idElementoPlanta: value.id
+              idElementoPlanta: value.idElemento
             }))}
           />
         </div>
@@ -662,8 +803,10 @@ function Mantenimientos() {
           <h5> Oferta </h5>
           <Autocomplete
             disableClearable={true}
+            className={styles2.inputMaterial}
             id="Oferta"
             options={ofertas}
+            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
             sx={{ width: 150 }}
             renderInput={(params) => <TextField {...params} name="oferta" />}
@@ -673,34 +816,17 @@ function Mantenimientos() {
             }))}
           />
         </div>
-
         <div className="col-md-5">
-          <h5> Analisis </h5>
-          {/* Desplegable de Técnicos */}
-          <Autocomplete
-            disableClearable={true}
-            id="IdAnalisis"
-            options={analisis}
-            getOptionLabel={option => option.nombre}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="idAnalisis" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              idAnalisis: value.id
-            }))}
-          />
-        </div>
-
-        <div className="col-md-12">
           <h5> Operario </h5>
           {/* Desplegable de Técnicos */}
           <Autocomplete
             disableClearable={true}
+            className={styles.inputMaterial}
             id="Operarios"
             options={operarios}
             filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
             getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-            sx={{ width: 350 }}
+            sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} name="operario" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
@@ -709,15 +835,89 @@ function Mantenimientos() {
           />
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-5">
+          <h5> Analisis </h5>
+          {/* Desplegable de Técnicos */}
+          {console.log(tareaSeleccionada)}
+          {console.log(confAnalisisNivelesPlantasCliente)}
+          <Autocomplete
+            disableClearable={true}
+            className={styles2.inputMaterial}
+            id="IdAnalisis"
+            options={analisis}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.idElemento === tareaSeleccionada.idElementoPlanta)}
+            getOptionLabel={option => option.idAnalisis}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="idAnalisis" />}
+            onChange={handleChangeAnalisis}
+          />
+        </div>
+        <div className="col-md-2">
+          <h5> Final </h5>
+          <TextField
+            disabled={estadoInput}
+            id='final'
+            className={styles.inputMaterial}
+            select
+            name="final"
+            onChange={handleChange}
+            value={tareaSeleccionada.final}
+          >
+            {final.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-2">
+          <h5> Valor </h5>
+          <TextField
+            disabled={estadoInput}
+            id='valor'
+            className={styles.inputMaterial}
+            select
+            name="valor"
+            onChange={handleChangeValor}
+            value={tareaSeleccionada.valor}
+          >
+            {selections.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-3">
+          <h5> Nombre valor </h5>
+          <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange} />
+        </div>
+        <div className="col-md-4">
+          <h5> Protocolo </h5>
+          <TextField
+            id='protocolo'
+            className={styles.inputMaterial}
+            select
+            name="protocolo"
+            onChange={handleChange}
+          >
+            {protocolos.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-4">
           {/* Desplegable de tipos*/}
           <h5> Periodicidad </h5>
           <Autocomplete
             disableClearable={true}
+            className={styles2.inputMaterial}
             id="CboTipos"
             options={tipos}
             getOptionLabel={option => option.nombre}
-            sx={{ width: 300 }}
+            sx={{ width: 200 }}
             renderInput={(params) => <TextField {...params} name="idTipo" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
@@ -725,19 +925,27 @@ function Mantenimientos() {
             }))}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-2">
           {/* Fecha prevista */}
-          <h5> Fecha Prevista </h5>
+          <h5> Fecha </h5>
           <TextField
-            id="fechaprevista"
+            className={styles.inputMaterial}
+            id="fecha"
             type="date"
-            name="fechaPrevista"
-            sx={{ width: 220 }}
+            name="fecha"
+            sx={{ width: 225 }}
             onChange={(e) => setfechaprevista(e.target.value)}
             InputLabelProps={{
               shrink: true,
             }}
           />
+        </div>
+        <div className="col-md-3">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Se Cancela" name="cancelado" onChange={handleChangeCheck3} />
+        </div>
+        <div className="col-md-12">
+          <h5> Comentarios </h5>
+          <TextField disabled={estadoCancelado} className={styles.inputMaterial} name="comentarios" onChange={handleChange} />
         </div>
       </div>
       <br />
@@ -850,6 +1058,7 @@ function Mantenimientos() {
             id="NombreCliente"
             options={clientes}
             defaultValue={nombreClienteEditar[0]}
+            filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.razonSocial}
             sx={{ width: 250 }}
             renderInput={(params) => <TextField {...params} name="nombreCliente" />}
@@ -867,6 +1076,7 @@ function Mantenimientos() {
             id="Oferta"
             options={ofertas}
             defaultValue={ofertaEditar[0]}
+            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
             sx={{ width: 150 }}
             renderInput={(params) => <TextField {...params} name="oferta" />}
@@ -877,7 +1087,7 @@ function Mantenimientos() {
           />
         </div>
 
-        <div className="col-md-3">
+        <div className="col-md-4">
           <h5> Analisis </h5>
           {/* Desplegable de Técnicos */}
           <Autocomplete
@@ -888,11 +1098,48 @@ function Mantenimientos() {
             getOptionLabel={option => option.nombre}
             sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} name="idAnalisis" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              idAnalisis: value.id
-            }))}
+            onChange={handleChangeAnalisis}
           />
+        </div>
+        <div className="col-md-3">
+          <h5> Final </h5>
+          <TextField
+            disabled={estadoInput}
+            id='final'
+            className={styles2.inputMaterial}
+            select
+            name="final"
+            onChange={handleChange}
+            value={tareaSeleccionada.final}
+          >
+            {final.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-3">
+          <h5> Valor </h5>
+          <TextField
+            disabled={estadoInput}
+            id='valor'
+            className={styles2.inputMaterial}
+            select
+            name="valor"
+            onChange={handleChangeValor}
+            value={tareaSeleccionada.valor}
+          >
+            {selections.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-2">
+          <h5> Nombre valor </h5>
+          <TextField disabled={estadoValor} className={styles2.inputMaterial} name="nombreValor" onChange={handleChange} />
         </div>
 
         <div className="col-md-4">
@@ -949,9 +1196,16 @@ function Mantenimientos() {
             }))}
           />
         </div>
+        <div className="col-md-2">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Se Cancela" name="cancelado" onChange={handleChangeCheck3} />
+        </div>
+        <div className="col-md-10">
+          <h5> Comentarios </h5>
+          <TextField disabled={estadoCancelado} className={styles.inputMaterial} name="comentarios" onChange={handleChange} />
+        </div>
       </div>
-      <br />
       <div className="row">
+        {console.log(dataVis)}
         <MaterialTable columns={columnasVis} data={dataVis}
           localization={localization}
           actions={[
@@ -994,7 +1248,12 @@ function Mantenimientos() {
             },
           ]}
 
-          // onRowClick={((evt, mantenimientoDetSeleccionado) => setMantenimientoDetSeleccionado(mantenimientoDetSeleccionado.tableData.id))}
+          onRowClick={((evt, analisisSeleccionado) => {
+              setAnalisisSeleccionado(analisisSeleccionado)
+              peticionGetVis();
+              setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
+              abrirCerrarModalEditarDet();
+          })}
           onSelectionChange={(filas) => {
             setFilasSeleccionadasVis(filas);
             if (filas.length > 0)
@@ -1002,7 +1261,7 @@ function Mantenimientos() {
           }
           }
           options={{
-            sorting: true, paging: true, pageSizeOptions: [1, 3, 5, 7], pageSize: 7, filtering: false, search: false, selection: true,
+            sorting: true, paging: true, pageSizeOptions: [1, 3, 5, 7], pageSize: 5, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
             rowStyle: rowData => ({
               backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
@@ -1035,8 +1294,8 @@ function Mantenimientos() {
 
   const bodyEliminar = (
 
-    <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar la tarea ? </p>
+    <div className={stylesEliminar.modal}>
+      <h5>Estás seguro que deseas eliminar la tarea ? </h5>
       <div align="right">
         <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
@@ -1046,20 +1305,6 @@ function Mantenimientos() {
 
 
   // modal insertar mantenimiento detalle
-  const handleChangeDet = e => {
-    const { name, value } = e.target;
-    setMantenimientoDetSeleccionado(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  }
-
-  const handleChangeCheck = (event, value) => {
-    setMantenimientoDetSeleccionado(prevState => ({
-      ...prevState,
-      realizado: value
-    }))
-  }
 
 
   const abrirCerrarModalInsertarDet = () => {
@@ -1067,69 +1312,75 @@ function Mantenimientos() {
   }
 
   const bodyInsertarDet = (
-    <div className={styles.modal}>
+    <div className={styles2.modal}>
       <h3>Insertar detalle de tarea </h3>
+      <br />
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-3">
           {/* Desplegable de Clientes */}
           <h5> Cliente </h5>
-          <Autocomplete
-            disableClearable={true}
-            id="CboClientes"
-            options={clientes}
-            getOptionLabel={option => option.codigo}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              codigoCliente: value.codigo
-            }))}
-          />
+          <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.codigoCliente} />
         </div>
-        <div className="col-md-6">
-          <Autocomplete
-            disableClearable={true}
-            id="Oferta"
-            options={ofertas}
-            getOptionLabel={option => option.numeroOferta}
-            sx={{ width: 150 }}
-            renderInput={(params) => <TextField {...params} name="oferta" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              oferta: value.numeroOferta
-            }))}
-          />
+        <div className="col-md-3">
+          <h5> Oferta </h5>
+          <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.oferta} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-3">
+          <h5> Analisis </h5>
+          <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idAnalisis} />
+        </div>
+        <div className="col-md-3">
+          <h5> Elemento de planta </h5>
+          <TextField className={styles.inputMaterial} name="idElemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idElementoPlanta} />
+        </div>
+        <div className="col-md-3">
+          <h5> Periodo </h5>
+          <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeVis} />
+        </div>
+        <div className="col-md-3">
+          <h5> Fecha </h5>
           {/* Fecha prevista */}
           <TextField
-            id="fechaprevista"
-            label="Fecha prevista"
+            id="fecha"
             type="date"
-            name="fechaPrevista"
-            sx={{ width: 220 }}
-            onChange={handleChangeDet}
+            name="fecha"
+            sx={{ width: 150 }}
+            onChange={handleChangeVis}
             InputLabelProps={{
               shrink: true,
             }}
           />
         </div>
-        <div className="col-md-6">
-          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           {/* Fecha realizacion */}
+          <h5> Protocolo </h5>
           <TextField
-            id="fecharealizacion"
-            label="Fecha realización"
-            type="date"
-            name="fechaRealizacion"
-            sx={{ width: 220 }}
-            onChange={handleChangeDet}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+            id='protocolo'
+            className={styles.inputMaterial}
+            select
+            name="protocolo"
+            onChange={handleChangeVis}
+          >
+            {protocolos.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-3">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheck} />
+        </div>
+        <div className="col-md-3">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheck2} />
+        </div>
+        <div className="col-md-6">
+          <h5> Numero Facturacion </h5>
+          <TextField className={styles2.inputMaterial} name="numeroFacturado" onChange={handleChangeVis} />
+        </div>
+        <div className="col-md-12">
+          <h5> Observaciones </h5>
+          <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeVis} />
         </div>
       </div>
 
@@ -1151,57 +1402,75 @@ function Mantenimientos() {
 
   const bodyEditarDet = (
     <div className={styles.modal}>
-      <h3>Editar detalle mantenimiento</h3>
+      <h3>Detalle de tarea</h3>
+      <br/>
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-3">
           {/* Desplegable de Clientes */}
-          <Autocomplete
-            disabled
-            disableClearable={true}
-            id="CboClientesDet"
-            options={clientes}
-            defaultValue={clienteMantenimientoDetEditar[0]}
-            getOptionLabel={option => option.nombreComercial}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
-
-          />
+          <h5> Cliente </h5>
+          <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.codigoCliente} />
         </div>
-        <div className="col-md-6">
-          <TextField disabled className={styles.inputMaterial} defaultValue={tareaSeleccionada.numOferta} label="Número de oferta" name="numOferta" />
+        <div className="col-md-3">
+          <h5> Oferta </h5>
+          <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.oferta} />
         </div>
-        <div className="col-md-6">
-          {/* Fecha prevista */}
+        <div className="col-md-3">
+          <h5> Analisis </h5>
+          <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idAnalisis} />
+        </div>
+        <div className="col-md-3">
+          <h5> Elemento de planta </h5>
+          <TextField className={styles.inputMaterial} name="idElemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idElementoPlanta} />
+        </div>
+        <div className="col-md-3">
+          <h5> Periodo </h5>
+          <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeVis} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+        </div>
+        <div className="col-md-3">
+          <h5> Fecha </h5>
           <TextField
-            id="fechaprevistadet"
-            label="Fecha prevista"
+            id="fecha"
             type="date"
-            defaultValue={new Date(mantenimientoDetSeleccionado.fechaPrevista).getFullYear() + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaPrevista).getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaPrevista).getDate())).slice(-2)}
-            name="fechaPrevista"
-            sx={{ width: 220 }}
-            onChange={handleChangeDet}
+            name="fecha"
+            sx={{ width: 150 }}
+            onChange={handleChangeVis}
             InputLabelProps={{
               shrink: true,
             }}
+            value={analisisSeleccionado && analisisSeleccionado.fecha}
           />
         </div>
-        <div className="col-md-6">
-          <FormControlLabel control={<Checkbox defaultChecked={mantenimientoDetSeleccionado.realizado} />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheck} />
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           {/* Fecha realizacion */}
+          <h5> Protocolo </h5>
           <TextField
-            id="fecharealizacion"
-            label="Fecha realización"
-            type="date"
-            defaultValue={fechaRealizacion}
-            name="fechaRealizacion"
-            sx={{ width: 220 }}
-            onChange={handleChangeDet}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+            id='protocolo'
+            className={styles.inputMaterial}
+            select
+            name="protocolo"
+            onChange={handleChangeVis}
+            value={analisisSeleccionado && analisisSeleccionado.protocolo}
+          >
+            {protocolos.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-3">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheck} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+        </div>
+        <div className="col-md-3">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheck2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+        </div>
+        <div className="col-md-6">
+          <h5> Numero Facturacion </h5>
+          <TextField className={styles2.inputMaterial} name="numeroFacturado" onChange={handleChangeVis} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+        </div>
+        <div className="col-md-12">
+          <h5> Observaciones </h5>
+          <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeVis} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
         </div>
       </div>
       <br /><br />
@@ -1220,8 +1489,8 @@ function Mantenimientos() {
 
   const bodyEliminarDet = (
 
-    <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el detalle de tarea ? </p>
+    <div className={stylesEliminar.modal}>
+      <h5>Estás seguro que deseas eliminar el detalle de tarea ? </h5>
       <div align="right">
         <Button color="secondary" onClick={() => peticionDeleteVis()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminarDet()}>No</Button>
@@ -1271,8 +1540,8 @@ function Mantenimientos() {
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
-          setTareaSeleccionada(tareaSeleccionada);
           peticionGetVis();
+          setTareaSeleccionada(tareaSeleccionada);
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));
           setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.idElementoPlanta));
@@ -1283,6 +1552,8 @@ function Mantenimientos() {
           abrirCerrarModalEditar();
         }}
         onSelectionChange={(filas) => {
+          console.log(FilasSeleccionadas)
+          console.log(filas)
           setFilasSeleccionadas(filas);
           if (filas.length > 0)
             setTareaSeleccionada(filas[0]);
@@ -1359,4 +1630,4 @@ function Mantenimientos() {
 
 }
 
-export default Mantenimientos;
+export default Tareas;

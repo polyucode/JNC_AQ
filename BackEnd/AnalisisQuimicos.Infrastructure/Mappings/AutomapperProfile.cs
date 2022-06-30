@@ -19,7 +19,7 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<Provincias, ProvinciaDto>().ReverseMap();
             CreateMap<Poblaciones, PoblacionDto>().ReverseMap();
             CreateMap<ElementosPlanta, ElementosPlantaDto>().ReverseMap();
-            CreateMap<ServMantenimientoCab, ServMantenimientoCabDto>().ReverseMap();
+            CreateMap<Tareas, TareasDTO>().ReverseMap();
             CreateMap<ServMantenimientoDet, ServMantenimientoDetDto>().ReverseMap();
             CreateMap<ParametrosAnalisisPlanta, ParametrosAnalisisPlantaDTO>().ReverseMap();
             CreateMap<ConfNivelesPlantasCliente, ConfNivelesPlantasClienteDTO>().ReverseMap();

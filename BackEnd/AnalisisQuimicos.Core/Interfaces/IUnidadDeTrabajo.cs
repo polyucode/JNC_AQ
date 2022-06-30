@@ -10,7 +10,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Analisis> AnalisisRepository { get; }
         IRepository<Clientes> ClienteRepository { get; }
         IRepository<Perfiles> PerfilRepository { get; }
-        IRepository<ServMantenimientoCab> ServMantenimientoCabRepository { get; }
+        IRepository<Tareas> TareasRepository { get; }
         IRepository<ServMantenimientoDet> ServMantenimientoDetRepository { get; }
         IRepository<Comarcas> ComarcaRepository { get; }
         IRepository<Provincias> ProvinciaRepository { get; }
