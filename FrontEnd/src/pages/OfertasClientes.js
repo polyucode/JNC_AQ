@@ -60,7 +60,7 @@ const useStyles2 = makeStyles((theme) => ({
         cursor: 'pointer'
     },
     inputMaterial: {
-        width: '100%'
+        width: '40%'
     }
 }));
 
@@ -473,19 +473,19 @@ function OfertasClientes() {
             <h3>Agregar Nueva Oferta</h3>
             <br />
             <div className="row g-3">
-                <div className="col-md-6">
+                <div className="col-md-3">
                     <h5> Oferta </h5>
                     <TextField className={styles.inputMaterial} type="number" name="numeroOferta" onChange={handleChange} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-9">
                     <h5> Descripcion </h5>
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <h5> Pedido </h5>
                     <TextField className={styles.inputMaterial} type="number" name="pedido" onChange={handleChange} />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <h5> Codigo Cliente</h5>
                     <Autocomplete
                         type="number"
@@ -493,7 +493,7 @@ function OfertasClientes() {
                         id="CodigoCliente"
                         options={clientes}
                         getOptionLabel={option => parseInt(option.codigo)}
-                        sx={{ width: 300 }}
+                        sx={{ width: 200 }}
                         renderInput={(params) => <TextField {...params} type="number" name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
@@ -501,19 +501,16 @@ function OfertasClientes() {
                         }))}
                     />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     <h5> Nombre Cliente </h5>
                     <Autocomplete
                         disableClearable={true}
                         type="number"
                         id="NombreCliente"
                         options={clientes}
-                        getOptionLabel={(option) => {
-                            if (ofertaSeleccionada.codigoCliente === 1234) {
-                                option = "Jose"
-                            }
-                        }}
-                        sx={{ width: 300 }}
+                        filterOptions={options => clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente)}
+                        getOptionLabel={option => option.razonSocial}
+                        sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="nombreCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
@@ -604,6 +601,7 @@ function OfertasClientes() {
                         id="NombreCliente"
                         options={clientes}
                         getOptionLabel={option => option.razonSocial}
+                        filterOptions={options => clientes.filter(cliente => cliente.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         defaultValue={clientesNombreEditar[0]}
                         sx={{ width: 200 }}
                         renderInput={(params) => <TextField {...params} name="nombreCliente" />}
@@ -752,7 +750,19 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-9">
                     <h5> Descripcion </h5>
-                    <TextField className={styles.inputMaterial} name="descripcionProducto" onChange={handleChangeProducto} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="descripcion"
+                        options={productos}
+                        filterOptions={options => productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto)}
+                        getOptionLabel={option => option.descripcion}
+                        sx={{ width: 625 }}
+                        renderInput={(params) => <TextField {...params} name="descripcion" />}
+                        onChange={(event, value) => setProductoSeleccionado(prevState => ({
+                            ...prevState,
+                            descripcionProducto: value.descripcion
+                        }))}
+                    />
                 </div>
                 <div className="col-md-3">
                     <h5> Estimacion </h5>

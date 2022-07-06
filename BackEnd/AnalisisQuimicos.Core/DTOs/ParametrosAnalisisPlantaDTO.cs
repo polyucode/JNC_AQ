@@ -9,9 +9,9 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Id { get; set; }
         public int? CodigoCliente { get; set; }
         public int? Oferta { get; set; }
-        public int? IdElemento { get; set; }
+        public string Elemento { get; set; }
         public string Periodo { get; set; }
-        public int? IdAnalisis { get; set; }
+        public string Analisis { get; set; }
         public DateTime? Fecha { get; set; }
         public bool? Realizado { get; set; }
         public string Operario { get; set; }

@@ -100,6 +100,7 @@ function PlantasTabla() {
 
     const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
 
+    const [analisisNivelesPlantasCliente, setAnalisisNivelesPlantasCliente] = useState([]);
 
     const [oferta, setOferta] = useState([]);
 
@@ -134,21 +135,80 @@ function PlantasTabla() {
     const styles = useStyles();
 
     const planta = {
-        codigoCliente: '',
-        elementos: [{
-            nombre: 'Torre',
-            numero: 1,
-            posicion: 1,
-            nivel: 1,
-            propiedades: {
-                fisicoQuimico: true,
-                aerobios: false,
-                legionela: true,
-                aguaPotable: true,
-                aguasResiduales: false
-            },
+        codigoCliente: 0,
+        oferta: 0,
+        elementos: []
+    }
+    let listaElementos = planta.elementos;
+
+    const [value, setValue] = React.useState('0');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    const GetClientes = async () => {
+        axios.get("/cliente", token).then(response => {
+            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setClientes(cliente);
+        }, [])
+    }
+
+    const GetOfertas = async () => {
+        axios.get("/ofertasclientes", token).then(response => {
+            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOferta(oferta);
+        }, [])
+    }
+
+    const GetAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setAnalisisNivelesPlantasCliente(analisisNiveles);
+        })
+    }
+
+    const GetConfParametrosElementoPlantaCliente = async () => {
+        axios.get("/parametroselementoplantacliente", token).then(response => {
+            setData2(response.data.data)
+        })
+    }
+
+    function FiltrarData(){
+        setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === confParametrosElementoPlantaCliente.codigoCliente && analisis.oferta === confParametrosElementoPlantaCliente.oferta))
+    } 
+
+    const onChangeCliente = (e, value, name) => {
+        if(e.target.textContent !== ""){
+            setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.oferta === confParametrosElementoPlantaCliente.oferta))
+        }
+
+        setConfParametrosElementoPlantaCliente((prevState) => ({
+            ...prevState,
+            [name]: value.codigo
+        }))
+
+        Datos();
+    }
+
+    const onChangeOferta = (e, value, name) => {
+        if(e.target.textContent !== ""){
+            setData(analisisNivelesPlantasCliente.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.codigoCliente === confParametrosElementoPlantaCliente.codigoCliente))
+        }
+
+        setConfParametrosElementoPlantaCliente((prevState) => ({
+            ...prevState,
+            [name]: value.numeroOferta
+        }))
+
+        Datos();
+    }
+
+    function Datos() {
+        let elementoNuevo = {
+            nombre: data.analisis,
             plantilla: {
-                EsPlantilla: false,
+                esPlantilla: false,
                 Comptador: {
                     LimInf: '',
                     LimSup: '',
@@ -296,6 +356,34 @@ function PlantasTabla() {
                     Activo: false,
                     VerInspector: false,
                 },
+                AquaproxAB5310: {
+                    LimInf: '',
+                    LimSup: '',
+                    Unidades: 'm3',
+                    Activo: false,
+                    VerInspector: false,
+                },
+                BiopolLB5: {
+                    LimInf: '',
+                    LimSup: '',
+                    Unidades: 'm3',
+                    Activo: false,
+                    VerInspector: false,
+                },
+                MefacideLG: {
+                    LimInf: '',
+                    LimSup: '',
+                    Unidades: 'm3',
+                    Activo: false,
+                    VerInspector: false,
+                },
+                BiopolIB200: {
+                    LimInf: '',
+                    LimSup: '',
+                    Unidades: 'm3',
+                    Activo: false,
+                    VerInspector: false,
+                },
                 Campo1: {
                     Nombre: '',
                     LimInf: '',
@@ -381,1287 +469,18 @@ function PlantasTabla() {
                     Activo: false,
                 }
             }
-        },
-        {
-            nombre: 'Depósito',
-            numero: 1,
-            posicion: 1,
-            nivel: 2,
-            propiedades: {
-                fisicoQuimico: true,
-                aerobios: true,
-                legionela: true,
-                aguaPotable: true,
-                aguasResiduales: false
-            },
-            plantilla: {
-                EsPlantilla: false,
-                Comptador: {
-                    LimInf: '5',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'uS/cm',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
+        }
 
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'mg/l',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                }
-            }
-        },
-        {
-            nombre: 'Osmosis',
-            numero: 1,
-            posicion: 2,
-            nivel: 2,
-            propiedades: {
-                fisicoQuimico: false,
-                aerobios: false,
-                legionela: true,
-                aguaPotable: false,
-                aguasResiduales: true
-            },
-            plantilla: {
-                EsPlantilla: false,
-                Comptador: {
-                    LimInf: '5',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'uS/cm',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
-
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'mg/l',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                }
-            }
-        },
-        {
-            nombre: 'Torre',
-            numero: 1,
-            posicion: 1,
-            nivel: 3,
-            propiedades: {
-                fisicoQuimico: false,
-                aerobios: false,
-                legionela: true,
-                aguaPotable: true,
-                aguasResiduales: true
-            },
-            plantilla: {
-                EsPlantilla: false,
-                Comptador: {
-                    LimInf: '5',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'uS/cm',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
-
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'mg/l',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                }
-            }
-        },
-        {
-            nombre: 'Torre',
-            numero: 2,
-            posicion: 2,
-            nivel: 3,
-            propiedades: {
-                fisicoQuimico: true,
-                aerobios: false,
-                legionela: false,
-                aguaPotable: true,
-                aguasResiduales: true
-            },
-            plantilla: {
-                EsPlantilla: false,
-                Comptador: {
-                    LimInf: '5',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'uS/cm',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
-
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'mg/l',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                }
-            }
-        },
-        {
-            nombre: 'Caldera',
-            numero: 1,
-            posicion: 1,
-            nivel: 4,
-            propiedades: {
-                fisicoQuimico: false,
-                aerobios: true,
-                legionela: true,
-                aguaPotable: false,
-                aguasResiduales: false
-            },
-            plantilla: {
-                EsPlantilla: false,
-                Comptador: {
-                    LimInf: '5',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'uS/cm',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
-
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: true,
-                    VerInspector: true,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'C',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'Un. p',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'mg/l',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: 'm3',
-                    Activo: false,
-                }
-            }
-        }]
-    }
-    let listaElementos = planta.elementos;
-
-    const [value, setValue] = React.useState('0');
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
-    }
-
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOferta(oferta);
-        }, [])
-    }
-
-    const GetConfParametrosElementoPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
-            setData2(response.data.data)
-        })
-    }
-
-    const GetParametrosAnalisisPlanta = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData(response.data.data)
-        })
+        listaElementos.push(elementoNuevo)
     }
 
     useEffect(() => {
-        GetParametrosAnalisisPlanta();
+        FiltrarData();
         GetConfParametrosElementoPlantaCliente();
         GetOfertas();
         GetClientes();
+        GetAnalisisNivelesPlantasCliente();
+        Datos();
     }, [])
 
     return (
@@ -1673,20 +492,34 @@ function PlantasTabla() {
                     <tbody>
                         <tr>
                             <th>Código</th>
+                            <th> Nombre </th>
                             <th>Oferta</th>
                         </tr>
                         <tr>
                             <td>
+                                {console.log(listaElementos)}
                                 <Autocomplete
                                     disableClearable={true}
                                     id="Cliente"
                                     options={clientes}
                                     getOptionLabel={option => option.codigo}
                                     sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                                    renderInput={(params) => <TextField {...params} name="codigoCliente" />}
+                                    onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
+                                />
+                            </td>
+                            <td>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="NombreCliente"
+                                    options={clientes}
+                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === confParametrosElementoPlantaCliente.codigoCliente)}
+                                    getOptionLabel={option => option.razonSocial}
+                                    sx={{ width: 200 }}
+                                    renderInput={(params) => <TextField {...params} name="nombreCliente" />}
                                     onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
                                         ...prevState,
-                                        codigoCliente: parseInt(value.codigo)
+                                        nombreCliente: value.razonSocial
                                     }))}
                                 />
                             </td>
@@ -1695,13 +528,11 @@ function PlantasTabla() {
                                     disableClearable={true}
                                     id="Oferta"
                                     options={oferta}
+                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === confParametrosElementoPlantaCliente.codigoCliente)}
                                     getOptionLabel={option => option.numeroOferta}
                                     sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
-                                    onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
-                                        ...prevState,
-                                        oferta: parseInt(value.numeroOferta)
-                                    }))}
+                                    renderInput={(params) => <TextField {...params}  name="numeroOferta" />}
+                                    onChange={(event, value) => onChangeOferta(event, value, "oferta")}
                                 />
                             </td>
                         </tr>
@@ -1713,7 +544,7 @@ function PlantasTabla() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList id="tab-list" onChange={handleChange}>
                             {
-                                listaElementos.map((elemento, index) => <Tab key={index} label={elemento.nombre + ' ' + elemento.numero} value={index.toString()} />)
+                                data.map((elemento, index) => <Tab key={index} label={elemento.elemento} value={index.toString()} />)
                             }
                         </TabList>
                     </Box>

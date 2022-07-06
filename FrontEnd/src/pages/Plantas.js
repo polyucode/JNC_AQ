@@ -23,7 +23,8 @@ function Plantas() {
 
     const [confPlantasCliente, setConfPlantasCliente] = useState({
         id: 0,
-        CodigoCliente: 0,
+        codigoCliente: 0,
+        nombreCliente: '',
         oferta: 0,
         NumNiveles: 0,
         addDate: null,
@@ -113,7 +114,6 @@ function Plantas() {
         const tipoElemento = [];
         elemento.map(elem => tipoElemento.push({ id: elem.id, nombre: elem.nombre, numero: elem.numero }))
 
-        console.log(tipoElemento)
         // Preparamos una variable para el elemento nuevo
         let elementoNuevo = {
             id: 0,
@@ -184,7 +184,6 @@ function Plantas() {
     }
 
     function crearNiveles() {
-        console.log(elemento)
         // Obtenemos el valor de la cantidad de niveles a crear
         let numNiveles = document.getElementById('numero-niveles').value;
         let listadoNiveles = [];
@@ -246,24 +245,9 @@ function Plantas() {
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
-        // Seteamos los checkboxs según los datos almacenados en el elemento
-        /*document.getElementById('ckb-fisico-quimico').checked = elementoAnalisisProps.fisicoQuimico;
-        document.getElementById('ckb-aerobios').checked = elementoAnalisisProps.aerobios;
-        document.getElementById('ckb-legionela').checked = elementoAnalisisProps.legionela;
-        document.getElementById('ckb-agua-potable').checked = elementoAnalisisProps.aguaPotable;
-        document.getElementById('ckb-aguas-residuales').checked = elementoAnalisisProps.aguasResiduales;
-        document.getElementById('ckb-desinfecciones').checked = elementoAnalisisProps.desinfecciones;
-        document.getElementById('ckb-osmosis').checked = elementoAnalisisProps.osmosis;
-        document.getElementById('ckb-agua-pozo').checked = elementoAnalisisProps.aguaPozo;
-        document.getElementById('ckb-acs').checked = elementoAnalisisProps.acs;
-        document.getElementById('ckb-maquina-frio').checked = elementoAnalisisProps.maquinaFrio;
-        document.getElementById('ckb-mediciones').checked = elementoAnalisisProps.mediciones;
-        document.getElementById('ckb-fuga-gas').checked = elementoAnalisisProps.controlGas;
-        document.getElementById('ckb-otros').checked = elementoAnalisisProps.otros;*/
     }
 
     function changeAnalisisElemento(e) {
-        //console.log()
         listaElementos[elementoAnalisisId].propiedades[e.target.id - 1].value = e.target.checked
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         // Cuando cambia el valor de un checkbox, vemos cual de ellos ha sido
@@ -302,8 +286,17 @@ function Plantas() {
             case '11':
                 elementoAnalisisProps[10].value = e.target.checked;
                 break;
-            case '12':
+            case '15':
                 elementoAnalisisProps[11].value = e.target.checked;
+                break;
+            case '16':
+                elementoAnalisisProps[12].value = e.target.checked;
+                break;
+            case '17':
+                elementoAnalisisProps[13].value = e.target.checked;
+                break;
+            case '18':
+                elementoAnalisisProps[14].value = e.target.checked;
                 break;
         }
 
@@ -346,17 +339,11 @@ function Plantas() {
     }
 
     useEffect(() => {
-        //GetConfPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
         GetOfertas();
         GetAnalisis();
-        //peticionGet();
-        //GetPerfiles();
-        //GetPoblacion();
-        //GetProvincia();
-        //GetComarca();
     }, [])
 
 
@@ -364,7 +351,7 @@ function Plantas() {
         if (confPlantasCliente.NumNiveles > 5) {
             alert('El número máximo de niveles que se pueden crear son 5');
             return;
-        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.oferta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
+        } else if (confPlantasCliente.codigoCliente == null || confPlantasCliente.oferta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
             alert('Faltan introducir datos correctos para crear los niveles');
             return;
         }
@@ -381,26 +368,16 @@ function Plantas() {
         }
     }
 
-    /*const postElemento = async () => {
-        await axios.post("/elementosplanta", elementosPlanta, token)
-            .then(response => {
-                console.log(response)
-                return response.data.data
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }*/
-
     async function datosElementos() {
         listaElementos.map((elemento) => {
             const elem = {
                 id: 0,
-                CodigoCliente: confPlantasCliente.CodigoCliente,
+                CodigoCliente: confPlantasCliente.codigoCliente,
+                NombreCliente: confPlantasCliente.nombreCliente,
                 Oferta: confPlantasCliente.oferta,
                 Id_Planta: confPlantasCliente.id,
                 Nivel: elemento.nivel,
-                Id_Elemento: elemento.id,
+                IdElemento: elemento.id,
                 Visible: false,
                 Conecta: "",
                 addDate: null,
@@ -428,11 +405,11 @@ function Plantas() {
                 if (analisis.value == true) {
                     const analisisElem = {
                         id: 0,
-                        CodigoCliente: confPlantasCliente.CodigoCliente,
+                        CodigoCliente: confPlantasCliente.codigoCliente,
                         Oferta: confPlantasCliente.oferta,
                         IdPlanta: confPlantasCliente.id,
-                        IdElemento: elemento.id,
-                        IdAnalisis: analisis.id,
+                        Elemento: elemento.nombre,
+                        Analisis: analisis.nombre,
                         addDate: null,
                         addIdUser: null,
                         modDate: null,
@@ -450,8 +427,8 @@ function Plantas() {
                         })
                 }
             })
-            window.location.reload();
         })
+        //window.location.reload();
     }
 
     function crearNodo(elemento) {
@@ -572,17 +549,29 @@ function Plantas() {
                                 options={clientes}
                                 getOptionLabel={option => option.codigo}
                                 sx={{ width: 250 }}
-                                renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="CodigoCliente" />}
+                                renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="codigoCliente" />}
                                 onChange={(event, value) => setConfPlantasCliente(prevState => ({
                                     ...prevState,
-                                    CodigoCliente: parseInt(value.codigo)
+                                    codigoCliente: parseInt(value.codigo)
                                 }))}
                             />
                             <br />
-                            {/*<div className="col-md-6">
+                            <div className="col-md-6">
                                 <p>Nombre</p>
-                                <TextField style={{width: 250}} name="nombre" onChange={handleChange} />
-                            </div>*/}
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="NombreCliente"
+                                    options={clientes}
+                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === confPlantasCliente.codigoCliente)}
+                                    getOptionLabel={option => option.razonSocial}
+                                    sx={{ width: 250 }}
+                                    renderInput={(params) => <TextField {...params} min="0" label="" name="nombreCliente" />}
+                                    onChange={(event, value) => setConfPlantasCliente(prevState => ({
+                                        ...prevState,
+                                        nombreCliente: value.razonSocial
+                                    }))}
+                                />
+                            </div>
                             <br /><br />
                             <div className='numero-oferta'>
                                 <h5>Numero de Oferta</h5>
@@ -591,6 +580,7 @@ function Plantas() {
                                     disableClearable={true}
                                     id="oferta"
                                     options={oferta}
+                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === confPlantasCliente.codigoCliente)}
                                     getOptionLabel={option => option.numeroOferta}
                                     sx={{ width: 250 }}
                                     renderInput={(params) => <TextField {...params} type="number" name="oferta" />}

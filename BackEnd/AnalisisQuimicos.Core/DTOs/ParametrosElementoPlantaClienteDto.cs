@@ -6,9 +6,10 @@ namespace AnalisisQuimicos.Core.DTOs
 {
     public class ParametrosElementoPlantaClienteDto
     {
-        public int? IdCliente { get; set; }
-        public int? IdElemento { get; set; }
-        public int? IdPlanta { get; set; }
+        public int? CodigoCliente { get; set; }
+        public string NombreCliente { get; set; }
+        public int? Oferta { get; set; }
+        public string Elemento { get; set; }
         public bool? EsPlantilla { get; set; }
         public float? Comptador_LimInf { get; set; }
         public float? Comptador_LimSup { get; set; }

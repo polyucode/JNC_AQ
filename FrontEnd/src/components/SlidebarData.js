@@ -14,7 +14,7 @@ export const SlidebarData = [
     {
         title: 'Usuarios',
         path: '/usuarios',
-        icon: <AiIcons.AiOutlineUser/>,
+        icon: <AiIcons.AiOutlineUser />,
         cName: 'nav-text'
     },
     {
@@ -24,32 +24,38 @@ export const SlidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Tareas',
-        path: '/tareas',
-        icon: <MdOutlineConstruction/>,
+        title: 'Ofertas',
+        path: '/ofertas',
+        icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Plantas',
         path: '/plantas',
-        icon: <MdOutlineConstruction/>,
+        icon: <MdOutlineConstruction />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Tareas',
+        path: '/tareas',
+        icon: <MdOutlineConstruction />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Visualizacion',
+        path: '/visualizacion',
+        icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Plantas (Tabla)',
         path: '/plantasTabla',
-        icon: <MdOutlineConstruction/>,
+        icon: <MdOutlineConstruction />,
         cName: 'nav-text'
     },
     {
         title: 'Mantenimiento (Tecnico)',
         path: '/mantenimientoTecnico',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Ofertas',
-        path: '/ofertas',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
@@ -64,12 +70,5 @@ export const SlidebarData = [
         path: '/consumoarticulos',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
-    },
-    {
-        title: 'Visualizacion',
-        path: '/visualizacion',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
-    },
-
+    }
 ]

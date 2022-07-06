@@ -19,11 +19,11 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Oferta).HasColumnName("Oferta");
 
-            builder.Property(e => e.IdElemento).HasColumnName("Id_Elemento");
+            builder.Property(e => e.Elemento).HasColumnName("Elemento");
 
             builder.Property(e => e.IdPlanta).HasColumnName("Id_Planta");
 
-            builder.Property(e => e.IdAnalisis).HasColumnName("Id_Analisis");
+            builder.Property(e => e.Analisis).HasColumnName("Analisis");
 
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 

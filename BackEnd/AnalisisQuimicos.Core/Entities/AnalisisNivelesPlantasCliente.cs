@@ -8,8 +8,8 @@ namespace AnalisisQuimicos.Core.Entities
         public int? CodigoCliente { get; set; }
         public int? Oferta { get; set; }
         public int? IdPlanta { get; set; }
-        public int? IdElemento { get; set; }
-        public int? IdAnalisis { get; set; }
+        public string Elemento { get; set; }
+        public string Analisis { get; set; }
 
     }
 }

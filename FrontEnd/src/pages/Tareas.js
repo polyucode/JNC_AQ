@@ -21,6 +21,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
 import './Mantenimientos.css';
+import { FamilyRestroomRounded } from "@mui/icons-material";
 
 const token = {
   headers: {
@@ -109,7 +110,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 1000,
+    height: 1020,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -132,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1050,
-    height: 850,
+    height: 750,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -146,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputMaterial: {
     width: '100%',
-    height: 75
+    height: 50
   }
 }));
 
@@ -168,7 +169,7 @@ const useStyles2 = makeStyles((theme) => ({
   },
   inputMaterial: {
     width: '45%',
-    height: 60
+    height: 55
   }
 }));
 
@@ -268,10 +269,16 @@ function Tareas() {
     nombreCliente: "",
     operario: "",
     protocolo: "",
-    idElementoPlanta: 0,
+    elementoPlanta: "",
     oferta: 0,
-    idAnalisis: 0,
+    analisis: "",
+    final: "",
+    valor: "",
+    nombreValor: "",
+    unidades: "",
     tipo: 0,
+    cancelado: false,
+    comentarios: "",
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -282,25 +289,14 @@ function Tareas() {
 
   });
 
-  const [mantenimientoDetSeleccionado, setMantenimientoDetSeleccionado] = useState({
-
-    id: 0,
-    idCab: 0,
-    fechaPrevista: null,
-    realizado: false,
-    fechaRealizacion: null,
-    estado: "",
-    observaciones: "",
-  });
-
   const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
 
     id: 0,
     codigoCliente: 0,
     oferta: 0,
-    idElemento: 0,
+    elemento: '',
     periodo: '',
-    idAnalisis: 0,
+    analisis: '',
     fecha: null,
     realizado: false,
     operario: '',
@@ -318,7 +314,6 @@ function Tareas() {
   });
 
   const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-  const [FilasSeleccionadasDet, setFilasSeleccionadasDet] = useState([]);
   const [FilasSeleccionadasVis, setFilasSeleccionadasVis] = useState([]);
 
   const [nombreClienteEditar, setNombreClienteEditar] = useState([]);
@@ -329,18 +324,13 @@ function Tareas() {
   const [ofertaEditar, setOfertaEditar] = useState([]);
   const [analisisEditar, setAnalisisEditar] = useState([]);
 
-  const [clienteMantenimientoDetEditar, setClienteMantenimientoDetEditar] = useState([]);
-
   const [clienteAnalisisEditar, setClienteAnalisisEditar] = useState([]);
-
-  const [MantenimientoDetEliminar, setMantenimientoDetEliminar] = useState([]);
 
   const [TareaEliminar, setTareaEliminar] = useState([]);
 
   const [AnalisisEliminar, setAnalisisEliminar] = useState([]);
 
   const [data, setData] = useState([]);
-  const [dataDet, setDataDet] = useState([]);
   const [dataVis, setDataVis] = useState([]);
 
   const [operarios, setOperarios] = useState([]);
@@ -355,18 +345,15 @@ function Tareas() {
 
   const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
-  const [clientesTable, setClientesTable] = useState({});
-
   const [elementosplantaTable, setElementosPlantaTable] = useState({});
 
-  const [tecnicosTable, setTecnicosTable] = useState({});
-
   const [tiposTable, setTiposTable] = useState({});
+
+  const [operariosTable, setOperariosTable] = useState({});
 
   const [analisisTable, setAnalisisTable] = useState({});
 
   const [fechaprevista, setfechaprevista] = useState("");
-  const [fechaRealizacion, setFechaRealizacion] = useState("");
 
   const [estadoInput, setEstadoInput] = useState(true);
   const [estadoValor, setEstadoValor] = useState(true);
@@ -384,10 +371,10 @@ function Tareas() {
 
     //visibles
     { title: 'Cliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por cliente" },
-    { title: 'Nombre Cliente', field: 'nombreCliente', filterPlaceholder: "Filtrar por cliente" },
+    { title: 'Nombre Cliente', field: 'nombreCliente',  filterPlaceholder: "Filtrar por cliente" },
     { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por técnico" },
-    { title: 'Elemento de planta', field: 'idElementoPlanta', lookup: elementosplantaTable, filterPlaceholder: "Filtrar por elemento" },
-    { title: 'Analisis', field: 'idAnalisis', lookup: analisisTable, filterPlaceholder: "Filtrar por Analisis" },
+    { title: 'Elemento de planta', field: 'elementoPlanta', filterPlaceholder: "Filtrar por elemento" },
+    { title: 'Analisis', field: 'analisis', filterPlaceholder: "Filtrar por Analisis" },
     { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por oferta" },
     { title: 'Tipo', field: 'tipo', lookup: tiposTable, filterPlaceholder: "Filtrar por tipo" },
 
@@ -474,6 +461,10 @@ function Tareas() {
 
 
   useEffect(() => {
+    const lookupOperario = {};
+    operarios.map(fila => lookupOperario[fila.id] = fila.nombre + ' ' + fila.apellidos)
+    setOperariosTable(lookupOperario)
+
     const lookupElementosPlanta = {};
     elementosplanta.map(fila => lookupElementosPlanta[fila.id] = fila.nombre);
     setElementosPlantaTable(lookupElementosPlanta);
@@ -488,7 +479,7 @@ function Tareas() {
     analisis.map(fila => lookupAnalisis[fila.id] = fila.nombre);
     setAnalisisTable(lookupAnalisis);
 
-  }, [elementosplanta, analisis, tipos])
+  }, [elementosplanta, analisis, tipos, operarios])
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
@@ -503,9 +494,9 @@ function Tareas() {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.oferta = response.data.data.oferta
-            analisisSeleccionado.idElemento = response.data.data.idElementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
-            analisisSeleccionado.idAnalisis = response.data.data.idAnalisis;
+            analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
@@ -523,9 +514,9 @@ function Tareas() {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.oferta = response.data.data.oferta
-            analisisSeleccionado.idElemento = response.data.data.idElementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
-            analisisSeleccionado.idAnalisis = response.data.data.idAnalisis;
+            analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
@@ -543,9 +534,9 @@ function Tareas() {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.oferta = response.data.data.oferta
-            analisisSeleccionado.idElemento = response.data.data.idElementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
-            analisisSeleccionado.idAnalisis = response.data.data.idAnalisis;
+            analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
@@ -563,9 +554,9 @@ function Tareas() {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.oferta = response.data.data.oferta
-            analisisSeleccionado.idElemento = response.data.data.idElementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
-            analisisSeleccionado.idAnalisis = response.data.data.idAnalisis;
+            analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
@@ -614,7 +605,7 @@ function Tareas() {
 
   const peticionGetVis = async () => {
     axios.get("/parametrosanalisisplanta", token).then(response => {
-      setDataVis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.idElemento === tareaSeleccionada.idElementoPlanta))
+      setDataVis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta))
     })
   }
 
@@ -729,9 +720,9 @@ function Tareas() {
   const handleChangeAnalisis = (event, value) => {
     setTareaSeleccionada(prevState => ({
       ...prevState,
-      idAnalisis: value.id
+      analisis: value.analisis
     }))
-    if (value.id === 13 || value.id === 14) {
+    if (value.analisis === "Otros con Fechas de Trabajo" || value.analisis === "Otros sin Fechas de Trabajo" || value.analisis === "Legionela" || value.analisis === "Aerobios" || value.analisis === "Aguas Residuales" || value.analisis === "Desinfecciones" || value.analisis === "AguaPozo" || value.analisis === "Agua Potable" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mediciones" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Control Fuga gas" || value.analisis === "Revision de bandeja") {
       setEstadoInput(false)
     } else {
       setEstadoInput(true)
@@ -743,7 +734,7 @@ function Tareas() {
       <h3>Agregar tarea</h3>
       <br />
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-3">
           <h5> Codigo Cliente </h5>
           {/* Desplegable de Clientes */}
           <Autocomplete
@@ -756,12 +747,12 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              codigoCliente: value.codigo
+              codigoCliente: parseInt(value.codigo)
             }))}
           />
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-3">
           <h5> Nombre Cliente </h5>
           {/* Desplegable de Clientes */}
           <Autocomplete
@@ -779,26 +770,6 @@ function Tareas() {
             }))}
           />
         </div>
-
-        {/* Desplegable de elementos planta */}
-        <div className="col-md-4">
-          <h5> Elemento de planta </h5>
-          <Autocomplete
-            disableClearable={true}
-            className={styles2.inputMaterial}
-            id="CboElementosPlanta"
-            options={elementosplanta}
-            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
-            getOptionLabel={option => option.idElemento}
-            sx={{ width: 250 }}
-            renderInput={(params) => <TextField {...params} name="idElementoPlanta" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              idElementoPlanta: value.idElemento
-            }))}
-          />
-        </div>
-
         <div className="col-md-3">
           <h5> Oferta </h5>
           <Autocomplete
@@ -812,9 +783,86 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: value.numeroOferta
+              oferta: parseInt(value.numeroOferta)
             }))}
           />
+        </div>
+
+        {/* Desplegable de elementos planta */}
+        <div className="col-md-3">
+          <h5> Elemento de planta </h5>
+          <Autocomplete
+            disableClearable={true}
+            className={styles2.inputMaterial}
+            id="CboElementosPlanta"
+            options={elementosplanta}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+            getOptionLabel={option => option.elemento}
+            sx={{ width: 225 }}
+            renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
+            onChange={(event, value) => setTareaSeleccionada(prevState => ({
+              ...prevState,
+              elementoPlanta: value.elemento
+            }))}
+          />
+        </div>
+
+        <div className="col-md-5">
+          <h5> Analisis </h5>
+          {/* Desplegable de Técnicos */}
+          <Autocomplete
+            disableClearable={true}
+            className={styles2.inputMaterial}
+            id="Analisis"
+            options={analisis}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
+            getOptionLabel={option => option.analisis}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="analisis" />}
+            onChange={handleChangeAnalisis}
+          />
+        </div>
+        <div className="col-md-5">
+          <h5> Final </h5>
+          <TextField
+            disabled={estadoInput}
+            id='final'
+            className={styles2.inputMaterial}
+            select
+            name="final"
+            onChange={handleChange}
+          >
+            {final.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-4">
+          <h5> Valor </h5>
+          <TextField
+            disabled={estadoInput}
+            id='valor'
+            className={styles2.inputMaterial}
+            select
+            name="valor"
+            onChange={handleChangeValor}
+          >
+            {selections.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+        <div className="col-md-4">
+          <h5> Nombre valor </h5>
+          <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange} />
+        </div>
+        <div className="col-md-2">
+          <h5> Unidades </h5>
+          <TextField disabled={estadoValor} className={styles.inputMaterial} name="unidades" onChange={handleChange} />
         </div>
         <div className="col-md-5">
           <h5> Operario </h5>
@@ -833,64 +881,6 @@ function Tareas() {
               operario: value.nombre
             }))}
           />
-        </div>
-
-        <div className="col-md-5">
-          <h5> Analisis </h5>
-          {/* Desplegable de Técnicos */}
-          {console.log(tareaSeleccionada)}
-          {console.log(confAnalisisNivelesPlantasCliente)}
-          <Autocomplete
-            disableClearable={true}
-            className={styles2.inputMaterial}
-            id="IdAnalisis"
-            options={analisis}
-            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.idElemento === tareaSeleccionada.idElementoPlanta)}
-            getOptionLabel={option => option.idAnalisis}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="idAnalisis" />}
-            onChange={handleChangeAnalisis}
-          />
-        </div>
-        <div className="col-md-2">
-          <h5> Final </h5>
-          <TextField
-            disabled={estadoInput}
-            id='final'
-            className={styles.inputMaterial}
-            select
-            name="final"
-            onChange={handleChange}
-            value={tareaSeleccionada.final}
-          >
-            {final.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="col-md-2">
-          <h5> Valor </h5>
-          <TextField
-            disabled={estadoInput}
-            id='valor'
-            className={styles.inputMaterial}
-            select
-            name="valor"
-            onChange={handleChangeValor}
-            value={tareaSeleccionada.valor}
-          >
-            {selections.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <div className="col-md-3">
-          <h5> Nombre valor </h5>
-          <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange} />
         </div>
         <div className="col-md-4">
           <h5> Protocolo </h5>
@@ -940,13 +930,13 @@ function Tareas() {
             }}
           />
         </div>
-        <div className="col-md-3">
+        {/*<div className="col-md-3">
           <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Se Cancela" name="cancelado" onChange={handleChangeCheck3} />
         </div>
         <div className="col-md-12">
           <h5> Comentarios </h5>
           <TextField disabled={estadoCancelado} className={styles.inputMaterial} name="comentarios" onChange={handleChange} />
-        </div>
+          </div>*/}
       </div>
       <br />
       <div align="right">
@@ -1039,6 +1029,7 @@ function Tareas() {
             disableClearable={true}
             id="CboClientes"
             options={clientes}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={clienteTareaEditar[0]}
             getOptionLabel={option => option.codigo}
             sx={{ width: 200 }}
@@ -1057,6 +1048,7 @@ function Tareas() {
             disableClearable={true}
             id="NombreCliente"
             options={clientes}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={nombreClienteEditar[0]}
             filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.razonSocial}
@@ -1075,6 +1067,7 @@ function Tareas() {
             disableClearable={true}
             id="Oferta"
             options={ofertas}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={ofertaEditar[0]}
             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
@@ -1087,17 +1080,19 @@ function Tareas() {
           />
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-3">
           <h5> Analisis </h5>
           {/* Desplegable de Técnicos */}
           <Autocomplete
             disableClearable={true}
-            id="IdAnalisis"
+            id="Analisis"
             options={analisis}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={analisisEditar[0]}
-            getOptionLabel={option => option.nombre}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
+            getOptionLabel={option => option.analisis}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="idAnalisis" />}
+            renderInput={(params) => <TextField {...params} name="analisis" />}
             onChange={handleChangeAnalisis}
           />
         </div>
@@ -1137,9 +1132,13 @@ function Tareas() {
             ))}
           </TextField>
         </div>
-        <div className="col-md-2">
+        <div className="col-md-3">
           <h5> Nombre valor </h5>
-          <TextField disabled={estadoValor} className={styles2.inputMaterial} name="nombreValor" onChange={handleChange} />
+          <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange} value={tareaSeleccionada.nombreValor} />
+        </div>
+        <div className="col-md-3">
+          <h5> Unidades </h5>
+          <TextField disabled={estadoValor} className={styles2.inputMaterial} name="unidades" onChange={handleChange} value={tareaSeleccionada.unidades} />
         </div>
 
         <div className="col-md-4">
@@ -1149,6 +1148,7 @@ function Tareas() {
             disableClearable={true}
             id="Operario"
             options={operarios}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={tecnicoTareaEditar[0]}
             filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
             getOptionLabel={option => option.nombre + ' ' + option.apellidos}
@@ -1168,13 +1168,14 @@ function Tareas() {
             disableClearable={true}
             id="CboElementosPlanta"
             options={elementosplanta}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={elementoTareaEditar[0]}
             getOptionLabel={option => option.nombre}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="idElementoPlanta" />}
+            renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              idElementoPlanta: value.id
+              elementoPlanta: value.nombre
             }))}
           />
         </div>
@@ -1186,6 +1187,7 @@ function Tareas() {
             disableClearable={true}
             id="CboTipos"
             options={tipos}
+            className={stylesEditarDet.inputMaterial}
             defaultValue={tipoTareaEditar[0]}
             getOptionLabel={option => option.nombre}
             sx={{ width: 300 }}
@@ -1238,11 +1240,6 @@ function Tareas() {
               tooltip: "Editar detalle de tarea",
               onClick: (e, data) => {
                 setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
-                if (mantenimientoDetSeleccionado.realizado === true) {
-                  setFechaRealizacion(new Date(mantenimientoDetSeleccionado.fechaRealizacion).getFullYear() + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date(mantenimientoDetSeleccionado.fechaRealizacion).getDate())).slice(-2))
-                } else {
-                  setFechaRealizacion("")
-                }
                 abrirCerrarModalEditarDet();
               },
             },
@@ -1261,7 +1258,7 @@ function Tareas() {
           }
           }
           options={{
-            sorting: true, paging: true, pageSizeOptions: [1, 3, 5, 7], pageSize: 5, filtering: false, search: false, selection: true,
+            sorting: true, paging: true, pageSizeOptions: [1, 3, 4 , 5], pageSize: 5, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
             rowStyle: rowData => ({
               backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
@@ -1528,10 +1525,10 @@ function Tareas() {
 
               setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].nombreCliente))
               setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente));
-              setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
+              setElementoTareaEditar(elementosplanta.filter(elemento => elemento.nombre === FilasSeleccionadas[0].elementoPlanta));
               setTipoTareaEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
               setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
-              setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idAnalisis));
+              setAnalisisEditar(analisis.filter(analisi => analisi.nombre === FilasSeleccionadas[0].analisis));
               setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === FilasSeleccionadas[0].oferta))
 
               abrirCerrarModalEditar();
@@ -1540,20 +1537,19 @@ function Tareas() {
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
-          peticionGetVis();
+          console.log(tareaSeleccionada)
           setTareaSeleccionada(tareaSeleccionada);
+          peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));
-          setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.idElementoPlanta));
+          setElementoTareaEditar(elementosplanta.filter(elemento => elemento.nombre === tareaSeleccionada.elementoPlanta));
           setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
           setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
-          setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.idAnalisis));
+          setAnalisisEditar(analisis.filter(analisi => analisi.nombre === tareaSeleccionada.analisis));
           setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === tareaSeleccionada.oferta))
           abrirCerrarModalEditar();
         }}
         onSelectionChange={(filas) => {
-          console.log(FilasSeleccionadas)
-          console.log(filas)
           setFilasSeleccionadas(filas);
           if (filas.length > 0)
             setTareaSeleccionada(filas[0]);
