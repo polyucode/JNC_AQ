@@ -41,7 +41,7 @@ class TablaElementosTabla extends React.Component {
                     nombreInt: 'Temperatura'
                 },
                 {
-                    nombre: 'Conductividad 25 ºC',
+                    nombre: 'Conductivitat',
                     nombreInt: 'Conductivitat'
                 },
                 {
@@ -112,7 +112,7 @@ class TablaElementosTabla extends React.Component {
                     nombre: 'Isotiazolona',
                     nombreInt: 'Isotiazolona'
                 },
-                {
+                /*{
                     nombre: 'AquaproxAB5310',
                     nombreInt: 'AquaproxAB5310'
                 },
@@ -127,7 +127,7 @@ class TablaElementosTabla extends React.Component {
                 {
                     nombre: 'BiopolIB200',
                     nombreInt: 'BiopolIB200'
-                }                
+                }*/             
             ],
             plantilla: this.props.plantilla,
         }
@@ -225,24 +225,24 @@ class TablaElementosTabla extends React.Component {
                                 <th><center>Activar</center></th>
                                 <th><center>Ver Insp.</center></th>
                             </tr>
-                            <CampoPrincipalPlantasTabla key="1" nombre="Comptador" datos={this.state.plantilla.Comptador} />
-                            <CampoPrincipalPlantasTabla key="2" nombre="pH" datos={this.state.plantilla.PH} />
-                            <CampoPrincipalPlantasTabla key="3" nombre="Temperatura" datos={this.state.plantilla.Temperatura} />
-                            <CampoPrincipalPlantasTabla key="4" nombre="Conductivitat 25 ºC" datos={this.state.plantilla.Conductivitat} />
-                            <CampoPrincipalPlantasTabla key="5" nombre="TDS" datos={this.state.plantilla.TDS} />
-                            <CampoPrincipalPlantasTabla key="6" nombre="Alcalinitat M" datos={this.state.plantilla.AlcalinitatM} />
-                            <CampoPrincipalPlantasTabla key="7" nombre="Alcalinitat P" datos={this.state.plantilla.AlcalinitatP} />
-                            <CampoPrincipalPlantasTabla key="8" nombre="Duresa Càlcica" datos={this.state.plantilla.DuresaCalcica} />
-                            <CampoPrincipalPlantasTabla key="9" nombre="Duresa Total" datos={this.state.plantilla.DuresaTotal} />
-                            <CampoPrincipalPlantasTabla key="10" nombre="Terbolesa" datos={this.state.plantilla.Terbolesa} />
-                            <CampoPrincipalPlantasTabla key="11" nombre="Fe" datos={this.state.plantilla.Fe} />
-                            <CampoPrincipalPlantasTabla key="12" nombre="Clorurs" datos={this.state.plantilla.Clorurs} />
-                            <CampoPrincipalPlantasTabla key="13" nombre="Sulfats" datos={this.state.plantilla.Sulfats} />
-                            <CampoPrincipalPlantasTabla key="14" nombre="Silicats" datos={this.state.plantilla.Silicats} />
-                            <CampoPrincipalPlantasTabla key="15" nombre="Clor Lliure" datos={this.state.plantilla.ClorLliure} />
-                            <CampoPrincipalPlantasTabla key="16" nombre="Clor Total" datos={this.state.plantilla.ClorTotal} />
-                            <CampoPrincipalPlantasTabla key="17" nombre="Brom" datos={this.state.plantilla.Brom} />
-                            <CampoPrincipalPlantasTabla key="18" nombre="Sulfits (SO3)" datos={this.state.plantilla.Sulfits} />
+                            <CampoPrincipalPlantasTabla key="1" name="comptador" nombre="Comptador" datos={this.state.plantilla.Comptador} />
+                            <CampoPrincipalPlantasTabla key="2" name="ph" nombre="pH" datos={this.state.plantilla.PH} />
+                            <CampoPrincipalPlantasTabla key="3" name="temperatura" nombre="Temperatura" datos={this.state.plantilla.Temperatura} />
+                            <CampoPrincipalPlantasTabla key="4" name="conductivitat" nombre="Conductivitat" datos={this.state.plantilla.Conductivitat} />
+                            <CampoPrincipalPlantasTabla key="5" name="TDS" nombre="TDS" datos={this.state.plantilla.TDS} />
+                            <CampoPrincipalPlantasTabla key="6" name="alcalinitatM" nombre="AlcalinitatM" datos={this.state.plantilla.AlcalinitatM} />
+                            <CampoPrincipalPlantasTabla key="7" name="alcalinitatP" nombre="AlcalinitatP" datos={this.state.plantilla.AlcalinitatP} />
+                            <CampoPrincipalPlantasTabla key="8" name="duresaCalcica" nombre="DuresaCàlcica" datos={this.state.plantilla.DuresaCalcica} />
+                            <CampoPrincipalPlantasTabla key="9" name="duresaTotal" nombre="DuresaTotal" datos={this.state.plantilla.DuresaTotal} />
+                            <CampoPrincipalPlantasTabla key="10" name="terbolesa" nombre="Terbolesa" datos={this.state.plantilla.Terbolesa} />
+                            <CampoPrincipalPlantasTabla key="11" name="fe" nombre="Fe" datos={this.state.plantilla.Fe} />
+                            <CampoPrincipalPlantasTabla key="12" name="clorurs" nombre="Clorurs" datos={this.state.plantilla.Clorurs} />
+                            <CampoPrincipalPlantasTabla key="13" name="sulfats" nombre="Sulfats" datos={this.state.plantilla.Sulfats} />
+                            <CampoPrincipalPlantasTabla key="14" name="silicats" nombre="Silicats" datos={this.state.plantilla.Silicats} />
+                            <CampoPrincipalPlantasTabla key="15" name="clorLliure" nombre="ClorLliure" datos={this.state.plantilla.ClorLliure} />
+                            <CampoPrincipalPlantasTabla key="16" name="clorTotal" nombre="ClorTotal" datos={this.state.plantilla.ClorTotal} />
+                            <CampoPrincipalPlantasTabla key="17" name="brom" nombre="Brom" datos={this.state.plantilla.Brom} />
+                            <CampoPrincipalPlantasTabla key="18" name="sulfits" nombre="Sulfits" datos={this.state.plantilla.Sulfits} />
                         </tbody>
                     </table>
                 </div>
@@ -258,13 +258,13 @@ class TablaElementosTabla extends React.Component {
                             <th><center>Activar</center></th>
                             <th><center>Ver Insp.</center></th>
                         </tr>                       
-                            <CampoPrincipalPlantasTabla key="19" nombre="Ortofosfats (PO4)" datos={this.state.plantilla.Ortofosfats} />
-                            <CampoPrincipalPlantasTabla key="20" nombre="MoO4" datos={this.state.plantilla.Mo} />
-                            <CampoPrincipalPlantasTabla key="21" nombre="Isotiazolona" datos={this.state.plantilla.Isotiazolona} />
-                            <CampoPrincipalPlantasTabla key="22" nombre="AquaproxAB5310" datos={this.state.plantilla.AquaproxAB5310} /> 
-                            <CampoPrincipalPlantasTabla key="23" nombre="BiopolLB5" datos={this.state.plantilla.BiopolLB5} /> 
-                            <CampoPrincipalPlantasTabla key="24" nombre="MefacideLG" datos={this.state.plantilla.MefacideLG} /> 
-                            <CampoPrincipalPlantasTabla key="25" nombre="BiopolIB200" datos={this.state.plantilla.BiopolIB200} />                       
+                            <CampoPrincipalPlantasTabla key="19" name="ortofosfats" nombre="Ortofosfats (PO4)" datos={this.state.plantilla.Ortofosfats} />
+                            <CampoPrincipalPlantasTabla key="20" name="mo" nombre="MoO4" datos={this.state.plantilla.Mo} />
+                            <CampoPrincipalPlantasTabla key="21" name="isotiazolona" nombre="Isotiazolona" datos={this.state.plantilla.Isotiazolona} />
+                            {/*<CampoPrincipalPlantasTabla key="22" name="aquaproxAB5310" nombre="AquaproxAB5310" datos={this.state.plantilla.AquaproxAB5310} /> 
+                            <CampoPrincipalPlantasTabla key="23" name="biopolLB5" nombre="BiopolLB5" datos={this.state.plantilla.BiopolLB5} /> 
+                            <CampoPrincipalPlantasTabla key="24" name="mefacideLG" nombre="MefacideLG" datos={this.state.plantilla.MefacideLG} /> 
+                            <CampoPrincipalPlantasTabla key="25" name="biopolIB200" nombre="BiopolIB200" datos={this.state.plantilla.BiopolIB200} /> */}                      
                     </tbody>
                     <br/>
                     <h6> Campos personalizados </h6>
@@ -280,14 +280,14 @@ class TablaElementosTabla extends React.Component {
                                 <th><center>Activar</center></th>
                                 <th><center>Ver Insp.</center></th>
                             </tr>
-                            <CampoPersPlantasTabla key="1" nombre="Campo 1" datos={this.state.plantilla.Campo1} />
-                            <CampoPersPlantasTabla key="2" nombre="Campo 2" datos={this.state.plantilla.Campo2} />
-                            <CampoPersPlantasTabla key="3" nombre="Campo 3" datos={this.state.plantilla.Campo3} />
-                            <CampoPersPlantasTabla key="4" nombre="Campo 4" datos={this.state.plantilla.Campo4} />
-                            <CampoPersPlantasTabla key="5" nombre="Campo 5" datos={this.state.plantilla.Campo5} />
-                            <CampoPersPlantasTabla key="6" nombre="Campo 6" datos={this.state.plantilla.Campo6} />
-                            <CampoPersPlantasTabla key="7" nombre="Campo 7" datos={this.state.plantilla.Campo7} />
-                            <CampoPersPlantasTabla key="8" nombre="Campo 8" datos={this.state.plantilla.Campo8} />
+                            <CampoPersPlantasTabla key="1" name="comptador" nombre="Campo 1" datos={this.state.plantilla.Campo1} />
+                            <CampoPersPlantasTabla key="2" name="comptador" nombre="Campo 2" datos={this.state.plantilla.Campo2} />
+                            <CampoPersPlantasTabla key="3" name="comptador" nombre="Campo 3" datos={this.state.plantilla.Campo3} />
+                            <CampoPersPlantasTabla key="4" name="comptador" nombre="Campo 4" datos={this.state.plantilla.Campo4} />
+                            <CampoPersPlantasTabla key="5" name="comptador" nombre="Campo 5" datos={this.state.plantilla.Campo5} />
+                            <CampoPersPlantasTabla key="6" name="comptador" nombre="Campo 6" datos={this.state.plantilla.Campo6} />
+                            <CampoPersPlantasTabla key="7" name="comptador" nombre="Campo 7" datos={this.state.plantilla.Campo7} />
+                            <CampoPersPlantasTabla key="8" name="comptador" nombre="Campo 8" datos={this.state.plantilla.Campo8} />
                         </tbody>
                     </table>
                 </div>

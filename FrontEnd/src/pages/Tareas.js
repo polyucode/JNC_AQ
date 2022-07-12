@@ -1085,7 +1085,7 @@ function Tareas() {
           {/* Desplegable de Técnicos */}
           <Autocomplete
             disableClearable={true}
-            id="Analisis"
+            id="analisis"
             options={analisis}
             className={stylesEditarDet.inputMaterial}
             defaultValue={analisisEditar[0]}
@@ -1324,11 +1324,11 @@ function Tareas() {
         </div>
         <div className="col-md-3">
           <h5> Analisis </h5>
-          <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idAnalisis} />
+          <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.analisis} />
         </div>
         <div className="col-md-3">
           <h5> Elemento de planta </h5>
-          <TextField className={styles.inputMaterial} name="idElemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idElementoPlanta} />
+          <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.elementoPlanta} />
         </div>
         <div className="col-md-3">
           <h5> Periodo </h5>

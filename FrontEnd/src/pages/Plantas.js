@@ -91,7 +91,6 @@ function Plantas() {
     let contadorPort = 1;
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
-
         <div style={{ background: data.background, border: '1px solid ' + data.selector, borderRadius: '5px', color: data.color }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {inputs.map((port) => React.cloneElement(port, { style: { width: '10px', height: '34px', background: data.selector } }))}
@@ -147,7 +146,7 @@ function Plantas() {
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
         elementosNivel.forEach((elemento) => {
-            listaElementosNivel.push(React.createElement('option', null, elemento.nombre + ' ' + elemento.numero));
+            listaElementosNivel.push(React.createElement('option', {key: "elemento" + id}, elemento.nombre + ' ' + elemento.numero));
         });
 
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
@@ -163,7 +162,10 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
 
-        //crearNodo(elementoNuevo)
+        console.log(listaElementos)
+        if(listaElementos.length > 0){
+            crearNodo(elementoNuevo)
+        }
     }
 
     function eliminarElemento(id) {
@@ -196,11 +198,11 @@ function Plantas() {
         // Generamos en el DOM la interfaz de los niveles
         for (let i = 0; i < numNiveles; i++) {
             let listadoElementos = [
-                React.createElement('option', { value: "Osmosis" }, "Osmosis"),
-                React.createElement('option', { value: "Caldera" }, "Caldera"),
-                React.createElement('option', { value: "Torre" }, "Torre"),
-                React.createElement('option', { value: "Refrigeracion" }, "Refrigeracion"),
-                React.createElement('option', { value: "Deposito" }, "Deposito")
+                React.createElement('option', { key: 'Osmosis', value: "Osmosis" }, "Osmosis"),
+                React.createElement('option', { key: 'Caldera', value: "Caldera" }, "Caldera"),
+                React.createElement('option', { key: 'Torre', value: "Torre" }, "Torre"),
+                React.createElement('option', { key: 'Refrigeracion', value: "Refrigeracion" }, "Refrigeracion"),
+                React.createElement('option', { key: 'Deposito', value: "Deposito" }, "Deposito")
             ]
 
             // Creamos el listado de elementos disponibles
@@ -208,19 +210,19 @@ function Plantas() {
 
             // Creamos todos los componentes de la interfaz del nivel
             let elementos = [
-                React.createElement('h6', null, 'Nivel ' + (i + 1)),
-                React.createElement('hr', null, null),
-                React.createElement('select', { id: 'lista-nivel-' + (i + 1) }, listadoElementos),
-                React.createElement('button', { onClick: () => crearElemento(i + 1) }, '+'),
-                React.createElement('button', { onClick: () => eliminarElemento(i + 1) }, '-'),
-                React.createElement('select', { className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
-                React.createElement('input', { type: 'checkbox' }, null),
-                React.createElement('label', null, 'Ver inspector'),
-                React.createElement('button', { onClick: () => eliminarNivel() }, 'Eliminar')
+                React.createElement('h6', {key: 'titulo'}, 'Nivel ' + (i + 1)),
+                React.createElement('hr', {key: 'hr'} , null),
+                React.createElement('select', { key: 'lista-nivel',  id: 'lista-nivel-' + (i + 1) }, listadoElementos),
+                React.createElement('button', { key: 'button+', onClick: () => crearElemento(i + 1) }, '+'),
+                React.createElement('button', { key: 'button-', onClick: () => eliminarElemento(i + 1) }, '-'),
+                React.createElement('select', { key: 'lista-elementos-nivel', className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
+                React.createElement('input', { key: 'checkbox', type: 'checkbox' }, null),
+                React.createElement('label', { key: 'inspector'}, 'Ver inspector'),
+                React.createElement('button', { key: 'eliminar', onClick: () => eliminarNivel() }, 'Eliminar')
             ]
 
             // Creamos el contenedor de planta principal para añadir todos los demás componentes
-            let contenido = React.createElement('div', { className: 'planta' }, elementos);
+            let contenido = React.createElement('div', { key: 'planta' + (i + 1), className: 'planta' }, elementos);
             listadoNiveles.push(contenido);
         }
 
@@ -243,6 +245,7 @@ function Plantas() {
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
+        console.log(listaElementos)
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
     }
@@ -459,7 +462,7 @@ function Plantas() {
             output = [
                 { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
-            contadorPort += 2;
+            contadorPort += 1;
         }
         if (elemento.nivel == 3) {
             var color = '#bbdefb';
@@ -471,7 +474,7 @@ function Plantas() {
             output = [
                 { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
-            contadorPort += 2;
+            contadorPort += 1;
         }
         if (elemento.nivel == 4) {
             var color = '#b3e5fc';
@@ -483,7 +486,7 @@ function Plantas() {
             output = [
                 { id: 'port-' + (contadorPort + 1), alignment: 'right' }
             ]
-            contadorPort += 2;
+            contadorPort += 1;
         }
         if (elemento.nivel == 5) {
             var color = '#b2ebf2';
@@ -508,14 +511,17 @@ function Plantas() {
 
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
-        contadorNodo += 1;
-
+        addNode(nodo)
+        
         schema.nodes.forEach((node) => {
             console.log(node);
         })
 
         console.log(schema);
-        addNode(nodo);
+        contadorNodo += 1;
+
+        
+
 
 
 
@@ -623,21 +629,6 @@ function Plantas() {
                                 {
                                     analisis.map((analisi, index) => <div key={index}><input type="checkbox" id={analisi.id} onChange={changeAnalisisElemento} /> {analisi.nombre} </div>)
                                 }
-                                {/*<React.Fragment>
-                                    <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
-                                    <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
-                                    <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
-                                    <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
-                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label><br />
-                                    <label><input type="checkbox" id="ckb-desinfecciones" onChange={changeAnalisisElemento} /> Desinfecciones</label><br />
-                                    <label><input type="checkbox" id="ckb-osmosis" onChange={changeAnalisisElemento} /> Osmosis </label><br />
-                                    <label><input type="checkbox" id="ckb-agua-pozo" onChange={changeAnalisisElemento} /> Agua Pozo</label><br />
-                                    <label><input type="checkbox" id="ckb-acs" onChange={changeAnalisisElemento} /> ACS</label><br />
-                                    <label><input type="checkbox" id="ckb-maquina-frio" onChange={changeAnalisisElemento} /> Mantenimiento Maq Frio </label><br />
-                                    <label><input type="checkbox" id="ckb-mediciones" onChange={changeAnalisisElemento} /> Mediciones</label><br />
-                                    <label><input type="checkbox" id="ckb-fuga-gas" onChange={changeAnalisisElemento} /> Control fuga de gas</label><br />
-                                    <label><input type="checkbox" id="ckb-otros" onChange={changeAnalisisElemento} /> Otros</label><br />
-                            </React.Fragment>*/}
                             </div>
                         </div>
                         <button onClick={datosAnalisisElementos}>Guardar</button>

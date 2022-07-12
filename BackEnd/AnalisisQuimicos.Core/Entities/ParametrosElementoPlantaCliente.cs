@@ -13,179 +13,179 @@ namespace AnalisisQuimicos.Core.Entities
         public bool? EsPlantilla { get; set; }
         public double? Comptador_LimInf { get; set; }
         public double? Comptador_LimSup { get; set; }
-        public int? Comptador_Unidades { get; set; }
+        public string Comptador_Unidades { get; set; }
         public bool? Comptador_Activo { get; set; }
         public bool? Comptador_VerInspector { get; set; }
         public double? PH_LimInf { get; set; }
         public double? PH_LimSup { get; set; }
-        public int? PH_Unidades { get; set; }
+        public string PH_Unidades { get; set; }
         public bool? PH_Activo { get; set; }
         public bool? PH_VerInspector { get; set; }
         public double? Temperatura_LimInf { get; set; }
         public double? Temperatura_LimSup { get; set; }
-        public int? Temperatura_Unidades { get; set; }
+        public string Temperatura_Unidades { get; set; }
         public bool? Temperatura_Activo { get; set; }
         public bool? Temperatura_VerInspector { get; set; }
         public double? Conductivitat_LimInf { get; set; }
         public double? Conductivitat_LimSup { get; set; }
-        public int? Conductivitat_Unidades { get; set; }
+        public string Conductivitat_Unidades { get; set; }
         public bool? Conductivitat_Activo { get; set; }
         public bool? Conductivitat_VerInspector { get; set; }
         public double? TDS_LimInf { get; set; }
         public double? TDS_LimSup { get; set; }
-        public int? TDS_Unidades { get; set; }
+        public string TDS_Unidades { get; set; }
         public bool? TDS_Activo { get; set; }
         public bool? TDS_VerInspector { get; set; }
         public double? AlcalinitatM_LimInf { get; set; }
         public double? AlcalinitatM_LimSup { get; set; }
-        public int? AlcalinitatM_Unidades { get; set; }
+        public string AlcalinitatM_Unidades { get; set; }
         public bool? AlcalinitatM_Activo { get; set; }
         public bool? AlcalinitatM_VerInspector { get; set; }
         public double? AlcalinitatP_LimInf { get; set; }
         public double? AlcalinitatP_LimSup { get; set; }
-        public int? AlcalinitatP_Unidades { get; set; }
+        public string AlcalinitatP_Unidades { get; set; }
         public bool? AlcalinitatP_Activo { get; set; }
         public bool? AlcalinitatP_VerInspector { get; set; }
         public double? DuresaCalcica_LimInf { get; set; }
         public double? DuresaCalcica_LimSup { get; set; }
-        public int? DuresaCalcica_Unidades { get; set; }
+        public string DuresaCalcica_Unidades { get; set; }
         public bool? DuresaCalcica_Activo { get; set; }
         public bool? DuresaCalcica_VerInspector { get; set; }
         public double? DuresaTotal_LimInf { get; set; }
         public double? DuresaTotal_LimSup { get; set; }
-        public int? DuresaTotal_Unidades { get; set; }
+        public string DuresaTotal_Unidades { get; set; }
         public bool? DuresaTotal_Activo { get; set; }
         public bool? DuresaTotal_VerInspector { get; set; }
         public double? Terbolesa_LimInf { get; set; }
         public double? Terbolesa_LimSup { get; set; }
-        public int? Terbolesa_Unidades { get; set; }
+        public string Terbolesa_Unidades { get; set; }
         public bool? Terbolesa_Activo { get; set; }
         public bool? Terbolesa_VerInspector { get; set; }
         public double? Fe_LimInf { get; set; }
         public double? Fe_LimSup { get; set; }
-        public int? Fe_Unidades { get; set; }
+        public string Fe_Unidades { get; set; }
         public bool? Fe_Activo { get; set; }
         public bool? Fe_VerInspector { get; set; }
         public double? Clorurs_LimInf { get; set; }
         public double? Clorurs_LimSup { get; set; }
-        public int? Clorurs_Unidades { get; set; }
+        public string Clorurs_Unidades { get; set; }
         public bool? Clorurs_Activo { get; set; }
         public bool? Clorurs_VerInspector { get; set; }
         public double? Sulfats_LimInf { get; set; }
         public double? Sulfats_LimSup { get; set; }
-        public int? Sulfats_Unidades { get; set; }
+        public string Sulfats_Unidades { get; set; }
         public bool? Sulfats_Activo { get; set; }
         public bool? Sulfats_VerInspector { get; set; }
         public float? Silicats_LimInf { get; set; }
         public float? Silicats_LimSup { get; set; }
-        public int? Silicats_Unidades { get; set; }
+        public string Silicats_Unidades { get; set; }
         public bool? Silicats_Activo { get; set; }
         public bool? Silicats_VerInspector { get; set; }
         public double? ClorLliure_LimInf { get; set; }
         public double? ClorLliure_LimSup { get; set; }
-        public int? ClorLliure_Unidades { get; set; }
+        public string ClorLliure_Unidades { get; set; }
         public bool? ClorLliure_Activo { get; set; }
         public bool? ClorLliure_VerInspector { get; set; }
         public double? ClorTotal_LimInf { get; set; }
         public double? ClorTotal_LimSup { get; set; }
-        public int? ClorTotal_Unidades { get; set; }
+        public string ClorTotal_Unidades { get; set; }
         public bool? ClorTotal_Activo { get; set; }
         public bool? ClorTotal_VerInspector { get; set; }
         public double? Brom_LimInf { get; set; }
         public double? Brom_LimSup { get; set; }
-        public int? Brom_Unidades { get; set; }
+        public string Brom_Unidades { get; set; }
         public bool? Brom_Activo { get; set; }
         public bool? Brom_VerInspector { get; set; }
         public double? Sulfits_LimInf { get; set; }
         public double? Sulfits_LimSup { get; set; }
-        public int? Sulfits_Unidades { get; set; }
+        public string Sulfits_Unidades { get; set; }
         public bool? Sulfits_Activo { get; set; }
         public bool? Sulfits_VerInspector { get; set; }
         public float? Ortofosfats_LimInf { get; set; }
         public float? Ortofosfats_LimSup { get; set; }
-        public int? Ortofosfats_Unidades { get; set; }
+        public string Ortofosfats_Unidades { get; set; }
         public bool? Ortofosfats_Activo { get; set; }
         public bool? Ortofosfats_VerInspector { get; set; }
         public float? Mo_LimInf { get; set; }
         public float? Mo_LimSup { get; set; }
-        public int? Mo_Unidades { get; set; }
+        public string Mo_Unidades { get; set; }
         public bool? Mo_Activo { get; set; }
         public bool? Mo_VerInspector { get; set; }
         public float? Isotiazolona_LimInf { get; set; }
         public float? Isotiazolona_LimSup { get; set; }
-        public int? Isotiazolona_Unidades { get; set; }
+        public string Isotiazolona_Unidades { get; set; }
         public bool? Isotiazolona_Activo { get; set; }
         public bool? Isotiazolona_VerInspector { get; set; }
         public string Campo1_Nombre { get; set; }
         public double? Campo1_LimInf { get; set; }
         public double? Campo1_LimSup { get; set; }
-        public int? Campo1_Unidades { get; set; }
+        public string Campo1_Unidades { get; set; }
         public bool? Campo1_Activo { get; set; }
         public bool? Campo1_VerInspector { get; set; }
         public string Campo2_Nombre { get; set; }
         public double? Campo2_LimInf { get; set; }
         public double? Campo2_LimSup { get; set; }
-        public int? Campo2_Unidades { get; set; }
+        public string Campo2_Unidades { get; set; }
         public bool? Campo2_Activo { get; set; }
         public bool? Campo2_VerInspector { get; set; }
         public string Campo3_Nombre { get; set; }
         public double? Campo3_LimInf { get; set; }
         public double? Campo3_LimSup { get; set; }
-        public int? Campo3_Unidades { get; set; }
+        public string Campo3_Unidades { get; set; }
         public bool? Campo3_Activo { get; set; }
         public bool? Campo3_VerInspector { get; set; }
         public string Campo4_Nombre { get; set; }
         public double? Campo4_LimInf { get; set; }
         public double? Campo4_LimSup { get; set; }
-        public int? Campo4_Unidades { get; set; }
+        public string Campo4_Unidades { get; set; }
         public bool? Campo4_Activo { get; set; }
         public bool? Campo4_VerInspector { get; set; }
         public string Campo5_Nombre { get; set; }
         public double? Campo5_LimInf { get; set; }
         public double? Campo5_LimSup { get; set; }
-        public int? Campo5_Unidades { get; set; }
+        public string Campo5_Unidades { get; set; }
         public bool? Campo5_Activo { get; set; }
         public bool? Campo5_VerInspector { get; set; }
         public string Campo6_Nombre { get; set; }
         public double? Campo6_LimInf { get; set; }
         public double? Campo6_LimSup { get; set; }
-        public int? Campo6_Unidades { get; set; }
+        public string Campo6_Unidades { get; set; }
         public bool? Campo6_Activo { get; set; }
         public bool? Campo6_VerInspector { get; set; }
         public string Campo7_Nombre { get; set; }
         public double? Campo7_LimInf { get; set; }
         public double? Campo7_LimSup { get; set; }
-        public int? Campo7_Unidades { get; set; }
+        public string Campo7_Unidades { get; set; }
         public bool? Campo7_Activo { get; set; }
         public bool? Campo7_VerInspector { get; set; }
         public string Campo8_Nombre { get; set; }
         public double? Campo8_LimInf { get; set; }
         public double? Campo8_LimSup { get; set; }
-        public int? Campo8_Unidades { get; set; }
+        public string Campo8_Unidades { get; set; }
         public bool? Campo8_Activo { get; set; }
         public bool? Campo8_VerInspector { get; set; }
         public string Campo9_Nombre { get; set; }
         public double? Campo9_LimInf { get; set; }
         public double? Campo9_LimSup { get; set; }
-        public int? Campo9_Unidades { get; set; }
+        public string Campo9_Unidades { get; set; }
         public bool? Campo9_Activo { get; set; }
         public bool? Campo9_VerInspector { get; set; }
         public string Campo10_Nombre { get; set; }
         public double? Campo10_LimInf { get; set; }
         public double? Campo10_LimSup { get; set; }
-        public int? Campo10_Unidades { get; set; }
+        public string Campo10_Unidades { get; set; }
         public bool? Campo10_Activo { get; set; }
         public bool? Campo10_VerInspector { get; set; }
         public string Campo11_Nombre { get; set; }
         public double? Campo11_LimInf { get; set; }
         public double? Campo11_LimSup { get; set; }
-        public int? Campo11_Unidades { get; set; }
+        public string Campo11_Unidades { get; set; }
         public bool? Campo11_Activo { get; set; }
         public bool? Campo11_VerInspector { get; set; }
         public string Campo12_Nombre { get; set; }
         public double? Campo12_LimInf { get; set; }
         public double? Campo12_LimSup { get; set; }
-        public int? Campo12_Unidades { get; set; }
+        public string Campo12_Unidades { get; set; }
         public bool? Campo12_Activo { get; set; }
         public bool? Campo12_VerInspector { get; set; }
     }

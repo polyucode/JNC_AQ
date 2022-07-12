@@ -7,6 +7,7 @@ namespace AnalisisQuimicos.Core.Interfaces
     public interface IUnidadDeTrabajo :IDisposable
     {
         IUsuarioRepository UsuarioRepository { get; }
+        IRepository<Archivos> ArchivosRepository { get; }
         IRepository<Analisis> AnalisisRepository { get; }
         IRepository<Clientes> ClienteRepository { get; }
         IRepository<Perfiles> PerfilRepository { get; }

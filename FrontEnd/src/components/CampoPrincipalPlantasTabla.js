@@ -19,15 +19,15 @@ class CampoPrincipalPlantasTabla extends React.Component {
 
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
         if(this.state.Activo) {
-            document.getElementById(this.props.nombre+'-limit-inf').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-limit-sup').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-unidades').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-ver-insp').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'LimInf').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'LimSup').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'Unidades').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'VerInspector').removeAttribute('disabled');
         } else {
-            document.getElementById(this.props.nombre+'-limit-inf').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-limit-sup').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-unidades').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-ver-insp').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'LimInf').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'LimSup').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'Unidades').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'VerInspector').setAttribute('disabled','disabled');
         }   
 
     }
@@ -36,20 +36,20 @@ class CampoPrincipalPlantasTabla extends React.Component {
 
         // Comprobamos si la casilla está marcada. Si no lo está deshabilitamos los inputs
         if(e.target.checked) {
-            document.getElementById(this.props.nombre+'-limit-inf').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-limit-sup').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-unidades').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'-ver-insp').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'LimInf').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'LimSup').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'Unidades').removeAttribute('disabled');
+            document.getElementById(this.props.nombre+'VerInspector').removeAttribute('disabled');
 
-            document.getElementById(this.props.nombre+'-activo').setAttribute('checked','checked');
+            document.getElementById(this.props.nombre+'Activo').setAttribute('checked','checked');
             this.setState({Activo: true});
         } else {
-            document.getElementById(this.props.nombre+'-limit-inf').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-limit-sup').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-unidades').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'-ver-insp').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'LimInf').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'LimSup').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'Unidades').setAttribute('disabled','disabled');
+            document.getElementById(this.props.nombre+'VerInspector').setAttribute('disabled','disabled');
 
-            document.getElementById(this.props.nombre+'-activo').removeAttribute('checked');
+            document.getElementById(this.props.nombre+'Activo').removeAttribute('checked');
             this.setState({Activo: false});
         }   
     };
@@ -63,6 +63,7 @@ class CampoPrincipalPlantasTabla extends React.Component {
     }
 
     handleUnidad(e) {
+        console.log(e.target.value)
         this.setState({
             Unidades: e.target.value
         })
@@ -70,6 +71,7 @@ class CampoPrincipalPlantasTabla extends React.Component {
     
     handleLimitInferior(e) {
         // Actualiza el valor en la variable
+        console.log(e.target.value)
         this.setState({
             LimInf: e.target.value
         });
@@ -77,6 +79,7 @@ class CampoPrincipalPlantasTabla extends React.Component {
     }
 
     handleLimitSuperior(e) {
+        console.log(e.target.value)
         // Actualiza el valor en la variable
         this.setState({
             LimSup: e.target.value
@@ -87,10 +90,10 @@ class CampoPrincipalPlantasTabla extends React.Component {
         return (
             <tr>
                 <td>{this.props.nombre}</td>
-                <td><input type="text" size="3" id={this.props.nombre+'-limit-inf'} value={this.state.LimInf} onChange={this.handleLimitInferior} /></td>
-                <td><input type="text" size="3" id={this.props.nombre+'-limit-sup'} value={this.state.LimSup} onChange={this.handleLimitSuperior}  /></td>
+                <td><input type="text" size="3" name={this.props.nombre+'LimInf'} id={this.props.nombre+'LimInf'} value={this.state.LimInf} onChange={this.handleLimitInferior} /></td>
+                <td><input type="text" size="3" name={this.props.nombre+'LimSup'} id={this.props.nombre+'LimSup'} value={this.state.LimSup} onChange={this.handleLimitSuperior}  /></td>
                 <td>
-                    <select id={this.props.nombre+'-unidades'} onChange={this.handleUnidad} value={this.state.Unidades}>
+                    <select name={this.props.nombre+'Unidades'} id={this.props.nombre+'Unidades'} onChange={this.handleUnidad} value={this.state.Unidades}>
                         <option value='m3'>m3</option>
                         <option value='Un. pH'>Un. pH</option>
                         <option value='ºC'>ºC</option>
@@ -100,8 +103,8 @@ class CampoPrincipalPlantasTabla extends React.Component {
                         <option value='µS/cm'>µS/cm</option>
                     </select>
                 </td>
-                <td><center><input type="checkbox" id={this.props.nombre+'-activo'} onChange={this.handleActivo} checked={this.state.Activo} /></center></td>
-                <td><center><input type="checkbox" id={this.props.nombre+'-ver-insp'} checked={this.state.VerInspector} onChange={this.handleVerInspector} /></center></td>
+                <td><center><input type="checkbox" name={this.props.nombre+'Activo'} id={this.props.nombre+'Activo'} onChange={this.handleActivo} checked={this.state.Activo} /></center></td>
+                <td><center><input type="checkbox" name={this.props.nombre+'VerInspector'} id={this.props.nombre+'VerInspector'} checked={this.state.VerInspector} onChange={this.handleVerInspector} /></center></td>
             </tr>
         );
     }

@@ -184,11 +184,15 @@ function Visualizacion() {
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
 
+    const [analisisNombre, setAnalisisNombre] = useState([]);
+
     const [oferta, setOferta] = useState([]);
 
     const [clientes, setClientes] = useState([]);
 
     const [elemento, setElemento] = useState([]);
+
+    const [archivos2, setArchivos2] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
     const [analisisTable, setAnalisisTable] = useState({});
@@ -243,7 +247,29 @@ function Visualizacion() {
     const [data15, setData15] = useState([]);
     const [dataTablas, setDataTablas] = useState([]);
 
+    const [archivos, setArchivos] = useState(null);
+
     const styles = useStyles();
+
+    const subirArchivos = e => {
+        setArchivos(e);
+    }
+
+    const insertarArchivos = async () => {
+        const f = new FormData();
+
+        for (let index = 0; index < archivos.length; index++) {
+            f.append("files", archivos[index]);
+        }
+
+        await axios.post("/archivos", f)
+            .then(response => {
+                return response
+            }).catch(error => {
+                console.log(error);
+            })
+
+    }
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -282,7 +308,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-3">
                     <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.idAnalisis} />
+                    <TextField className={styles.inputMaterial} defaultValue={analisisNombre} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -359,11 +385,11 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-3">
                     <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="idElemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.idElemento} />
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
                 </div>
                 <div className="col-md-3">
                     <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.idAnalisis} />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -418,6 +444,10 @@ function Visualizacion() {
                     <h5> Observaciones </h5>
                     <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
                 </div>
+                <div className="col-md-12">
+                    <h5> Subir PDF </h5>
+                    <input type="file" name="files" multiple onChange={(e) => subirArchivos(e.target.files)} />
+                </div>
             </div>
             <br />
             <div align="right">
@@ -455,6 +485,13 @@ function Visualizacion() {
         axios.get("/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
+        }, [])
+    }
+
+    const GetArchivos = async () => {
+        axios.get("/archivos", token).then(response => {
+            const archivo = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setArchivos2(archivo);
         }, [])
     }
 
@@ -511,6 +548,7 @@ function Visualizacion() {
     }
 
     useEffect(() => {
+        GetArchivos();
         GetParametrosAnalisisPlanta();
         FiltrarData();
         GetOfertas();
@@ -544,6 +582,7 @@ function Visualizacion() {
                     }
                 });
                 GetParametrosAnalisisPlanta();
+                insertarArchivos();
                 abrirCerrarModalEditar();
             }).catch(error => {
                 console.log(error);
@@ -643,7 +682,7 @@ function Visualizacion() {
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.nombre
+            [name]: value.elemento
         }))
     }
 
@@ -689,6 +728,7 @@ function Visualizacion() {
             <br />
             <div className='home-container-elements'>
                 <div className="visualizacion">
+                    {console.log(dataTablas)}
                     <div className="visualizacion-tablas">
                         {dataTablas.map((analisi, index) => {
                             switch (analisi.analisis) {
@@ -702,6 +742,7 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisNombre(analisis.filter(analisi => analisi.nombre === dataTablas.analisis))
                                                         abrirCerrarModalInsertar();
                                                     },
                                                 },
@@ -723,7 +764,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas1(filas);
 
@@ -837,7 +882,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            //onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
@@ -895,9 +944,13 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                console.log(analisisSeleccionado)
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.nombre === analisisSeleccionado.analisis));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);

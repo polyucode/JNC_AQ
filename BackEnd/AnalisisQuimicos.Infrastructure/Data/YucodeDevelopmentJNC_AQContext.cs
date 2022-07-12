@@ -18,6 +18,7 @@ namespace AnalisisQuimicos.Infrastructure.Data
         {
         }
 
+        public virtual DbSet<Archivos> GesArchivos { get; set; }
         public virtual DbSet<Analisis> GesAnalisis { get; set; }
         public virtual DbSet<Clientes> GesClientes { get; set; }
         public virtual DbSet<AnalisisNivelesPlantasCliente> GesConfAnalisisNivelesPlantasCliente { get; set; }
