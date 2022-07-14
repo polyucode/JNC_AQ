@@ -37,7 +37,7 @@ function HomeCliente() {
 
     const initialSchema = createSchema({
         nodes: [
-            /*{
+            {
                 id: 'node-1',
                 content: 'Osmosis 1',
                 coordinates: [20, 120],
@@ -90,7 +90,7 @@ function HomeCliente() {
         { input: 'port-3', output: 'port-8' },
         { input: 'port-5', output: 'port-8' },
         { input: 'port-7', output: 'port-8' },
-        */
+        
         ]
     })
 

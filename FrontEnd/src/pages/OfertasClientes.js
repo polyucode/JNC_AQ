@@ -302,7 +302,6 @@ function OfertasClientes() {
     }
 
     useEffect(() => {
-        console.log("Entra en el use Effect")
         getProductos();
         getOfertas();
         getClientes();
@@ -600,8 +599,8 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="NombreCliente"
                         options={clientes}
+                        filterOptions={options => clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.razonSocial}
-                        filterOptions={options => clientes.filter(cliente => cliente.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         defaultValue={clientesNombreEditar[0]}
                         sx={{ width: 200 }}
                         renderInput={(params) => <TextField {...params} name="nombreCliente" />}
@@ -765,16 +764,16 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-3">
-                    <h5> Estimacion </h5>
+                    <h5> Estimacion (kg) </h5>
                     <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Consumidos </h5>
+                    <h5> Consumidos (kg) </h5>
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Falta Entregar </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} />
+                    <h5> Entregar </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} value={productoSeleccionado.cantidad - productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
@@ -911,7 +910,6 @@ function OfertasClientes() {
 
     return (
         <div>
-            {console.log(data)}
             <MaterialTable columns={columnas} data={data}
                 localization={{
                     body: {

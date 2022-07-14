@@ -164,7 +164,7 @@ function Plantas() {
 
         console.log(listaElementos)
         if(listaElementos.length > 0){
-            crearNodo(elementoNuevo)
+           // crearNodo(elementoNuevo)
         }
     }
 
@@ -518,13 +518,8 @@ function Plantas() {
         })
 
         console.log(schema);
-        contadorNodo += 1;
-
+        contadorNodo ++;
         
-
-
-
-
     }
 
     const handleChange = e => {

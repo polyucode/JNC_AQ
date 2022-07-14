@@ -11,6 +11,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string Elemento { get; set; }
         public string Periodo { get; set; }
         public string Analisis { get; set; }
+        public string NombreAnalisis { get; set; }
         public DateTime? Fecha { get; set; }
         public bool? Realizado { get; set; }
         public string Operario { get; set; }

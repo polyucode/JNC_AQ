@@ -489,7 +489,7 @@ function Tareas() {
         var date = new Date(fechaprevista);
 
         if (tareaSeleccionada.tipo === 1) {
-          for (let i = 0; i < 12; i++) {
+          for (let i = 0; i <= 12; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -509,7 +509,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 2) {
-          for (let i = 0; i < 6; i++) {
+          for (let i = 0; i <= 6; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -529,7 +529,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 3) {
-          for (let i = 0; i < 4; i++) {
+          for (let i = 0; i <= 4; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -549,7 +549,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 4) {
-          for (let i = 0; i < 3; i++) {
+          for (let i = 0; i <= 3; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -568,12 +568,49 @@ function Tareas() {
             peticionPostVis();
           }
         }
+        if (tareaSeleccionada.tipo === 5) {
+          for (let i = 0; i <= 1; i++) {
+            analisisSeleccionado.id = null;
+            analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.analisis = response.data.data.analisis;
+            analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.realizado = false;
+            analisisSeleccionado.operario = response.data.data.operario;
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
+            analisisSeleccionado.observaciones = "";
+            analisisSeleccionado.facturado = false;
+            analisisSeleccionado.numeroFacturado = "";
+            date.setMonth(date.getMonth() + 12)
+            peticionPostVis();
+          }
+        }
+        if (tareaSeleccionada.tipo === 6) {
+          for (let i = 0; i < 48; i++) {
+            analisisSeleccionado.id = null;
+            analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.analisis = response.data.data.analisis;
+            analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.realizado = false;
+            analisisSeleccionado.operario = response.data.data.operario;
+            analisisSeleccionado.protocolo = response.data.data.protocolo;
+            analisisSeleccionado.observaciones = "";
+            analisisSeleccionado.facturado = false;
+            analisisSeleccionado.numeroFacturado = "";
+            date.setDate(date.getDay() + 7)
+            peticionPostVis();
+          }
+        }
         abrirCerrarModalInsertar();
         peticionGet();
       }).catch(error => {
         console.log(error);
-      })
-      
+      })     
   }
 
   const peticionPut = async () => {
@@ -611,9 +648,12 @@ function Tareas() {
 
   const peticionPostVis = async () => {
     analisisSeleccionado.id = 0;
+    analisisSeleccionado.codigoCliente = tareaSeleccionada.codigoCliente;
+    analisisSeleccionado.oferta = tareaSeleccionada.oferta;
+    analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
     await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
-        abrirCerrarModalInsertarDet();
+        //abrirCerrarModalInsertarDet();
         peticionGetVis();
       }).catch(error => {
         console.log(error);
@@ -1207,7 +1247,6 @@ function Tareas() {
         </div>
       </div>
       <div className="row">
-        {console.log(dataVis)}
         <MaterialTable columns={columnasVis} data={dataVis}
           localization={localization}
           actions={[
@@ -1314,7 +1353,6 @@ function Tareas() {
       <br />
       <div className="row g-3">
         <div className="col-md-3">
-          {/* Desplegable de Clientes */}
           <h5> Cliente </h5>
           <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.codigoCliente} />
         </div>
@@ -1537,7 +1575,6 @@ function Tareas() {
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
-          console.log(tareaSeleccionada)
           setTareaSeleccionada(tareaSeleccionada);
           peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))

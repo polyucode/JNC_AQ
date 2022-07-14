@@ -107,6 +107,7 @@ function Visualizacion() {
         elemento: '',
         periodo: '',
         analisis: '',
+        nombreAnalisis: '',
         fecha: null,
         realizado: false,
         operario: '',
@@ -192,6 +193,8 @@ function Visualizacion() {
 
     const [elemento, setElemento] = useState([]);
 
+    const [operarios, setOperarios] = useState([]);
+
     const [archivos2, setArchivos2] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
@@ -220,6 +223,19 @@ function Visualizacion() {
     const columnasDet = [
 
         //visibles
+        { title: 'Periodo', field: 'periodo' },
+        { title: 'Fecha', field: 'fecha', type: 'date' },
+        { title: 'Realizado', field: 'realizado', type: 'boolean' },
+        { title: 'Protocolo', field: 'protocolo' },
+        { title: 'Observaciones', field: 'observaciones' },
+        { title: 'Facturado', field: 'facturado', type: 'boolean' },
+        { title: 'Numero Facturado', field: 'numeroFacturado' },
+    ];
+
+    const columnasVis = [
+
+        //visibles
+        { title: 'Nombre Analisis', field: 'nombreAnalisis' },
         { title: 'Periodo', field: 'periodo' },
         { title: 'Fecha', field: 'fecha', type: 'date' },
         { title: 'Realizado', field: 'realizado', type: 'boolean' },
@@ -306,9 +322,22 @@ function Visualizacion() {
                     <h5> Elemento </h5>
                     <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} defaultValue={analisisNombre} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -329,9 +358,22 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-6">
                     <h5> Operario </h5>
-                    <TextField className={styles.inputMaterial} name="operario" onChange={handleChangeInput} />
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Operarios"
+                        options={operarios}
+                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="operario" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            operario: value.nombre
+                        }))}
+                    />
                 </div>
-                <div className="col-md-9">
+                <div className="col-md-6">
                     <h5> Protocolo </h5>
                     <TextField
                         id='protocolo'
@@ -516,6 +558,13 @@ function Visualizacion() {
         }, [])
     }
 
+    const GetOperarios = async () => {
+        axios.get("/usuario", token).then(response => {
+          const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
+          setOperarios(usuario);
+        }, [])
+      }
+
     const GetAnalisisNivelesPlantasCliente = async () => {
         axios.get("/analisisnivelesplantascliente", token).then(response => {
             const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -548,6 +597,7 @@ function Visualizacion() {
     }
 
     useEffect(() => {
+        GetOperarios();
         GetArchivos();
         GetParametrosAnalisisPlanta();
         FiltrarData();
@@ -825,7 +875,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
@@ -1130,7 +1184,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
@@ -1187,7 +1245,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
@@ -1245,7 +1307,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
@@ -1303,7 +1369,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            //onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
@@ -1361,7 +1431,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
@@ -1418,7 +1492,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
@@ -1475,7 +1553,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
@@ -1503,7 +1585,7 @@ function Visualizacion() {
                                     )
                                 case "Otros con Fechas de Trabajo":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data14}
+                                        <MaterialTable columns={columnasVis} data={data14}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1532,7 +1614,11 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
                                                 console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
@@ -1561,7 +1647,7 @@ function Visualizacion() {
                                     )
                                 case "Otros sin Fechas de Trabajo":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data15}
+                                        <MaterialTable columns={columnasVis} data={data15}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1590,9 +1676,12 @@ function Visualizacion() {
                                                 },
                                             ]}
 
-                                            onRowClick={((evt, analisisSeleccionado) => setAnalisisSeleccionado(analisisSeleccionado.tableData.id))}
+                                            onRowClick={((evt, analisisSeleccionado) => {
+                                                setAnalisisSeleccionado(analisisSeleccionado)
+                                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                abrirCerrarModalEditar();
+                                            })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
                                                 setFilasSeleccionadas(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
