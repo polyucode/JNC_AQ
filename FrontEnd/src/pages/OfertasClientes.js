@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 900,
-        height: 660,
+        height: 600,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -173,14 +173,14 @@ function OfertasClientes() {
         id: 0,
         codigoCliente: 0,
         oferta: 0,
-        producto: 0,
+        producto: '',
         descripcionProducto: '',
         cantidad: 0,
         precio: 0,
         stockMin: 0,
         stockMax: 0,
         consumidos: 0,
-        faltaEntregar: 0,
+        entregar: 0,
         adr: '',
         portes: 0,
         addDate: null,
@@ -216,11 +216,16 @@ function OfertasClientes() {
 
     const [productos, setProductos] = useState([]);
 
+    const [contactos, setContactos] = useState([]);
+
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
 
     const [clientesCodigoEditar, setClientesCodigoEditar] = useState([]);
     const [clientesNombreEditar, setClientesNombreEditar] = useState([]);
+
+    const [contacto1Editar, setContacto1Editar] = useState([]);
+    const [contacto2Editar, setContacto2Editar] = useState([]);
 
     const [nombreFiltrado, setNombreFiltrado] = useState({})
 
@@ -263,7 +268,7 @@ function OfertasClientes() {
         { title: 'Descripcion', field: 'descripcionProducto', filterPlaceholder: "Filtrar por descripcion" },
         { title: 'Estimacion', field: 'cantidad', filterPlaceholder: "Filtrar por cantidad" },
         { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
-        { title: 'FaltaEntregar', field: 'faltaEntregar', filterPlaceholder: "Filtrar por FaltaEntregar" },
+        { title: 'Entregar', field: 'entregar', filterPlaceholder: "Filtrar por Entregar" },
         { title: 'Precio', field: 'precio', filterPlaceholder: "Filtrar por precio" },
         { title: 'StockMin', field: 'stockMin', filterPlaceholder: "Filtrar por StockMin" },
         { title: 'StockMax', field: 'stockMax', filterPlaceholder: "Filtrar por StockMax" },
@@ -281,6 +286,13 @@ function OfertasClientes() {
         axios.get("/productos", token).then(response => {
             const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setProductos(producto);
+        }, [])
+    }
+
+    const getContactos = async () => {
+        axios.get("/clientescontactos", token).then(response => {
+            const contacto = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setContactos(contacto);
         }, [])
     }
 
@@ -302,6 +314,7 @@ function OfertasClientes() {
     }
 
     useEffect(() => {
+        getContactos();
         getProductos();
         getOfertas();
         getClientes();
@@ -359,7 +372,7 @@ function OfertasClientes() {
     }
 
     const peticionPostProducto = async () => {
-        productoSeleccionado.id = null;
+        productoSeleccionado.id = 0;
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
         console.log(productoSeleccionado)
@@ -430,7 +443,6 @@ function OfertasClientes() {
 
     function FiltrarNombre() {
         setNombreFiltrado(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente))
-        console.log(nombreFiltrado)
     }
 
 
@@ -545,14 +557,39 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-6">
                     <h5> Contacto 1 </h5>
-                    <TextField className={styles.inputMaterial} label="Contacto1" name="contacto1" onChange={handleChange} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto1"
+                        options={contactos}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto1" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto1: value.nombre
+                        }))}
+                    />
                 </div>
                 <div className="col-md-6">
                     <h5> Contacto 2 </h5>
-                    <TextField className={styles.inputMaterial} label="Contacto2" name="contacto2" onChange={handleChange} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto2"
+                        options={contactos}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto2" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto2: value.nombre
+                        }))}
+                    />
                 </div>
             </div>
             <br />
+            <br/>
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
@@ -640,11 +677,37 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-4">
                     <h5> Contacto 1 </h5>
-                    <TextField className={styles.inputMaterial} name="contacto1" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto1} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto1"
+                        options={contactos}
+                        defaultValue={contacto1Editar[0]}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto1" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto1: value.nombre
+                        }))}
+                    />
                 </div>
                 <div className="col-md-4">
                     <h5> Contacto 2 </h5>
-                    <TextField className={styles.inputMaterial} name="contacto2" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.contacto2} />
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto2"
+                        options={contactos}
+                        defaultValue={contacto2Editar[0]}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto2" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto2: value.nombre
+                        }))}
+                    />
                 </div>
             </div>
             <br />
@@ -678,6 +741,7 @@ function OfertasClientes() {
                 ]}
 
                 onRowClick={((evt, productoSeleccionado) => {
+                    console.log(productoSeleccionado)
                     setProductoSeleccionado(productoSeleccionado);
                     getConsumos();
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
@@ -729,6 +793,7 @@ function OfertasClientes() {
 
     const bodyInsertarProducto = (
         <div className={styles.modal}>
+            {console.log(productoSeleccionado)}
             <h3>Agregar Nuevo Producto</h3>
             <br />
             <div className="row g-3">
@@ -743,7 +808,7 @@ function OfertasClientes() {
                         renderInput={(params) => <TextField {...params} type="number" name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
-                            producto: parseInt(value.codigoProducto)
+                            producto: value.codigoProducto
                         }))}
                     />
                 </div>
@@ -756,7 +821,7 @@ function OfertasClientes() {
                         filterOptions={options => productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto)}
                         getOptionLabel={option => option.descripcion}
                         sx={{ width: 625 }}
-                        renderInput={(params) => <TextField {...params} name="descripcion" />}
+                        renderInput={(params) => <TextField {...params} name="descripcionProducto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
                             descripcionProducto: value.descripcion
@@ -772,8 +837,8 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Entregar </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} value={productoSeleccionado.cantidad - productoSeleccionado.consumidos} />
+                    <h5> Entregar (kg) </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.cantidad - productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
@@ -823,18 +888,18 @@ function OfertasClientes() {
             <br />
             <div className="row g-3">
                 <div className="col-md-3">
-                    <h5> Numero Producto </h5>
+                    <h5> Codigo </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="producto"
                         options={productos}
-                        getOptionLabel={option => option.codigoProducto}
                         defaultValue={productoEditar[0]}
+                        getOptionLabel={option => option.codigoProducto}
                         sx={{ width: 150 }}
-                        renderInput={(params) => <TextField {...params} type="number" name="producto" />}
+                        renderInput={(params) => <TextField {...params}  name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
-                            producto: parseInt(value.codigoProducto)
+                            producto: value.codigoProducto
                         }))}
                     />
                 </div>
@@ -851,8 +916,8 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Falta Entregar </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="faltaEntregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.faltaEntregar} />
+                    <h5> Entregar </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.entregar} />
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
@@ -993,6 +1058,8 @@ function OfertasClientes() {
                     getConsumos();
                     setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
                     setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
+                    setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))
+                    setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto2))
                     abrirCerrarModalEditar();
                 }}
                 onSelectionChange={(filas) => {

@@ -23,6 +23,7 @@ import listPlugin from '@fullcalendar/list';
 import './Mantenimientos.css';
 import { FamilyRestroomRounded } from "@mui/icons-material";
 
+
 const token = {
   headers: {
     Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -358,6 +359,8 @@ function Tareas() {
   const [estadoInput, setEstadoInput] = useState(true);
   const [estadoValor, setEstadoValor] = useState(true);
   const [estadoCancelado, setEstadoCancelado] = useState(true);
+  const [estadoOperario, setEstadoOperario] = useState(true);
+  const [estadoProtocolo, setEstadoProtocolo] = useState(true);
 
   const styles = useStyles();
   const styles2 = useStyles2();
@@ -439,9 +442,10 @@ function Tareas() {
 
   const GetConfAnalisisNivelesPlantasCliente = async () => {
     axios.get("/analisisnivelesplantascliente", token).then(response => {
-        setConfAnalisisNivelesPlantasCliente(response.data.data)
-    })
-}
+      const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setConfAnalisisNivelesPlantasCliente(niveles);
+    }, [])
+  }
 
   const peticionGet = async () => {
     axios.get("/tareas", token).then(response => {
@@ -606,6 +610,7 @@ function Tareas() {
             peticionPostVis();
           }
         }
+
         abrirCerrarModalInsertar();
         peticionGet();
       }).catch(error => {
@@ -767,6 +772,18 @@ function Tareas() {
     } else {
       setEstadoInput(true)
     }
+
+    if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo"){
+      setEstadoOperario(false)
+    } else{
+      setEstadoOperario(true)
+    }
+
+    if (value.analisis === "Desinfecciones"){
+      setEstadoProtocolo(false)
+    } else{
+      setEstadoProtocolo(true)
+    }
   }
 
   const bodyInsertar = (
@@ -853,7 +870,7 @@ function Tareas() {
           <Autocomplete
             disableClearable={true}
             className={styles2.inputMaterial}
-            id="Analisis"
+            id="analisis"
             options={analisis}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
             getOptionLabel={option => option.analisis}
@@ -908,6 +925,7 @@ function Tareas() {
           <h5> Operario </h5>
           {/* Desplegable de Técnicos */}
           <Autocomplete
+            disabled={estadoOperario}
             disableClearable={true}
             className={styles.inputMaterial}
             id="Operarios"
@@ -925,6 +943,7 @@ function Tareas() {
         <div className="col-md-4">
           <h5> Protocolo </h5>
           <TextField
+            disabled={estadoProtocolo}
             id='protocolo'
             className={styles.inputMaterial}
             select
@@ -1185,6 +1204,7 @@ function Tareas() {
           {/* Desplegable de Técnicos */}
           <h5> Operario </h5>
           <Autocomplete
+            disabled={estadoOperario}
             disableClearable={true}
             id="Operario"
             options={operarios}
@@ -1206,16 +1226,17 @@ function Tareas() {
           <h5> Elemento de planta </h5>
           <Autocomplete
             disableClearable={true}
+            className={styles2.inputMaterial}
             id="CboElementosPlanta"
             options={elementosplanta}
-            className={stylesEditarDet.inputMaterial}
             defaultValue={elementoTareaEditar[0]}
-            getOptionLabel={option => option.nombre}
-            sx={{ width: 300 }}
+            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+            getOptionLabel={option => option.elemento}
+            sx={{ width: 225 }}
             renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              elementoPlanta: value.nombre
+              elementoPlanta: value.elemento
             }))}
           />
         </div>
@@ -1579,10 +1600,10 @@ function Tareas() {
           peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));
-          setElementoTareaEditar(elementosplanta.filter(elemento => elemento.nombre === tareaSeleccionada.elementoPlanta));
+          setElementoTareaEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
           setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
           setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
-          setAnalisisEditar(analisis.filter(analisi => analisi.nombre === tareaSeleccionada.analisis));
+          setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
           setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === tareaSeleccionada.oferta))
           abrirCerrarModalEditar();
         }}

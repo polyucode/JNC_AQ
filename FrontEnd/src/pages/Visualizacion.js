@@ -239,6 +239,7 @@ function Visualizacion() {
         { title: 'Periodo', field: 'periodo' },
         { title: 'Fecha', field: 'fecha', type: 'date' },
         { title: 'Realizado', field: 'realizado', type: 'boolean' },
+        { title: 'Operario', field: 'operario' },
         { title: 'Protocolo', field: 'protocolo' },
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' },

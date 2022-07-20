@@ -289,9 +289,14 @@ function Clientes() {
 
   const peticionGetContacto = async () => {
     axios.get("/clientescontactos", token).then(response => {
-      setDataContacto(response.data.data)
+      setDataDet(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
     })
   }
+
+  /*function FiltrarDataContacto () {
+    setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+    peticionGetContacto();
+  }*/
 
   useEffect(() => {
     const lookupComarca = {};
@@ -315,6 +320,7 @@ function Clientes() {
     GetPoblacion();
     GetProvincia();
     GetComarca();
+    //FiltrarDataContacto();
   }, [])
 
   const peticionPost = async () => {
@@ -890,7 +896,7 @@ function Clientes() {
 
         onRowClick={((evt, clienteSeleccionado) => {
           setClienteSeleccionado(clienteSeleccionado)
-          setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+          //setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
           peticionGetContacto();
           setComarcaClienteEditar(comarca.filter(comarca => comarca.id === clienteSeleccionado.comarca));
           setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === clienteSeleccionado.provincia));

@@ -54,8 +54,6 @@ function Plantas() {
 
     const [checked, setChecked] = React.useState(true);
 
-    //const [confPlantasCliente, setConfPlantasCliente] = useState([]);
-
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
     const [elementosPlanta, setElementosPlanta] = useState([]);
@@ -145,8 +143,8 @@ function Plantas() {
 
         // Creamos los elementos de la lista y los pintamos
         let listaElementosNivel = [];
-        elementosNivel.forEach((elemento) => {
-            listaElementosNivel.push(React.createElement('option', {key: "elemento" + id}, elemento.nombre + ' ' + elemento.numero));
+        elementosNivel.forEach((elemento, index) => {
+            listaElementosNivel.push(React.createElement('option', { key: "elemento" + index }, elemento.nombre + ' ' + elemento.numero));
         });
 
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
@@ -157,15 +155,19 @@ function Plantas() {
             }
         }
         // Actualizamos la lista de análisis por elemento
-        ReactDOM.render(
-            listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
-            document.getElementById('analisis-elemento-list')
-        );
-
-        console.log(listaElementos)
-        if(listaElementos.length > 0){
-           // crearNodo(elementoNuevo)
+        if (elementosRepetidos === 0) {
+            ReactDOM.render(
+                listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre)),
+                document.getElementById('analisis-elemento-list')
+            );
+        } else {
+            ReactDOM.render(
+                listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
+                document.getElementById('analisis-elemento-list')
+            );
         }
+
+        //crearNodo(elementoNuevo)
     }
 
     function eliminarElemento(id) {
@@ -173,8 +175,8 @@ function Plantas() {
         listaElementos.pop()
 
         let listaElementosNivel = [];
-        listaElementos.forEach((elemento) => {
-            listaElementosNivel.push(React.createElement('option', null, elemento.nombre + ' ' + elemento.numero));
+        listaElementos.forEach((elemento, index) => {
+            listaElementosNivel.push(React.createElement('option', { key: "elemento" + index }, elemento.nombre + ' ' + elemento.numero));
         });
 
         ReactDOM.render(listaElementosNivel, document.getElementById('lista-elementos-nivel-' + (id)));
@@ -210,14 +212,14 @@ function Plantas() {
 
             // Creamos todos los componentes de la interfaz del nivel
             let elementos = [
-                React.createElement('h6', {key: 'titulo'}, 'Nivel ' + (i + 1)),
-                React.createElement('hr', {key: 'hr'} , null),
-                React.createElement('select', { key: 'lista-nivel',  id: 'lista-nivel-' + (i + 1) }, listadoElementos),
+                React.createElement('h6', { key: 'titulo' }, 'Nivel ' + (i + 1)),
+                React.createElement('hr', { key: 'hr' }, null),
+                React.createElement('select', { key: 'lista-nivel', id: 'lista-nivel-' + (i + 1) }, listadoElementos),
                 React.createElement('button', { key: 'button+', onClick: () => crearElemento(i + 1) }, '+'),
                 React.createElement('button', { key: 'button-', onClick: () => eliminarElemento(i + 1) }, '-'),
                 React.createElement('select', { key: 'lista-elementos-nivel', className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
                 React.createElement('input', { key: 'checkbox', type: 'checkbox' }, null),
-                React.createElement('label', { key: 'inspector'}, 'Ver inspector'),
+                React.createElement('label', { key: 'inspector' }, 'Ver inspector'),
                 React.createElement('button', { key: 'eliminar', onClick: () => eliminarNivel() }, 'Eliminar')
             ]
 
@@ -245,7 +247,6 @@ function Plantas() {
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
-        console.log(listaElementos)
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
     }
@@ -411,7 +412,7 @@ function Plantas() {
                         CodigoCliente: confPlantasCliente.codigoCliente,
                         Oferta: confPlantasCliente.oferta,
                         IdPlanta: confPlantasCliente.id,
-                        Elemento: elemento.nombre,
+                        Elemento: elemento.nombre + " " + elemento.numero,
                         Analisis: analisis.nombre,
                         addDate: null,
                         addIdUser: null,
@@ -512,14 +513,16 @@ function Plantas() {
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
         addNode(nodo)
-        
+        contadorNodo++;
+
         schema.nodes.forEach((node) => {
             console.log(node);
         })
 
         console.log(schema);
-        contadorNodo ++;
+
         
+
     }
 
     const handleChange = e => {
