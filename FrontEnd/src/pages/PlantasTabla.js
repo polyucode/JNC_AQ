@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import axios from "axios";
 import { Tab, Box } from '@mui/material';
@@ -11,10 +11,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { ThemeContext } from '../App';
 
 import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
 import MaterialTable from "@material-table/core";
+
+
 
 const token = {
     headers: {
@@ -91,6 +94,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PlantasTabla() {
+
+    const { valores } = useContext(ThemeContext);
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -1587,43 +1592,13 @@ function PlantasTabla() {
                         </tr>
                         <tr>
                             <td>
-                                {console.log(parametrosSeleccionado)}
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="CodigoCliente"
-                                    options={clientes}
-                                    getOptionLabel={option => option.codigo}
-                                    sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-                                    onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
-                                />
+                                <TextField className="" name="codigoCliente" value={valores.codigo} />
                             </td>
                             <td>
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="NombreCliente"
-                                    options={clientes}
-                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
-                                    getOptionLabel={option => option.razonSocial}
-                                    sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                        ...prevState,
-                                        nombreCliente: value.razonSocial
-                                    }))}
-                                />
+                                <TextField className="" name="nombreCliente" value={valores.nombre} />
                             </td>
                             <td>
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="Oferta"
-                                    options={oferta}
-                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
-                                    getOptionLabel={option => option.numeroOferta}
-                                    sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} name="numeroOferta" />}
-                                    onChange={(event, value) => onChangeOferta(event, value, "oferta")}
-                                />
+                                <TextField className="" name="oferta" value={valores.oferta} />
                             </td>
                         </tr>
                     </tbody>
@@ -1634,15 +1609,13 @@ function PlantasTabla() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList id="tab-list" onChange={handleChange}>
                             {
-                                data.map((elemento, index) => <Tab key={index} label={elemento.elemento} value={index.toString()} />)
+                                <Tab key="elemento" label={valores.elemento} value={valores.elemento} />
                             }
                         </TabList>
                     </Box>
-                    <Box>
-                    {
-                        listaElementos.map((elemento, index) => <TablaElementosTabla key={index} value={index} plantilla={elemento.plantilla} />)
-                    }
-                    </Box>
+                        {
+                            listaElementos.map((elemento, index) => <TablaElementosTabla key={index} value={index} plantilla={elemento.plantilla} />)
+                        }
                 </TabContext>
             </Box>
             <div className='botones-menu'>

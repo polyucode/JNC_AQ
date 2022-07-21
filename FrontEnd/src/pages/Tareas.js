@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
@@ -12,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
+import { ThemeContext } from "../App";
 
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -246,6 +248,12 @@ const localization = {
 
 function Tareas() {
 
+  const datos = useContext( ThemeContext )
+  console.log(datos)
+
+  const { valores , setValores } = useContext( ThemeContext );
+
+
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -368,7 +376,7 @@ function Tareas() {
   const stylesEditarDet = useStylesEditarDet();
   const stylesEliminar = useStylesEliminar();
 
-
+  let navigate = useNavigate();
 
   const columnas = [
 
@@ -610,9 +618,11 @@ function Tareas() {
             peticionPostVis();
           }
         }
-
+        
         abrirCerrarModalInsertar();
         peticionGet();
+        setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, oferta: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta})
+        {tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true });}
       }).catch(error => {
         console.log(error);
       })     
@@ -1635,7 +1645,7 @@ function Tareas() {
 
         title="Listado de Tareas"
       />
-
+      
       <Modal
         open={modalInsertar}
         onClose={abrirCerrarModalInsertar}>
