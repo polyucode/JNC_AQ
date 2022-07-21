@@ -248,9 +248,6 @@ const localization = {
 
 function Tareas() {
 
-  const datos = useContext( ThemeContext )
-  console.log(datos)
-
   const { valores , setValores } = useContext( ThemeContext );
 
 

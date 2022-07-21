@@ -1,114 +1,109 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-class CampoPrincipalPlantasTabla extends React.Component {
+const CampoPrincipalPlantasTabla = (props) => {
 
-    constructor(props) {
-        super(props);
-        
-        this.state = this.props.datos;
+    console.log(props)
+    const [state, setState] = useState(props.datos);
 
-        this.handleActivo = this.handleActivo.bind(this);
-        this.handleVerInspector = this.handleVerInspector.bind(this);
-        this.handleUnidad = this.handleUnidad.bind(this);
-        this.handleLimitInferior = this.handleLimitInferior.bind(this);
-        this.handleLimitSuperior = this.handleLimitSuperior.bind(this);
+    const [limitInferior, setLimitInferior] = useState([]);
+    const [limitSuperior, setLimitSuperior] = useState([]);
+    const [unidades, setUnidades] = useState([]);
+    const [verInspector, setVerInspector] = useState([]);
 
-    }
 
-    componentDidMount() {
+    useEffect(() => {
 
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
-        if(this.state.Activo) {
-            document.getElementById(this.props.nombre+'LimInf').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'LimSup').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'Unidades').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'VerInspector').removeAttribute('disabled');
+        if (state.Activo) {
+            document.getElementById(props.nombre + 'LimInf').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'LimSup').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'Unidades').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'VerInspector').removeAttribute('disabled');
         } else {
-            document.getElementById(this.props.nombre+'LimInf').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'LimSup').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'Unidades').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'VerInspector').setAttribute('disabled','disabled');
-        }   
+            document.getElementById(props.nombre + 'LimInf').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'LimSup').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'Unidades').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'VerInspector').setAttribute('disabled', 'disabled');
+        }
+
+    }, []);
+
+    const handleActivo = (e) => {
+
+        // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
+        if (e.target.checked) {
+            document.getElementById(props.nombre + 'LimInf').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'LimSup').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'Unidades').removeAttribute('disabled');
+            document.getElementById(props.nombre + 'Activo').setAttribute('checked', 'checked');
+            document.getElementById(props.nombre + 'VerInspector').removeAttribute('disabled');
+            setState({ Activo: true });
+        } else {
+            document.getElementById(props.nombre + 'LimInf').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'LimSup').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'Unidades').setAttribute('disabled', 'disabled');
+            document.getElementById(props.nombre + 'Activo').removeAttribute('checked');
+            document.getElementById(props.nombre + 'VerInspector').setAttribute('disabled', 'disabled');
+            setState({ Activo: false });
+        }
 
     }
 
-    handleActivo(e) {
+    const handleVerInspector = (e) => {
 
-        // Comprobamos si la casilla está marcada. Si no lo está deshabilitamos los inputs
-        if(e.target.checked) {
-            document.getElementById(this.props.nombre+'LimInf').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'LimSup').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'Unidades').removeAttribute('disabled');
-            document.getElementById(this.props.nombre+'VerInspector').removeAttribute('disabled');
-
-            document.getElementById(this.props.nombre+'Activo').setAttribute('checked','checked');
-            this.setState({Activo: true});
-        } else {
-            document.getElementById(this.props.nombre+'LimInf').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'LimSup').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'Unidades').setAttribute('disabled','disabled');
-            document.getElementById(this.props.nombre+'VerInspector').setAttribute('disabled','disabled');
-
-            document.getElementById(this.props.nombre+'Activo').removeAttribute('checked');
-            this.setState({Activo: false});
-        }   
-    };
-
-    handleVerInspector(e) {
         // Actualiza el valor en la variable
-        this.setState({
+        setVerInspector({
             VerInspector: e.target.checked
         });
 
     }
 
-    handleUnidad(e) {
-        console.log(e.target.value)
-        this.setState({
+    const handleUnidad = (e) => {
+        setState({
             Unidades: e.target.value
         })
     }
-    
-    handleLimitInferior(e) {
-        // Actualiza el valor en la variable
-        console.log(e.target.value)
-        this.setState({
-            LimInf: e.target.value
-        });
 
+    const handleLimitInferior = (e) => {
+        const { name, value } = e.target
+        // Actualiza el valor en la variable
+        setState(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+        console.log(state)
     }
 
-    handleLimitSuperior(e) {
-        console.log(e.target.value)
+    const handleLimitSuperior = (e) => {
+
         // Actualiza el valor en la variable
-        this.setState({
+        setState({
             LimSup: e.target.value
         })
+        console.log(limitSuperior)
     }
 
-    render() {
-        return (
-            <tr>
-                <td>{this.props.nombre}</td>
-                <td><input type="text" size="3" name={this.props.nombre+'LimInf'} id={this.props.nombre+'LimInf'} value={this.state.LimInf} onChange={this.handleLimitInferior} /></td>
-                <td><input type="text" size="3" name={this.props.nombre+'LimSup'} id={this.props.nombre+'LimSup'} value={this.state.LimSup} onChange={this.handleLimitSuperior}  /></td>
-                <td>
-                    <select name={this.props.nombre+'Unidades'} id={this.props.nombre+'Unidades'} onChange={this.handleUnidad} value={this.state.Unidades}>
-                        <option value='m3'>m3</option>
-                        <option value='Un. pH'>Un. pH</option>
-                        <option value='ºC'>ºC</option>
-                        <option value='mg/l'>mg/l</option>
-                        <option value='mg/l CaCO3'>mg/l CaCO3</option>
-                        <option value='N.T.U'>N.T.U</option>
-                        <option value='µS/cm'>µS/cm</option>
-                    </select>
-                </td>
-                <td><center><input type="checkbox" name={this.props.nombre+'Activo'} id={this.props.nombre+'Activo'} onChange={this.handleActivo} checked={this.state.Activo} /></center></td>
-                <td><center><input type="checkbox" name={this.props.nombre+'VerInspector'} id={this.props.nombre+'VerInspector'} checked={this.state.VerInspector} onChange={this.handleVerInspector} /></center></td>
-            </tr>
-        );
-    }
 
+    return (
+        <tr>
+            <td>{props.nombre}</td>
+            <td><input type="text" size="3" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} value={state.LimInf} onChange={handleLimitInferior} /></td>
+            <td><input type="text" size="3" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} value={state.LimSup} onChange={handleLimitSuperior} /></td>
+            <td>
+                <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} value={state.Unidades}>
+                    <option value='m3'>m3</option>
+                    <option value='Un. pH'>Un. pH</option>
+                    <option value='ºC'>ºC</option>
+                    <option value='mg/l'>mg/l</option>
+                    <option value='mg/l CaCO3'>mg/l CaCO3</option>
+                    <option value='N.T.U'>N.T.U</option>
+                    <option value='µS/cm'>µS/cm</option>
+                </select>
+            </td>
+            <td><center><input type="checkbox" name={props.nombre + 'Activo'} id={props.nombre + 'Activo'} onChange={handleActivo} checked={state.Activo} /></center></td>
+            <td><center><input type="checkbox" name={props.nombre + 'VerInspector'} id={props.nombre + 'VerInspector'} checked={state.VerInspector} onChange={handleVerInspector} /></center></td>
+        </tr>
+    );
 };
 
 export default CampoPrincipalPlantasTabla;
