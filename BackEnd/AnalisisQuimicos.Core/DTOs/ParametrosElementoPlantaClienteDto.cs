@@ -117,6 +117,26 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Isotiazolona_Unidades { get; set; }
         public bool? Isotiazolona_Activo { get; set; }
         public bool? Isotiazolona_VerInspector { get; set; }
+        public float? AquaproxAB5310_LimInf { get; set; }
+        public float? AquaproxAB5310_LimSup { get; set; }
+        public string AquaproxAB5310_Unidades { get; set; }
+        public bool? AquaproxAB5310_Activo { get; set; }
+        public bool? AquaproxAB5310_VerInspector { get; set; }
+        public float? BiopolLB5_LimInf { get; set; }
+        public float? BiopolLB5_LimSup { get; set; }
+        public string BiopolLB5_Unidades { get; set; }
+        public bool? BiopolLB5_Activo { get; set; }
+        public bool? BiopolLB5_VerInspector { get; set; }
+        public float? MefacideLG_LimInf { get; set; }
+        public float? MefacideLG_LimSup { get; set; }
+        public string MefacideLG_Unidades { get; set; }
+        public bool? MefacideLG_Activo { get; set; }
+        public bool? MefacideLG_VerInspector { get; set; }
+        public float? BiopolIB200_LimInf { get; set; }
+        public float? BiopolIB200_LimSup { get; set; }
+        public string BiopolIB200_Unidades { get; set; }
+        public bool? BiopolIB200_Activo { get; set; }
+        public bool? BiopolIB200_VerInspector { get; set; }
         public string Campo1_Nombre { get; set; }
         public float? Campo1_LimInf { get; set; }
         public float? Campo1_LimSup { get; set; }

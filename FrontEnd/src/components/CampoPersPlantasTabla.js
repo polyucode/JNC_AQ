@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 const CampoPersPlantasTabla = (props) => {
 
-    console.log(props)
     const [ state, setState ] = useState(props.datos);
     const nombreId = props.nombre.replace(/\s+/g, '');
 
@@ -102,6 +101,7 @@ const CampoPersPlantasTabla = (props) => {
             <td><input type="text" size="3" name={nombreId + 'LimSup'} id={nombreId + 'LimSup'} value={state.LimSup} onChange={handleLimitSuperior} /></td>
             <td>
                 <select name={nombreId + 'Unidades'} id={nombreId + 'Unidades'} onChange={handleUnidad}>
+                    <option value=''></option>
                     <option value='m3'>m3</option>
                     <option value='Un. pH'>Un. pH</option>
                     <option value='ºC'>ºC</option>

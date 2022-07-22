@@ -152,199 +152,295 @@ function PlantasTabla() {
         ComptadorUnidades: "",
         ComptadorActivo: false,
         ComptadorVerInspector: false,
-        PHLimInf: 0,
-        PHLimSup: 0,
-        PHUnidades: "",
-        PHActivo: false,
-        PHVerInspector: false
+        pHLimInf: 0,
+        pHLimSup: 0,
+        pHUnidades: "",
+        pHActivo: false,
+        pHVerInspector: false,
+        TemperaturaLimInf: 0,
+        TemperaturaLimSup: 0,
+        TemperaturaUnidades: "",
+        TemperaturaActivo: false,
+        TemperaturaVerInspector: false,
+        ConductivitatLimInf: 0,
+        ConductivitatLimSup: 0,
+        ConductivitatUnidades: "",
+        ConductivitatActivo: false,
+        ConductivitatVerInspector: false,
+        tdsLimInf: 0,
+        tdsLimSup: 0,
+        tdsUnidades: "",
+        tdsActivo: false,
+        tdsVerInspector: false,
+        AlcalinitatMLimInf: 0,
+        AlcalinitatMLimSup: 0,
+        AlcalinitatMUnidades: "",
+        AlcalinitatMActivo: false,
+        AlcalinitatMVerInspector: false,
+        AlcalinitatPLimInf: 0,
+        AlcalinitatPLimSup: 0,
+        AlcalinitatPUnidades: "",
+        AlcalinitatPActivo: false,
+        AlcalinitatPVerInspector: false,
+        DuresaCalcicaLimInf: 0,
+        DuresaCalcicaLimSup: 0,
+        DuresaCalcicaUnidades: "",
+        DuresaCalcicaActivo: false,
+        DuresaCalcicaVerInspector: false,
+        DuresaTotalLimInf: 0,
+        DuresaTotalLimSup: 0,
+        DuresaTotalUnidades: "",
+        DuresaTotalActivo: false,
+        DuresaTotalVerInspector: false,
+        TerbolesaLimInf: 0,
+        TerbolesaLimSup: 0,
+        TerbolesaUnidades: "",
+        TerbolesaActivo: false,
+        TerbolesaVerInspector: false,
+        FeLimInf: 0,
+        FeLimSup: 0,
+        FeUnidades: "",
+        FeActivo: false,
+        FeVerInspector: false,
+        ClorursLimInf: 0,
+        ClorursLimSup: 0,
+        ClorursUnidades: "",
+        ClorursActivo: false,
+        ClorursVerInspector: false,
+        SulfatsLimInf: 0,
+        SulfatsLimSup: 0,
+        SulfatsUnidades: "",
+        SulfatsActivo: false,
+        SulfatsVerInspector: false,
+        SilicatsLimInf: 0,
+        SilicatsLimSup: 0,
+        SilicatsUnidades: "",
+        SilicatsActivo: false,
+        SilicatsVerInspector: false,
+        ClorLliureLimInf: 0,
+        ClorLliureLimSup: 0,
+        ClorLliureUnidades: "",
+        ClorLliureActivo: false,
+        ClorLliureVerInspector: false,
+        ClorTotalLimInf: 0,
+        ClorTotalLimSup: 0,
+        ClorTotalUnidades: "",
+        ClorTotalActivo: false,
+        ClorTotalVerInspector: false,
+        BromTotalLimInf: 0,
+        BromTotalLimSup: 0,
+        BromTotalUnidades: "",
+        BromTotalActivo: false,
+        BromTotalVerInspector: false,
+        SulfitsLimInf: 0,
+        SulfitsLimSup: 0,
+        SulfitsUnidades: "",
+        SulfitsActivo: false,
+        SulfitsVerInspector: false,
+        OrtofosfatsLimInf: 0,
+        OrtofosfatsLimSup: 0,
+        OrtofosfatsUnidades: "",
+        OrtofosfatsActivo: false,
+        OrtofosfatsVerInspector: false,
+        MoLimInf: 0,
+        MoLimSup: 0,
+        MoUnidades: "",
+        MoActivo: false,
+        MoVerInspector: false,
+        IsotiazolonaLimInf: 0,
+        IsotiazolonaLimSup: 0,
+        IsotiazolonaUnidades: "",
+        IsotiazolonaActivo: false,
+        IsotiazolonaVerInspector: false,
     })
 
+    console.log(parametrosSeleccionado)
     const planta = {
         codigoCliente: 0,
         oferta: 0,
-        elementos: [{
-            nombre: "",
+        elementos: {
             plantilla: {
                 esPlantilla: false,
                 Comptador: {
-                    LimInf: 0,
-                    LimSup: 0,
-                    Unidades: 'm3',
+                    LimInf: '',
+                    LimSup: '',
+                    Unidades: '...',
                     Activo: false,
                     VerInspector: false,
                 },
                 PH: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'Un. ph',
+                    Unidades: '...',
                     Activo: false,
                     VerInspector: false,
                 },
                 Temperatura: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'ºC',
+                    Unidades: '...',
                     Activo: false,
                     VerInspector: false,
                 },
                 Conductivitat: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'uS/cm',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 TDS: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'uS/cm',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 AlcalinitatM: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l CaCO3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 AlcalinitatP: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l CaCO3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 DuresaCalcica: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l CaCO3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 DuresaTotal: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l CaCO3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Terbolesa: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'N.T.U',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Fe: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Clorurs: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Sulfats: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'Un. p',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Silicats: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'Un. p',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 ClorLliure: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'C',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 ClorTotal: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'Un. p',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Brom: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'mg/l',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Sulfits: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Ortofosfats: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Mo: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Isotiazolona: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
-                /*AquaproxAB5310: {
+                AquaproxAB5310: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 BiopolLB5: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 MefacideLG: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 BiopolIB200: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
-                },*/
+                },
                 Campo1: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false
                 },
@@ -352,81 +448,92 @@ function PlantasTabla() {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo3: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo4: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo5: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo6: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo7: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo8: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo9: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo10: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo11: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 },
                 Campo12: {
                     Nombre: '',
                     LimInf: '',
                     LimSup: '',
-                    Unidades: 'm3',
+                    Unidades: '',
                     Activo: false,
+                    VerInspector: false,
                 }
             }
-        }]
+        }
     }
     let listaElementos = planta.elementos;
 
@@ -434,11 +541,6 @@ function PlantasTabla() {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-
-        setParametrosSeleccionado((prevState) => ({
-            ...prevState,
-            elemento: event.target.textContent
-        }))
     };
 
     const GetClientes = async () => {
@@ -468,7 +570,7 @@ function PlantasTabla() {
         })
     }
 
-    function FiltrarData() {
+    /*function FiltrarData() {
         setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === parametrosSeleccionado.codigoCliente && analisis.oferta === parametrosSeleccionado.oferta))
     }
 
@@ -492,10 +594,14 @@ function PlantasTabla() {
             ...prevState,
             [name]: value.numeroOferta
         }))
-    }
+    }*/
 
     const guardarElementos = async () => {
         parametrosSeleccionado.esPlantilla = true;
+        parametrosSeleccionado.codigoCliente = valores.codigo;
+        parametrosSeleccionado.nombreCliente = valores.nombre;
+        parametrosSeleccionado.oferta = valores.ofertas;
+        parametrosSeleccionado.elemento = valores.elemento;
         await axios.post("/parametroselementoplantacliente", parametrosSeleccionado, token)
             .then(response => {
                 return response
@@ -505,7 +611,7 @@ function PlantasTabla() {
     }
 
     useEffect(() => {
-        FiltrarData();
+        //FiltrarData();
         GetConfParametrosElementoPlantaCliente();
         GetOfertas();
         GetClientes();
@@ -532,7 +638,7 @@ function PlantasTabla() {
                                 <TextField className={styles.inputMaterial} name="nombreCliente" value={valores.nombre} />
                             </td>
                             <td>
-                                <TextField className={styles.inputMaterial} name="oferta" value={valores.oferta} />
+                                <TextField className={styles.inputMaterial} name="oferta" value={valores.ofertas} />
                             </td>
                         </tr>
                     </tbody>
@@ -543,12 +649,12 @@ function PlantasTabla() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList id="tab-list" onChange={handleChange}>
                             {
-                                <Tab key="elemento" label={valores.elemento} value="1" />
+                                <Tab key="elemento" label={valores.elemento} value={value} />
                             }
                         </TabList>
                     </Box>
                         {
-                            listaElementos.map((elemento, index) => <TablaElementosTabla key={index} value={index} plantilla={elemento.plantilla} />)
+                            <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={ setParametrosSeleccionado } />
                         }
                 </TabContext>
             </Box>

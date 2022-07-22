@@ -618,7 +618,7 @@ function Tareas() {
         
         abrirCerrarModalInsertar();
         peticionGet();
-        setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, oferta: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta})
+        setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta})
         {tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true });}
       }).catch(error => {
         console.log(error);

@@ -264,6 +264,50 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Isotiazolona_VerInspector).HasColumnName("Isotiazolona_VerInspector");
 
 
+            builder.Property(e => e.AquaproxAB5310_LimInf).HasColumnName("AquaproxAB5310_LimInf");
+
+            builder.Property(e => e.AquaproxAB5310_LimSup).HasColumnName("AquaproxAB5310_LimSup");
+
+            builder.Property(e => e.AquaproxAB5310_Unidades).HasColumnName("AquaproxAB5310_Unidades");
+
+            builder.Property(e => e.AquaproxAB5310_Activo).HasColumnName("AquaproxAB5310_Activo");
+
+            builder.Property(e => e.AquaproxAB5310_VerInspector).HasColumnName("AquaproxAB5310_VerInspector");
+
+
+            builder.Property(e => e.BiopolLB5_LimInf).HasColumnName("BiopolLB5_LimInf");
+
+            builder.Property(e => e.BiopolLB5_LimSup).HasColumnName("BiopolLB5_LimSup");
+
+            builder.Property(e => e.BiopolLB5_Unidades).HasColumnName("BiopolLB5_Unidades");
+
+            builder.Property(e => e.BiopolLB5_Activo).HasColumnName("BiopolLB5_Activo");
+
+            builder.Property(e => e.BiopolLB5_VerInspector).HasColumnName("BiopolLB5_VerInspector");
+
+
+            builder.Property(e => e.MefacideLG_LimInf).HasColumnName("MefacideLG_LimInf");
+
+            builder.Property(e => e.MefacideLG_LimSup).HasColumnName("MefacideLG_LimSup");
+
+            builder.Property(e => e.MefacideLG_Unidades).HasColumnName("MefacideLG_Unidades");
+
+            builder.Property(e => e.MefacideLG_Activo).HasColumnName("MefacideLG_Activo");
+
+            builder.Property(e => e.MefacideLG_VerInspector).HasColumnName("MefacideLG_VerInspector");
+
+
+            builder.Property(e => e.BiopolIB200_LimInf).HasColumnName("BiopolIB200_LimInf");
+
+            builder.Property(e => e.BiopolIB200_LimSup).HasColumnName("BiopolIB200_LimSup");
+
+            builder.Property(e => e.BiopolIB200_Unidades).HasColumnName("BiopolIB200_Unidades");
+
+            builder.Property(e => e.BiopolIB200_Activo).HasColumnName("BiopolIB200_Activo");
+
+            builder.Property(e => e.BiopolIB200_VerInspector).HasColumnName("BiopolIB200_VerInspector");
+
+
             builder.Property(e => e.Campo1_Nombre).HasColumnName("Campo1_Nombre");
 
             builder.Property(e => e.Campo1_LimInf).HasColumnName("Campo1_LimInf");

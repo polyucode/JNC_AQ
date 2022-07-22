@@ -3,12 +3,15 @@ import axios from "axios";
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
-import { TextField } from '@material-ui/core';
+import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Switch } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import MenuItem from '@mui/material/MenuItem';
+
 
 import 'beautiful-react-diagrams/styles.css';
 import './Plantas.css';
@@ -19,7 +22,128 @@ const token = {
     }
 };
 
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 1050,
+        height: 750,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '100%',
+        height: 50
+    }
+}));
+
+const useStyles2 = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 1150,
+        height: 750,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '45%',
+        height: 55
+    }
+}));
+
+const tipos = [
+    { id: 1, nombre: "Mensual" },
+    { id: 2, nombre: "Bimensual" },
+    { id: 3, nombre: "Trimestral" },
+    { id: 4, nombre: "Semestral" },
+    { id: 5, nombre: "Anual" },
+    { id: 6, nombre: "Semanal" },
+    { id: 7, nombre: "Bisemanal" }
+  ]
+
+const selections = [
+    {
+      value: 'Si',
+      label: 'Si',
+    },
+    {
+      value: 'No',
+      label: 'No',
+    }
+  ];
+
+const final = [
+    {
+        value: 'PDF',
+        label: 'PDF',
+    },
+    {
+        value: 'Ok',
+        label: 'Ok',
+    }
+];
+
+const protocolos = [
+    {
+        value: 'Desinfeccion Parado 4B',
+        label: 'Desinfeccion Parado 4B'
+    },
+    {
+        value: 'Desinfeccion Continuo 4B',
+        label: 'Desinfeccion Continuo 4B'
+    },
+    {
+        value: 'Desinfeccion limpieza parado',
+        label: 'Desinfeccion limpieza parado'
+    },
+    {
+        value: 'Desinfeccion limpieza continuo',
+        label: 'Desinfeccion limpieza continuo'
+    },
+    {
+        value: 'Desinfeccion Protocolo 4C',
+        label: 'Desinfeccion Protocolo 4C'
+    },
+    {
+        value: 'Desinfeccion de aporte',
+        label: 'Desinfeccion de aporte'
+    },
+    {
+        value: 'Desinfeccion contraincendios',
+        label: 'Desinfeccion contraincendios'
+    },
+    {
+        value: 'Desinfeccion parado fuente ornamental',
+        label: 'Desinfeccion parado fuente ornamental'
+    },
+    {
+        value: 'Desinfeccion ACS (termico)',
+        label: 'Desinfeccion ACS (termico)'
+    },
+    {
+        value: 'Desinfeccion AFCH (cloracion)',
+        label: 'Desinfeccion AFCH (cloracion)'
+    }
+]
+
 function Plantas() {
+
+    const [modalTarea, setModalTarea] = useState(false);
 
     const [confPlantasCliente, setConfPlantasCliente] = useState({
         id: 0,
@@ -36,7 +160,34 @@ function Plantas() {
         deleted: null,
     });
 
-    const [confAnalisisNivelesPlantaCliente, setAnalisisConfNivelesPlantaCliente] = useState([]);
+    const [tareaSeleccionada, setTareaSeleccionada] = useState({
+
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: "",
+        operario: "",
+        protocolo: "",
+        elementoPlanta: "",
+        oferta: 0,
+        analisis: "",
+        final: "",
+        valor: "",
+        nombreValor: "",
+        unidades: "",
+        tipo: 0,
+        cancelado: false,
+        comentarios: "",
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+
+    });
+
+    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
     /*   const [elementosPlanta, setElementosPlanta] = useState({
            id: 0,
@@ -56,8 +207,6 @@ function Plantas() {
 
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
-    const [elementosPlanta, setElementosPlanta] = useState([]);
-
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
 
@@ -65,11 +214,25 @@ function Plantas() {
 
     const [elemento, setElemento] = useState([]);
 
+    const [operarios, setOperarios] = useState([]);
+
     const [analisis, setAnalisis] = useState([]);
 
     const [nombreCliente, setNombreCliente] = useState([]);
 
+    const styles = useStyles();
+    const styles2 = useStyles2();
+
     const [data, setData] = useState([]);
+
+    const [estadoInput, setEstadoInput] = useState(true);
+    const [estadoValor, setEstadoValor] = useState(true);
+    const [estadoCancelado, setEstadoCancelado] = useState(true);
+    const [estadoOperario, setEstadoOperario] = useState(true);
+    const [estadoProtocolo, setEstadoProtocolo] = useState(true);
+
+    const [fechaprevista, setfechaprevista] = useState("");
+
 
     const planta = {
         codigoCliente: 0,
@@ -102,6 +265,226 @@ function Plantas() {
     );
 
     const [schema, { onChange, addNode, removeNode }] = useSchema(createSchema({}));
+
+    const abrirCerrarModalTarea = () => {
+        setModalTarea(!modalTarea);
+    }
+
+    const handleChangeAnalisis = (event, value) => {
+        setTareaSeleccionada(prevState => ({
+            ...prevState,
+            analisis: value.analisis
+        }))
+        if (value.analisis === "Otros con Fechas de Trabajo" || value.analisis === "Otros sin Fechas de Trabajo" || value.analisis === "Legionela" || value.analisis === "Aerobios" || value.analisis === "Aguas Residuales" || value.analisis === "Desinfecciones" || value.analisis === "AguaPozo" || value.analisis === "Agua Potable" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mediciones" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Control Fuga gas" || value.analisis === "Revision de bandeja") {
+            setEstadoInput(false)
+        } else {
+            setEstadoInput(true)
+        }
+
+        if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo") {
+            setEstadoOperario(false)
+        } else {
+            setEstadoOperario(true)
+        }
+
+        if (value.analisis === "Desinfecciones") {
+            setEstadoProtocolo(false)
+        } else {
+            setEstadoProtocolo(true)
+        }
+    }
+
+    const handleChangeValor = (event, value) => {
+        setTareaSeleccionada(prevState => ({
+          ...prevState,
+          valor: value.props.value
+        }))
+        if (value.props.value === "Si") {
+          setEstadoValor(false)
+        } else {
+          setEstadoValor(true)
+        }
+    }
+
+    const handleChange2 = e => {
+        const { name, value } = e.target;
+        setTareaSeleccionada(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+      }
+
+
+    const bodyTarea = (
+        <div className={styles.modal}>
+            <h3>Agregar tarea</h3>
+            <br />
+            <div className="row g-3">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles2.inputMaterial} name="codigoCliente" disabled value={confPlantasCliente.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Nombre Cliente </h5>
+                    <TextField className={styles2.inputMaterial} name="nombreCliente" disabled value={confPlantasCliente.nombreCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles2.inputMaterial} name="oferta" disabled value={confPlantasCliente.oferta} />
+                </div>
+
+                {/* Desplegable de elementos planta */}
+                <div className="col-md-3">
+                    <h5> Elemento de planta </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles2.inputMaterial}
+                        id="CboElementosPlanta"
+                        options={elemento}
+                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+                        getOptionLabel={option => option.elemento}
+                        sx={{ width: 225 }}
+                        renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
+                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
+                            ...prevState,
+                            elementoPlanta: value.elemento
+                        }))}
+                    />
+                </div>
+
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    {/* Desplegable de Técnicos */}
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles2.inputMaterial}
+                        id="analisis"
+                        options={analisis}
+                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={handleChangeAnalisis}
+                    />
+                </div>
+                <div className="col-md-5">
+                    <h5> Final </h5>
+                    <TextField
+                        disabled={estadoInput}
+                        id='final'
+                        className={styles2.inputMaterial}
+                        select
+                        name="final"
+                        onChange={handleChange2}
+                    >
+                        {final.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
+                <div className="col-md-4">
+                    <h5> Valor </h5>
+                    <TextField
+                        disabled={estadoInput}
+                        id='valor'
+                        className={styles2.inputMaterial}
+                        select
+                        name="valor"
+                        onChange={handleChangeValor}
+                    >
+                        {selections.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
+                <div className="col-md-4">
+                    <h5> Nombre valor </h5>
+                    <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange2} />
+                </div>
+                <div className="col-md-2">
+                    <h5> Unidades </h5>
+                    <TextField disabled={estadoValor} className={styles.inputMaterial} name="unidades" onChange={handleChange2} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Operario </h5>
+                    {/* Desplegable de Técnicos */}
+                    <Autocomplete
+                        disabled={estadoOperario}
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Operarios"
+                        options={operarios}
+                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="operario" />}
+                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
+                            ...prevState,
+                            operario: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <h5> Protocolo </h5>
+                    <TextField
+                        disabled={estadoProtocolo}
+                        id='protocolo'
+                        className={styles.inputMaterial}
+                        select
+                        name="protocolo"
+                        onChange={handleChange2}
+                    >
+                        {protocolos.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
+                <div className="col-md-4">
+                    {/* Desplegable de tipos*/}
+                    <h5> Periodicidad </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles2.inputMaterial}
+                        id="CboTipos"
+                        options={tipos}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="idTipo" />}
+                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
+                            ...prevState,
+                            tipo: value.id
+                        }))}
+                    />
+                </div>
+                <div className="col-md-2">
+                    {/* Fecha prevista */}
+                    <h5> Fecha </h5>
+                    <TextField
+                        className={styles.inputMaterial}
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 225 }}
+                        onChange={(e) => setfechaprevista(e.target.value)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalTarea()}>Cancelar</Button>
+            </div>
+        </div>
+    )
 
     function crearElemento(id) {
 
@@ -342,7 +725,23 @@ function Plantas() {
         }, [])
     }
 
+    const GetConfAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfAnalisisNivelesPlantasCliente(niveles);
+        }, [])
+    }
+
+    const GetOperarios = async () => {
+        axios.get("/usuario", token).then(response => {
+          const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
+          setOperarios(usuario);
+        }, [])
+      }
+
     useEffect(() => {
+        GetOperarios();
+        GetConfAnalisisNivelesPlantasCliente();
         GetConfNivelesPlantaCliente();
         GetElementosPlanta();
         GetClientes();
@@ -521,7 +920,7 @@ function Plantas() {
 
         console.log(schema);
 
-        
+
 
     }
 
@@ -656,8 +1055,16 @@ function Plantas() {
             <div className='botones'>
                 <button><Link to='/plantasTabla'>Siguiente</Link></button>
             </div>
-        </div>
 
+
+
+
+            <Modal
+                open={modalTarea}
+                onClose={abrirCerrarModalTarea}>
+                {bodyTarea}
+            </Modal>
+        </div>
     )
 
 }
