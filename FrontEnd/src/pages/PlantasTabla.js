@@ -167,11 +167,11 @@ function PlantasTabla() {
         ConductivitatUnidades: "",
         ConductivitatActivo: false,
         ConductivitatVerInspector: false,
-        tdsLimInf: 0,
-        tdsLimSup: 0,
-        tdsUnidades: "",
-        tdsActivo: false,
-        tdsVerInspector: false,
+        TDSLimInf: 0,
+        TDSLimSup: 0,
+        TDSUnidades: "",
+        TDSActivo: false,
+        TDSVerInspector: false,
         AlcalinitatMLimInf: 0,
         AlcalinitatMLimSup: 0,
         AlcalinitatMUnidades: "",
@@ -227,34 +227,101 @@ function PlantasTabla() {
         ClorTotalUnidades: "",
         ClorTotalActivo: false,
         ClorTotalVerInspector: false,
-        BromTotalLimInf: 0,
-        BromTotalLimSup: 0,
-        BromTotalUnidades: "",
-        BromTotalActivo: false,
-        BromTotalVerInspector: false,
+        BromLimInf: 0,
+        BromLimSup: 0,
+        BromUnidades: "",
+        BromActivo: false,
+        BromVerInspector: false,
         SulfitsLimInf: 0,
         SulfitsLimSup: 0,
         SulfitsUnidades: "",
         SulfitsActivo: false,
         SulfitsVerInspector: false,
-        OrtofosfatsLimInf: 0,
-        OrtofosfatsLimSup: 0,
-        OrtofosfatsUnidades: "",
-        OrtofosfatsActivo: false,
-        OrtofosfatsVerInspector: false,
-        MoLimInf: 0,
-        MoLimSup: 0,
-        MoUnidades: "",
-        MoActivo: false,
-        MoVerInspector: false,
+        OrtofosfatsPO4LimInf: 0,
+        OrtofosfatsPO4LimSup: 0,
+        OrtofosfatsPO4Unidades: "",
+        OrtofosfatsPO4Activo: false,
+        OrtofosfatsPO4VerInspector: false,
+        MoO4LimInf: 0,
+        MoO4LimSup: 0,
+        MoO4Unidades: "",
+        MoO4Activo: false,
+        MoO4VerInspector: false,
         IsotiazolonaLimInf: 0,
         IsotiazolonaLimSup: 0,
         IsotiazolonaUnidades: "",
         IsotiazolonaActivo: false,
         IsotiazolonaVerInspector: false,
+        AquaproxAB5310LimInf: 0,
+        AquaproxAB5310LimSup: 0,
+        AquaproxAB5310Unidades: "",
+        AquaproxAB5310Activo: false,
+        AquaproxAB5310VerInspector: false,
+        BiopolLB5LimInf: 0,
+        BiopolLB5LimSup: 0,
+        BiopolLB5Unidades: "",
+        BiopolLB5Activo: false,
+        BiopolLB5VerInspector: false,
+        MefacideLGLimInf: 0,
+        MefacideLGLimSup: 0,
+        MefacideLGUnidades: "",
+        MefacideLGActivo: false,
+        MefacideLGVerInspector: false,
+        BiopolIB200LimInf: 0,
+        BiopolIB200LimSup: 0,
+        BiopolIB200Unidades: "",
+        BiopolIB200Activo: false,
+        BiopolIB200VerInspector: false,
+        Campo1Nombre: "",
+        Campo1LimInf: 0,
+        Campo1LimSup: 0,
+        Campo1Unidades: "",
+        Campo1Activo: false,
+        Campo1VerInspector: false,
+        Campo2Nombre: "",
+        Campo2LimInf: 0,
+        Campo2LimSup: 0,
+        Campo2Unidades: "",
+        Campo2Activo: false,
+        Campo2VerInspector: false,
+        Campo3Nombre: "",
+        Campo3LimInf: 0,
+        Campo3LimSup: 0,
+        Campo3Unidades: "",
+        Campo3Activo: false,
+        Campo3VerInspector: false,
+        Campo4Nombre: "",
+        Campo4LimInf: 0,
+        Campo4LimSup: 0,
+        Campo4Unidades: "",
+        Campo4Activo: false,
+        Campo4VerInspector: false,
+        Campo5Nombre: "",
+        Campo5LimInf: 0,
+        Campo5LimSup: 0,
+        Campo5Unidades: "",
+        Campo5Activo: false,
+        Campo5VerInspector: false,
+        Campo6Nombre: "",
+        Campo6LimInf: 0,
+        Campo6LimSup: 0,
+        Campo6Unidades: "",
+        Campo6Activo: false,
+        Campo6VerInspector: false,
+        Campo7Nombre: "",
+        Campo7LimInf: 0,
+        Campo7LimSup: 0,
+        Campo7Unidades: "",
+        Campo7Activo: false,
+        Campo7VerInspector: false,
+        Campo8Nombre: "",
+        Campo8LimInf: 0,
+        Campo8LimSup: 0,
+        Campo8Unidades: "",
+        Campo8Activo: false,
+        Campo8VerInspector: false,
     })
 
-    console.log(parametrosSeleccionado)
     const planta = {
         codigoCliente: 0,
         oferta: 0,
@@ -604,6 +671,7 @@ function PlantasTabla() {
         parametrosSeleccionado.elemento = valores.elemento;
         await axios.post("/parametroselementoplantacliente", parametrosSeleccionado, token)
             .then(response => {
+                console.log(parametrosSeleccionado)
                 return response
             }).catch(error => {
                 console.log(error);
@@ -629,6 +697,7 @@ function PlantasTabla() {
                             <th> Código </th>
                             <th> Nombre </th>
                             <th> Oferta </th>
+                            <th> Elemento </th>
                         </tr>
                         <tr>
                             <td>
@@ -640,27 +709,30 @@ function PlantasTabla() {
                             <td>
                                 <TextField className={styles.inputMaterial} name="oferta" value={valores.ofertas} />
                             </td>
+                            <td>
+                                <TextField className={styles.inputMaterial} name="elemento" value={valores.elemento} />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    {/*<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList id="tab-list" onChange={handleChange}>
                             {
                                 <Tab key="elemento" label={valores.elemento} value={value} />
                             }
                         </TabList>
-                    </Box>
+                    </Box>*/}
                         {
                             <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={ setParametrosSeleccionado } />
                         }
                 </TabContext>
             </Box>
             <div className='botones-menu'>
-                <button>Cancelar</button>
-                <button onClick={guardarElementos}>Aceptar</button>
+                <button> Abrir Plantilla </button>
+                <button onClick={guardarElementos}> Guardar Plantilla </button>
             </div>
         </div>
     );

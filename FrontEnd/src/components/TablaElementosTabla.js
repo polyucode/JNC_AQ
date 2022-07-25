@@ -17,6 +17,8 @@ const TablaElementosTabla = (props) => {
 
     const { valores } = useContext(ThemeContext);
 
+    const [ parametrosSeleccionado, setParametrosSeleccionado ] = useState([])
+
     // Variables para la generación de los parametros activos
     let filaElementoActivo = [];
     let filasElementosActivos = [];
@@ -54,7 +56,7 @@ const TablaElementosTabla = (props) => {
                 nombreInt: 'AlcalinitatP'
             },
             {
-                nombre: 'Dureza Cálcica',
+                nombre: 'Dureza Calcica',
                 nombreInt: 'DuresaCalcica'
             },
             {
@@ -219,7 +221,7 @@ const TablaElementosTabla = (props) => {
                         <CampoPrincipalPlantasTabla key="5" name="TDS" nombre="TDS" datos={state.plantilla.TDS} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                         <CampoPrincipalPlantasTabla key="6" name="alcalinitatM" nombre="AlcalinitatM" datos={state.plantilla.AlcalinitatM} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                         <CampoPrincipalPlantasTabla key="7" name="alcalinitatP" nombre="AlcalinitatP" datos={state.plantilla.AlcalinitatP} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPrincipalPlantasTabla key="8" name="duresaCalcica" nombre="DuresaCàlcica" datos={state.plantilla.DuresaCalcica} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="8" name="duresaCalcica" nombre="DuresaCalcica" datos={state.plantilla.DuresaCalcica} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                         <CampoPrincipalPlantasTabla key="9" name="duresaTotal" nombre="DuresaTotal" datos={state.plantilla.DuresaTotal} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                         <CampoPrincipalPlantasTabla key="10" name="terbolesa" nombre="Terbolesa" datos={state.plantilla.Terbolesa} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                         <CampoPrincipalPlantasTabla key="11" name="fe" nombre="Fe" datos={state.plantilla.Fe} setParametrosSeleccionado={props.setParametrosSeleccionado} />
@@ -245,13 +247,13 @@ const TablaElementosTabla = (props) => {
                         <th><center>Activar</center></th>
                         <th><center>Ver Insp.</center></th>
                     </tr>
-                    <CampoPrincipalPlantasTabla key="19" name="ortofosfats" nombre="Ortofosfats (PO4)" datos={state.plantilla.Ortofosfats} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                    <CampoPrincipalPlantasTabla key="19" name="ortofosfats" nombre="OrtofosfatsPO4" datos={state.plantilla.Ortofosfats} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="20" name="mo" nombre="MoO4" datos={state.plantilla.Mo} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="21" name="isotiazolona" nombre="Isotiazolona" datos={state.plantilla.Isotiazolona} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                    <CampoPrincipalPlantasTabla key="22" name="aquaproxAB5310" nombre="AquaproxAB5310" datos={state.plantilla.AquaproxAB5310} />
-                    <CampoPrincipalPlantasTabla key="23" name="biopolLB5" nombre="BiopolLB5" datos={state.plantilla.BiopolLB5} />
-                    <CampoPrincipalPlantasTabla key="24" name="mefacideLG" nombre="MefacideLG" datos={state.plantilla.MefacideLG} />
-                    <CampoPrincipalPlantasTabla key="25" name="biopolIB200" nombre="BiopolIB200" datos={state.plantilla.BiopolIB200} />
+                    <CampoPrincipalPlantasTabla key="22" name="aquaproxAB5310" nombre="AquaproxAB5310" datos={state.plantilla.AquaproxAB5310} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                    <CampoPrincipalPlantasTabla key="23" name="biopolLB5" nombre="BiopolLB5" datos={state.plantilla.BiopolLB5} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                    <CampoPrincipalPlantasTabla key="24" name="mefacideLG" nombre="MefacideLG" datos={state.plantilla.MefacideLG} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                    <CampoPrincipalPlantasTabla key="25" name="biopolIB200" nombre="BiopolIB200" datos={state.plantilla.BiopolIB200} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                 </tbody>
                 <br />
                 <h6> Campos personalizados </h6>
@@ -267,14 +269,14 @@ const TablaElementosTabla = (props) => {
                             <th><center>Activar</center></th>
                             <th><center>Ver Insp.</center></th>
                         </tr>
-                        <CampoPersPlantasTabla key="1" name="comptador" nombre="Campo 1" datos={state.plantilla.Campo1} />
-                        <CampoPersPlantasTabla key="2" name="comptador" nombre="Campo 2" datos={state.plantilla.Campo2} />
-                        <CampoPersPlantasTabla key="3" name="comptador" nombre="Campo 3" datos={state.plantilla.Campo3} />
-                        <CampoPersPlantasTabla key="4" name="comptador" nombre="Campo 4" datos={state.plantilla.Campo4} />
-                        <CampoPersPlantasTabla key="5" name="comptador" nombre="Campo 5" datos={state.plantilla.Campo5} />
-                        <CampoPersPlantasTabla key="6" name="comptador" nombre="Campo 6" datos={state.plantilla.Campo6} />
-                        <CampoPersPlantasTabla key="7" name="comptador" nombre="Campo 7" datos={state.plantilla.Campo7} />
-                        <CampoPersPlantasTabla key="8" name="comptador" nombre="Campo 8" datos={state.plantilla.Campo8} />
+                        <CampoPersPlantasTabla key="1" name="campo1" nombre="Campo1" datos={state.plantilla.Campo1} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="2" name="campo2" nombre="Campo2" datos={state.plantilla.Campo2} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="3" name="campo3" nombre="Campo3" datos={state.plantilla.Campo3} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="4" name="campo4" nombre="Campo4" datos={state.plantilla.Campo4} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="5" name="campo5" nombre="Campo5" datos={state.plantilla.Campo5} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="6" name="campo6" nombre="Campo6" datos={state.plantilla.Campo6} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="7" name="campo7" nombre="Campo7" datos={state.plantilla.Campo7} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="8" name="campo8" nombre="Campo8" datos={state.plantilla.Campo8} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     </tbody>
                 </table>
             </div>
@@ -288,8 +290,8 @@ const TablaElementosTabla = (props) => {
                     </div>
                 </div>
                 <div>
-                    <button>Abrir plantilla</button><br />
-                    <button>Guardar como plantilla</button>
+                    {/* Mostrar datos que he introducido en la parametrizacion*/}
+
                 </div>
             </div>
         </>

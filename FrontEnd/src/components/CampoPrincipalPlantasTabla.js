@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const CampoPrincipalPlantasTabla = (props) => {
 
-    console.log(props)
+    
     const [state, setState] = useState(props.datos);
 
     const [limitInferior, setLimitInferior] = useState([]);
@@ -10,12 +10,12 @@ const CampoPrincipalPlantasTabla = (props) => {
     const [unidades, setUnidades] = useState([]);
     const [verInspector, setVerInspector] = useState([]);
 
-    
+    const [ checkboxActivo, setCheckboxActivo ] = useState(false)
 
     useEffect(() => {
 
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
-        if (state.Activo) {
+        if (checkboxActivo) {
             document.getElementById(props.nombre + 'LimInf').removeAttribute('disabled');
             document.getElementById(props.nombre + 'LimSup').removeAttribute('disabled');
             document.getElementById(props.nombre + 'Unidades').removeAttribute('disabled');
@@ -30,6 +30,7 @@ const CampoPrincipalPlantasTabla = (props) => {
     }, []);
 
     const handleActivo = (e) => {
+        setCheckboxActivo(e.target.checked)
         const { name, value } = e.target
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
         if (e.target.checked) {
@@ -38,14 +39,20 @@ const CampoPrincipalPlantasTabla = (props) => {
             document.getElementById(props.nombre + 'Unidades').removeAttribute('disabled');
             document.getElementById(props.nombre + 'Activo').setAttribute('checked', 'checked');
             document.getElementById(props.nombre + 'VerInspector').removeAttribute('disabled');
-            props.setParametrosSeleccionado({ [name]: true });
+            props.setParametrosSeleccionado(prevState => ({
+                ...prevState,
+                [name]: e.target.checked
+            }));
         } else {
             document.getElementById(props.nombre + 'LimInf').setAttribute('disabled', 'disabled');
             document.getElementById(props.nombre + 'LimSup').setAttribute('disabled', 'disabled');
             document.getElementById(props.nombre + 'Unidades').setAttribute('disabled', 'disabled');
             document.getElementById(props.nombre + 'Activo').removeAttribute('checked');
             document.getElementById(props.nombre + 'VerInspector').setAttribute('disabled', 'disabled');
-            props.setParametrosSeleccionado({ [name]: false });
+            props.setParametrosSeleccionado(prevState => ({
+                ...prevState,
+                [name]: e.target.checked
+            }));
         }
 
     }
@@ -53,9 +60,10 @@ const CampoPrincipalPlantasTabla = (props) => {
     const handleVerInspector = (e) => {
         const { name, value } = e.target
         // Actualiza el valor en la variable
-        props.setParametrosSeleccionado({
+        props.setParametrosSeleccionado(prevState => ({
+            ...prevState,
             [name]: e.target.checked
-        });
+        }));
 
     }
 
@@ -73,7 +81,7 @@ const CampoPrincipalPlantasTabla = (props) => {
         // Actualiza el valor en la variable
         props.setParametrosSeleccionado(prevState => ({
             ...prevState,
-            [name]: value
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
         
     }
@@ -83,7 +91,7 @@ const CampoPrincipalPlantasTabla = (props) => {
         // Actualiza el valor en la variable
         props.setParametrosSeleccionado(prevState => ({
             ...prevState,
-            [name]: value
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
 
@@ -91,10 +99,10 @@ const CampoPrincipalPlantasTabla = (props) => {
     return (
         <tr>
             <td>{props.nombre}</td>
-            <td><input type="text" size="3" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} value={state.LimInf} onChange={handleLimitInferior} /></td>
-            <td><input type="text" size="3" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} value={state.LimSup} onChange={handleLimitSuperior} /></td>
+            <td><input type="number" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} onChange={handleLimitInferior} /></td>
+            <td><input type="number" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} onChange={handleLimitSuperior} /></td>
             <td>
-                <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} value={state.Unidades}>
+                <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} >
                     <option value=''></option>
                     <option value='m3'>m3</option>
                     <option value='Un. pH'>Un. pH</option>
@@ -105,8 +113,8 @@ const CampoPrincipalPlantasTabla = (props) => {
                     <option value='µS/cm'>µS/cm</option>
                 </select>
             </td>
-            <td><center><input type="checkbox" name={props.nombre + 'Activo'} id={props.nombre + 'Activo'} onChange={handleActivo} checked={state.Activo} /></center></td>
-            <td><center><input type="checkbox" name={props.nombre + 'VerInspector'} id={props.nombre + 'VerInspector'} checked={state.VerInspector} onChange={handleVerInspector} /></center></td>
+            <td><center><input type="checkbox" name={props.nombre + 'Activo'} id={props.nombre + 'Activo'} onChange={handleActivo} checked={checkboxActivo}/></center></td>
+            <td><center><input type="checkbox" name={props.nombre + 'VerInspector'} id={props.nombre + 'VerInspector'} onChange={handleVerInspector} /></center></td>
         </tr>
     );
 };
