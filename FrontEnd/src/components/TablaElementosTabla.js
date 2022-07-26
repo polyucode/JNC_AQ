@@ -15,10 +15,6 @@ const TablaElementosTabla = (props) => {
     // Obtenemos los datos del usuario actual
     const usuario = JSON.parse(localStorage.getItem('UsuarioActual'));
 
-    const { valores } = useContext(ThemeContext);
-
-    const [ parametrosSeleccionado, setParametrosSeleccionado ] = useState([])
-
     // Variables para la generación de los parametros activos
     let filaElementoActivo = [];
     let filasElementosActivos = [];

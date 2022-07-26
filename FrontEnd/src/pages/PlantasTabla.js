@@ -134,6 +134,8 @@ function PlantasTabla() {
         { title: 'Facturado', field: 'facturado', type: 'boolean' }
     ];
 
+    const [ datos, setDatos ] = useState([]);
+
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
@@ -566,38 +568,6 @@ function PlantasTabla() {
                     Unidades: '',
                     Activo: false,
                     VerInspector: false,
-                },
-                Campo9: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo10: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo11: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo12: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
                 }
             }
         }
@@ -663,6 +633,17 @@ function PlantasTabla() {
         }))
     }*/
 
+    function handleObject() {
+        
+        setDatos(Object.entries(parametrosSeleccionado).map(([key , value ]) => {
+            if(value != 0 || value != false ){
+                console.log(key + ' ' + value)
+            }
+        }))
+
+        console.log(datos)
+    }
+
     const guardarElementos = async () => {
         parametrosSeleccionado.esPlantilla = true;
         parametrosSeleccionado.codigoCliente = valores.codigo;
@@ -676,6 +657,7 @@ function PlantasTabla() {
             }).catch(error => {
                 console.log(error);
             })
+        handleObject()
     }
 
     useEffect(() => {
@@ -734,6 +716,10 @@ function PlantasTabla() {
                 <button> Abrir Plantilla </button>
                 <button onClick={guardarElementos}> Guardar Plantilla </button>
             </div>
+            <div>
+                {datos[0]}
+            </div>
+        
         </div>
     );
 }
