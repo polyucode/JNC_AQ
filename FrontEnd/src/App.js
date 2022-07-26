@@ -18,6 +18,8 @@ import Productos from './pages/Productos';
 import ConsumoArticulos from './pages/ConsumoArticulos'
 import Visualizacion from './pages/Visualizacion';
 
+import { MainLayout } from './layout/MainLayout';
+
 export default function App() {
   return (
     <div>
@@ -25,7 +27,7 @@ export default function App() {
         <Navbar />
         <div className='container-fluid'>
         <Routes>
-          <Route path='/' exact element={<Home />} />
+          <Route path='/' exact element={<MainLayout />} />
           <Route path='/login' element={<Login />} />
           <Route path='/usuarios' element={<Usuarios />} />
           <Route path='/clientes' element={<Clientes />} />
