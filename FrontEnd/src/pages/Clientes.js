@@ -24,7 +24,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 780,
+    height: 870,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -37,14 +37,14 @@ const useStylesEditarDet = makeStyles((theme) => ({
     cursor: 'pointer'
   },
   inputMaterial: {
-    width: '100%'
+    width: '70%'
   }
 }));
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
-    width: 700,
+    width: 1000,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -129,13 +129,10 @@ function Clientes() {
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
-    codigo: '',
+    codigo: 0,
     cif: '',
     razonSocial: '',
-    nombreComercial: '',
-    telefono1: '',
-    telefono2: '',
-    idSector: 0,
+    telefono: '',
     movil: '',
     email: '',
     direccion: '',
@@ -144,6 +141,7 @@ function Clientes() {
     cp: '',
     pais: '',
     comarca: 0,
+    idSector: 0,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -158,12 +156,12 @@ function Clientes() {
   const [contactoSeleccionado, setContactoSeleccionado] = useState({
 
     id: 0,
+    codigoCliente: 0,
     nombre: '',
     telefono: '',
     email: '',
     cargo: '',
     comentarios: '',
-    idCliente: clienteSeleccionado.id,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -188,6 +186,7 @@ function Clientes() {
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
+  const [dataContacto, setDataContacto] = useState([]);
 
   const [perfiles, setPerfiles] = useState([]);
 
@@ -203,6 +202,10 @@ function Clientes() {
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
 
+  const [comarcaTable, setComarcaTable] = useState({});
+  const [poblacionTable, setPoblacionTable] = useState({});
+  const [provinciaTable, setProvinciaTable] = useState({});
+
 
 
   const columnas = [
@@ -211,26 +214,19 @@ function Clientes() {
     { title: 'Codigo', field: 'codigo', filterPlaceholder: "Filtrar por codigo" },
     { title: 'Cif', field: 'cif', filterPlaceholder: "Filtrar por cif" },
     { title: 'RazonSocial', field: 'razonSocial', filterPlaceholder: "Filtrar por Razón Social" },
-    { title: 'NombreComercial', field: 'nombreComercial', filterPlaceholder: "Filtrar por nombre comercial" },
-
-    { title: 'Telefono1', field: 'telefono1', filterPlaceholder: "Filtrar por teléfono" },
-
+    { title: 'Telefono', field: 'telefono', filterPlaceholder: "Filtrar por teléfono" },
     { title: 'Movil', field: 'movil', filterPlaceholder: "Filtrar por movil" },
     { title: 'Email', field: 'email', filterPlaceholder: "Filtrar por email" },
+    { title: 'Direccion', field: 'direccion', filterPlaceholder: "Filtrar por dirección" },
+    { title: 'Poblacion', field: 'poblacion', lookup: poblacionTable, filterPlaceholder: "Filtrar por población" },
+    { title: 'Provincia', field: 'provincia', lookup: provinciaTable, filterPlaceholder: "Filtrar por provincia" },
+    { title: 'Comarca', field: 'comarca', lookup: comarcaTable, filterPlaceholder: "Filtrar por comarca" },
+    { title: 'Cp', field: 'cp', filterPlaceholder: "Filtrar por código postal" },
 
     //Ocultas
     { title: 'Id', field: 'id', filterPlaceholder: "Filtrar por id", hidden: true },
-
-
-    { title: 'Telefono2', field: 'telefono2', filterPlaceholder: "Filtrar por teléfono", hidden: true },
     { title: 'IdSector', field: 'idSector', filterPlaceholder: "Filtrar por id sector", hidden: true },
-
-    { title: 'Direccion', field: 'direccion', filterPlaceholder: "Filtrar por dirección", hidden: true },
-    { title: 'Poblacion', field: 'poblacion', filterPlaceholder: "Filtrar por población", hidden: true },
-    { title: 'Provincia', field: 'provincia', filterPlaceholder: "Filtrar por provincia", hidden: true },
-    { title: 'Cp', field: 'cp', filterPlaceholder: "Filtrar por código postal", hidden: true },
     { title: 'Pais', field: 'pais', filterPlaceholder: "Filtrar por país", hidden: true },
-    { title: 'Comarca', field: 'comarca', filterPlaceholder: "Filtrar por comarca", hidden: true },
     { title: 'CuentaContable', field: 'cuentaContable', filterPlaceholder: "Filtrar por cuenta contable", hidden: true },
   ];
 
@@ -244,7 +240,7 @@ function Clientes() {
     { title: 'Comentarios', field: 'comentarios', filterPlaceholder: "Filtrar por comentarios" },
 
     //Ocultas
-    { title: 'Id Cliente', field: 'idCliente', type: 'numeric', filterPlaceholder: "Filtrar por IdCliente", hidden: true, },
+    { title: 'CodigoCliente', field: 'CodigoCliente', type: 'numeric', filterPlaceholder: "Filtrar por CodigoCliente", hidden: true, },
     { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder: "Filtrar por fecha creacion", hidden: true },
     { title: 'Usuario creación', field: 'AddIdUser', type: 'numeric', filterPlaceholder: "Filtrar por Usuario creación", hidden: true },
     { title: 'Fecha modificación', field: 'modDate', type: 'date', filterPlaceholder: "Filtrar por Fecha modificación", hidden: true },
@@ -292,11 +288,30 @@ function Clientes() {
   }
 
   const peticionGetContacto = async () => {
-    console.log("MEtodo Get Ejecutandose")
     axios.get("/clientescontactos", token).then(response => {
-      setDataDet(response.data.data)
+      setDataDet(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
     })
   }
+
+  /*function FiltrarDataContacto () {
+    setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+    peticionGetContacto();
+  }*/
+
+  useEffect(() => {
+    const lookupComarca = {};
+    comarca.map(fila => lookupComarca[fila.id] = fila.descripcion)
+    setComarcaTable(lookupComarca)
+
+    const lookupPoblacion = {};
+    poblacion.map(fila => lookupPoblacion[fila.id] = fila.poblacion)
+    setPoblacionTable(lookupPoblacion)
+
+    const lookupProvincia = {};
+    provincia.map(fila => lookupProvincia[fila.id] = fila.descripcion)
+    setProvinciaTable(lookupProvincia)
+
+  }, [comarca, poblacion])
 
   useEffect(() => {
     peticionGet();
@@ -305,12 +320,11 @@ function Clientes() {
     GetPoblacion();
     GetProvincia();
     GetComarca();
+    //FiltrarDataContacto();
   }, [])
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    console.log("Metodo POST Ejecutandose")
-    console.log("El cliente seleccionado es:" + clienteSeleccionado)
     await axios.post("/cliente", clienteSeleccionado, token)
       .then(response => {
         //setData(data.concat(response.data));
@@ -322,7 +336,6 @@ function Clientes() {
   }
 
   const peticionPut = async () => {
-    console.log(clienteSeleccionado)
     await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
       .then(response => {
         var clienteModificado = data;
@@ -339,7 +352,6 @@ function Clientes() {
   }
 
   const peticionDelete = async () => {
-    console.log("id=" + ClienteEliminar[0].id)
     var i = 0;
     while (i < ClienteEliminar.length) {
       await axios.delete("/cliente/" + ClienteEliminar[i].id, token)
@@ -354,9 +366,8 @@ function Clientes() {
   }
 
   const peticionPostContacto = async () => {
-    console.log("Peticion Post ejecutandose");
-    contactoSeleccionado.id = null;
-    console.log(clienteSeleccionado)
+    contactoSeleccionado.id = 0;
+    contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
     await axios.post("/clientescontactos", contactoSeleccionado, token)
       .then(response => {
         abrirCerrarModalInsertarContacto();
@@ -365,11 +376,9 @@ function Clientes() {
       .catch(error => {
         console.log(error);
       })
-    console.log(contactoSeleccionado)
   }
 
   const peticionDeleteContacto = async () => {
-    console.log("Peticion Delete ejecutandose")
     var i = 0;
     while (i < ContactoClienteEliminar.length) {
       await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
@@ -384,7 +393,6 @@ function Clientes() {
   }
 
   const peticionPutContacto = async () => {
-    console.log(contactoSeleccionado)
     await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
       .then(response => {
         var contactoModificado = data;
@@ -409,7 +417,7 @@ function Clientes() {
     const { name, value } = e.target;
     setClienteSeleccionado(prevState => ({
       ...prevState,
-      [name]: value
+      [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
     }));
   }
 
@@ -424,38 +432,46 @@ function Clientes() {
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Nuevo Cliente</h3>
+      <br/>
       <div className="row g-3">
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} />
+        <div className="col-md-3">
+          <h5> Codigo </h5>
+          <TextField className={styles.inputMaterial} type="number" name="codigo" onChange={handleChange} />
+        </div>
+        <div className="col-md-2">
+          <h5> CIF </h5>
+          <TextField className={styles.inputMaterial} name="cif" onChange={handleChange} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} />
+          <h5> Razon Social </h5>
+          <TextField className={styles.inputMaterial} name="razonSocial" onChange={handleChange} />
+        </div>
+        <div className="col-md-3">
+          <h5> Teléfono </h5>
+          <TextField className={styles.inputMaterial} name="telefono" onChange={handleChange} />
+        </div>
+        <div className="col-md-3">
+          <h5> Móvil </h5>
+          <TextField className={styles.inputMaterial} name="movil" onChange={handleChange} />
         </div>
         <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} />
+          <h5> Email </h5>
+          <TextField className={styles.inputMaterial} name="email" onChange={handleChange} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} />
+        <div className="col-md-5">
+          <h5> Direccion </h5>
+          <TextField className={styles.inputMaterial} name="direccion" onChange={handleChange} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} />
+        <div className="col-md-2">
+          <h5> Codigo Postal </h5>
+          <TextField className={styles.inputMaterial} name="cp" onChange={handleChange} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} />
+        <div className="col-md-3">
+          <h5> País </h5>
+          <TextField className={styles.inputMaterial} name="pais" onChange={handleChange} />
         </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
+          <h5> Comarca </h5>
           {/* Desplegable de Comarca */}
           <Autocomplete
             disableClearable={true}
@@ -463,14 +479,15 @@ function Clientes() {
             options={comarca}
             getOptionLabel={option => option.descripcion}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+            renderInput={(params) => <TextField {...params} name="comarca" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               comarca: value.id
             }))}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
+          <h5> Província </h5>
           {/* Desplegable de Provincia */}
           <Autocomplete
             disableClearable={true}
@@ -478,14 +495,15 @@ function Clientes() {
             options={provincia}
             getOptionLabel={option => option.descripcion}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+            renderInput={(params) => <TextField {...params} name="provincia" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               provincia: value.id
             }))}
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-4">
+          <h5> Población </h5>
           {/* Desplegable de Población */}
           <Autocomplete
             disableClearable={true}
@@ -493,7 +511,7 @@ function Clientes() {
             options={poblacion}
             getOptionLabel={option => option.poblacion}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+            renderInput={(params) => <TextField {...params} name="poblacion" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               poblacion: value.id
@@ -518,39 +536,47 @@ function Clientes() {
 
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
-      <h3>Editar Cliente</h3>
+      <h3> Cliente </h3>
+      <br />
       <div className="row g-3">
         <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+          <h5> Codigo </h5>
+          <TextField className={stylesEditarDet.inputMaterial} type="number" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
         </div>
         <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
+          <h5> CIF </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
+        </div>
+        <div className="col-md-4">
+          <h5> RazonSocial </h5>
+          <TextField className={styles.inputMaterial} name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
         </div>
         <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
+          <h5> Teléfono </h5>
+          <TextField className={styles.inputMaterial} name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} />
+        </div>
+        <div className="col-md-3">
+          <h5> Móvil </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
+        </div>
+        <div className="col-md-3">
+          <h5> Email </h5>
+          <TextField className={styles.inputMaterial} name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
+        </div>
+        <div className="col-md-3">
+          <h5> Dirección </h5>
+          <TextField className={styles.inputMaterial} name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
         </div>
         <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono1} />
-        </div>
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono2} />
+          <h5> Código Postal </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
         </div>
         <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
+          <h5> País </h5>
+          <TextField className={styles.inputMaterial} name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
         </div>
         <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
-        </div>
-        <div className="col-md-3">
+          <h5> Comarca </h5>
           {/* Desplegable de Comarca */}
           <Autocomplete
             disableClearable={true}
@@ -559,7 +585,7 @@ function Clientes() {
             getOptionLabel={option => option.descripcion}
             defaultValue={comarcaClienteEditar[0]}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+            renderInput={(params) => <TextField {...params} name="comarca" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               comarca: value.id
@@ -567,6 +593,7 @@ function Clientes() {
           />
         </div>
         <div className="col-md-3">
+          <h5> Província </h5>
           {/* Desplegable de Provincia */}
           <Autocomplete
             disableClearable={true}
@@ -575,7 +602,7 @@ function Clientes() {
             getOptionLabel={option => option.descripcion}
             defaultValue={provinciaClienteEditar[0]}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+            renderInput={(params) => <TextField {...params} name="provincia" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               provincia: value.id
@@ -583,6 +610,7 @@ function Clientes() {
           />
         </div>
         <div className="col-md-3">
+          <h5> Población </h5>
           {/* Desplegable de Población */}
           <Autocomplete
             disableClearable={true}
@@ -591,7 +619,7 @@ function Clientes() {
             getOptionLabel={option => option.poblacion}
             defaultValue={poblacionClienteEditar[0]}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+            renderInput={(params) => <TextField {...params} name="poblacion" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
               poblacion: value.id
@@ -610,7 +638,6 @@ function Clientes() {
             onClick: (e, data) => {
               //setContactoClienteEditar();
               abrirCerrarModalInsertarContacto();
-              console.log(dataDet)
             },
           },
           {
@@ -626,23 +653,17 @@ function Clientes() {
             tooltip: "Editar detalle contacto",
             onClick: (e, data) => {
               setContactoClienteEditar(contactoSeleccionado[0]);
-              // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-              // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
-              // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-              // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
-              // if(FilasSeleccionadas[0].idPerfil === 2){
-              //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
-              //   setestadoCboCliente(false);
-              // }else{
-              //   setclienteUsuarioEditar(false);
-              //   setestadoCboCliente(true);
-              // }
               abrirCerrarModalEditarContacto();
             },
           },
         ]}
 
-        onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
+        onRowClick={((evt, contactoSeleccionado) => {
+          setContactoSeleccionado(contactoSeleccionado)
+          peticionGetContacto();
+          setContactoClienteEditar(contactoSeleccionado[0]);
+          abrirCerrarModalEditarContacto();
+        })}
         onSelectionChange={(filas) => {
           setFilasSeleccionadasDet(filas);
           if (filas.length > 0)
@@ -651,7 +672,7 @@ function Clientes() {
         }
         options={{
           sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-          columnsButton: true,
+          columnsButton: true, showSelectAllCheckbox: false,
           rowStyle: rowData => ({
             backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
             whiteSpace: "nowrap"
@@ -669,7 +690,7 @@ function Clientes() {
       />
       <br /><br />
       <div align="right">
-        <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
+        <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
         <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
     </div>
@@ -700,22 +721,33 @@ function Clientes() {
   const bodyInsertarContacto = (
     <div className={styles.modal}>
       <h3>Agregar Nuevo Contacto</h3>
+      <br />
       <div className="row g-3">
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
+        <div className="col-md-6">
+          <h5> Cliente </h5>
+          <TextField disabled className={stylesEditarDet.inputMaterial} name="codigoCliente" onChange={handleChangeContacto} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+        </div>
+        <div className="col-md-6">
+          <h5> Nombre </h5>
+          <TextField className={styles.inputMaterial} name="nombre" onChange={handleChangeContacto} />
+        </div>
+        <div className="col-md-5">
+          <h5> Telefono </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="telefono" onChange={handleChangeContacto} />
+        </div>
+        <div className="col-md-6">
+          <h5> Email </h5>
+          <TextField className={styles.inputMaterial} name="email" onChange={handleChangeContacto} />
+        </div>
+        <div className="col-md-5">
+          <h5> Cargo </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="cargo" onChange={handleChangeContacto} />
         </div>
         <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChangeContacto} />
+          <h5> Comentarios </h5>
+          <TextField className={styles.inputMaterial} name="comentarios" onChange={handleChangeContacto} />
         </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} />
-        </div>
+        <br />
         <div align="right">
           <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
           <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
@@ -726,25 +758,35 @@ function Clientes() {
 
   const bodyEditarContacto = (
     <div className={styles.modal}>
-      <h3>Editar Contacto </h3>
+      <h3> Contacto </h3>
+      <br />
       <div className="row g-3">
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
+        <div className="col-md-6">
+          <h5> Cliente </h5>
+          <TextField disabled className={stylesEditarDet.inputMaterial} name="codigoCliente" onChange={handleChangeContacto} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+        </div>
+        <div className="col-md-6">
+          <h5> Nombre </h5>
+          <TextField className={styles.inputMaterial} name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
+        </div>
+        <div className="col-md-5">
+          <h5> Teléfono </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
+        </div>
+        <div className="col-md-6">
+          <h5> Email </h5>
+          <TextField className={styles.inputMaterial} name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
+        </div>
+        <div className="col-md-5">
+          <h5> Cargo </h5>
+          <TextField className={stylesEditarDet.inputMaterial} name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
         </div>
         <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
+          <h5> Comentarios </h5>
+          <TextField className={styles.inputMaterial} name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
         </div>
         <div align="right">
-          <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>
+          <Button color="primary" onClick={() => peticionPutContacto()}>Guardar</Button>
           <Button onClick={() => abrirCerrarModalEditarContacto()}>Cancelar</Button>
         </div>
       </div>
@@ -753,7 +795,7 @@ function Clientes() {
 
   const bodyEliminarContacto = (
     <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el contacto ? </p>
+      <h5>Estás seguro que deseas eliminar el contacto ? </h5>
       <div align="right">
         <Button color="secondary" onClick={() => peticionDeleteContacto()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
@@ -764,11 +806,10 @@ function Clientes() {
 
   const bodyEliminar = (
     <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el cliente ? </p>
+      <h5>Estás seguro que deseas eliminar el cliente ? </h5>
       <div align="right">
         <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-
       </div>
     </div>
   )
@@ -853,7 +894,15 @@ function Clientes() {
           },
         ]}
 
-        onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}
+        onRowClick={((evt, clienteSeleccionado) => {
+          setClienteSeleccionado(clienteSeleccionado)
+          //setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+          peticionGetContacto();
+          setComarcaClienteEditar(comarca.filter(comarca => comarca.id === clienteSeleccionado.comarca));
+          setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === clienteSeleccionado.provincia));
+          setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.id === clienteSeleccionado.poblacion));
+          abrirCerrarModalEditar();
+        })}
         onSelectionChange={(filas) => {
           setFilasSeleccionadas(filas);
 
@@ -862,7 +911,7 @@ function Clientes() {
         }
         options={{
           sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-          columnsButton: true,
+          columnsButton: true, showSelectAllCheckbox: false,
           rowStyle: rowData => ({
             backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
             whiteSpace: "nowrap"

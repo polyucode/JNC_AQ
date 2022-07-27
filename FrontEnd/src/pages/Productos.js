@@ -22,7 +22,8 @@ const token = {
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
-        width: 700,
+        width: 800,
+        height: 350,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -97,11 +98,9 @@ function Productos() {
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-
-
     const [productoSeleccionado, setProductoSeleccionado] = useState({
         id: 0,
-        codigoProducto: 0,
+        codigoProducto: "",
         descripcion: "",
         addDate: null,
         addIdUser: null,
@@ -142,7 +141,7 @@ function Productos() {
         productoSeleccionado.id = null;
         await axios.post("/productos", productoSeleccionado, token)
             .then(response => {
-                //setData(data.concat(response.data));
+                console.log(response)
                 abrirCerrarModalInsertar();
                 getProductos();
             }).catch(error => {
@@ -205,14 +204,18 @@ function Productos() {
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Producto</h3>
+            <br/>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoProducto" name="codigoProducto" onChange={handleChange} />
+                    <h5> Codigo Producto </h5>
+                    <TextField className={styles.inputMaterial} name="codigoProducto" onChange={handleChange} />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="textbox" label="Descripcion" name="descripcion" onChange={handleChange} />
+                <div className="col-md-12">
+                    <h5> Descripcion </h5>
+                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
             </div>
+            <br/>
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
@@ -222,15 +225,19 @@ function Productos() {
 
     const bodyEditar = (
         <div className={styles.modal}>
-            <h3>Editar Producto</h3>
+            <h3> Producto </h3>
+            <br/>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoProducto" name="codigoProducto" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.codigoProducto} />
+                    <h5> Codigo Producto </h5>
+                    <TextField className={styles.inputMaterial} name="codigoProducto" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.codigoProducto} />
                 </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.descripcion} />
+                <div className="col-md-12">
+                    <h5> Descripción </h5>
+                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.descripcion} />
                 </div>
             </div>
+            <br/>
             <div align="right">
                 <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
                 <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
@@ -247,8 +254,6 @@ function Productos() {
             </div>
         </div>
     )
-
-
 
     return (
         <div>
@@ -326,7 +331,11 @@ function Productos() {
                     },
                 ]}
 
-                onRowClick={((evt, productoSeleccionado) => setProductoSeleccionado(productoSeleccionado.tableData.id))}
+                onRowClick={((evt, productoSeleccionado) => {
+                    setProductoSeleccionado(productoSeleccionado)
+                    getProductos();
+                    abrirCerrarModalEditar();
+                })}
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
 
@@ -335,7 +344,7 @@ function Productos() {
                 }
                 options={{
                     sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-                    columnsButton: true,
+                    columnsButton: true, showSelectAllCheckbox: false,
                     rowStyle: rowData => ({
                         backgroundColor: (productoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                         whiteSpace: "nowrap"

@@ -7,12 +7,12 @@ using System.Text;
 
 namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 {
-    public class ServMantenimientoCabConfiguration : IEntityTypeConfiguration<ServMantenimientoCab>
+    public class TareasConfiguration : IEntityTypeConfiguration<Tareas>
     {
-        public void Configure(EntityTypeBuilder<ServMantenimientoCab> builder)
+        public void Configure(EntityTypeBuilder<Tareas> builder)
         {
 
-            builder.ToTable("GES_ServMantenimiento_Cab");
+            builder.ToTable("GES_Tareas");
 
             builder.HasKey(e => e.Id);
 
@@ -21,8 +21,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.DelDate).HasColumnType("datetime");
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
-
-            builder.Property(e => e.NumOferta).HasMaxLength(50);
 
         }
     }

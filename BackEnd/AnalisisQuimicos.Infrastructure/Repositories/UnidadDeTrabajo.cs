@@ -13,13 +13,14 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         private readonly YucodeDevelopmentJNC_AQContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IRepository<Archivos> _archivosRepository;
         private readonly IRepository<Analisis> _analisisRepository;
         private readonly IRepository<Clientes> _clienteRepository;
         private readonly IRepository<Comarcas> _comarcaRepository;
         private readonly IRepository<Perfiles> _perfilRepository;
         private readonly IRepository<Poblaciones> _poblacionRepository;
         private readonly IRepository<Provincias> _provinviaRepository;
-        private readonly IRepository<ServMantenimientoCab> _servMantenimientoCabRepository;
+        private readonly IRepository<Tareas> _tareasRepository;
         private readonly IRepository<ServMantenimientoDet> _servMantenimientoDetRepository;
         private readonly IRepository<ElementosPlanta> _elementosPlantaRepository;
         private readonly IRepository<ConfNivelesPlantasCliente> _confNivelesPlantasClienteRepository;
@@ -39,13 +40,15 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         public IUsuarioRepository UsuarioRepository => _usuarioRepository ?? new UsuarioRepository(_context);
 
+        public IRepository<Archivos> ArchivosRepository => _archivosRepository ?? new BaseRepository<Archivos>(_context);
+
         public IRepository<Analisis> AnalisisRepository => _analisisRepository ?? new BaseRepository<Analisis>(_context);
 
         public IRepository<Clientes> ClienteRepository => _clienteRepository ?? new BaseRepository<Clientes>(_context);
 
         public IRepository<Perfiles> PerfilRepository => _perfilRepository ?? new BaseRepository<Perfiles>(_context);
 
-        public IRepository<ServMantenimientoCab> ServMantenimientoCabRepository => _servMantenimientoCabRepository ?? new BaseRepository<ServMantenimientoCab>(_context);
+        public IRepository<Tareas> TareasRepository => _tareasRepository ?? new BaseRepository<Tareas>(_context);
 
         public IRepository<ServMantenimientoDet> ServMantenimientoDetRepository => _servMantenimientoDetRepository ?? new BaseRepository<ServMantenimientoDet>(_context);
 

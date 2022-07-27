@@ -6,7 +6,9 @@ namespace AnalisisQuimicos.Core.DTOs
 {
     public class ConfPlantasClienteDTO
     {
+        public int? Id { get; set; }
         public int? CodigoCliente { get; set; }
+        public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
         public int? NumNiveles { get; set; }
         public DateTime? AddDate { get; set; }

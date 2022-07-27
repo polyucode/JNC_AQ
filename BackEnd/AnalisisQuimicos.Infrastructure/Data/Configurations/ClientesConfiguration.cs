@@ -55,8 +55,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Movil).HasMaxLength(20);
 
-            builder.Property(e => e.NombreComercial).HasMaxLength(500);
-
             builder.Property(e => e.Pais).HasMaxLength(100);
 
             builder.Property(e => e.Poblacion).HasMaxLength(200);
@@ -65,9 +63,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.RazonSocial).HasMaxLength(500);
 
-            builder.Property(e => e.Telefono1).HasMaxLength(20);
-
-            builder.Property(e => e.Telefono2).HasMaxLength(20);
+            builder.Property(e => e.Telefono).HasMaxLength(20);
         }
     }
 }

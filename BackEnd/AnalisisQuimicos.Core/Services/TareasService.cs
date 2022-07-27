@@ -7,30 +7,30 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class ServMantenimientoCabService : IRepository<ServMantenimientoCab>
+    public class TareasService : IRepository<Tareas>
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
-        public ServMantenimientoCabService(IUnidadDeTrabajo unidadDeTrabajo)
+        public TareasService(IUnidadDeTrabajo unidadDeTrabajo)
         {
             _unidadDeTrabajo = unidadDeTrabajo;
         }
 
         public async Task Delete(int id)
         {
-            await _unidadDeTrabajo.ServMantenimientoCabRepository.Delete(id);
+            await _unidadDeTrabajo.TareasRepository.Delete(id);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
 
-        public async Task<ServMantenimientoCab> GetById(int id)
+        public async Task<Tareas> GetById(int id)
         {
-            return await _unidadDeTrabajo.ServMantenimientoCabRepository.GetById(id);
+            return await _unidadDeTrabajo.TareasRepository.GetById(id);
         }
 
-        public IEnumerable<ServMantenimientoCab> GetAll() //ServMantenimientoCabQueryFilter filtro
+        public IEnumerable<Tareas> GetAll() //ServMantenimientoCabQueryFilter filtro
         {
-            var clientes = _unidadDeTrabajo.ServMantenimientoCabRepository.GetAll();
+            var tareas = _unidadDeTrabajo.TareasRepository.GetAll();
             //if (filtro.Nombre != null)
             //{
             //    clientes = clientes.Where(x => x.Nombre.ToLower().Contains(filtro.Nombre.ToLower()));
@@ -52,23 +52,23 @@ namespace AnalisisQuimicos.Core.Services
             //{
             //    clientes = clientes.Where(x => x.IdPerfil == filtro.IdPerfil);
             //}
-            return clientes;
+            return tareas;
         }
 
-        public async Task Add(ServMantenimientoCab cliente)
+        public async Task Add(Tareas tarea)
         {
             //if (cliente.Nombre == "NoPermitir")
             //{
             //    throw new BussinesException("No se puede añadir un cliente con ese nombre");
             //}
-            await _unidadDeTrabajo.ServMantenimientoCabRepository.Add(cliente);
+            await _unidadDeTrabajo.TareasRepository.Add(tarea);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
 
-        public async void Update(ServMantenimientoCab cliente)
+        public async void Update(Tareas tarea)
         {
-            _unidadDeTrabajo.ServMantenimientoCabRepository.Update(cliente);
+            _unidadDeTrabajo.TareasRepository.Update(tarea);
             await _unidadDeTrabajo.SaveChangesAsync();
         }
     }

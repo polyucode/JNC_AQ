@@ -5,12 +5,10 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class Clientes : BaseEntity
     {
-        public string Codigo { get; set; }
+        public int? Codigo { get; set; }
         public string Cif { get; set; }
         public string RazonSocial { get; set; }
-        public string NombreComercial { get; set; }
-        public string Telefono1 { get; set; }
-        public string Telefono2 { get; set; }
+        public string Telefono { get; set; }
         public int? IdSector { get; set; }
         public string Movil { get; set; }
         public string Email { get; set; }

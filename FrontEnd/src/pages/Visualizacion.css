@@ -16,9 +16,8 @@ div.home-container-elements {
     display: flex;
 }
 
-div.home-col-1 {
-    width: calc(50% - 6px);
-    margin-right: 6px;
+div.visualizacion {
+    width: 100%;
 }
 
 div.datos {
