@@ -5,11 +5,6 @@ const CampoPrincipalPlantasTabla = (props) => {
     
     const [state, setState] = useState(props.datos);
 
-    const [limitInferior, setLimitInferior] = useState([]);
-    const [limitSuperior, setLimitSuperior] = useState([]);
-    const [unidades, setUnidades] = useState([]);
-    const [verInspector, setVerInspector] = useState([]);
-
     const [ checkboxActivo, setCheckboxActivo ] = useState(false)
 
     useEffect(() => {
@@ -97,7 +92,7 @@ const CampoPrincipalPlantasTabla = (props) => {
 
 
     return (
-        <tr>
+        <tr key={props.nombre}>
             <td>{props.nombre}</td>
             <td><input type="number" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} onChange={handleLimitInferior} /></td>
             <td><input type="number" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} onChange={handleLimitSuperior} /></td>

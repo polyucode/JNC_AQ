@@ -779,7 +779,6 @@ function Visualizacion() {
             <br />
             <div className='home-container-elements'>
                 <div className="visualizacion">
-                    {console.log(dataTablas)}
                     <div className="visualizacion-tablas">
                         {dataTablas.map((analisi, index) => {
                             switch (analisi.analisis) {

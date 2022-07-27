@@ -5,9 +5,6 @@ const CampoPersPlantasTabla = (props) => {
     const [ state, setState ] = useState(props.datos);
     const nombreId = props.nombre.replace(/\s+/g, '');
 
-    const [limitInferior, setLimitInferior] = useState([]);
-    const [limitSuperior, setLimitSuperior] = useState([]);
-
     const [ checkboxActivo2, setCheckbox2Activo] = useState(false);
 
     useEffect( () => {
@@ -108,7 +105,7 @@ const CampoPersPlantasTabla = (props) => {
 
 
     return (
-        <tr>
+        <tr key={props.nombre}>
             <td>{props.nombre}</td>
             <td><input type="text" name={nombreId + 'Nombre'} id={nombreId + 'Nombre'} onChange={handleNombre} /></td>
             <td><input type="number" name={nombreId + 'LimInf'} id={nombreId + 'LimInf'} onChange={handleLimitInferior} /></td>

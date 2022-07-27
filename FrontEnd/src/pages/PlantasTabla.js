@@ -105,11 +105,13 @@ function PlantasTabla() {
 
     const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
 
-    const [analisisNivelesPlantasCliente, setAnalisisNivelesPlantasCliente] = useState([]);
+    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
     const [oferta, setOferta] = useState([]);
 
     const [clientes, setClientes] = useState([]);
+
+    const [elementos, setElementos] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
     const [analisisTable, setAnalisisTable] = useState({});
@@ -134,7 +136,7 @@ function PlantasTabla() {
         { title: 'Facturado', field: 'facturado', type: 'boolean' }
     ];
 
-    const [ datos, setDatos ] = useState([]);
+    const [datos, setDatos] = useState([]);
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
@@ -333,21 +335,21 @@ function PlantasTabla() {
                 Comptador: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: '...',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 PH: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: '...',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
                 Temperatura: {
                     LimInf: '',
                     LimSup: '',
-                    Unidades: '...',
+                    Unidades: '',
                     Activo: false,
                     VerInspector: false,
                 },
@@ -594,10 +596,10 @@ function PlantasTabla() {
         }, [])
     }
 
-    const GetAnalisisNivelesPlantasCliente = async () => {
+    const GetConfAnalisisNivelesPlantasCliente = async () => {
         axios.get("/analisisnivelesplantascliente", token).then(response => {
             const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setAnalisisNivelesPlantasCliente(analisisNiveles);
+            setConfAnalisisNivelesPlantasCliente(analisisNiveles);
         })
     }
 
@@ -605,6 +607,13 @@ function PlantasTabla() {
         axios.get("/parametroselementoplantacliente", token).then(response => {
             setData2(response.data.data)
         })
+    }
+
+    const GetElementos = async () => {
+        axios.get("/elementosplanta", token).then(response => {
+            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setElementos(elemento);
+        }, [])
     }
 
     /*function FiltrarData() {
@@ -633,16 +642,18 @@ function PlantasTabla() {
         }))
     }*/
 
-    function handleObject() {
+    /*function handleObject() {
         
-        setDatos(Object.entries(parametrosSeleccionado).map(([key , value ]) => {
+        Object.entries(parametrosSeleccionado).map((key , value ) => {
             if(value != 0 || value != false ){
-                console.log(key + ' ' + value)
+                console.log([key + ' ' + value ])
             }
-        }))
+        })
 
-        console.log(datos)
-    }
+        const variable = Object.entries(parametrosSeleccionado)
+
+        console.log(variable)
+    }*/
 
     const guardarElementos = async () => {
         parametrosSeleccionado.esPlantilla = true;
@@ -652,51 +663,137 @@ function PlantasTabla() {
         parametrosSeleccionado.elemento = valores.elemento;
         await axios.post("/parametroselementoplantacliente", parametrosSeleccionado, token)
             .then(response => {
-                console.log(parametrosSeleccionado)
                 return response
             }).catch(error => {
                 console.log(error);
             })
-        handleObject()
+        // handleObject()
     }
+
+    const abrirPlantilla = async () => {
+        console.log("Abro Plantilla")
+    }
+
 
     useEffect(() => {
         //FiltrarData();
+        GetElementos();
         GetConfParametrosElementoPlantaCliente();
         GetOfertas();
         GetClientes();
-        GetAnalisisNivelesPlantasCliente();
+        GetConfAnalisisNivelesPlantasCliente();
     }, [])
 
     return (
         <div className="contenedor">
-            <div className='cliente'>
-                <h6>Cliente</h6>
-                <hr />
-                <table>
-                    <tbody>
-                        <tr>
-                            <th> Código </th>
-                            <th> Nombre </th>
-                            <th> Oferta </th>
-                            <th> Elemento </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <TextField className={styles.inputMaterial} name="codigoCliente" value={valores.codigo} />
-                            </td>
-                            <td>
-                                <TextField className={styles.inputMaterial} name="nombreCliente" value={valores.nombre} />
-                            </td>
-                            <td>
-                                <TextField className={styles.inputMaterial} name="oferta" value={valores.ofertas} />
-                            </td>
-                            <td>
-                                <TextField className={styles.inputMaterial} name="elemento" value={valores.elemento} />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div className="contenedor2">
+                <div className='cliente'>
+                    <h6>Cliente</h6>
+                    <hr />
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th> Código </th>
+                                <th> Nombre </th>
+                                <th> Oferta </th>
+                                <th> Elemento </th>
+                            </tr>
+                            {!valores.codigo ?
+                                <tr>
+                                    <td>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            className={styles.inputMaterial}
+                                            id="codigoCliente"
+                                            options={clientes}
+                                            getOptionLabel={option => option.codigo}
+                                            sx={{ width: 150 }}
+                                            renderInput={(params) => <TextField {...params} name="codigoCliente" />}
+                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                                ...prevState,
+                                                codigoCliente: parseInt(value.codigo)
+                                            }))}
+                                        />
+                                    </td>
+                                    <td>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="CboClientes"
+                                            className={styles.inputMaterial}
+                                            options={clientes}
+                                            filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
+                                            getOptionLabel={option => option.razonSocial}
+                                            sx={{ width: 230 }}
+                                            renderInput={(params) => <TextField {...params} name="nombreCliente" />}
+                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                                ...prevState,
+                                                nombreCliente: value.razonSocial
+                                            }))}
+
+                                        />
+                                    </td>
+                                    <td>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            className={styles.inputMaterial}
+                                            id="Oferta"
+                                            options={oferta}
+                                            filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
+                                            getOptionLabel={option => option.numeroOferta}
+                                            sx={{ width: 150 }}
+                                            renderInput={(params) => <TextField {...params} name="oferta" />}
+                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                                ...prevState,
+                                                oferta: parseInt(value.numeroOferta)
+                                            }))}
+                                        />
+                                    </td>
+                                    <td>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            className={styles.inputMaterial}
+                                            id="elemento"
+                                            options={elementos}
+                                            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                            getOptionLabel={option => option.elemento}
+                                            sx={{ width: 225 }}
+                                            renderInput={(params) => <TextField {...params} name="elemento" />}
+                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                                ...prevState,
+                                                elemento: value.elemento
+                                            }))}
+                                        />
+                                    </td>
+                                </tr>
+                                :
+                                <tr>
+                                    <td>
+                                        <TextField disabled className="cogidoCliente" value={valores.codigo} />
+                                    </td>
+                                    <td>
+                                        <TextField disabled className="nombreCliente" value={valores.nombre} />
+                                    </td>
+                                    <td>
+                                        <TextField disabled className="oferta" value={valores.ofertas} />
+                                    </td>
+                                    <td>
+                                        <TextField disabled className="elemento" value={valores.elemento} />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                {valores.codigo ?
+                    <div className='botones-menu'>
+                        <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
+                    </div>
+                    :
+                    <div className='botones-menu'>
+                        <button className="plantilla" onClick={abrirPlantilla}> Abrir Plantilla </button>
+                        <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
+                    </div>
+                }
             </div>
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={value}>
@@ -707,19 +804,11 @@ function PlantasTabla() {
                             }
                         </TabList>
                     </Box>*/}
-                        {
-                            <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={ setParametrosSeleccionado } />
-                        }
+                    {
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} />
+                    }
                 </TabContext>
             </Box>
-            <div className='botones-menu'>
-                <button> Abrir Plantilla </button>
-                <button onClick={guardarElementos}> Guardar Plantilla </button>
-            </div>
-            <div>
-                {datos[0]}
-            </div>
-        
         </div>
     );
 }

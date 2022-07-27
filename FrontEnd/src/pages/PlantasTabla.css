@@ -27,6 +27,12 @@ button {
     border: 1px solid #DBDBDB;
 }
 
+button.plantilla{
+    padding: 5px 15px;
+    margin: 80px 0 0 40px;
+    border: 1px solid #DBDBDB;
+}
+
 div.contenedor {
     width: 100%;
     background-color: #FFFFFF;
@@ -78,5 +84,12 @@ div.contenedor > div.botones-menu {
 }
 
 div.contenedor > div.botones-menu > button {
-    margin-right: 16px;
+    padding: 5px 15px;
+    margin: 80px 0 0 40px;
+    border: 1px solid #DBDBDB;
+}
+
+div.contenedor > div.contenedor2 {
+    display: flex;
+    flex-direction: row;
 }

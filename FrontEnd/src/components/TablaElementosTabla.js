@@ -186,10 +186,6 @@ const TablaElementosTabla = (props) => {
 
     }
 
-    const handleChange = (e) => {
-        console.log(e.target)
-    }
-
     useEffect(() => {
         cargarParametrosTabla();
         filasElementosActivos = [];
@@ -276,7 +272,7 @@ const TablaElementosTabla = (props) => {
                     </tbody>
                 </table>
             </div>
-            <div className="col-3">
+            {/*<div className="col-3">
                 <div className="ver-inspector">
                     <h6>Ver Inspector (todo)</h6>
                     <hr />
@@ -285,11 +281,8 @@ const TablaElementosTabla = (props) => {
                         <label><input type="radio" name="verInspector" value='false' onChange={handleVerInspector} /> No</label>
                     </div>
                 </div>
-                <div>
-                    {/* Mostrar datos que he introducido en la parametrizacion*/}
-
-                </div>
             </div>
+            */}
         </>
     );
 
