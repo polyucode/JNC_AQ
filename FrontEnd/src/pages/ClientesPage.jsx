@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -110,7 +111,7 @@ const localization = {
   },
 }
 
-function Clientes() {
+export const ClientesPage = () => {
 
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -775,150 +776,150 @@ function Clientes() {
 
 
   return (
-    <div>
-      <MaterialTable columns={columnas} data={data}
-        localization={{
-          body: {
-            emptyDataSourceMessage: 'No hay datos por mostrar',
-            addTooltip: 'Añadir',
-            deleteTooltip: 'Eliminar',
-            editTooltip: 'Editar',
-            filterRow: {
-              filterTooltip: 'Filtrar',
+    <MainLayout title='Clientes'>
+      <div>
+        <MaterialTable columns={columnas} data={data}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'No hay datos por mostrar',
+              addTooltip: 'Añadir',
+              deleteTooltip: 'Eliminar',
+              editTooltip: 'Editar',
+              filterRow: {
+                filterTooltip: 'Filtrar',
+              },
+              editRow: {
+                deleteText: '¿Segura(o) que quiere eliminar?',
+                cancelTooltip: 'Cancelar',
+                saveTooltip: 'Guardar',
+              },
             },
-            editRow: {
-              deleteText: '¿Segura(o) que quiere eliminar?',
-              cancelTooltip: 'Cancelar',
-              saveTooltip: 'Guardar',
+            grouping: {
+              placeholder: "Arrastre un encabezado aquí para agrupar",
+              groupedBy: 'Agrupado por',
             },
-          },
-          grouping: {
-            placeholder: "Arrastre un encabezado aquí para agrupar",
-            groupedBy: 'Agrupado por',
-          },
-          header: {
-            actions: 'Acciones',
-          },
-          pagination: {
-            firstAriaLabel: 'Primera página',
-            firstTooltip: 'Primera página',
-            labelDisplayedRows: '{from}-{to} de {count}',
-            labelRowsPerPage: 'Filas por página:',
-            labelRowsSelect: 'filas',
-            lastAriaLabel: 'Ultima página',
-            lastTooltip: 'Ultima página',
-            nextAriaLabel: 'Pagina siguiente',
-            nextTooltip: 'Pagina siguiente',
-            previousAriaLabel: 'Pagina anterior',
-            previousTooltip: 'Pagina anterior',
-          },
-          toolbar: {
-            addRemoveColumns: 'Agregar o eliminar columnas',
-            exportAriaLabel: 'Exportar',
-            exportName: 'Exportar a CSV',
-            exportTitle: 'Exportar',
-            nRowsSelected: '{0} filas seleccionadas',
-            searchPlaceholder: 'Buscar',
-            searchTooltip: 'Buscar',
-            showColumnsAriaLabel: 'Mostrar columnas',
-            showColumnsTitle: 'Mostrar columnas',
-          },
-        }}
-        actions={[
-          {
-            icon: () => <AddCircle style={{ fill: "green" }} />,
-            tooltip: "Añadir Cliente",
-            isFreeAction: true,
-            onClick: (e, data) => {
-              abrirCerrarModalInsertar()
+            header: {
+              actions: 'Acciones',
             },
-          },
-          {
-            icon: () => <RemoveCircle style={{ fill: "red" }} />,
-            tooltip: "Eliminar Cliente",
-            onClick: (event, rowData) => {
-              setClienteEliminar(FilasSeleccionadas);
-              abrirCerrarModalEliminar()
+            pagination: {
+              firstAriaLabel: 'Primera página',
+              firstTooltip: 'Primera página',
+              labelDisplayedRows: '{from}-{to} de {count}',
+              labelRowsPerPage: 'Filas por página:',
+              labelRowsSelect: 'filas',
+              lastAriaLabel: 'Ultima página',
+              lastTooltip: 'Ultima página',
+              nextAriaLabel: 'Pagina siguiente',
+              nextTooltip: 'Pagina siguiente',
+              previousAriaLabel: 'Pagina anterior',
+              previousTooltip: 'Pagina anterior',
             },
-          },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar Cliente",
-            onClick: (e, data) => {
-              setComarcaClienteEditar(comarca.filter(comarca => comarca.id === FilasSeleccionadas[0].comarca));
-              setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === FilasSeleccionadas[0].provincia));
-              setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.id === FilasSeleccionadas[0].poblacion));
-              abrirCerrarModalEditar();
+            toolbar: {
+              addRemoveColumns: 'Agregar o eliminar columnas',
+              exportAriaLabel: 'Exportar',
+              exportName: 'Exportar a CSV',
+              exportTitle: 'Exportar',
+              nRowsSelected: '{0} filas seleccionadas',
+              searchPlaceholder: 'Buscar',
+              searchTooltip: 'Buscar',
+              showColumnsAriaLabel: 'Mostrar columnas',
+              showColumnsTitle: 'Mostrar columnas',
             },
-          },
-        ]}
+          }}
+          actions={[
+            {
+              icon: () => <AddCircle style={{ fill: "green" }} />,
+              tooltip: "Añadir Cliente",
+              isFreeAction: true,
+              onClick: (e, data) => {
+                abrirCerrarModalInsertar()
+              },
+            },
+            {
+              icon: () => <RemoveCircle style={{ fill: "red" }} />,
+              tooltip: "Eliminar Cliente",
+              onClick: (event, rowData) => {
+                setClienteEliminar(FilasSeleccionadas);
+                abrirCerrarModalEliminar()
+              },
+            },
+            {
+              icon: () => <Edit />,
+              tooltip: "Editar Cliente",
+              onClick: (e, data) => {
+                setComarcaClienteEditar(comarca.filter(comarca => comarca.id === FilasSeleccionadas[0].comarca));
+                setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === FilasSeleccionadas[0].provincia));
+                setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.id === FilasSeleccionadas[0].poblacion));
+                abrirCerrarModalEditar();
+              },
+            },
+          ]}
 
-        onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}
-        onSelectionChange={(filas) => {
-          setFilasSeleccionadas(filas);
+          onRowClick={((evt, clienteSeleccionado) => setClienteSeleccionado(clienteSeleccionado.tableData.id))}
+          onSelectionChange={(filas) => {
+            setFilasSeleccionadas(filas);
 
-          setClienteSeleccionado(filas[0]);
-        }
-        }
-        options={{
-          sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-          columnsButton: true,
-          rowStyle: rowData => ({
-            backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-            whiteSpace: "nowrap"
-          }),
+            setClienteSeleccionado(filas[0]);
+          }
+          }
+          options={{
+            sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
+            columnsButton: true,
+            rowStyle: rowData => ({
+              backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+              whiteSpace: "nowrap"
+            }),
 
-          exportMenu: [{
-            label: 'Export PDF',
-            exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Clientes')
-          }, {
-            label: 'Export CSV',
-            exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Clientes')
-          }]
-        }}
+            exportMenu: [{
+              label: 'Export PDF',
+              exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Clientes')
+            }, {
+              label: 'Export CSV',
+              exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Clientes')
+            }]
+          }}
 
-        title="Listado de clientes"
-      />
+          title="Listado de clientes"
+        />
 
-      <Modal
-        open={modalInsertar}
-        onClose={abrirCerrarModalInsertar}>
-        {bodyInsertar}
-      </Modal>
+        <Modal
+          open={modalInsertar}
+          onClose={abrirCerrarModalInsertar}>
+          {bodyInsertar}
+        </Modal>
 
-      <Modal
-        open={modalEditar}
-        onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
-      </Modal>
+        <Modal
+          open={modalEditar}
+          onClose={abrirCerrarModalEditar}>
+          {bodyEditar}
+        </Modal>
 
-      <Modal
-        open={modalEliminar}
-        onClose={abrirCerrarModalEliminar}>
-        {bodyEliminar}
+        <Modal
+          open={modalEliminar}
+          onClose={abrirCerrarModalEliminar}>
+          {bodyEliminar}
 
-      </Modal>
+        </Modal>
 
-      <Modal
-        open={modalInsertarContacto}
-        onClose={abrirCerrarModalInsertarContacto}>
-        {bodyInsertarContacto}
-      </Modal>
+        <Modal
+          open={modalInsertarContacto}
+          onClose={abrirCerrarModalInsertarContacto}>
+          {bodyInsertarContacto}
+        </Modal>
 
-      <Modal
-        open={modalEliminarContacto}
-        onClose={abrirCerrarModalEliminarContacto}>
-        {bodyEliminarContacto}
-      </Modal>
+        <Modal
+          open={modalEliminarContacto}
+          onClose={abrirCerrarModalEliminarContacto}>
+          {bodyEliminarContacto}
+        </Modal>
 
-      <Modal
-        open={modalEditarContacto}
-        onClose={abrirCerrarModalEditarContacto}>
-        {bodyEditarContacto}
-      </Modal>
-    </div>
+        <Modal
+          open={modalEditarContacto}
+          onClose={abrirCerrarModalEditarContacto}>
+          {bodyEditarContacto}
+        </Modal>
+      </div>
+    </MainLayout>
   );
 
 }
-
-export default Clientes;

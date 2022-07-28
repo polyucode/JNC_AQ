@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers:{
@@ -38,15 +39,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Usuarios() {
+export const UsuariosPage = () => {
 
     //variables
     const [modalInsertar, setModalInsertar]= useState(false);
-
     const [modalEditar, setModalEditar]= useState(false);
-    
     const [modalEliminar, setModalEliminar]= useState(false);
-
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
       id: 0,
       nombre: '',
@@ -69,27 +67,16 @@ function Usuarios() {
     });
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-
     const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
-
     const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
-
     const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
-
     const [data, setData] = useState([]);
-
     const [perfiles, setPerfiles] = useState([]);
-
     const [clientes, setClientes] = useState([]);
-
     const [clientesTable, setClientesTable] = useState({});
-
     const styles= useStyles();
-
     const [estadoCboCliente, setestadoCboCliente] = useState(true);
-    
-
-
+  
     const columnas=[
       //visibles
       { title: 'Nombre', field: 'nombre', filterPlaceholder:"Filtrar por nombre" },
@@ -358,6 +345,7 @@ function Usuarios() {
 
 
     return (
+      <MainLayout title='Usuarios'>
         <div>
         <MaterialTable columns={columnas} data={data}
             localization={{
@@ -485,8 +473,7 @@ function Usuarios() {
 
         </Modal>
         </div>
+      </MainLayout>
     );
 
-} 
-
-export default Usuarios;
+}

@@ -1,7 +1,5 @@
 import React, {useState, useEffect}  from "react";
-import PermissionsGate from "../PermissionsGate";
-import { SCOPES } from "../permission-maps";
-
+import { MainLayout } from "../layout/MainLayout";
 import HomeCliente from "../components/HomeCliente";
 
 import './Home.css';
@@ -12,9 +10,7 @@ const token = {
     }
 };
 
-
-
-function Home() {
+export const HomePage = () => {
 
     const [User,setUsuario] = useState('');
 
@@ -26,15 +22,11 @@ function Home() {
         }
     },[])
 
-    
-
-
-
     return (
-        <>
-        <HomeCliente/>
-        </>
-    )
+        <MainLayout title='Inicio'>
+            <HomeCliente/>
+        </MainLayout>
+    );
     // return (
     //     <div className="container">
     //         <div className="card" >
@@ -50,7 +42,4 @@ function Home() {
     //     </div>
 
     // );
-
-} 
-
-export default Home;
+}

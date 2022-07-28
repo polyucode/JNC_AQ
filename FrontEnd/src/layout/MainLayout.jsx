@@ -1,32 +1,40 @@
-import { Avatar, Grid, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { useState } from 'react';
+import { Toolbar, Box } from '@mui/material';
+import { Appbar, Sidebar } from '../components/Menu';
 
-export const MainLayout = () => {
+export const MainLayout = ({ title, children }) => {
+
+    const drawerWidth = 300;
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const onDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
 
     return (
         <>
-        <Grid container>
+            <Box sx={{ display: 'flex '}}>
 
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Avatar alt="Logo JNegre" src="/img/logo.svg" sx={{ mr: 2 }} />
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Inicio
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-            </AppBar>
+                <Appbar title={ title } drawerWidth={ drawerWidth } onDrawerToggle={ onDrawerToggle } />
+                <Sidebar drawerWidth={ drawerWidth } mobileOpen={ mobileOpen } onDrawerToggle={ onDrawerToggle } />
 
-        </Grid>
+                <Box
+                    component='main'
+                    sx={{
+                        flexGrow: 1,
+                        p: 2,
+                        width: { sm: `calc(100% - ${ drawerWidth }px)` },
+                        ml: { sm: `${ drawerWidth }px` }
+                    }}
+                >
+                    <Toolbar />
+
+                    {/* La página en sí será cargada en este punto */}
+                    { children }
+
+                </Box>
+
+            </Box>
         </>
     );
 }
