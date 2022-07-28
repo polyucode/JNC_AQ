@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -89,7 +90,7 @@ const localization = {
 }
 
 
-function OfertasClientes() {
+export const OfertasClientesPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -407,6 +408,7 @@ function OfertasClientes() {
 
 
     return (
+        <MainLayout title="Ofertas">
         <div>
             <MaterialTable columns={columnas} data={data}
                 localization={{
@@ -528,7 +530,6 @@ function OfertasClientes() {
                 {bodyEliminar}
             </Modal>
         </div>
+        </MainLayout>
     )
 }
-
-export default OfertasClientes;

@@ -20,6 +20,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
 import './Mantenimientos.css';
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers:{
@@ -127,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }
   
-function Mantenimientos() {
+export const MantenimientosPage = () => {
 
     //variables
     const [modalInsertar, setModalInsertar]= useState(false);
@@ -1032,6 +1033,7 @@ function Mantenimientos() {
           )
 
     return (
+      <MainLayout title="Mantenimientos">
         <div>
         <MaterialTable columns={columnas} data={data}
             localization={localization}
@@ -1147,8 +1149,7 @@ function Mantenimientos() {
         </Modal>
 
         </div>
+      </MainLayout>
     );
 
-} 
-
-export default Mantenimientos;
+}

@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -89,7 +90,7 @@ const localization = {
 }
 
 
-function Productos() {
+export const ProductosPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -251,6 +252,7 @@ function Productos() {
 
 
     return (
+        <MainLayout title="Productos">
         <div>
             <MaterialTable columns={columnas} data={data}
                 localization={{
@@ -370,7 +372,6 @@ function Productos() {
                 {bodyEliminar}
             </Modal>
         </div>
+        </MainLayout>
     )
 }
-
-export default Productos;

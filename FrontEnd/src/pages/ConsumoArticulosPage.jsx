@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -89,7 +90,7 @@ const localization = {
 }
 
 
-function ConsumoArticulos() {
+export const ConsumoArticulosPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -275,6 +276,7 @@ function ConsumoArticulos() {
 
 
     return (
+        <MainLayout title="Consumo de Artículos">
         <div>
             <MaterialTable columns={columnas} data={data}
                 localization={{
@@ -394,7 +396,6 @@ function ConsumoArticulos() {
                 {bodyEliminar}
             </Modal>
         </div>
+        </MainLayout>
     )
 }
-
-export default ConsumoArticulos;

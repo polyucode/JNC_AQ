@@ -4,7 +4,7 @@ import { Appbar, Sidebar } from '../components/Menu';
 
 export const MainLayout = ({ title, children }) => {
 
-    const drawerWidth = 300;
+    const drawerWidth = 250;
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const onDrawerToggle = () => {

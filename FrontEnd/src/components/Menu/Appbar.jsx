@@ -1,7 +1,16 @@
 import { Avatar, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 
 export const Appbar = ({ title, drawerWidth, onDrawerToggle }) => {
+
+    const navigate = useNavigate();
+
+    const onLoginClick = () => {
+
+        navigate('/login', { replace: true });
+
+    }
 
     return (
         <>
@@ -30,7 +39,7 @@ export const Appbar = ({ title, drawerWidth, onDrawerToggle }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         { title }
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button color="inherit" onClick={ onLoginClick }>Login</Button>
                 </Toolbar>
 
             </AppBar>

@@ -16,7 +16,6 @@ class TablaElementosTabla extends React.Component {
 
     // Lista de los parametros principales
 
-
     // Variables para la generación de los parametros activos
     filaElementoActivo = [];
     filasElementosActivos = [];
@@ -25,6 +24,8 @@ class TablaElementosTabla extends React.Component {
 
     constructor(props) {
         super(props);
+
+        if( this.usuario === null ) this.usuario = { idPerfil: 0 }
 
         this.state = {
             parametros: [

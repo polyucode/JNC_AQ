@@ -12,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 
 import './Visualizacion.css';
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers: {
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Visualizacion() {
+export const VisualizacionPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -393,6 +394,7 @@ function Visualizacion() {
 
 
     return (
+        <MainLayout title="Visualización">
         <div className="home-container">
             <h4> Visualizacion de datos </h4>
             <div className="datos">
@@ -687,8 +689,7 @@ function Visualizacion() {
                 {bodyEditar}
             </Modal>
         </div>
+        </MainLayout>
     );
 
 }
-
-export default Visualizacion;

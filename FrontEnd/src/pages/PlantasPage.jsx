@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import 'beautiful-react-diagrams/styles.css';
 import './Plantas.css';
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers: {
@@ -20,7 +21,7 @@ const token = {
     }
 };
 
-function Plantas() {
+export const PlantasPage = () => {
 
     const [confPlantasCliente, setConfPlantasCliente] = useState({
         id: 0,
@@ -515,7 +516,7 @@ function Plantas() {
 
 
     return (
-
+        <MainLayout title="Plantas">
         <div className="main-container">
             <div className='row1-1'>
                 <div className='col1-1'>
@@ -636,9 +637,7 @@ function Plantas() {
                 <button><Link to='/plantasTabla'>Siguiente</Link></button>
             </div>
         </div>
-
+        </MainLayout>
     )
 
 }
-
-export default Plantas;

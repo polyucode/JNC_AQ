@@ -15,6 +15,7 @@ import Checkbox from '@mui/material/Checkbox';
 import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
 import MaterialTable from "@material-table/core";
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers: {
@@ -90,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function PlantasTabla() {
+export const PlantasTablaPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -1665,69 +1666,69 @@ function PlantasTabla() {
     }, [])
 
     return (
-        <div className="contenedor">
-            <div className='cliente'>
-                <h6>Cliente</h6>
-                <hr />
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>Código</th>
-                            <th>Oferta</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="Cliente"
-                                    options={clientes}
-                                    getOptionLabel={option => option.codigo}
-                                    sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
-                                    onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
-                                        ...prevState,
-                                        codigoCliente: parseInt(value.codigo)
-                                    }))}
-                                />
-                            </td>
-                            <td>
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="Oferta"
-                                    options={oferta}
-                                    getOptionLabel={option => option.numeroOferta}
-                                    sx={{ width: 200 }}
-                                    renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
-                                    onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
-                                        ...prevState,
-                                        oferta: parseInt(value.numeroOferta)
-                                    }))}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <MainLayout title="Plantas (Tabla)">
+            <div className="contenedor">
+                <div className='cliente'>
+                    <h6>Cliente</h6>
+                    <hr />
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Código</th>
+                                <th>Oferta</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Autocomplete
+                                        disableClearable={true}
+                                        id="Cliente"
+                                        options={clientes}
+                                        getOptionLabel={option => option.codigo}
+                                        sx={{ width: 200 }}
+                                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                                        onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
+                                            ...prevState,
+                                            codigoCliente: parseInt(value.codigo)
+                                        }))}
+                                    />
+                                </td>
+                                <td>
+                                    <Autocomplete
+                                        disableClearable={true}
+                                        id="Oferta"
+                                        options={oferta}
+                                        getOptionLabel={option => option.numeroOferta}
+                                        sx={{ width: 200 }}
+                                        renderInput={(params) => <TextField {...params} label="Oferta" name="numeroOferta" />}
+                                        onChange={(event, value) => setConfParametrosElementoPlantaCliente(prevState => ({
+                                            ...prevState,
+                                            oferta: parseInt(value.numeroOferta)
+                                        }))}
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <Box sx={{ width: '100%', typography: 'body1' }}>
+                    <TabContext value={value}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <TabList id="tab-list" onChange={handleChange}>
+                                {
+                                    listaElementos.map((elemento, index) => <Tab key={index} label={elemento.nombre + ' ' + elemento.numero} value={index.toString()} />)
+                                }
+                            </TabList>
+                        </Box>
+                        {
+                            listaElementos.map((elemento, index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
+                        }
+                    </TabContext>
+                </Box>
+                <div className='botones-menu'>
+                    <button>Cancelar</button>
+                    <button>Aceptar</button>
+                </div>
             </div>
-            <Box sx={{ width: '100%', typography: 'body1' }}>
-                <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList id="tab-list" onChange={handleChange}>
-                            {
-                                listaElementos.map((elemento, index) => <Tab key={index} label={elemento.nombre + ' ' + elemento.numero} value={index.toString()} />)
-                            }
-                        </TabList>
-                    </Box>
-                    {
-                        listaElementos.map((elemento, index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
-                    }
-                </TabContext>
-            </Box>
-            <div className='botones-menu'>
-                <button>Cancelar</button>
-                <button>Aceptar</button>
-            </div>
-        </div>
+        </MainLayout>
     );
 }
-
-export default PlantasTabla;

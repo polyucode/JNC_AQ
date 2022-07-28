@@ -31,8 +31,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import './MantenimientoTecnico.css';
+import { MainLayout } from '../layout/MainLayout';
 
-function MantenimientoTecnico() {
+export const MantenimientoTecnicoPage = () => {
 
     const [open, setOpen] = React.useState(true);
     const [contextMenu, setContextMenu] = React.useState(null);
@@ -73,6 +74,7 @@ function MantenimientoTecnico() {
     ];
 
     return (
+        <MainLayout title="Mantenimiento (Técnico)">
         <div className="main-container">
             <div className='row1'>
                 <h4>Mantenimiento</h4>
@@ -291,7 +293,6 @@ function MantenimientoTecnico() {
                 </div>
             </div>
         </div>
+        </MainLayout>
     )
 }
-
-export default MantenimientoTecnico;
