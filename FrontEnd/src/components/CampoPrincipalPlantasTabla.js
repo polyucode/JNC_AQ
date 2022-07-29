@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const CampoPrincipalPlantasTabla = (props) => {
 
-    
+    console.log(props)
+
     const [state, setState] = useState(props.datos);
 
     const [ checkboxActivo, setCheckboxActivo ] = useState(false)
@@ -94,7 +95,7 @@ const CampoPrincipalPlantasTabla = (props) => {
     return (
         <tr key={props.nombre}>
             <td>{props.nombre}</td>
-            <td><input type="number" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} onChange={handleLimitInferior} /></td>
+            <td><input type="number" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} onChange={handleLimitInferior} value={props.parametrosSeleccionado.comptadorLimInf} /></td>
             <td><input type="number" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} onChange={handleLimitSuperior} /></td>
             <td>
                 <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} >

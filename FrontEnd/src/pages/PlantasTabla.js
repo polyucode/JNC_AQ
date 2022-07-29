@@ -617,6 +617,7 @@ function PlantasTabla() {
         }, [])
     }
 
+
     /*function FiltrarData() {
         setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === parametrosSeleccionado.codigoCliente && analisis.oferta === parametrosSeleccionado.oferta))
     }
@@ -678,8 +679,14 @@ function PlantasTabla() {
         handleObject()
     }
 
-    const abrirPlantilla = async () => {
-        console.log("Abro Plantilla")
+    const GetParametros = async () => {
+
+        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
+        const response = await axios.get(url , token) 
+            
+        setParametrosSeleccionado({ ...response.data.data }) 
+        
+        console.log(response.data.data)
     }
 
 
@@ -799,7 +806,7 @@ function PlantasTabla() {
                     </div>
                     :
                     <div className='botones-menu'>
-                        <button className="plantilla" onClick={abrirPlantilla}> Abrir Plantilla </button>
+                        <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
                         <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
