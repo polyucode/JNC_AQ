@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import axios from "axios";
+import { Link } from 'react-router-dom';
 import { Tab, Box } from '@mui/material';
 import { TabContext, TabList } from '@mui/lab';
 import { Modal, TextField, Button } from '@material-ui/core';
@@ -642,18 +643,25 @@ function PlantasTabla() {
         }))
     }*/
 
-    /*function handleObject() {
-        
-        Object.entries(parametrosSeleccionado).map((key , value ) => {
+    function handleObject() {
+
+        const prueba = [];
+
+        Object.entries(parametrosSeleccionado).map(([key , value] ) => {
             if(value != 0 || value != false ){
-                console.log([key + ' ' + value ])
+                console.log([key + ' = ' + value ])
+
+                prueba.push({
+                    [key]: value
+                });
+            
             }
         })
 
-        const variable = Object.entries(parametrosSeleccionado)
+        setDatos(prueba);
+        console.log({prueba});
 
-        console.log(variable)
-    }*/
+    }
 
     const guardarElementos = async () => {
         parametrosSeleccionado.esPlantilla = true;
@@ -667,7 +675,7 @@ function PlantasTabla() {
             }).catch(error => {
                 console.log(error);
             })
-        // handleObject()
+        handleObject()
     }
 
     const abrirPlantilla = async () => {
@@ -787,11 +795,13 @@ function PlantasTabla() {
                 {valores.codigo ?
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
+                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                     :
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={abrirPlantilla}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
+                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                 }
             </div>
@@ -808,7 +818,7 @@ function PlantasTabla() {
                         <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} />
                     }
                 </TabContext>
-            </Box>
+            </Box>            
         </div>
     );
 }

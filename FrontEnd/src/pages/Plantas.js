@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactDOM from 'react-dom';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';

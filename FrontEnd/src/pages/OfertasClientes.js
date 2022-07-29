@@ -829,15 +829,15 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-3">
-                    <h5> Estimacion (kg) </h5>
+                    <h5> Estimacion </h5>
                     <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Consumidos (kg) </h5>
+                    <h5> Consumidos </h5>
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Entregar (kg) </h5>
+                    <h5> Entregar </h5>
                     <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.cantidad - productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">

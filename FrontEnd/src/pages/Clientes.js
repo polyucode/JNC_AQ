@@ -295,7 +295,7 @@ function Clientes() {
 
   /*function FiltrarDataContacto () {
     setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
-    peticionGetContacto();
+    //peticionGetContacto();
   }*/
 
   useEffect(() => {
@@ -817,6 +817,7 @@ function Clientes() {
 
   return (
     <div>
+      {console.log(dataDet)}
       <MaterialTable columns={columnas} data={data}
         localization={{
           body: {
