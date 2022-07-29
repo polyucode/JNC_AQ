@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Entities
 {
@@ -184,5 +185,6 @@ namespace AnalisisQuimicos.Core.Entities
         public string Campo8Unidades { get; set; }
         public bool? Campo8Activo { get; set; }
         public bool? Campo8VerInspector { get; set; }
+
     }
 }

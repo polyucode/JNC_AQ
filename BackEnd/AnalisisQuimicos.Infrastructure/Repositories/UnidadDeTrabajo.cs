@@ -25,7 +25,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<ElementosPlanta> _elementosPlantaRepository;
         private readonly IRepository<ConfNivelesPlantasCliente> _confNivelesPlantasClienteRepository;
         private readonly IRepository<ConfPlantasCliente> _confPlantasClienteRepository;
-        private readonly IRepository<ParametrosElementoPlantaCliente> _parametrosElementoPlantaClienteRepository;
+        private readonly IParametrosElementoPlantaClienteRepository _parametrosElementoPlantaClienteRepository;
         private readonly IRepository<ParametrosAnalisisPlanta> _parametrosAnalisisPlantaRepository;
         private readonly IRepository<AnalisisNivelesPlantasCliente> _analisisNivelesPlantasClienteRepository;
         private readonly IRepository<ClientesContactos> _clientesContactosRepository;
@@ -63,7 +63,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         public IRepository<ConfPlantasCliente> ConfPlantasClienteRepository => _confPlantasClienteRepository ?? new BaseRepository<ConfPlantasCliente>(_context);
 
-        public IRepository<ParametrosElementoPlantaCliente> ParametrosElementoPlantaClienteRepository => _parametrosElementoPlantaClienteRepository ?? new BaseRepository<ParametrosElementoPlantaCliente>(_context);
+        public IParametrosElementoPlantaClienteRepository ParametrosElementoPlantaClienteRepository => _parametrosElementoPlantaClienteRepository ?? new ParametrosElementoPlantaClienteRepository(_context);
 
         public IRepository<ParametrosAnalisisPlanta> ParametrosAnalisisPlantaRepository => _parametrosAnalisisPlantaRepository ?? new BaseRepository<ParametrosAnalisisPlanta>(_context);
 
