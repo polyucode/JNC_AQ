@@ -1,17 +1,28 @@
-import axios from 'axios';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import Cookies from 'universal-cookie';
-import './Login.css';
+
+import { LoginLayout } from '../layout/LoginLayout';
+// import './Login.css';
 import logo from '../img/jncLogoDark.jpg'
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@material-ui/core';
 
-function Login(){
+
+export const LoginPage = () => {
+
+    const theme = useTheme();
 
     const navigate = useNavigate();
-
     const cookies = new Cookies();
+
     const [User,setUsuario] = useState('');
     const [Password,setContraseña] = useState('');
 
@@ -71,7 +82,33 @@ function Login(){
 
         //     <button className='btn btn-primary btn-block'>Login</button>
         // </form>
+
+        <LoginLayout title="Login">
         <div className='login-contenedor'>
+
+            <Card sx={{ maxWidth: 345, backgroundColor: '#616161', color: 'white' }}>
+                <CardMedia
+                    component="img"
+                    width="80"
+                    image="/img/logo2.svg"
+                    alt="green iguana"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                    Lizard
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    Lizards are a widespread group of squamate reptiles, with over 6,000
+                    species, ranging across all continents except Antarctica
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small">Share</Button>
+                    <Button size="small">Learn More</Button>
+                </CardActions>
+            </Card>
+
+
                 <div className='card login-form'>
                     <div className='card-body'>
                         {/* <h1 className='card-title text-center'>LOGIN</h1> */}
@@ -94,7 +131,6 @@ function Login(){
                     </div>
                 </div>
         </div>
+        </LoginLayout>
     );
 }
-
-export default Login;

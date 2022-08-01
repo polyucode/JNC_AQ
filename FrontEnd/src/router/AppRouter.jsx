@@ -10,10 +10,9 @@ import {
     OfertasClientesPage,
     ProductosPage,
     ConsumoArticulosPage,
-    VisualizacionPage
+    VisualizacionPage,
+    LoginPage
 } from '../pages';
-
-import Login from '../pages/Login';
 import Perfil from '../pages/Perfil';
 
 export const AppRouter = () => {
@@ -21,7 +20,7 @@ export const AppRouter = () => {
     return (
         <Routes>
             <Route path='/' exact element={<HomePage />} />
-            <Route path='/login' element={<Login />} />
+            <Route path='/login' element={<LoginPage />} />
             <Route path='/usuarios' element={<UsuariosPage />} />
             <Route path='/clientes' element={<ClientesPage />} />
             <Route path='/mantenimientos' element={<MantenimientosPage />} />

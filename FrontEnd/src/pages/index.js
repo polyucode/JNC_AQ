@@ -10,3 +10,4 @@ export * from './OfertasClientesPage';
 export * from './ProductosPage';
 export * from './ConsumoArticulosPage';
 export * from './VisualizacionPage';
+export * from './LoginPage';
