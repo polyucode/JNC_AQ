@@ -96,9 +96,9 @@ const CampoPrincipalPlantasTabla = (props) => {
         <tr key={props.nombre}>
             <td>{props.nombre}</td>
             <td><input type="number" name={props.nombre + 'LimInf'} id={props.nombre + 'LimInf'} onChange={handleLimitInferior} value={props.parametrosSeleccionado.comptadorLimInf} /></td>
-            <td><input type="number" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} onChange={handleLimitSuperior} /></td>
+            <td><input type="number" name={props.nombre + 'LimSup'} id={props.nombre + 'LimSup'} onChange={handleLimitSuperior} value={props.parametrosSeleccionado.comptadorLimSup} /></td>
             <td>
-                <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} >
+                <select name={props.nombre + 'Unidades'} id={props.nombre + 'Unidades'} onChange={handleUnidad} value={props.parametrosSeleccionado.comptadorUnidades} >
                     <option value=''></option>
                     <option value='m3'>m3</option>
                     <option value='Un. pH'>Un. pH</option>
@@ -109,8 +109,8 @@ const CampoPrincipalPlantasTabla = (props) => {
                     <option value='µS/cm'>µS/cm</option>
                 </select>
             </td>
-            <td><center><input type="checkbox" name={props.nombre + 'Activo'} id={props.nombre + 'Activo'} onChange={handleActivo} checked={checkboxActivo}/></center></td>
-            <td><center><input type="checkbox" name={props.nombre + 'VerInspector'} id={props.nombre + 'VerInspector'} onChange={handleVerInspector} /></center></td>
+            <td><center><input type="checkbox" name={props.nombre + 'Activo'} id={props.nombre + 'Activo'} onChange={handleActivo} checked={props.parametrosSeleccionado.comptadorActivo} /></center></td>
+            <td><center><input type="checkbox" name={props.nombre + 'VerInspector'} id={props.nombre + 'VerInspector'} onChange={handleVerInspector} checked={props.parametrosSeleccionado.comptadorVerInspector} /></center></td>
         </tr>
     );
 };

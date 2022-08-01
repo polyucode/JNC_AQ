@@ -76,18 +76,18 @@ const tipos = [
     { id: 5, nombre: "Anual" },
     { id: 6, nombre: "Semanal" },
     { id: 7, nombre: "Bisemanal" }
-  ]
+]
 
 const selections = [
     {
-      value: 'Si',
-      label: 'Si',
+        value: 'Si',
+        label: 'Si',
     },
     {
-      value: 'No',
-      label: 'No',
+        value: 'No',
+        label: 'No',
     }
-  ];
+];
 
 const final = [
     {
@@ -270,226 +270,6 @@ function Plantas() {
 
     const [schema, { onChange, addNode, removeNode }] = useSchema(createSchema({}));
 
-    const abrirCerrarModalTarea = () => {
-        setModalTarea(!modalTarea);
-    }
-
-    const handleChangeAnalisis = (event, value) => {
-        setTareaSeleccionada(prevState => ({
-            ...prevState,
-            analisis: value.analisis
-        }))
-        if (value.analisis === "Otros con Fechas de Trabajo" || value.analisis === "Otros sin Fechas de Trabajo" || value.analisis === "Legionela" || value.analisis === "Aerobios" || value.analisis === "Aguas Residuales" || value.analisis === "Desinfecciones" || value.analisis === "AguaPozo" || value.analisis === "Agua Potable" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mediciones" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Control Fuga gas" || value.analisis === "Revision de bandeja") {
-            setEstadoInput(false)
-        } else {
-            setEstadoInput(true)
-        }
-
-        if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo") {
-            setEstadoOperario(false)
-        } else {
-            setEstadoOperario(true)
-        }
-
-        if (value.analisis === "Desinfecciones") {
-            setEstadoProtocolo(false)
-        } else {
-            setEstadoProtocolo(true)
-        }
-    }
-
-    const handleChangeValor = (event, value) => {
-        setTareaSeleccionada(prevState => ({
-          ...prevState,
-          valor: value.props.value
-        }))
-        if (value.props.value === "Si") {
-          setEstadoValor(false)
-        } else {
-          setEstadoValor(true)
-        }
-    }
-
-    const handleChange2 = e => {
-        const { name, value } = e.target;
-        setTareaSeleccionada(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
-      }
-
-
-    const bodyTarea = (
-        <div className={styles.modal}>
-            <h3>Agregar tarea</h3>
-            <br />
-            <div className="row g-3">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles2.inputMaterial} name="codigoCliente" disabled value={confPlantasCliente.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Nombre Cliente </h5>
-                    <TextField className={styles2.inputMaterial} name="nombreCliente" disabled value={confPlantasCliente.nombreCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles2.inputMaterial} name="oferta" disabled value={confPlantasCliente.oferta} />
-                </div>
-
-                {/* Desplegable de elementos planta */}
-                <div className="col-md-3">
-                    <h5> Elemento de planta </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles2.inputMaterial}
-                        id="CboElementosPlanta"
-                        options={elemento}
-                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
-                        getOptionLabel={option => option.elemento}
-                        sx={{ width: 225 }}
-                        renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
-                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
-                            ...prevState,
-                            elementoPlanta: value.elemento
-                        }))}
-                    />
-                </div>
-
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    {/* Desplegable de Técnicos */}
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles2.inputMaterial}
-                        id="analisis"
-                        options={analisis}
-                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={handleChangeAnalisis}
-                    />
-                </div>
-                <div className="col-md-5">
-                    <h5> Final </h5>
-                    <TextField
-                        disabled={estadoInput}
-                        id='final'
-                        className={styles2.inputMaterial}
-                        select
-                        name="final"
-                        onChange={handleChange2}
-                    >
-                        {final.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <div className="col-md-4">
-                    <h5> Valor </h5>
-                    <TextField
-                        disabled={estadoInput}
-                        id='valor'
-                        className={styles2.inputMaterial}
-                        select
-                        name="valor"
-                        onChange={handleChangeValor}
-                    >
-                        {selections.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <div className="col-md-4">
-                    <h5> Nombre valor </h5>
-                    <TextField disabled={estadoValor} className={styles.inputMaterial} name="nombreValor" onChange={handleChange2} />
-                </div>
-                <div className="col-md-2">
-                    <h5> Unidades </h5>
-                    <TextField disabled={estadoValor} className={styles.inputMaterial} name="unidades" onChange={handleChange2} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Operario </h5>
-                    {/* Desplegable de Técnicos */}
-                    <Autocomplete
-                        disabled={estadoOperario}
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Operarios"
-                        options={operarios}
-                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="operario" />}
-                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
-                            ...prevState,
-                            operario: value.nombre
-                        }))}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <h5> Protocolo </h5>
-                    <TextField
-                        disabled={estadoProtocolo}
-                        id='protocolo'
-                        className={styles.inputMaterial}
-                        select
-                        name="protocolo"
-                        onChange={handleChange2}
-                    >
-                        {protocolos.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <div className="col-md-4">
-                    {/* Desplegable de tipos*/}
-                    <h5> Periodicidad </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles2.inputMaterial}
-                        id="CboTipos"
-                        options={tipos}
-                        getOptionLabel={option => option.nombre}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="idTipo" />}
-                        onChange={(event, value) => setTareaSeleccionada(prevState => ({
-                            ...prevState,
-                            tipo: value.id
-                        }))}
-                    />
-                </div>
-                <div className="col-md-2">
-                    {/* Fecha prevista */}
-                    <h5> Fecha </h5>
-                    <TextField
-                        className={styles.inputMaterial}
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 225 }}
-                        onChange={(e) => setfechaprevista(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalTarea()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
     function crearElemento(id) {
 
         const tipoAnalisis = [];
@@ -541,20 +321,14 @@ function Plantas() {
                 elementoNuevo.id = tipoElemento[id].id
             }
         }
-        // Actualizamos la lista de análisis por elemento
-        if (elementosRepetidos === 0) {
-            ReactDOM.render(
-                listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre)),
-                document.getElementById('analisis-elemento-list')
-            );
-        } else {
-            ReactDOM.render(
-                listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
-                document.getElementById('analisis-elemento-list')
-            );
-        }
 
-        //crearNodo(elementoNuevo)
+        // Actualizamos la lista de análisis por elemento
+        ReactDOM.render(
+            listaElementos.map((d, index) => React.createElement('option', { key: index, value: index }, d.nombre + ' ' + d.numero)),
+            document.getElementById('analisis-elemento-list')
+        );
+
+        crearNodo(elementoNuevo)
     }
 
     function eliminarElemento(id) {
@@ -573,7 +347,7 @@ function Plantas() {
             document.getElementById('analisis-elemento-list')
         );
         // console.log('Crear elemento');
-        // crearNodo(elementoNuevo);
+        //removeNode();
 
     }
 
@@ -741,10 +515,10 @@ function Plantas() {
 
     const GetOperarios = async () => {
         axios.get("/usuario", token).then(response => {
-          const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
-          setOperarios(usuario);
+            const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOperarios(usuario);
         }, [])
-      }
+    }
 
     useEffect(() => {
         GetOperarios();
@@ -830,7 +604,7 @@ function Plantas() {
                     }
                     axios.post("/analisisnivelesplantascliente", analisisElem, token)
                         .then(response => {
-                            {response && navigate('/tareas', { replace: true })}
+                            { response && navigate('/tareas', { replace: true }) }
                             return response
                         })
                         .catch(error => {
@@ -839,11 +613,11 @@ function Plantas() {
                 }
             })
         })
-        //window.location.reload();
     }
 
     function crearNodo(elemento) {
 
+        console.log(listaElementos)
         console.log('Crear nodo');
 
         // Preparamos los input y output
@@ -919,11 +693,11 @@ function Plantas() {
 
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
-        addNode(nodo)
+        schema.nodes.push(nodo)
         contadorNodo++;
 
-        schema.nodes.forEach((node) => {
-            console.log(node);
+        schema.nodes.forEach((node, index) => {
+            console.log(node, index);
         })
 
         console.log(schema);
@@ -1063,15 +837,6 @@ function Plantas() {
             <div className='botones'>
                 <button><Link to='/plantasTabla'>Siguiente</Link></button>
             </div>
-
-
-
-
-            <Modal
-                open={modalTarea}
-                onClose={abrirCerrarModalTarea}>
-                {bodyTarea}
-            </Modal>
         </div>
     )
 

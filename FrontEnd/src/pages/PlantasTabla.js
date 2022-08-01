@@ -644,7 +644,7 @@ function PlantasTabla() {
         }))
     }*/
 
-    function handleObject() {
+    /*function handleObject() {
 
         const prueba = [];
 
@@ -662,7 +662,7 @@ function PlantasTabla() {
         setDatos(prueba);
         console.log({prueba});
 
-    }
+    }*/
 
     const guardarElementos = async () => {
         parametrosSeleccionado.esPlantilla = true;
@@ -676,7 +676,7 @@ function PlantasTabla() {
             }).catch(error => {
                 console.log(error);
             })
-        handleObject()
+        //handleObject()
     }
 
     const GetParametros = async () => {
