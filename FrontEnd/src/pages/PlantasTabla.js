@@ -18,6 +18,9 @@ import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
 import MaterialTable from "@material-table/core";
 
+import { CrearParametrizacion } from '../helpers/CrearParametrizacion';
+import { useParsearParametros } from "../helpers/UseParsearParametros";
+
 
 
 const token = {
@@ -141,6 +144,293 @@ function PlantasTabla() {
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
+
+    const { nuevaParametrizacion, setDatosParametrizacion } = useParsearParametros();
+
+    const [parametros, setParametros] = useState({
+        cliente: {
+            codigoCliente: 5,
+            elemento: "Caldera 1",
+            esPlantilla: true,
+            nombreCliente: "Castellar Vidrio",
+            oferta: 4567
+        },
+        parametrosFijos: {
+            alcalinitatM: {
+                Activo: false,
+                Nombre: "alcalinitatM",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            alcalinitatP: {
+                Activo: false,
+                Nombre: "alcalinitatP",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            aquaproxAB5310: {
+                Activo: false,
+                Nombre: "aquaproxAB5310",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            biopolIB200: {
+                Activo: false,
+                Nombre: "biopolIB200",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            biopolLB5: {
+                Activo: false,
+                Nombre: "biopolLB5",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            brom: {
+                Activo: false,
+                Nombre: "brom",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            clorLliure: {
+                Activo: false,
+                Nombre: "clorLliure",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            clorTotal: {
+                Activo: false,
+                Nombre: "clorTotal",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            clorurs: {
+                Activo: false,
+                Nombre: "clorurs",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            comptador: {
+                Activo: false,
+                Nombre: "comptador",
+                LimInf: '',
+                LimSup: '',
+                Unidades: '',
+                VerInspector: false
+            },
+            conductivitat: {
+                Activo: false,
+                Nombre: "conductivitat",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            duresaCalcica: {
+                Activo: false,
+                Nombre: "duresaCalcica",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            duresaTotal: {
+                Activo: false,
+                Nombre: "duresaTotal",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            fe: {
+                Activo: false,
+                Nombre: "fe",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            isotiazolona: {
+                Activo: false,
+                Nombre: "isotiazolona",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            mefacideLG: {
+                Activo: false,
+                Nombre: "mefacideLG",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            moO4: {
+                Activo: false,
+                Nombre: "moO4",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            ortofosfatsPO4: {
+                Activo: false,
+                Nombre: "ortofosfatsPO4",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            ph: {
+                Activo: false,
+                Nombre: "ph",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            silicats: {
+                Activo: false,
+                Nombre: "silicats",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            sulfats: {
+                Activo: false,
+                Nombre: "sulfats",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            sulfits: {
+                Activo: false,
+                Nombre: "sulfits",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            tds: {
+                Activo: false,
+                Nombre: "tds",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            temperatura: {
+                Activo: false,
+                Nombre: "temperatura",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            },
+            terbolesa: {
+                Activo: false,
+                Nombre: "terbolesa",
+                LimInf: '',
+                LimSup: '',
+                Unidades: "",
+                VerInspector: false
+            }
+        },
+        parametrosPersonalizados: {
+            campo1: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo2: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo3: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo4: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo5: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo6: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo7: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            },
+            campo8: {
+                Activo: false,
+                LimInf: '',
+                LimSup: '',
+                Nombre: "",
+                Unidades: "",
+                VerInspector: false
+            }
+        },
+        dbInfo: {
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+            modDate: null,
+            modIdUser: null
+        }
+    });
 
     const styles = useStyles();
 
@@ -682,11 +972,10 @@ function PlantasTabla() {
     const GetParametros = async () => {
 
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
-        const response = await axios.get(url , token) 
-            
-        setParametrosSeleccionado({ ...response.data.data }) 
-        
-        console.log(response.data.data)
+        const response = await axios.get(url, token)
+
+        setDatosParametrizacion( response.data.data )
+
     }
 
 
@@ -822,10 +1111,10 @@ function PlantasTabla() {
                         </TabList>
                     </Box>*/}
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={nuevaParametrizacion} />
                     }
                 </TabContext>
-            </Box>            
+            </Box>
         </div>
     );
 }

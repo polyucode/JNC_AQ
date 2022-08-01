@@ -265,7 +265,6 @@ function Plantas() {
                 {outputs.map((port) => React.cloneElement(port, { style: { width: '10px', height: '34px', background: data.selector } }))}
             </div>
         </div>
-
     );
 
     const [schema, { onChange, addNode, removeNode }] = useSchema(createSchema({}));
@@ -694,10 +693,11 @@ function Plantas() {
         // Augmentamos el contador de nodos y lo añadimos a la lista
 
         schema.nodes.push(nodo)
+        //addNode(nodo)
         contadorNodo++;
 
         schema.nodes.forEach((node, index) => {
-            console.log(node, index);
+            console.log(node);
         })
 
         console.log(schema);
