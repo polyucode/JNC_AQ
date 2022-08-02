@@ -145,7 +145,9 @@ function PlantasTabla() {
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
-    const { nuevaParametrizacion, setDatosParametrizacion } = useParsearParametros();
+    const { nuevaParametrizacion, setDatosParametrizacion, cambiarCampoFijo } = useParsearParametros();
+
+    console.log(nuevaParametrizacion)
 
     const [parametros, setParametros] = useState({
         cliente: {
@@ -969,6 +971,10 @@ function PlantasTabla() {
         //handleObject()
     }
 
+    const editarPlantilla = async () => {
+        console.log("Hola")
+    }
+
     const GetParametros = async () => {
 
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
@@ -1097,6 +1103,7 @@ function PlantasTabla() {
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
+                        <button className="plantilla" onClick={editarElementos}> Editar Plantilla </button>
                         <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                 }
@@ -1111,7 +1118,7 @@ function PlantasTabla() {
                         </TabList>
                     </Box>*/}
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={nuevaParametrizacion} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={nuevaParametrizacion} />
                     }
                 </TabContext>
             </Box>

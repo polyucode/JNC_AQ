@@ -95,7 +95,6 @@ export const CrearParametrizacion = ( datos ) => {
       dbInfo
     }
     // Para ver el resultado final
-    console.log({nuevaParametrizacion});
     // Retornamos el resultado
     return nuevaParametrizacion;
 }

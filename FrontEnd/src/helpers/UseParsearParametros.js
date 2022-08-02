@@ -14,7 +14,7 @@ export const useParsearParametros = () => {
         parametrosFijos: {
             alcalinitatM: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'alcalinitatM',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -22,7 +22,7 @@ export const useParsearParametros = () => {
             },
             alcalinitatP: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'alcalinitatP',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -30,7 +30,7 @@ export const useParsearParametros = () => {
             },
             aquaproxAB5310: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'aquaproxAB5310',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -38,7 +38,7 @@ export const useParsearParametros = () => {
             },
             biopolIB200: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'biopolIB200',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -46,7 +46,7 @@ export const useParsearParametros = () => {
             },
             biopolLB5: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'biopolLB5',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -54,7 +54,7 @@ export const useParsearParametros = () => {
             },
             brom: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'brom',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -62,7 +62,7 @@ export const useParsearParametros = () => {
             },
             clorLliure: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorLliure',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -70,7 +70,7 @@ export const useParsearParametros = () => {
             },
             clorTotal: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorTotal',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -78,7 +78,7 @@ export const useParsearParametros = () => {
             },
             clorurs: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorurs',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -86,7 +86,7 @@ export const useParsearParametros = () => {
             },
             comptador: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'comptador',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -94,7 +94,7 @@ export const useParsearParametros = () => {
             },
             conductivitat: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'conductivitat',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -102,7 +102,7 @@ export const useParsearParametros = () => {
             },
             duresaCalcica: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'duresaCalcica',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -110,7 +110,7 @@ export const useParsearParametros = () => {
             },
             duresaTotal: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'duresaTotal',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -118,7 +118,7 @@ export const useParsearParametros = () => {
             },
             fe: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'fe',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -126,7 +126,7 @@ export const useParsearParametros = () => {
             },
             isotiazolona: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'isotiazolona',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -134,7 +134,7 @@ export const useParsearParametros = () => {
             },
             mefacideLG: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'mefacideLG',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -142,7 +142,7 @@ export const useParsearParametros = () => {
             },
             moO4: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'moO4',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -150,7 +150,7 @@ export const useParsearParametros = () => {
             },
             ortofosfatsPO4: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'ortofosfatsPO4',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -158,7 +158,7 @@ export const useParsearParametros = () => {
             },
             ph: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'ph',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -166,7 +166,7 @@ export const useParsearParametros = () => {
             },
             silicats: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'silicats',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -174,7 +174,7 @@ export const useParsearParametros = () => {
             },
             sulfats: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'sulfats',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -182,7 +182,7 @@ export const useParsearParametros = () => {
             },
             sulfits: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'sulfits',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -190,7 +190,7 @@ export const useParsearParametros = () => {
             },
             tds: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'tds',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -198,7 +198,7 @@ export const useParsearParametros = () => {
             },
             temperatura: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'temperatura',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -206,7 +206,7 @@ export const useParsearParametros = () => {
             },
             terbolesa: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'terbolesa',
                 LimInf: '',
                 LimSup: '',
                 Unidades: '',
@@ -296,11 +296,27 @@ export const useParsearParametros = () => {
         setNuevaParametrizacion(datos);
     }
 
+    const cambiarCampoFijo = ( nombreCampo, objeto, nombreParametro, dato ) => {
+
+        setNuevaParametrizacion({
+            ...nuevaParametrizacion,
+            parametrosFijos: {
+                ...nuevaParametrizacion.parametrosFijos,
+                [nombreCampo]: {
+                    ...objeto,
+                    [nombreParametro]: dato
+                }
+            }
+        });
+        
+    }
+
     return {
         //* Propiedades
         nuevaParametrizacion,
         //* Métodos
         setDatosParametrizacion,
-        cambiarParametros
+        cambiarParametros,
+        cambiarCampoFijo
     }
 }
