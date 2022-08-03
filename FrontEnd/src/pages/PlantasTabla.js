@@ -148,6 +148,12 @@ function PlantasTabla() {
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
 
+    console.log(parametrosFront)
+    useEffect( () => {
+        
+        setDatosParametrosBack(parametrosFront)
+    }, [parametrosFront])
+
     const [parametros, setParametros] = useState({
         cliente: {
             codigoCliente: 5,
@@ -955,9 +961,11 @@ function PlantasTabla() {
 
     }*/
 
+
     async function guardarElementos(){
-        setDatosParametrosBack(parametrosFront)
+        
         console.log(parametrosBack)
+
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
                 return response
