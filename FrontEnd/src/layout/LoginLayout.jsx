@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Toolbar, Box } from '@mui/material';
+import { Toolbar, Box, Grid } from '@mui/material';
 import { Appbar } from '../components/Menu';
 
 export const LoginLayout = ({ title, children }) => {
@@ -13,27 +13,19 @@ export const LoginLayout = ({ title, children }) => {
 
     return (
         <>
-            <Box sx={{ display: 'flex '}}>
+            <Grid container justifyContent="center" flexDirection="column" sx={{ pl: 2, pr: 2 }}>
 
-                <Appbar title={ title } drawerWidth={ drawerWidth } onDrawerToggle={ onDrawerToggle } />
-
-                <Box
-                    component='main'
-                    sx={{
-                        flexGrow: 1,
-                        p: 2,
-                        width: { sm: `calc(100% - ${ drawerWidth }px)` },
-                        ml: { sm: `${ drawerWidth }px` }
-                    }}
-                >
-                    <Toolbar />
+                <Appbar title={ title } variant='login-variant' onDrawerToggle={ onDrawerToggle } />
+                
+                <Grid item>
+                    <Toolbar sx={{ mb: 2 }} />
 
                     {/* La página en sí será cargada en este punto */}
                     { children }
 
-                </Box>
+                </Grid>
 
-            </Box>
+            </Grid>
         </>
     );
 }

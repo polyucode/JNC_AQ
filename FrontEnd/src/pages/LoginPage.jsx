@@ -7,6 +7,7 @@ import { LoginLayout } from '../layout/LoginLayout';
 // import './Login.css';
 import logo from '../img/jncLogoDark.jpg'
 
+import { FormControl, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -14,6 +15,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 
 
 export const LoginPage = () => {
@@ -84,34 +86,39 @@ export const LoginPage = () => {
         // </form>
 
         <LoginLayout title="Login">
-        <div className='login-contenedor'>
 
-            <Card sx={{ maxWidth: 345, backgroundColor: '#616161', color: 'white' }}>
-                <CardMedia
-                    component="img"
-                    width="80"
-                    image="/img/logo2.svg"
-                    alt="green iguana"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                    Lizard
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with over 6,000
-                    species, ranging across all continents except Antarctica
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
-            </Card>
+            <Grid container justifyContent="center">
 
+                <Grid item xs={10} sm={7} md={5} lg={4} >
 
+                    <Card sx={{ p: 4 }}>
+                        <CardMedia
+                            component="img"
+                            width="80"
+                            image="/img/logo2.svg"
+                            alt="Logo JNegre"
+                        />
+                        <CardContent>
+                            <FormControl>
+                            <TextField id="filled-basic" label="Filled" variant="filled" />
+                            </FormControl>
+                            
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small">Share</Button>
+                            <Button size="small">Learn More</Button>
+                        </CardActions>
+                    </Card>
+
+                </Grid>
+
+            </Grid>
+            
+
+{/* 
                 <div className='card login-form'>
                     <div className='card-body'>
-                        {/* <h1 className='card-title text-center'>LOGIN</h1> */}
+                        <h1 className='card-title text-center'>LOGIN</h1>
                         <div><img src={logo}></img></div>
                         <div className='card-text'></div>
                         <form onSubmit={handleSubmit}>
@@ -129,8 +136,7 @@ export const LoginPage = () => {
                             <button className='btn btn-primary btn-block'>Login</button>
                         </form>
                     </div>
-                </div>
-        </div>
+                </div> */}
         </LoginLayout>
     );
 }
