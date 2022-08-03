@@ -289,7 +289,9 @@ export const useParserFront = () => {
     });
 
     const setDatosParametrosFront = ( parametrosBack ) => {
+
         setParametrosFront( crearParametrizacionFront( parametrosBack ) );
+
     };
 
     const cambiarCampoFijo = ( nombreCampo, objeto, nombreParametro, dato ) => {

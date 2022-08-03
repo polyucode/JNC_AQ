@@ -37,49 +37,41 @@ export const useParserBack = () => {
         campo1Activo: false,
         campo1LimInf: 0,
         campo1LimSup: 0,
-        campo1Nombre: "",
         campo1Unidades: "",
         campo1VerInspector: false,
         campo2Activo: false,
         campo2LimInf: 0,
         campo2LimSup: 0,
-        campo2Nombre: "",
         campo2Unidades: "",
         campo2VerInspector: false,
         campo3Activo: false,
         campo3LimInf: 0,
         campo3LimSup: 0,
-        campo3Nombre: "",
         campo3Unidades: "",
         campo3VerInspector: false,
         campo4Activo: false,
         campo4LimInf: 0,
         campo4LimSup: 0,
-        campo4Nombre: "",
         campo4Unidades: "",
         campo4VerInspector: false,
         campo5Activo: false,
         campo5LimInf: 0,
         campo5LimSup: 0,
-        campo5Nombre: "",
         campo5Unidades: "",
         campo5VerInspector: false,
         campo6Activo: false,
         campo6LimInf: 0,
         campo6LimSup: 0,
-        campo6Nombre: "",
         campo6Unidades: "",
         campo6VerInspector: false,
         campo7Activo: false,
         campo7LimInf: 0,
         campo7LimSup: 0,
-        campo7Nombre: "",
         campo7Unidades: "",
         campo7VerInspector: false,
         campo8Activo: false,
         campo8LimInf: 0,
         campo8LimSup: 0,
-        campo8Nombre: "",
         campo8Unidades: "",
         campo8VerInspector: false,
         clorLliureActivo: false,
@@ -190,8 +182,9 @@ export const useParserBack = () => {
     });
 
     const setDatosParametrosBack = ( datosFront ) => {
-        console.log( datosFront );
-        setParametroBack( crearParametrizacionBack( datosFront ) );
+
+        setParametroBack( crearParametrizacionBack( datosFront ));
+
     }
 
     return {

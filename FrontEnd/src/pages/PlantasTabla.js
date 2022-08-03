@@ -144,9 +144,24 @@ function PlantasTabla() {
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo } = useParserFront();
-
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo } = useParserFront( setDatosParametrosBack );
+
+    useEffect(() => {
+
+        setDatosParametrosBack( parametrosFront );
+
+        // axios.post("/parametroselementoplantacliente", parametrosBack, token)
+        //     .then(response => {
+        //         return response
+        //     }).catch(error => {
+        //         console.log({ token });
+        //         console.log(error);
+        //     });
+
+    }, [ parametrosFront ]);
+
+    
 
     console.log(parametrosFront)
     useEffect( () => {
@@ -967,11 +982,12 @@ function PlantasTabla() {
         console.log(parametrosBack)
 
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
-            .then(response => {
-                return response
-            }).catch(error => {
-                console.log(error);
-            })
+                .then(response => {
+                    return response
+                }).catch(error => {
+                    console.log(error);
+                })
+        
         //handleObject()
     }
 
