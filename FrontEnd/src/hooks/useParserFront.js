@@ -14,7 +14,7 @@ export const useParserFront = () => {
         parametrosFijos: {
             alcalinitatM: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'alcalinitatM',
                 LimInf: 0,
                 LimSup: 0,
                 Unidades: '',
@@ -289,7 +289,9 @@ export const useParserFront = () => {
     });
 
     const setDatosParametrosFront = ( parametrosBack ) => {
+
         setParametrosFront( crearParametrizacionFront( parametrosBack ) );
+
     };
 
     const cambiarCampoFijo = ( nombreCampo, objeto, nombreParametro, dato ) => {

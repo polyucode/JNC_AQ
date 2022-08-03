@@ -45,3 +45,12 @@ C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
 C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.csproj.AssemblyReference.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.deps.json
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.csprojAssemblyReference.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.AssemblyInfoInputs.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.AssemblyInfo.cs
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.csproj.CoreCompileInputs.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Core\obj\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb

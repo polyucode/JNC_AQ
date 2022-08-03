@@ -65,7 +65,7 @@ const CampoPrincipalPlantasTabla = (props) => {
         console.log(e.target)
         const { name, value } = e.target
         // Actualiza el valor en la variable
-        props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimInf', value );
+        props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimInf', parseInt( value ) );
         
     }
 
@@ -73,7 +73,7 @@ const CampoPrincipalPlantasTabla = (props) => {
         console.log(e.target)
         const { name, value } = e.target
         // Actualiza el valor en la variable
-        props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimSup', value );
+        props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimSup', parseInt( value ) );
     }
 
 

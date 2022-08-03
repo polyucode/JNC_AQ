@@ -20,10 +20,12 @@ export const crearParametrizacionBack = ( datos ) => {
 
             const nombreParametro = campo + parametro;
 
-            parametrosBack = {
-                ...parametrosBack,
-                [nombreParametro]: datosCampo[parametro]
-            } 
+            if ( nombreParametro !== campo + 'Nombre' ) {
+                parametrosBack = {
+                    ...parametrosBack,
+                    [nombreParametro]: datosCampo[parametro]
+                } 
+            }
 
         }
 
