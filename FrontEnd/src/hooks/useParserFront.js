@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { CrearParametrizacion } from './CrearParametrizacion';
+import { crearParametrizacionFront } from '../helpers';
 
-export const useParsearParametros = () => {
+export const useParserFront = () => {
 
-    const [nuevaParametrizacion, setNuevaParametrizacion] = useState({
+    const [ parametrosFront, setParametrosFront ] = useState({
         cliente: {
             codigoCliente: 0,
             elemento: '',
@@ -14,201 +14,201 @@ export const useParsearParametros = () => {
         parametrosFijos: {
             alcalinitatM: {
                 Activo: false,
-                Nombre: 'alcalinitatM',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             alcalinitatP: {
                 Activo: false,
-                Nombre: 'alcalinitatP',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             aquaproxAB5310: {
                 Activo: false,
-                Nombre: 'aquaproxAB5310',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             biopolIB200: {
                 Activo: false,
-                Nombre: 'biopolIB200',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             biopolLB5: {
                 Activo: false,
-                Nombre: 'biopolLB5',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             brom: {
                 Activo: false,
-                Nombre: 'brom',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             clorLliure: {
                 Activo: false,
-                Nombre: 'clorLliure',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             clorTotal: {
                 Activo: false,
-                Nombre: 'clorTotal',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             clorurs: {
                 Activo: false,
-                Nombre: 'clorurs',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             comptador: {
                 Activo: false,
-                Nombre: 'comptador',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             conductivitat: {
                 Activo: false,
-                Nombre: 'conductivitat',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             duresaCalcica: {
                 Activo: false,
-                Nombre: 'duresaCalcica',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             duresaTotal: {
                 Activo: false,
-                Nombre: 'duresaTotal',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             fe: {
                 Activo: false,
-                Nombre: 'fe',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             isotiazolona: {
                 Activo: false,
-                Nombre: 'isotiazolona',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             mefacideLG: {
                 Activo: false,
-                Nombre: 'mefacideLG',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             moO4: {
                 Activo: false,
-                Nombre: 'moO4',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             ortofosfatsPO4: {
                 Activo: false,
-                Nombre: 'ortofosfatsPO4',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             ph: {
                 Activo: false,
-                Nombre: 'ph',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             silicats: {
                 Activo: false,
-                Nombre: 'silicats',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             sulfats: {
                 Activo: false,
-                Nombre: 'sulfats',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             sulfits: {
                 Activo: false,
-                Nombre: 'sulfits',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             tds: {
                 Activo: false,
-                Nombre: 'tds',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             temperatura: {
                 Activo: false,
-                Nombre: 'temperatura',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             terbolesa: {
                 Activo: false,
-                Nombre: 'terbolesa',
-                LimInf: '',
-                LimSup: '',
+                Nombre: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             }
@@ -217,64 +217,64 @@ export const useParsearParametros = () => {
             campo1: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo2: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo3: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo4: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo5: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo6: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo7: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             },
             campo8: {
                 Activo: false,
                 Nombre: '',
-                LimInf: '',
-                LimSup: '',
+                LimInf: 0,
+                LimSup: 0,
                 Unidades: '',
                 VerInspector: false
             }
@@ -288,35 +288,33 @@ export const useParsearParametros = () => {
         }
     });
 
-    const setDatosParametrizacion = (datos) => {
-        setNuevaParametrizacion(CrearParametrizacion(datos));
+    const setDatosParametrosFront = ( parametrosBack ) => {
+        setParametrosFront( crearParametrizacionFront( parametrosBack ) );
     };
-
-    const cambiarParametros = (datos) => {
-        setNuevaParametrizacion(datos);
-    }
 
     const cambiarCampoFijo = ( nombreCampo, objeto, nombreParametro, dato ) => {
 
-        setNuevaParametrizacion({
-            ...nuevaParametrizacion,
+        console.log( objeto );
+        
+        setParametrosFront({
+            ...parametrosFront,
             parametrosFijos: {
-                ...nuevaParametrizacion.parametrosFijos,
+                ...parametrosFront.parametrosFijos,
                 [nombreCampo]: {
                     ...objeto,
                     [nombreParametro]: dato
                 }
             }
         });
-        
+
     }
 
     return {
         //* Propiedades
-        nuevaParametrizacion,
+        parametrosFront,
+
         //* Métodos
-        setDatosParametrizacion,
-        cambiarParametros,
+        setDatosParametrosFront,
         cambiarCampoFijo
     }
 }

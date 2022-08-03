@@ -18,9 +18,8 @@ import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
 import MaterialTable from "@material-table/core";
 
-import { CrearParametrizacion } from '../helpers/CrearParametrizacion';
-import { useParsearParametros } from "../helpers/UseParsearParametros";
-
+import { useParserFront } from "../hooks/useParserFront";
+import { useParserBack } from "../hooks/useParserBack";
 
 
 const token = {
@@ -145,9 +144,9 @@ function PlantasTabla() {
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
-    const { nuevaParametrizacion, setDatosParametrizacion, cambiarCampoFijo } = useParsearParametros();
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo } = useParserFront();
 
-    console.log(nuevaParametrizacion)
+    const { parametrosBack, setDatosParametrosBack } = useParserBack();
 
     const [parametros, setParametros] = useState({
         cliente: {
@@ -956,13 +955,10 @@ function PlantasTabla() {
 
     }*/
 
-    const guardarElementos = async () => {
-        parametrosSeleccionado.esPlantilla = true;
-        parametrosSeleccionado.codigoCliente = valores.codigo;
-        parametrosSeleccionado.nombreCliente = valores.nombre;
-        parametrosSeleccionado.oferta = valores.ofertas;
-        parametrosSeleccionado.elemento = valores.elemento;
-        await axios.post("/parametroselementoplantacliente", parametrosSeleccionado, token)
+    async function guardarElementos(){
+        setDatosParametrosBack(parametrosFront)
+        console.log(parametrosBack)
+        await axios.post("/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
                 return response
             }).catch(error => {
@@ -980,7 +976,7 @@ function PlantasTabla() {
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
         const response = await axios.get(url, token)
 
-        setDatosParametrizacion( response.data.data )
+        setDatosParametrosFront( response.data.data )
 
     }
 
@@ -1103,7 +1099,7 @@ function PlantasTabla() {
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                        <button className="plantilla" onClick={editarElementos}> Editar Plantilla </button>
+                        <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
                         <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                 }
@@ -1118,7 +1114,7 @@ function PlantasTabla() {
                         </TabList>
                     </Box>*/}
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={nuevaParametrizacion} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }
                 </TabContext>
             </Box>

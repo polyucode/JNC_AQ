@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { useParsearParametros } from "../helpers/UseParsearParametros";
-
 const CampoPrincipalPlantasTabla = (props) => {
 
     const [state, setState] = useState(props.datos);
 
     const [ checkboxActivo, setCheckboxActivo ] = useState(false)
-
-    const { nuevaParametrizacion, setDatosParametrizacion, cambiarCampoFijo } = useParsearParametros();
-
-    const [ parametrosFijos, setParametrosFijos ] = useState( nuevaParametrizacion.parametrosFijos )
 
     //console.log(props)
     //console.log(parametrosFijos)
