@@ -277,14 +277,14 @@ const TablaElementosTabla = (props) => {
                             <th><center>Activar</center></th>
                             <th><center>Ver Insp.</center></th>
                         </tr>
-                        <CampoPersPlantasTabla key="1" name="campo1" nombre="Campo1" datos={state.plantilla.Campo1} parametros={props.parametros.parametrosFijos.campo1} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="2" name="campo2" nombre="Campo2" datos={state.plantilla.Campo2} parametros={props.parametros.parametrosFijos.campo2} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="3" name="campo3" nombre="Campo3" datos={state.plantilla.Campo3} parametros={props.parametros.parametrosFijos.campo3} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="4" name="campo4" nombre="Campo4" datos={state.plantilla.Campo4} parametros={props.parametros.parametrosFijos.campo4} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="5" name="campo5" nombre="Campo5" datos={state.plantilla.Campo5} parametros={props.parametros.parametrosFijos.campo5} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="6" name="campo6" nombre="Campo6" datos={state.plantilla.Campo6} parametros={props.parametros.parametrosFijos.campo6} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="7" name="campo7" nombre="Campo7" datos={state.plantilla.Campo7} parametros={props.parametros.parametrosFijos.campo7} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                        <CampoPersPlantasTabla key="8" name="campo8" nombre="Campo8" datos={state.plantilla.Campo8} parametros={props.parametros.parametrosFijos.campo8} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="1" name="campo1" nombre="Campo1" datos={state.plantilla.Campo1} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo1} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="2" name="campo2" nombre="Campo2" datos={state.plantilla.Campo2} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo2} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="3" name="campo3" nombre="Campo3" datos={state.plantilla.Campo3} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo3} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="4" name="campo4" nombre="Campo4" datos={state.plantilla.Campo4} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo4} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="5" name="campo5" nombre="Campo5" datos={state.plantilla.Campo5} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo5} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="6" name="campo6" nombre="Campo6" datos={state.plantilla.Campo6} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo6} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="7" name="campo7" nombre="Campo7" datos={state.plantilla.Campo7} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo7} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPersPlantasTabla key="8" name="campo8" nombre="Campo8" datos={state.plantilla.Campo8} cambiarDatos={props.cambiarDatosPers} parametros={props.parametros.parametrosPersonalizados.campo8} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     </tbody>
                 </table>
             </div>

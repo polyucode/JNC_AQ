@@ -4,6 +4,7 @@ import { crearParametrizacionBack } from '../helpers';
 export const useParserBack = () => {
 
     const [ parametrosBack, setParametroBack ] = useState({
+        id: 0,
         alcalinitatMActivo: false,
         alcalinitatMLimInf: 0,
         alcalinitatMLimSup: 0,

@@ -5,9 +5,6 @@ const CampoPrincipalPlantasTabla = (props) => {
     const [state, setState] = useState(props.datos);
 
     const [ checkboxActivo, setCheckboxActivo ] = useState(false)
-
-    //console.log(props)
-    //console.log(parametrosFijos)
     
     useEffect(() => {
 
@@ -27,7 +24,6 @@ const CampoPrincipalPlantasTabla = (props) => {
     }, []);
 
     const handleActivo = (e) => {
-        setCheckboxActivo(e.target.checked)
         const { name, value, checked } = e.target
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
         if (checked) {
@@ -52,7 +48,6 @@ const CampoPrincipalPlantasTabla = (props) => {
         const { name, value, checked } = e.target
         // Actualiza el valor en la variable
         props.cambiarDatos( props.parametros.Nombre, props.parametros, 'VerInspector', checked );
-
     }
 
     const handleUnidad = (e) => {
@@ -62,7 +57,6 @@ const CampoPrincipalPlantasTabla = (props) => {
     }
 
     const handleLimitInferior = (e) => {
-        console.log(e.target)
         const { name, value } = e.target
         // Actualiza el valor en la variable
         props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimInf', parseInt( value ) );
@@ -70,7 +64,6 @@ const CampoPrincipalPlantasTabla = (props) => {
     }
 
     const handleLimitSuperior = (e) => {
-        console.log(e.target)
         const { name, value } = e.target
         // Actualiza el valor en la variable
         props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimSup', parseInt( value ) );

@@ -516,7 +516,6 @@ function OfertasClientes() {
                     <h5> Nombre Cliente </h5>
                     <Autocomplete
                         disableClearable={true}
-                        type="number"
                         id="NombreCliente"
                         options={clientes}
                         filterOptions={options => clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente)}

@@ -18,6 +18,7 @@ import Productos from './pages/Productos';
 import ConsumoArticulos from './pages/ConsumoArticulos'
 import Visualizacion from './pages/Visualizacion';
 import Pdf from './pages/Pdf';
+import Entregas from './pages/Entregas';
 
 export const ThemeContext = React.createContext();
 
@@ -55,6 +56,7 @@ export default function App() {
               <Route path='/consumoarticulos' element={<ConsumoArticulos />} />
               <Route path='/visualizacion' element={<Visualizacion />} />
               <Route path='/pdf' element={<Pdf />} />
+              <Route path='/entregas' element={<Entregas />} />
             </Routes>
           </div>
 

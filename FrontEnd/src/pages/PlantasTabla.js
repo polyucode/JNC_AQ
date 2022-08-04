@@ -145,314 +145,11 @@ function PlantasTabla() {
     const [data2, setData2] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo } = useParserFront( setDatosParametrosBack );
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront( setDatosParametrosBack );
 
-    useEffect(() => {
-
-        setDatosParametrosBack( parametrosFront );
-
-        // axios.post("/parametroselementoplantacliente", parametrosBack, token)
-        //     .then(response => {
-        //         return response
-        //     }).catch(error => {
-        //         console.log({ token });
-        //         console.log(error);
-        //     });
-
-    }, [ parametrosFront ]);
-
-    
-
-    console.log(parametrosFront)
     useEffect( () => {
-        
         setDatosParametrosBack(parametrosFront)
     }, [parametrosFront])
-
-    const [parametros, setParametros] = useState({
-        cliente: {
-            codigoCliente: 5,
-            elemento: "Caldera 1",
-            esPlantilla: true,
-            nombreCliente: "Castellar Vidrio",
-            oferta: 4567
-        },
-        parametrosFijos: {
-            alcalinitatM: {
-                Activo: false,
-                Nombre: "alcalinitatM",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            alcalinitatP: {
-                Activo: false,
-                Nombre: "alcalinitatP",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            aquaproxAB5310: {
-                Activo: false,
-                Nombre: "aquaproxAB5310",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            biopolIB200: {
-                Activo: false,
-                Nombre: "biopolIB200",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            biopolLB5: {
-                Activo: false,
-                Nombre: "biopolLB5",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            brom: {
-                Activo: false,
-                Nombre: "brom",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            clorLliure: {
-                Activo: false,
-                Nombre: "clorLliure",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            clorTotal: {
-                Activo: false,
-                Nombre: "clorTotal",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            clorurs: {
-                Activo: false,
-                Nombre: "clorurs",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            comptador: {
-                Activo: false,
-                Nombre: "comptador",
-                LimInf: '',
-                LimSup: '',
-                Unidades: '',
-                VerInspector: false
-            },
-            conductivitat: {
-                Activo: false,
-                Nombre: "conductivitat",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            duresaCalcica: {
-                Activo: false,
-                Nombre: "duresaCalcica",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            duresaTotal: {
-                Activo: false,
-                Nombre: "duresaTotal",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            fe: {
-                Activo: false,
-                Nombre: "fe",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            isotiazolona: {
-                Activo: false,
-                Nombre: "isotiazolona",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            mefacideLG: {
-                Activo: false,
-                Nombre: "mefacideLG",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            moO4: {
-                Activo: false,
-                Nombre: "moO4",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            ortofosfatsPO4: {
-                Activo: false,
-                Nombre: "ortofosfatsPO4",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            ph: {
-                Activo: false,
-                Nombre: "ph",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            silicats: {
-                Activo: false,
-                Nombre: "silicats",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            sulfats: {
-                Activo: false,
-                Nombre: "sulfats",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            sulfits: {
-                Activo: false,
-                Nombre: "sulfits",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            tds: {
-                Activo: false,
-                Nombre: "tds",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            temperatura: {
-                Activo: false,
-                Nombre: "temperatura",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            },
-            terbolesa: {
-                Activo: false,
-                Nombre: "terbolesa",
-                LimInf: '',
-                LimSup: '',
-                Unidades: "",
-                VerInspector: false
-            }
-        },
-        parametrosPersonalizados: {
-            campo1: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo2: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo3: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo4: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo5: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo6: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo7: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            },
-            campo8: {
-                Activo: false,
-                LimInf: '',
-                LimSup: '',
-                Nombre: "",
-                Unidades: "",
-                VerInspector: false
-            }
-        },
-        dbInfo: {
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-            modDate: null,
-            modIdUser: null
-        }
-    });
 
     const styles = useStyles();
 
@@ -929,33 +626,6 @@ function PlantasTabla() {
         }, [])
     }
 
-
-    /*function FiltrarData() {
-        setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === parametrosSeleccionado.codigoCliente && analisis.oferta === parametrosSeleccionado.oferta))
-    }
-
-    const onChangeCliente = (e, value, name) => {
-        if (e.target.textContent !== "") {
-            setData(analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.oferta === parametrosSeleccionado.oferta))
-        }
-
-        setParametrosSeleccionado((prevState) => ({
-            ...prevState,
-            [name]: value.codigo
-        }))
-    }
-
-    const onChangeOferta = (e, value, name) => {
-        if (e.target.textContent !== "") {
-            setData(analisisNivelesPlantasCliente.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.codigoCliente === parametrosSeleccionado.codigoCliente))
-        }
-
-        setParametrosSeleccionado((prevState) => ({
-            ...prevState,
-            [name]: value.numeroOferta
-        }))
-    }*/
-
     /*function handleObject() {
 
         const prueba = [];
@@ -979,8 +649,11 @@ function PlantasTabla() {
 
     async function guardarElementos(){
         
-        console.log(parametrosBack)
-
+        parametrosBack.codigoCliente = valores.codigo;
+        parametrosBack.nombreCliente = valores.nombre;
+        parametrosBack.oferta = valores.ofertas;
+        parametrosBack.elemento = valores.elemento;
+        
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
                 .then(response => {
                     return response
@@ -992,7 +665,18 @@ function PlantasTabla() {
     }
 
     const editarPlantilla = async () => {
-        console.log("Hola")
+        await axios.put("/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
+            .then(response => {
+                var parametrosModificado = data2;
+                parametrosModificado.map(parametro => {
+                    if (parametro.id === parametrosBack.id) {
+                        parametro = parametrosBack
+                    }
+                });
+                GetConfParametrosElementoPlantaCliente();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     const GetParametros = async () => {
@@ -1138,7 +822,7 @@ function PlantasTabla() {
                         </TabList>
                     </Box>*/}
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }
                 </TabContext>
             </Box>
