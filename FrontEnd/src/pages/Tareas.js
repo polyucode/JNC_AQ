@@ -498,7 +498,7 @@ function Tareas() {
         var date = new Date(fechaprevista);
 
         if (tareaSeleccionada.tipo === 1) {
-          for (let i = 0; i <= 12; i++) {
+          for (let i = 0; i < 12; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -518,7 +518,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 2) {
-          for (let i = 0; i <= 6; i++) {
+          for (let i = 0; i < 6; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -538,7 +538,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 3) {
-          for (let i = 0; i <= 4; i++) {
+          for (let i = 0; i < 4; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -558,7 +558,7 @@ function Tareas() {
           }
         }
         if (tareaSeleccionada.tipo === 4) {
-          for (let i = 0; i <= 3; i++) {
+          for (let i = 0; i < 2; i++) {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -573,12 +573,12 @@ function Tareas() {
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
-            date.setMonth(date.getMonth() + 4)
+            date.setMonth(date.getMonth() + 6)
             peticionPostVis();
           }
         }
         if (tareaSeleccionada.tipo === 5) {
-          for (let i = 0; i <= 1; i++) {
+          for (let i = 0; i < 1; i++) {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.oferta = response.data.data.oferta

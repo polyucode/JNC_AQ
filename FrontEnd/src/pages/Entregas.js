@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+/*import React, { useState, useEffect } from "react";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
@@ -608,4 +608,4 @@ function Entregas() {
     )
 }
 
-export default Entregas;
+export default Entregas;*/

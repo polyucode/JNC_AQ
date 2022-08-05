@@ -17,6 +17,6 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Consumidos { get; set; }
         public int? Entregar { get; set; }
         public string ADR { get; set; }
-        public int? Portes { get; set; }
+        public string Portes { get; set; }
     }
 }

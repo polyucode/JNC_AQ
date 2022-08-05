@@ -182,7 +182,7 @@ function OfertasClientes() {
         consumidos: 0,
         entregar: 0,
         adr: '',
-        portes: 0,
+        portes: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -804,7 +804,7 @@ function OfertasClientes() {
                         options={productos}
                         getOptionLabel={option => option.codigoProducto}
                         sx={{ width: 150 }}
-                        renderInput={(params) => <TextField {...params} type="number" name="producto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
                             producto: value.codigoProducto
@@ -869,7 +869,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-12">
                     <h5> Portes </h5>
-                    <TextField className={styles3.inputMaterial} type="number" name="portes" onChange={handleChangeProducto} />
+                    <TextField className={styles3.inputMaterial} name="portes" onChange={handleChangeProducto} />
                 </div>
             </div>
             <br />
@@ -949,7 +949,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-12">
                     <h5> Portes </h5>
-                    <TextField className={styles3.inputMaterial} type="number" name="portes" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.portes} />
+                    <TextField className={styles3.inputMaterial} name="portes" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.portes} />
                 </div>
             </div>
             <div align="right">

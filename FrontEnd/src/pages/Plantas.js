@@ -411,12 +411,15 @@ function Plantas() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
+        console.log(elementoAnalisisProps)
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
     }
 
     function changeAnalisisElemento(e) {
         listaElementos[elementoAnalisisId].propiedades[e.target.id - 1].value = e.target.checked
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
+        console.log(elementoAnalisisProps)
+        console.log(e.target.id)
         // Cuando cambia el valor de un checkbox, vemos cual de ellos ha sido
         // y actualizamos el valor de la propiedad del elemento
         switch (e.target.id) {
@@ -453,16 +456,16 @@ function Plantas() {
             case '11':
                 elementoAnalisisProps[10].value = e.target.checked;
                 break;
-            case '15':
+            case '12':
                 elementoAnalisisProps[11].value = e.target.checked;
                 break;
-            case '16':
+            case '13':
                 elementoAnalisisProps[12].value = e.target.checked;
                 break;
-            case '17':
+            case '14':
                 elementoAnalisisProps[13].value = e.target.checked;
                 break;
-            case '18':
+            case '15':
                 elementoAnalisisProps[14].value = e.target.checked;
                 break;
         }

@@ -253,12 +253,12 @@ function Clientes() {
   ];
 
   //peticiones API
-  const GetPoblacion = async () => {
+  /*const GetPoblacion = async () => {
     axios.get("/poblacion", token).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
-  }
+  }*/
 
   const GetProvincia = async () => {
     axios.get("/provincia", token).then(response => {
@@ -317,7 +317,7 @@ function Clientes() {
     peticionGet();
     peticionGetContacto();
     GetPerfiles();
-    GetPoblacion();
+    //GetPoblacion();
     GetProvincia();
     GetComarca();
     //FiltrarDataContacto();
@@ -433,7 +433,7 @@ function Clientes() {
     <div className={styles.modal}>
       <h3>Agregar Nuevo Cliente</h3>
       <br/>
-      <div className="row g-3">
+      <div className="row g-4">
         <div className="col-md-3">
           <h5> Codigo </h5>
           <TextField className={styles.inputMaterial} type="number" name="codigo" onChange={handleChange} />
@@ -488,7 +488,6 @@ function Clientes() {
         </div>
         <div className="col-md-4">
           <h5> Província </h5>
-          {/* Desplegable de Provincia */}
           <Autocomplete
             disableClearable={true}
             id="CboProvincia"
@@ -502,9 +501,9 @@ function Clientes() {
             }))}
           />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4"> 
           <h5> Población </h5>
-          {/* Desplegable de Población */}
+          {/*
           <Autocomplete
             disableClearable={true}
             id="CboPoblacion"
@@ -517,6 +516,7 @@ function Clientes() {
               poblacion: value.id
             }))}
           />
+          */}
         </div>
       </div>
 
@@ -817,7 +817,6 @@ function Clientes() {
 
   return (
     <div>
-      {console.log(dataDet)}
       <MaterialTable columns={columnas} data={data}
         localization={{
           body: {

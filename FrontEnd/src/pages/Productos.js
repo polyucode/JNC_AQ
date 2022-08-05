@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import MenuItem from '@mui/material/MenuItem';
 
 
 const token = {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 800,
-        height: 350,
+        height: 425,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -100,8 +101,9 @@ function Productos() {
 
     const [productoSeleccionado, setProductoSeleccionado] = useState({
         id: 0,
-        codigoProducto: "",
-        descripcion: "",
+        codigoProducto: '',
+        descripcion: '',
+        adr: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -110,6 +112,17 @@ function Productos() {
         delIdUser: null,
         deleted: null,
     });
+
+    const selections = [
+        {
+            value: 'Si',
+            label: 'Si',
+        },
+        {
+            value: 'No',
+            label: 'No',
+        }
+    ];
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
@@ -123,7 +136,8 @@ function Productos() {
 
         //Visibles
         { title: 'CodigoProducto', field: 'codigoProducto', filterPlaceholder: "Filtrar por codigo de producto" },
-        { title: 'Descripcion', field: 'descripcion'}
+        { title: 'Descripcion', field: 'descripcion'},
+        { title: 'ADR', field: 'adr', filterPlaceholder: "Filtrar por ADR" }
 
     ];
 
@@ -214,6 +228,22 @@ function Productos() {
                     <h5> Descripcion </h5>
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
+                <div className="col-md-12">
+                    <h5> ADR </h5>
+                    <TextField
+                        id='adr'
+                        className={styles.inputMaterial}
+                        select
+                        name="adr"
+                        onChange={handleChange}
+                    >
+                        {selections.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
             </div>
             <br/>
             <div align="right">
@@ -236,10 +266,27 @@ function Productos() {
                     <h5> Descripción </h5>
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.descripcion} />
                 </div>
+                <div className="col-md-12">
+                    <h5> ADR </h5>
+                    <TextField
+                        id='adr'
+                        className={styles.inputMaterial}
+                        select
+                        name="adr"
+                        onChange={handleChange}
+                        value={productoSeleccionado.adr}
+                    >
+                        {selections.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
             </div>
             <br/>
             <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
+                <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
             </div>
         </div>

@@ -18,7 +18,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Consumidos { get; set; }
         public int? Entregar { get; set; }
         public string ADR { get; set; }
-        public int? Portes { get; set; }
+        public string Portes { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

@@ -246,6 +246,18 @@ function Visualizacion() {
         { title: 'Numero Facturado', field: 'numeroFacturado' },
     ];
 
+    const columnas1 = [
+
+        //visibles
+        { title: 'Periodo', field: 'periodo' },
+        { title: 'Fecha', field: 'fecha', type: 'date' },
+        { title: 'Realizado', field: 'realizado', type: 'boolean' },
+        { title: 'Operario', field: 'operario' },
+        { title: 'Observaciones', field: 'observaciones' },
+        { title: 'Facturado', field: 'facturado', type: 'boolean' },
+        { title: 'Numero Facturado', field: 'numeroFacturado' },
+    ];
+
     const [data, setData] = useState([]);
     const [data1, setData1] = useState([]);
     const [data2, setData2] = useState([]);
