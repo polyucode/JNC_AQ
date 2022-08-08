@@ -91,8 +91,14 @@ const useStyles = makeStyles((theme) => ({
 function Visualizacion() {
 
     const [modalInsertar, setModalInsertar] = useState(false);
+    const [modalInsertar1, setModalInsertar1] = useState(false);
+    const [modalInsertarOperario, setModalInsertarOperario] = useState(false);
+    const [modalInsertarAerobio, setModalInsertarAerobio] = useState(false);
 
     const [modalEditar, setModalEditar] = useState(false);
+    const [modalEditar1, setModalEditar1] = useState(false);
+    const [modalEditarOperario, setModalEditarOperario] = useState(false);
+    const [modalEditarAerobio, setModalEditarAerobio] = useState(false);
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
@@ -115,6 +121,7 @@ function Visualizacion() {
         observaciones: '',
         facturado: false,
         numeroFacturado: '',
+        resultado: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -181,6 +188,9 @@ function Visualizacion() {
     const [FilasSeleccionadas10, setFilasSeleccionadas10] = useState([]);
     const [FilasSeleccionadas11, setFilasSeleccionadas11] = useState([]);
     const [FilasSeleccionadas12, setFilasSeleccionadas12] = useState([]);
+    const [FilasSeleccionadas13, setFilasSeleccionadas13] = useState([]);
+    const [FilasSeleccionadas14, setFilasSeleccionadas14] = useState([]);
+    const [FilasSeleccionadas15, setFilasSeleccionadas15] = useState([]);
 
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
@@ -220,13 +230,13 @@ function Visualizacion() {
         { title: 'Numero Facturado', field: 'numeroFacturado' }
     ];
 
-    const columnasDet = [
+    const columnasOperario = [
 
         //visibles
         { title: 'Periodo', field: 'periodo' },
         { title: 'Fecha', field: 'fecha', type: 'date' },
         { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Protocolo', field: 'protocolo' },
+        { title: 'Operario', field: 'operario' },
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' },
         { title: 'Numero Facturado', field: 'numeroFacturado' },
@@ -252,10 +262,21 @@ function Visualizacion() {
         { title: 'Periodo', field: 'periodo' },
         { title: 'Fecha', field: 'fecha', type: 'date' },
         { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario' },
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' },
         { title: 'Numero Facturado', field: 'numeroFacturado' },
+    ];
+
+    const columnasAerobios = [
+
+        //visibles
+        { title: 'Periodo', field: 'periodo' },
+        { title: 'Fecha', field: 'fecha', type: 'date' },
+        { title: 'Realizado', field: 'realizado', type: 'boolean' },
+        { title: 'Observaciones', field: 'observaciones' },
+        { title: 'Facturado', field: 'facturado', type: 'boolean' },
+        { title: 'Numero Facturado', field: 'numeroFacturado' },
+        { title: 'Resultado', field: 'resultado' },
     ];
 
     const [data, setData] = useState([]);
@@ -425,6 +446,249 @@ function Visualizacion() {
         </div>
     )
 
+    const bodyInsertar1 = (
+        <div className={styles.modal}>
+            <h3>Agregar Nuevo Analisis</h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPost1()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalInsertar1()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
+    const bodyInsertarOperario = (
+        <div className={styles.modal}>
+            <h3>Agregar Nuevo Analisis</h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-6">
+                    <h5> Operario </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Operarios"
+                        options={operarios}
+                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="operario" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            operario: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostOperario()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalInsertarOperario()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
+    const bodyInsertarAerobio = (
+        <div className={styles.modal}>
+            <h3>Agregar Nuevo Analisis</h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Resultado </h5>
+                    <TextField className={styles.inputMaterial} name="resultado" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostAerobio()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalInsertarAerobio()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
     const bodyEditar = (
         <div className={styles.modal}>
             <h3> Analisis</h3>
@@ -512,6 +776,253 @@ function Visualizacion() {
         </div>
     )
 
+    const bodyEditar1 = (
+        <div className={styles.modal}>
+            <h3> Analisis </h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={analisisSeleccionado && analisisSeleccionado.fecha}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPut1()}>Guardar</Button>
+                <Button onClick={() => abrirCerrarModalEditar1()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
+    const bodyEditarOperario = (
+        <div className={styles.modal}>
+            <h3> Analisis </h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={analisisSeleccionado && analisisSeleccionado.fecha}
+                    />
+                </div>
+                <div className="col-md-6">
+                    <h5> Operario </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Operarios"
+                        options={operarios}
+                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="operario" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            operario: value.nombre
+                        }))}
+                        value={analisisSeleccionado && analisisSeleccionado.operario}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostOperario()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalEditarOperario()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
+    const bodyEditarAerobio = (
+        <div className={styles.modal}>
+            <h3> Analisis </h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        className={styles.inputMaterial}
+                        id="Analisis"
+                        options={analisis}
+                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
+                        getOptionLabel={option => option.analisis}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} name="analisis" />}
+                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                            ...prevState,
+                            analisis: value.analisis
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={analisisSeleccionado && analisisSeleccionado.fecha}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Resultado </h5>
+                    <TextField className={styles.inputMaterial} name="resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostAerobio()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalEditarAerobio()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
     const bodyEliminar = (
 
         <div className={styles.modal}>
@@ -524,12 +1035,35 @@ function Visualizacion() {
     )
 
     const abrirCerrarModalInsertar = () => {
-
         setModalInsertar(!modalInsertar);
+    }
+
+    const abrirCerrarModalInsertar1 = () => {
+        setModalInsertar1(!modalInsertar1);
+    }
+
+    const abrirCerrarModalInsertarOperario = () => {
+        setModalInsertarOperario(!modalInsertarOperario);
+    }
+
+    const abrirCerrarModalInsertarAerobio = () => {
+        setModalInsertarAerobio(!modalInsertarAerobio);
     }
 
     const abrirCerrarModalEditar = () => {
         setModalEditar(!modalEditar);
+    }
+
+    const abrirCerrarModalEditar1 = () => {
+        setModalEditar1(!modalEditar1);
+    }
+
+    const abrirCerrarModalEditarOperario = () => {
+        setModalEditarOperario(!modalEditarOperario);
+    }
+
+    const abrirCerrarModalEditarAerobio = () => {
+        setModalEditarAerobio(!modalEditarAerobio);
     }
 
     const abrirCerrarModalEliminar = () => {
@@ -573,10 +1107,10 @@ function Visualizacion() {
 
     const GetOperarios = async () => {
         axios.get("/usuario", token).then(response => {
-          const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
-          setOperarios(usuario);
+            const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setOperarios(usuario);
         }, [])
-      }
+    }
 
     const GetAnalisisNivelesPlantasCliente = async () => {
         axios.get("/analisisnivelesplantascliente", token).then(response => {
@@ -592,21 +1126,21 @@ function Visualizacion() {
     }
 
     function FiltrarData() {
-        setData1(data.filter(analisis => analisis.analisis === "Físico-Quimico"))
+        setData1(data.filter(analisis => analisis.analisis === "Físico-Químico"))
         setData2(data.filter(analisis => analisis.analisis === "Aerobios"))
         setData3(data.filter(analisis => analisis.analisis === "Legionela"))
         setData4(data.filter(analisis => analisis.analisis === "Aguas Residuales"))
         setData5(data.filter(analisis => analisis.analisis === "Desinfecciones"))
         setData6(data.filter(analisis => analisis.analisis === "Osmosis"))
         setData7(data.filter(analisis => analisis.analisis === "AguaPozo"))
-        setData8(data.filter(analisis => analisis.analisis === "ACS"))
+        setData8(data.filter(analisis => analisis.analisis === "Desinfección ACS"))
         setData9(data.filter(analisis => analisis.analisis === "Mantenimiento Maq Frio"))
         setData10(data.filter(analisis => analisis.analisis === "Mediciones"))
         setData11(data.filter(analisis => analisis.analisis === "Control Fuga Gas"))
         setData12(data.filter(analisis => analisis.analisis === "Agua Potable"))
         setData13(data.filter(analisis => analisis.analisis === "Revision de Bandeja"))
-        setData14(data.filter(analisis => analisis.analisis === "Otros con Fechas de Trabajo"))
-        setData15(data.filter(analisis => analisis.analisis === "Otros sin Fechas de Trabajo"))
+        setData14(data.filter(analisis => analisis.analisis === "Otros con Fecha de Trabajo"))
+        setData15(data.filter(analisis => analisis.analisis === "Otros sin Fecha de Trabajo"))
     }
 
     useEffect(() => {
@@ -624,11 +1158,46 @@ function Visualizacion() {
 
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
-        console.log(analisisSeleccionado)
         await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
             .then(response => {
                 //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
+                GetParametrosAnalisisPlanta();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPost1 = async () => {
+        analisisSeleccionado.id = null;
+        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+            .then(response => {
+                //setData(data.concat(response.data));
+                abrirCerrarModalInsertar1();
+                GetParametrosAnalisisPlanta();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPostOperario = async () => {
+        analisisSeleccionado.id = null;
+        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+            .then(response => {
+                //setData(data.concat(response.data));
+                abrirCerrarModalInsertarOperario();
+                GetParametrosAnalisisPlanta();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPostAerobio = async () => {
+        analisisSeleccionado.id = null;
+        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+            .then(response => {
+                //setData(data.concat(response.data));
+                abrirCerrarModalInsertarAerobio();
                 GetParametrosAnalisisPlanta();
             }).catch(error => {
                 console.log(error);
@@ -650,7 +1219,57 @@ function Visualizacion() {
             }).catch(error => {
                 console.log(error);
             })
-        console.log(data)
+    }
+
+    const peticionPut1 = async () => {
+        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+            .then(response => {
+                var analisisModificado = data;
+                analisisModificado.map(analisi => {
+                    if (analisi.id === analisisSeleccionado.id) {
+                        analisi = analisisSeleccionado
+                    }
+                });
+                GetParametrosAnalisisPlanta();
+                insertarArchivos();
+                abrirCerrarModalEditar1();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPutOperario = async () => {
+        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+            .then(response => {
+                var analisisModificado = data;
+                analisisModificado.map(analisi => {
+                    if (analisi.id === analisisSeleccionado.id) {
+                        analisi = analisisSeleccionado
+                    }
+                });
+                GetParametrosAnalisisPlanta();
+                insertarArchivos();
+                abrirCerrarModalEditarOperario();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPutAerobio = async () => {
+        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+            .then(response => {
+                var analisisModificado = data;
+                analisisModificado.map(analisi => {
+                    if (analisi.id === analisisSeleccionado.id) {
+                        analisi = analisisSeleccionado
+                    }
+                });
+                GetParametrosAnalisisPlanta();
+                insertarArchivos();
+                abrirCerrarModalEditarAerobio();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     const peticionDelete = async () => {
@@ -671,14 +1290,14 @@ function Visualizacion() {
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Quimico" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Aerobios" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Legionela" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Aguas Residuales" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Desinfecciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Osmosis" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "AguaPozo" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "ACS" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Desinfección ACS" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Mantenimiento Maq Frio" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Mediciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Control Fuga Gas" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
@@ -698,14 +1317,14 @@ function Visualizacion() {
     const onChangeOferta = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Quimico" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Aerobios" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Legionela" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Aguas Residuales" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Desinfecciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Osmosis" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "AguaPozo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Desinfección ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Mantenimiento Maq Frio" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Mediciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Control Fuga Gas" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
@@ -725,14 +1344,14 @@ function Visualizacion() {
     const onChangeElemento = (e, value, name) => {
         if (e.target.textContent !== "") {
             console.log(e.target.textContent)
-            setData1(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Quimico" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData1(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData2(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Aerobios" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData3(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Legionela" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData4(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Aguas Residuales" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData5(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Desinfecciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData6(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Osmosis" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData7(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "AguaPozo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData8(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData8(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Desinfección ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData9(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Mantenimiento Maq Frio" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData10(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Mediciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData11(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Control Fuga Gas" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
@@ -794,9 +1413,9 @@ function Visualizacion() {
                     <div className="visualizacion-tablas">
                         {dataTablas.map((analisi, index) => {
                             switch (analisi.analisis) {
-                                case "Físico-Quimico":
+                                case "Físico-Químico":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data1}
+                                        <MaterialTable columns={columnas1} data={data1}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -805,7 +1424,7 @@ function Visualizacion() {
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
                                                         setAnalisisNombre(analisis.filter(analisi => analisi.nombre === dataTablas.analisis))
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
@@ -821,7 +1440,7 @@ function Visualizacion() {
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
                                                         setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas1[0].id));
-                                                        abrirCerrarModalEditar();
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -829,7 +1448,7 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas1(filas);
@@ -839,17 +1458,17 @@ function Visualizacion() {
                                             }
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                columnsButton: false,
+                                                columnsButton: false, showSelectAllCheckbox: false,
                                                 rowStyle: rowData => ({
                                                     backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                                                     whiteSpace: "nowrap"
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
                                                 }]
                                             }}
 
@@ -858,7 +1477,7 @@ function Visualizacion() {
                                     )
                                 case "Aerobios":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data2}
+                                        <MaterialTable columns={columnasAerobios} data={data2}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -866,14 +1485,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertarAerobio();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas2);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -881,8 +1500,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas2[0].idCliente));
+                                                        abrirCerrarModalEditarAerobio();
                                                     },
                                                 },
                                             ]}
@@ -890,27 +1509,27 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditarAerobio();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas2(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
                                             }
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                columnsButton: false,
+                                                columnsButton: false, showSelectAllCheckbox: false,
                                                 rowStyle: rowData => ({
                                                     backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                                                     whiteSpace: "nowrap"
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Aerobios')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Aerobios')
                                                 }]
                                             }}
 
@@ -919,7 +1538,7 @@ function Visualizacion() {
                                     )
                                 case "Legionela":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data3}
+                                        <MaterialTable columns={columnas1} data={data3}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -927,14 +1546,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas3);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -942,8 +1561,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas3[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -951,28 +1570,27 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas3(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
                                             }
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                columnsButton: false,
+                                                columnsButton: false, showSelectAllCheckbox: false,
                                                 rowStyle: rowData => ({
                                                     backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                                                     whiteSpace: "nowrap"
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Legionela')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Legionela')
                                                 }]
                                             }}
 
@@ -981,7 +1599,7 @@ function Visualizacion() {
                                     )
                                 case "Aguas Residuales":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data4}
+                                        <MaterialTable columns={columnas1} data={data4}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -989,14 +1607,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas4);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1004,37 +1622,36 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas4[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
-                                                console.log(analisisSeleccionado)
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.nombre === analisisSeleccionado.analisis));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas4(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
                                             }
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                columnsButton: false,
+                                                columnsButton: false, showSelectAllCheckbox: false,
                                                 rowStyle: rowData => ({
                                                     backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                                                     whiteSpace: "nowrap"
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Aguas Residuales')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Aguas Residuales')
                                                 }]
                                             }}
 
@@ -1058,7 +1675,7 @@ function Visualizacion() {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas5);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1066,7 +1683,7 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].id));
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas5[0].id));
                                                         abrirCerrarModalEditar();
                                                     },
                                                 },
@@ -1078,8 +1695,7 @@ function Visualizacion() {
                                                 abrirCerrarModalEditar();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas5(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1093,10 +1709,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Desinfecciones')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Desinfecciones')
                                                 }]
                                             }}
 
@@ -1105,7 +1721,7 @@ function Visualizacion() {
                                     )
                                 case "Osmosis":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data6}
+                                        <MaterialTable columns={columnas1} data={data6}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1113,14 +1729,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas6);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1128,8 +1744,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas6[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -1137,11 +1753,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 GetParametrosAnalisisPlanta();
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas6(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1155,10 +1770,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Osmosis')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Osmosis')
                                                 }]
                                             }}
 
@@ -1167,7 +1782,7 @@ function Visualizacion() {
                                     )
                                 case "AguaPozo":
                                     return (
-                                        <MaterialTable columns={columnasDet} data={data7}
+                                        <MaterialTable columns={columnas1} data={data7}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1175,14 +1790,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas7);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1190,8 +1805,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas7[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -1199,10 +1814,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas7(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1216,17 +1831,17 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Agua Pozo')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Agua Pozo')
                                                 }]
                                             }}
 
                                             title="Agua Pozo"
                                         />
                                     )
-                                case "Desinfeccion ACS":
+                                case "Desinfección ACS":
                                     return (
                                         <MaterialTable columns={columnas} data={data8}
                                             localization={localization}
@@ -1243,7 +1858,7 @@ function Visualizacion() {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas8);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1251,7 +1866,7 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas8[0].idCliente));
                                                         abrirCerrarModalEditar();
                                                     },
                                                 },
@@ -1263,8 +1878,7 @@ function Visualizacion() {
                                                 abrirCerrarModalEditar();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas8(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1278,10 +1892,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Desinfeccion ACS')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Desinfeccion ACS')
                                                 }]
                                             }}
 
@@ -1290,7 +1904,7 @@ function Visualizacion() {
                                     )
                                 case "Mantenimiento Maq Frio":
                                     return (
-                                        <MaterialTable columns={columnas} data={data9}
+                                        <MaterialTable columns={columnasOperario} data={data9}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1298,14 +1912,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas9);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1313,8 +1927,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].id));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas9[0].id));
+                                                        abrirCerrarModalEditarOperario();
                                                     },
                                                 },
                                             ]}
@@ -1322,11 +1936,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditarOperario();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas9(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1340,10 +1953,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Mantenimiento de Maquina de Frio')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Mantenimiento de Maquina de Frio')
                                                 }]
                                             }}
 
@@ -1352,7 +1965,7 @@ function Visualizacion() {
                                     )
                                 case "Mediciones":
                                     return (
-                                        <MaterialTable columns={columnas} data={data10}
+                                        <MaterialTable columns={columnasOperario} data={data10}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1360,14 +1973,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas10);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1375,8 +1988,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas10[0].idCliente));
+                                                        abrirCerrarModalEditarOperario();
                                                     },
                                                 },
                                             ]}
@@ -1384,11 +1997,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditarOperario();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas10(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1402,10 +2014,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Mediciones')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Mediciones')
                                                 }]
                                             }}
 
@@ -1414,7 +2026,7 @@ function Visualizacion() {
                                     )
                                 case "Control Fuga Gas":
                                     return (
-                                        <MaterialTable columns={columnas} data={data11}
+                                        <MaterialTable columns={columnasOperario} data={data11}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1422,14 +2034,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas11);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1437,8 +2049,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas11[0].idCliente));
+                                                        abrirCerrarModalEditarOperario();
                                                     },
                                                 },
                                             ]}
@@ -1446,10 +2058,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditarOperario();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas11(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1463,19 +2075,19 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Control de Fuga de Gas')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Control de Fuga de Gas')
                                                 }]
                                             }}
 
-                                            title="Control fuga de gas"
+                                            title="Control Fuga de Gas"
                                         />
                                     )
                                 case "Agua Potable":
                                     return (
-                                        <MaterialTable columns={columnas} data={data12}
+                                        <MaterialTable columns={columnas1} data={data12}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1483,14 +2095,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas12);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1498,8 +2110,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas12[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -1507,10 +2119,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas12(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1524,10 +2136,10 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Agua Potable')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Agua Potable')
                                                 }]
                                             }}
 
@@ -1536,7 +2148,7 @@ function Visualizacion() {
                                     )
                                 case "Revision de Bandeja":
                                     return (
-                                        <MaterialTable columns={columnas} data={data13}
+                                        <MaterialTable columns={columnas1} data={data13}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1544,14 +2156,14 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        abrirCerrarModalInsertar();
+                                                        abrirCerrarModalInsertar1();
                                                     },
                                                 },
                                                 {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas13);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1559,8 +2171,8 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
-                                                        abrirCerrarModalEditar();
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas13[0].idCliente));
+                                                        abrirCerrarModalEditar1();
                                                     },
                                                 },
                                             ]}
@@ -1568,10 +2180,10 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar();
+                                                abrirCerrarModalEditar1();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas13(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1585,17 +2197,17 @@ function Visualizacion() {
                                                 }),
                                                 exportMenu: [{
                                                     label: 'Export PDF',
-                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Revision de Bandeja')
                                                 }, {
                                                     label: 'Export CSV',
-                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
+                                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Revision de Bandeja')
                                                 }]
                                             }}
 
                                             title="Revision de Bandeja"
                                         />
                                     )
-                                case "Otros con Fechas de Trabajo":
+                                case "Otros con Fecha de Trabajo":
                                     return (
                                         <MaterialTable columns={columnasVis} data={data14}
                                             localization={localization}
@@ -1612,7 +2224,7 @@ function Visualizacion() {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas14);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1620,7 +2232,7 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas14[0].idCliente));
                                                         abrirCerrarModalEditar();
                                                     },
                                                 },
@@ -1632,8 +2244,7 @@ function Visualizacion() {
                                                 abrirCerrarModalEditar();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                console.log(FilasSeleccionadas)
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas14(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1654,10 +2265,10 @@ function Visualizacion() {
                                                 }]
                                             }}
 
-                                            title="Otros con Fechas de Trabajo"
+                                            title="Otros con Fecha de Trabajo"
                                         />
                                     )
-                                case "Otros sin Fechas de Trabajo":
+                                case "Otros sin Fecha de Trabajo":
                                     return (
                                         <MaterialTable columns={columnasVis} data={data15}
                                             localization={localization}
@@ -1674,7 +2285,7 @@ function Visualizacion() {
                                                     icon: () => <RemoveCircle style={{ fill: "red" }} />,
                                                     tooltip: "Eliminar analisis",
                                                     onClick: (event, rowData) => {
-                                                        setAnalisisEliminar(FilasSeleccionadas);
+                                                        setAnalisisEliminar(FilasSeleccionadas15);
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
@@ -1682,7 +2293,7 @@ function Visualizacion() {
                                                     icon: () => <Edit />,
                                                     tooltip: "Editar analisis",
                                                     onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas[0].idCliente));
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas15[0].idCliente));
                                                         abrirCerrarModalEditar();
                                                     },
                                                 },
@@ -1694,7 +2305,7 @@ function Visualizacion() {
                                                 abrirCerrarModalEditar();
                                             })}
                                             onSelectionChange={(filas) => {
-                                                setFilasSeleccionadas(filas);
+                                                setFilasSeleccionadas15(filas);
                                                 if (filas.length > 0)
                                                     setAnalisisSeleccionado(filas[0]);
                                             }
@@ -1715,7 +2326,7 @@ function Visualizacion() {
                                                 }]
                                             }}
 
-                                            title="Otros sin Fechas de Trabajo"
+                                            title="Otros sin Fecha de Trabajo"
                                         />
                                     )
                             }
@@ -1732,6 +2343,24 @@ function Visualizacion() {
             </Modal>
 
             <Modal
+                open={modalInsertar1}
+                onClose={abrirCerrarModalInsertar1}>
+                {bodyInsertar1}
+            </Modal>
+
+            <Modal
+                open={modalInsertarOperario}
+                onClose={abrirCerrarModalInsertarOperario}>
+                {bodyInsertarOperario}
+            </Modal>
+
+            <Modal
+                open={modalInsertarAerobio}
+                onClose={abrirCerrarModalInsertarAerobio}>
+                {bodyInsertarAerobio}
+            </Modal>
+
+            <Modal
                 open={modalEliminar}
                 onClose={abrirCerrarModalEliminar}>
                 {bodyEliminar}
@@ -1742,6 +2371,25 @@ function Visualizacion() {
                 onClose={abrirCerrarModalEditar}>
                 {bodyEditar}
             </Modal>
+
+            <Modal
+                open={modalEditar1}
+                onClose={abrirCerrarModalEditar1}>
+                {bodyEditar1}
+            </Modal>
+
+            <Modal
+                open={modalEditarOperario}
+                onClose={abrirCerrarModalEditarOperario}>
+                {bodyEditarOperario}
+            </Modal>
+
+            <Modal
+                open={modalEditarAerobio}
+                onClose={abrirCerrarModalEditarAerobio}>
+                {bodyEditarAerobio}
+            </Modal>
+
         </div>
     );
 

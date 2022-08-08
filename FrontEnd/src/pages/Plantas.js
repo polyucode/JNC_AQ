@@ -418,8 +418,6 @@ function Plantas() {
     function changeAnalisisElemento(e) {
         listaElementos[elementoAnalisisId].propiedades[e.target.id - 1].value = e.target.checked
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-        console.log(elementoAnalisisProps)
-        console.log(e.target.id)
         // Cuando cambia el valor de un checkbox, vemos cual de ellos ha sido
         // y actualizamos el valor de la propiedad del elemento
         switch (e.target.id) {

@@ -274,7 +274,7 @@ function Productos() {
                         select
                         name="adr"
                         onChange={handleChange}
-                        value={productoSeleccionado.adr}
+                        value={productoSeleccionado && productoSeleccionado.adr}
                     >
                         {selections.map((option) => (
                             <MenuItem key={option.value} value={option.value}>

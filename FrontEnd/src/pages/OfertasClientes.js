@@ -262,7 +262,6 @@ function OfertasClientes() {
     ];
 
     const columnasProducto = [
-
         //Visibles
         { title: 'Codigo', field: 'producto', filterPlaceholder: "Filtrar por codigo" },
         { title: 'Descripcion', field: 'descripcionProducto', filterPlaceholder: "Filtrar por descripcion" },
@@ -375,7 +374,6 @@ function OfertasClientes() {
         productoSeleccionado.id = 0;
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
-        console.log(productoSeleccionado)
         await axios.post("/consumos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
@@ -383,7 +381,6 @@ function OfertasClientes() {
             }).catch(error => {
                 console.log(error);
             })
-            console.log(productoSeleccionado)
     }
 
     const peticionPutProducto = async () => {
