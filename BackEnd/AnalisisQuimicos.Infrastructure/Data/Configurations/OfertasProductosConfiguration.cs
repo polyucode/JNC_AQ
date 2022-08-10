@@ -5,16 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
 namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 {
-    public class ConsumosConfiguration : IEntityTypeConfiguration<Consumos>
+    public class OfertasProductosConfiguration : IEntityTypeConfiguration<OfertasProductos>
     {
-        public void Configure(EntityTypeBuilder<Consumos> builder)
+        public void Configure(EntityTypeBuilder<OfertasProductos> builder)
         {
             builder.HasKey(e => e.Id);
 
-            builder.ToTable("GES_Consumos");
+            builder.ToTable("GES_OfertasProductos");
 
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 
@@ -23,7 +22,5 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.ModDate).HasColumnType("datetime");
 
         }
-
-
     }
 }

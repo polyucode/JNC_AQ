@@ -243,6 +243,9 @@ function OfertasClientes() {
     const styles2 = useStyles2();
     const styles3 = useStyles3();
 
+    const [ number, setNumber ] = useState({ cantidad: 0, consumidos: 0 });
+    const [ resta, setResta ] = useState()
+
     const columnas = [
 
         //Visibles
@@ -275,8 +278,8 @@ function OfertasClientes() {
         { title: 'Portes', field: 'portes', filterPlaceholder: "Filtrar por Portes" },
     ];
 
-    const getConsumos = async () => {
-        axios.get("/consumos", token).then(response => {
+    const getOfertasProductos = async () => {
+        axios.get("/ofertasproductos", token).then(response => {
             setDataProducto(response.data.data)
         })
     }
@@ -313,11 +316,16 @@ function OfertasClientes() {
     }
 
     useEffect(() => {
+        const { cantidad, consumidos } = number
+        setResta(Number(cantidad) - Number(consumidos))
+    },[number])
+
+    useEffect(() => {
         getContactos();
         getProductos();
         getOfertas();
         getClientes();
-        getConsumos();
+        getOfertasProductos();
         FiltrarDataProducto();
     }, [])
 
@@ -374,17 +382,18 @@ function OfertasClientes() {
         productoSeleccionado.id = 0;
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
-        await axios.post("/consumos", productoSeleccionado, token)
+        productoSeleccionado.entregar = resta
+        await axios.post("/ofertasproductos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
-                getConsumos();
+                getOfertasProductos();
             }).catch(error => {
                 console.log(error);
             })
     }
 
     const peticionPutProducto = async () => {
-        await axios.put("/consumos?id=" + productoSeleccionado.id, productoSeleccionado, token)
+        await axios.put("/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
             .then(response => {
                 var productoModificado = dataDet;
                 productoModificado.map(producto => {
@@ -392,7 +401,7 @@ function OfertasClientes() {
                         producto = productoSeleccionado
                     }
                 });
-                getConsumos();
+                getOfertasProductos();
                 abrirCerrarModalEditarProducto();
             }).catch(error => {
                 console.log(error);
@@ -402,9 +411,9 @@ function OfertasClientes() {
     const peticionDeleteProducto = async () => {
         var i = 0;
         while (i < productoEliminar.length) {
-            await axios.delete("/consumos/" + productoEliminar[i].id, token)
+            await axios.delete("/ofertasproductos/" + productoEliminar[i].id, token)
                 .then(response => {
-                    getConsumos();
+                    getOfertasProductos();
                     abrirCerrarModalEliminarProducto();
                 }).catch(error => {
                     console.log(error);
@@ -454,6 +463,7 @@ function OfertasClientes() {
 
     const handleChangeProducto = e => {
         const { name, value } = e.target;
+        setNumber({ ...number, [name]: value })
         setProductoSeleccionado(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
@@ -470,9 +480,9 @@ function OfertasClientes() {
 
     const handleChangePrecio = e => {
         const { name, value } = e.target;
-        setOfertaSeleccionada(prevState => ({
+        setProductoSeleccionado(prevState => ({
             ...prevState,
-            [e.target.name]: e.target.name === 'price' ? parseFloat(e.target.value) : e.target.value
+            [e.target.name]: e.target.name === 'precio' ? parseFloat(e.target.value) : e.target.value
         }));
     }
 
@@ -739,7 +749,7 @@ function OfertasClientes() {
                 onRowClick={((evt, productoSeleccionado) => {
                     console.log(productoSeleccionado)
                     setProductoSeleccionado(productoSeleccionado);
-                    getConsumos();
+                    getOfertasProductos();
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
                     abrirCerrarModalEditarProducto();
                 })}
@@ -789,7 +799,6 @@ function OfertasClientes() {
 
     const bodyInsertarProducto = (
         <div className={styles.modal}>
-            {console.log(productoSeleccionado)}
             <h3>Agregar Nuevo Producto</h3>
             <br />
             <div className="row g-3">
@@ -826,19 +835,19 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-3">
                     <h5> Estimacion </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChangeProducto} />
+                    <TextField className={styles.inputMaterial} type="number" name="cantidad" value={number.cantidad} onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
                     <h5> Consumidos </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} />
+                    <TextField className={styles.inputMaterial} type="number" name="consumidos" value={number.consumidos} onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
                     <h5> Entregar </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.cantidad - productoSeleccionado.consumidos} />
+                    <TextField className={styles.inputMaterial} type="number" name="entregar" value={resta} />
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangeProducto} />
+                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangePrecio} />
                 </div>
                 <div className="col-md-6">
                     <h5> Stock Min </h5>
@@ -917,7 +926,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.precio} />
+                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangePrecio} value={productoSeleccionado && productoSeleccionado.precio} />
                 </div>
                 <div className="col-md-4">
                     <h5> Stock Min </h5>
@@ -1040,7 +1049,7 @@ function OfertasClientes() {
                         icon: () => <Edit />,
                         tooltip: "Editar Oferta",
                         onClick: (e, data) => {
-                            getConsumos();
+                            getOfertasProductos();
                             setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente));
                             setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].nombreCliente));
                             abrirCerrarModalEditar();
@@ -1051,7 +1060,7 @@ function OfertasClientes() {
                     // Copy row data and set checked state
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-                    getConsumos();
+                    getOfertasProductos();
                     setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
                     setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
                     setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))

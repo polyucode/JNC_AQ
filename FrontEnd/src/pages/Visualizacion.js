@@ -330,13 +330,11 @@ function Visualizacion() {
     }
 
     const handleChangeCheckbox = e => {
-        changeCheckState(e.target.checked)
-        console.log(e.target.checked)
-    }
-
-    const handleChangeCheckbox2 = e => {
-        changeActualState(e.target.checked)
-        console.log(e.target.checked)
+        const { name, value, checked } = e.target
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [name]: checked
+        }))
     }
 
     const bodyInsertar = (
@@ -424,10 +422,10 @@ function Visualizacion() {
                     </TextField>
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -498,10 +496,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -589,10 +587,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -663,10 +661,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -750,10 +748,10 @@ function Visualizacion() {
                     </TextField>
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -795,20 +793,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -829,10 +814,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -870,20 +855,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -922,10 +894,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -938,7 +910,7 @@ function Visualizacion() {
             </div>
             <br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPostOperario()}>Insertar</Button>
+                <Button color="primary" onClick={() => peticionPutOperario()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditarOperario()}>Cancelar</Button>
             </div>
         </div>
@@ -963,20 +935,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -997,10 +956,10 @@ function Visualizacion() {
                     />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState} label="Realizado" name="realizado" onChange={handleChangeCheckbox} value={analisisSeleccionado && analisisSeleccionado.realizado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={actualState2} label="Facturado" name="facturado" onChange={handleChangeCheckbox2} value={analisisSeleccionado && analisisSeleccionado.facturado} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-4">
                     <h5> Numero Facturacion </h5>
@@ -1017,7 +976,7 @@ function Visualizacion() {
             </div>
             <br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPostAerobio()}>Insertar</Button>
+                <Button color="primary" onClick={() => peticionPutAerobio()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditarAerobio()}>Cancelar</Button>
             </div>
         </div>
@@ -1205,6 +1164,7 @@ function Visualizacion() {
     }
 
     const peticionPut = async () => {
+        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1222,6 +1182,7 @@ function Visualizacion() {
     }
 
     const peticionPut1 = async () => {
+        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1239,6 +1200,7 @@ function Visualizacion() {
     }
 
     const peticionPutOperario = async () => {
+        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1256,6 +1218,7 @@ function Visualizacion() {
     }
 
     const peticionPutAerobio = async () => {
+        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1569,6 +1532,7 @@ function Visualizacion() {
 
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
+                                                console.log(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}

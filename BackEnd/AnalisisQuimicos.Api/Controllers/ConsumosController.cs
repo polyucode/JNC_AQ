@@ -3,6 +3,7 @@ using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class ConsumosController : ControllerBase
     {
-
         private readonly IRepository<Consumos> _consumosService;
         private readonly IMapper _mapper;
+
 
         public ConsumosController(IRepository<Consumos> consumosService, IMapper mapper)
         {
@@ -30,8 +31,8 @@ namespace AnalisisQuimicos.Api.Controllers
         public IActionResult GetAll()
         {
             var consumos = _consumosService.GetAll();
-            var consumosDto = _mapper.Map<IEnumerable<ConsumosDTO>>(consumos);
-            var response = new ApiResponses<IEnumerable<ConsumosDTO>>(consumosDto);
+            var consumosDto = _mapper.Map<IEnumerable<Consumos>>(consumos);
+            var response = new ApiResponses<IEnumerable<Consumos>>(consumosDto);
             return Ok(response);
         }
 
@@ -40,29 +41,29 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var consumo = await _consumosService.GetById(id);
-            var ConsumosDTO = _mapper.Map<ConsumosDTO>(consumo);
-            var response = new ApiResponses<ConsumosDTO>(ConsumosDTO);
+            var consumoDto = _mapper.Map<ConsumosDTO>(consumo);
+            var response = new ApiResponses<ConsumosDTO>(consumoDto);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(ConsumosDTO ConsumosDTO)
+        public async Task<IActionResult> Insert(Consumos consumosDto)
         {
-            var consumo = _mapper.Map<Consumos>(ConsumosDTO);
+            var consumos = _mapper.Map<Consumos>(consumosDto);
 
-            await _consumosService.Add(consumo);
+            await _consumosService.Add(consumos);
 
-            ConsumosDTO = _mapper.Map<ConsumosDTO>(consumo);
-            var response = new ApiResponses<ConsumosDTO>(ConsumosDTO);
+            consumosDto = _mapper.Map<Consumos>(consumos);
+            var response = new ApiResponses<Consumos>(consumosDto);
             return Ok(response);
         }
 
         [HttpPut]
-        public void Update(int id, ConsumosDTO ConsumosDTO)
+        public void Update(int id, Consumos consumosDto)
         {
-            var consumo = _mapper.Map<Consumos>(ConsumosDTO);
+            var consumos = _mapper.Map<Consumos>(consumosDto);
 
-            _consumosService.Update(consumo);
+            _consumosService.Update(consumos);
 
         }
 
