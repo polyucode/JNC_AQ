@@ -243,8 +243,8 @@ function OfertasClientes() {
     const styles2 = useStyles2();
     const styles3 = useStyles3();
 
-    const [ number, setNumber ] = useState({ cantidad: 0, consumidos: 0 });
-    const [ resta, setResta ] = useState()
+    const [number, setNumber] = useState({ cantidad: 0, consumidos: 0 });
+    const [resta, setResta] = useState()
 
     const columnas = [
 
@@ -318,7 +318,7 @@ function OfertasClientes() {
     useEffect(() => {
         const { cantidad, consumidos } = number
         setResta(Number(cantidad) - Number(consumidos))
-    },[number])
+    }, [number])
 
     useEffect(() => {
         getContactos();
@@ -342,6 +342,25 @@ function OfertasClientes() {
             .then(response => {
                 abrirCerrarModalInsertar();
                 getOfertas();
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: null,
+                    fechaFinalizacion: null,
+                    contacto1: '',
+                    contacto2: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -359,6 +378,25 @@ function OfertasClientes() {
                 });
                 getOfertas();
                 abrirCerrarModalEditar();
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: null,
+                    fechaFinalizacion: null,
+                    contacto1: '',
+                    contacto2: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -371,6 +409,25 @@ function OfertasClientes() {
                 .then(response => {
                     getOfertas();
                     abrirCerrarModalEliminar();
+                    setOfertaSeleccionada({
+                        id: 0,
+                        numeroOferta: 0,
+                        pedido: 0,
+                        codigoCliente: 0,
+                        nombreCliente: '',
+                        descripcion: '',
+                        fechaInicio: null,
+                        fechaFinalizacion: null,
+                        contacto1: '',
+                        contacto2: '',
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
                 }).catch(error => {
                     console.log(error);
                 })
@@ -387,6 +444,28 @@ function OfertasClientes() {
             .then(response => {
                 abrirCerrarModalInsertarProducto();
                 getOfertasProductos();
+                setProductoSeleccionado({
+                    id: 0,
+                    codigoCliente: 0,
+                    oferta: 0,
+                    producto: '',
+                    descripcionProducto: '',
+                    cantidad: 0,
+                    precio: 0,
+                    stockMin: 0,
+                    stockMax: 0,
+                    consumidos: 0,
+                    entregar: 0,
+                    adr: '',
+                    portes: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -403,6 +482,28 @@ function OfertasClientes() {
                 });
                 getOfertasProductos();
                 abrirCerrarModalEditarProducto();
+                setProductoSeleccionado({
+                    id: 0,
+                    codigoCliente: 0,
+                    oferta: 0,
+                    producto: '',
+                    descripcionProducto: '',
+                    cantidad: 0,
+                    precio: 0,
+                    stockMin: 0,
+                    stockMax: 0,
+                    consumidos: 0,
+                    entregar: 0,
+                    adr: '',
+                    portes: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -415,6 +516,28 @@ function OfertasClientes() {
                 .then(response => {
                     getOfertasProductos();
                     abrirCerrarModalEliminarProducto();
+                    setProductoSeleccionado({
+                        id: 0,
+                        codigoCliente: 0,
+                        oferta: 0,
+                        producto: '',
+                        descripcionProducto: '',
+                        cantidad: 0,
+                        precio: 0,
+                        stockMin: 0,
+                        stockMax: 0,
+                        consumidos: 0,
+                        entregar: 0,
+                        adr: '',
+                        portes: '',
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
                 }).catch(error => {
                     console.log(error);
                 })
@@ -486,6 +609,28 @@ function OfertasClientes() {
         }));
     }
 
+    useEffect(() => {
+
+        const descripcion = productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto);
+        (descripcion.length > 0) && setProductoSeleccionado({
+            ...productoSeleccionado,
+            descripcionProducto: descripcion[0].descripcion
+        });
+
+    }, [productoSeleccionado.producto]);
+
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
+        (nombre.length > 0) && setOfertaSeleccionada({
+            ...ofertaSeleccionada,
+            nombreCliente: nombre[0].razonSocial,
+            contacto1: '',
+            contacto2: ''
+        })
+
+    }, [ofertaSeleccionada.codigoCliente])
+
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3>Agregar Nueva Oferta</h3>
@@ -525,6 +670,7 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="NombreCliente"
                         options={clientes}
+                        inputValue={ofertaSeleccionada.nombreCliente}
                         filterOptions={options => clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.razonSocial}
                         sx={{ width: 250 }}
@@ -566,6 +712,7 @@ function OfertasClientes() {
                     <Autocomplete
                         disableClearable={true}
                         id="contacto1"
+                        inputValue={ofertaSeleccionada.contacto1}
                         options={contactos}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.nombre}
@@ -582,6 +729,7 @@ function OfertasClientes() {
                     <Autocomplete
                         disableClearable={true}
                         id="contacto2"
+                        inputValue={ofertaSeleccionada.contacto2}
                         options={contactos}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.nombre}
@@ -595,7 +743,7 @@ function OfertasClientes() {
                 </div>
             </div>
             <br />
-            <br/>
+            <br />
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
@@ -638,20 +786,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-2">
                     <h5> Nombre Cliente </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="NombreCliente"
-                        options={clientes}
-                        filterOptions={options => clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente)}
-                        getOptionLabel={option => option.razonSocial}
-                        defaultValue={clientesNombreEditar[0]}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                            ...prevState,
-                            nombreCliente: value.razonSocial
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="nombreCliente" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.nombreCliente} />
                 </div>
                 <div className="col-md-2">
                     <h5> Fecha Inicio </h5>
@@ -687,6 +822,7 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto1"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto1}
                         defaultValue={contacto1Editar[0]}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.nombre}
@@ -704,6 +840,7 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto2"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto2}
                         defaultValue={contacto2Editar[0]}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.nombre}
@@ -822,6 +959,7 @@ function OfertasClientes() {
                     <Autocomplete
                         disableClearable={true}
                         id="descripcion"
+                        inputValue={productoSeleccionado.descripcionProducto}
                         options={productos}
                         filterOptions={options => productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto)}
                         getOptionLabel={option => option.descripcion}
@@ -901,7 +1039,7 @@ function OfertasClientes() {
                         defaultValue={productoEditar[0]}
                         getOptionLabel={option => option.codigoProducto}
                         sx={{ width: 150 }}
-                        renderInput={(params) => <TextField {...params}  name="producto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setProductoSeleccionado(prevState => ({
                             ...prevState,
                             producto: value.codigoProducto

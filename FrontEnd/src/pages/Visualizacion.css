@@ -22,10 +22,20 @@ div.visualizacion {
 
 div.datos {
     display: flex;
-    margin-bottom: 15px;
     justify-content: center;
 }
 
 div.datos > div.MuiAutocomplete-root {
     margin: 15px;
+}
+
+div.datos2 > div.MuiAutocomplete-root {
+    margin: 15px;
+}
+
+div.datos2 {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: center;
+    margin-left: -280px;
 }

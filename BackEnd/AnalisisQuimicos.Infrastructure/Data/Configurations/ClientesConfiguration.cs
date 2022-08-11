@@ -25,11 +25,11 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Codigo).HasMaxLength(100);
 
-            builder.Property(e => e.Comarca).HasMaxLength(250);
+            builder.Property(e => e.Comarca).HasMaxLength(100);
 
             builder.Property(e => e.Cp)
-                        .HasColumnName("CP")
-                        .HasMaxLength(20);
+                .HasColumnName("CP")
+                .HasMaxLength(50);
 
             builder.Property(e => e.CreditoConcedido).HasColumnType("decimal(18, 2)");
 
@@ -57,9 +57,9 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Pais).HasMaxLength(100);
 
-            builder.Property(e => e.Poblacion).HasMaxLength(200);
+            builder.Property(e => e.Poblacion).HasMaxLength(100);
 
-            builder.Property(e => e.Provincia).HasMaxLength(200);
+            builder.Property(e => e.Provincia).HasMaxLength(100);
 
             builder.Property(e => e.RazonSocial).HasMaxLength(500);
 

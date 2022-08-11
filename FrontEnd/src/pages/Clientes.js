@@ -136,11 +136,11 @@ function Clientes() {
     movil: '',
     email: '',
     direccion: '',
-    poblacion: 0,
-    provincia: 0,
+    poblacion: '',
+    provincia: '',
     cp: '',
     pais: '',
-    comarca: 0,
+    comarca: '',
     idSector: 0,
     addDate: null,
     addIdUser: null,
@@ -218,9 +218,9 @@ function Clientes() {
     { title: 'Movil', field: 'movil', filterPlaceholder: "Filtrar por movil" },
     { title: 'Email', field: 'email', filterPlaceholder: "Filtrar por email" },
     { title: 'Direccion', field: 'direccion', filterPlaceholder: "Filtrar por dirección" },
-    { title: 'Poblacion', field: 'poblacion', lookup: poblacionTable, filterPlaceholder: "Filtrar por población" },
-    { title: 'Provincia', field: 'provincia', lookup: provinciaTable, filterPlaceholder: "Filtrar por provincia" },
-    { title: 'Comarca', field: 'comarca', lookup: comarcaTable, filterPlaceholder: "Filtrar por comarca" },
+    { title: 'Poblacion', field: 'poblacion' },
+    { title: 'Provincia', field: 'provincia' },
+    { title: 'Comarca', field: 'comarca' },
     { title: 'Cp', field: 'cp', filterPlaceholder: "Filtrar por código postal" },
 
     //Ocultas
@@ -253,12 +253,12 @@ function Clientes() {
   ];
 
   //peticiones API
-  /*const GetPoblacion = async () => {
+  const GetPoblacion = async () => {
     axios.get("/poblacion", token).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
-  }*/
+  }
 
   const GetProvincia = async () => {
     axios.get("/provincia", token).then(response => {
@@ -299,25 +299,31 @@ function Clientes() {
   }*/
 
   useEffect(() => {
-    const lookupComarca = {};
-    comarca.map(fila => lookupComarca[fila.id] = fila.descripcion)
-    setComarcaTable(lookupComarca)
 
-    const lookupPoblacion = {};
-    poblacion.map(fila => lookupPoblacion[fila.id] = fila.poblacion)
-    setPoblacionTable(lookupPoblacion)
+    if (clienteSeleccionado.cp.length < 5) {
+      const prov = provincia.filter(prov => prov.codigo === clienteSeleccionado.cp.slice(0, 2));
+      (prov.length > 0) && setClienteSeleccionado({
+        ...clienteSeleccionado,
+        provincia: prov[0].descripcion,
+        poblacion: ''
+      })
+    } else {
+      const pueblo = poblacion.filter(pobl => pobl.cp === clienteSeleccionado.cp);
+      (pueblo.length > 0) && setClienteSeleccionado({
+        ...clienteSeleccionado,
+        poblacion: pueblo[0].poblacion
+      })
 
-    const lookupProvincia = {};
-    provincia.map(fila => lookupProvincia[fila.id] = fila.descripcion)
-    setProvinciaTable(lookupProvincia)
+    }
 
-  }, [comarca, poblacion])
+  }, [clienteSeleccionado.cp])
+
 
   useEffect(() => {
     peticionGet();
     peticionGetContacto();
     GetPerfiles();
-    //GetPoblacion();
+    GetPoblacion();
     GetProvincia();
     GetComarca();
     //FiltrarDataContacto();
@@ -330,6 +336,29 @@ function Clientes() {
         //setData(data.concat(response.data));
         abrirCerrarModalInsertar();
         peticionGet();
+        setClienteSeleccionado({
+          id: 0,
+          codigo: 0,
+          cif: '',
+          razonSocial: '',
+          telefono: '',
+          movil: '',
+          email: '',
+          direccion: '',
+          poblacion: '',
+          provincia: '',
+          cp: '',
+          pais: '',
+          comarca: '',
+          idSector: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -346,6 +375,29 @@ function Clientes() {
         });
         peticionGet();
         abrirCerrarModalEditar();
+        setClienteSeleccionado({
+          id: 0,
+          codigo: 0,
+          cif: '',
+          razonSocial: '',
+          telefono: '',
+          movil: '',
+          email: '',
+          direccion: '',
+          poblacion: '',
+          provincia: '',
+          cp: '',
+          pais: '',
+          comarca: '',
+          idSector: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -358,6 +410,29 @@ function Clientes() {
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();
+          setClienteSeleccionado({
+            id: 0,
+            codigo: 0,
+            cif: '',
+            razonSocial: '',
+            telefono: '',
+            movil: '',
+            email: '',
+            direccion: '',
+            poblacion: '',
+            provincia: '',
+            cp: '',
+            pais: '',
+            comarca: '',
+            idSector: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+          })
         }).catch(error => {
           console.log(error);
         })
@@ -372,6 +447,22 @@ function Clientes() {
       .then(response => {
         abrirCerrarModalInsertarContacto();
         peticionGetContacto();
+        setContactoSeleccionado({
+          id: 0,
+          codigoCliente: 0,
+          nombre: '',
+          telefono: '',
+          email: '',
+          cargo: '',
+          comentarios: '',
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       })
       .catch(error => {
         console.log(error);
@@ -385,6 +476,22 @@ function Clientes() {
         .then(response => {
           peticionGetContacto();
           abrirCerrarModalEliminarContacto();
+          setContactoSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            nombre: '',
+            telefono: '',
+            email: '',
+            cargo: '',
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+          })
         }).catch(error => {
           console.log(error);
         })
@@ -403,6 +510,22 @@ function Clientes() {
         });
         peticionGetContacto();
         abrirCerrarModalEditarContacto();
+        setContactoSeleccionado({
+          id: 0,
+          codigoCliente: 0,
+          nombre: '',
+          telefono: '',
+          email: '',
+          cargo: '',
+          comentarios: '',
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -432,7 +555,8 @@ function Clientes() {
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Nuevo Cliente</h3>
-      <br/>
+      <br />
+      {console.log(clienteSeleccionado)}
       <div className="row g-4">
         <div className="col-md-3">
           <h5> Codigo </h5>
@@ -482,41 +606,17 @@ function Clientes() {
             renderInput={(params) => <TextField {...params} name="comarca" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
-              comarca: value.id
+              comarca: value.descripcion
             }))}
           />
         </div>
         <div className="col-md-4">
           <h5> Província </h5>
-          <Autocomplete
-            disableClearable={true}
-            id="CboProvincia"
-            options={provincia}
-            getOptionLabel={option => option.descripcion}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="provincia" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              provincia: value.id
-            }))}
-          />
+          <TextField className={styles.inputMaterial} name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
         </div>
-        <div className="col-md-4"> 
+        <div className="col-md-4">
           <h5> Población </h5>
-          {/*
-          <Autocomplete
-            disableClearable={true}
-            id="CboPoblacion"
-            options={poblacion}
-            getOptionLabel={option => option.poblacion}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="poblacion" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              poblacion: value.id
-            }))}
-          />
-          */}
+          <TextField className={styles.inputMaterial} name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
         </div>
       </div>
 
@@ -588,7 +688,7 @@ function Clientes() {
             renderInput={(params) => <TextField {...params} name="comarca" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
-              comarca: value.id
+              comarca: value.descripcion
             }))}
           />
         </div>
@@ -605,26 +705,14 @@ function Clientes() {
             renderInput={(params) => <TextField {...params} name="provincia" />}
             onChange={(event, value) => setClienteSeleccionado(prevState => ({
               ...prevState,
-              provincia: value.id
+              provincia: value.descripcion
             }))}
           />
         </div>
         <div className="col-md-3">
           <h5> Población </h5>
           {/* Desplegable de Población */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboPoblacion"
-            options={poblacion}
-            getOptionLabel={option => option.poblacion}
-            defaultValue={poblacionClienteEditar[0]}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="poblacion" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              poblacion: value.id
-            }))}
-          />
+          <TextField className={styles.inputMaterial} name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
         </div>
       </div>
       <br />
@@ -898,9 +986,9 @@ function Clientes() {
           setClienteSeleccionado(clienteSeleccionado)
           //setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
           peticionGetContacto();
-          setComarcaClienteEditar(comarca.filter(comarca => comarca.id === clienteSeleccionado.comarca));
-          setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === clienteSeleccionado.provincia));
-          setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.id === clienteSeleccionado.poblacion));
+          setComarcaClienteEditar(comarca.filter(comarca => comarca.descripcion === clienteSeleccionado.comarca));
+          setProvinciaClienteEditar(provincia.filter(provincia => provincia.descripcion === clienteSeleccionado.provincia));
+          setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.poblacion === clienteSeleccionado.poblacion));
           abrirCerrarModalEditar();
         })}
         onSelectionChange={(filas) => {

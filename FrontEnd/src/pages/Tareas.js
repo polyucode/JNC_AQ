@@ -248,7 +248,7 @@ const localization = {
 
 function Tareas() {
 
-  const { valores , setValores } = useContext( ThemeContext );
+  const { valores, setValores } = useContext(ThemeContext);
 
 
   //variables
@@ -276,7 +276,8 @@ function Tareas() {
     operario: "",
     protocolo: "",
     elementoPlanta: "",
-    oferta: 0,
+    oferta: '',
+    pedido: '',
     analisis: "",
     final: "",
     valor: "",
@@ -299,7 +300,9 @@ function Tareas() {
 
     id: 0,
     codigoCliente: 0,
+    nombreCliente: '',
     oferta: 0,
+    pedido: 0,
     elemento: '',
     periodo: '',
     analisis: '',
@@ -379,7 +382,7 @@ function Tareas() {
 
     //visibles
     { title: 'Cliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por cliente" },
-    { title: 'Nombre Cliente', field: 'nombreCliente',  filterPlaceholder: "Filtrar por cliente" },
+    { title: 'Nombre Cliente', field: 'nombreCliente', filterPlaceholder: "Filtrar por cliente" },
     { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por técnico" },
     { title: 'Elemento de planta', field: 'elementoPlanta', filterPlaceholder: "Filtrar por elemento" },
     { title: 'Analisis', field: 'analisis', filterPlaceholder: "Filtrar por Analisis" },
@@ -490,6 +493,30 @@ function Tareas() {
 
   }, [elementosplanta, analisis, tipos, operarios])
 
+  useEffect(() => {
+
+    const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
+    (nombre.length > 0) && setTareaSeleccionada({
+      ...tareaSeleccionada,
+      nombreCliente: nombre[0].razonSocial,
+      pedido: '',
+      oferta: '',
+      elementoPlanta: ''
+    })
+
+  }, [tareaSeleccionada.codigoCliente])
+
+  useEffect(() => {
+
+    const pedido = ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta);
+    (pedido.length > 0) && setTareaSeleccionada({
+      ...tareaSeleccionada,
+      pedido: pedido[0].pedido,
+      elementoPlanta: ''
+    })
+
+  }, [tareaSeleccionada.oferta])
+
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
     await axios.post("/tareas", tareaSeleccionada, token)
@@ -502,7 +529,9 @@ function Tareas() {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -522,7 +551,9 @@ function Tareas() {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -542,7 +573,9 @@ function Tareas() {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -562,7 +595,9 @@ function Tareas() {
 
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -581,7 +616,9 @@ function Tareas() {
           for (let i = 0; i < 1; i++) {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -600,7 +637,9 @@ function Tareas() {
           for (let i = 0; i < 48; i++) {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-            analisisSeleccionado.oferta = response.data.data.oferta
+            analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+            analisisSeleccionado.oferta = response.data.data.oferta;
+            analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
@@ -615,14 +654,39 @@ function Tareas() {
             peticionPostVis();
           }
         }
-        
+
         abrirCerrarModalInsertar();
         peticionGet();
-        setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta})
-        {tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true });}
+        setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
+        { tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true }); }
+        setTareaSeleccionada({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: "",
+          operario: "",
+          protocolo: "",
+          elementoPlanta: "",
+          oferta: '',
+          pedido: '',
+          analisis: "",
+          final: "",
+          valor: "",
+          nombreValor: "",
+          unidades: "",
+          tipo: 0,
+          cancelado: false,
+          comentarios: "",
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
-      })     
+      })
   }
 
   const peticionPut = async () => {
@@ -636,6 +700,31 @@ function Tareas() {
         });
         peticionGet();
         abrirCerrarModalEditar();
+        setTareaSeleccionada({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: "",
+          operario: "",
+          protocolo: "",
+          elementoPlanta: "",
+          oferta: '',
+          pedido: '',
+          analisis: "",
+          final: "",
+          valor: "",
+          nombreValor: "",
+          unidades: "",
+          tipo: 0,
+          cancelado: false,
+          comentarios: "",
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -646,6 +735,31 @@ function Tareas() {
       .then(response => {
         peticionGet();
         abrirCerrarModalEliminar();
+        setTareaSeleccionada({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: "",
+          operario: "",
+          protocolo: "",
+          elementoPlanta: "",
+          oferta: '',
+          pedido: '',
+          analisis: "",
+          final: "",
+          valor: "",
+          nombreValor: "",
+          unidades: "",
+          tipo: 0,
+          cancelado: false,
+          comentarios: "",
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -661,12 +775,38 @@ function Tareas() {
   const peticionPostVis = async () => {
     analisisSeleccionado.id = 0;
     analisisSeleccionado.codigoCliente = tareaSeleccionada.codigoCliente;
+    analisisSeleccionado.nombreCliente = tareaSeleccionada.nombreCliente;
     analisisSeleccionado.oferta = tareaSeleccionada.oferta;
+    analisisSeleccionado.pedido = tareaSeleccionada.pedido;
     analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
     await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
         //abrirCerrarModalInsertarDet();
         peticionGetVis();
+        setAnalisisSeleccionado({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: '',
+          oferta: 0,
+          pedido: 0,
+          elemento: '',
+          periodo: '',
+          analisis: '',
+          fecha: null,
+          realizado: false,
+          operario: '',
+          protocolo: '',
+          observaciones: '',
+          facturado: false,
+          numeroFacturado: '',
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -683,6 +823,30 @@ function Tareas() {
         });
         peticionGetVis();
         abrirCerrarModalEditarDet();
+        setAnalisisSeleccionado({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: '',
+          oferta: 0,
+          pedido: 0,
+          elemento: '',
+          periodo: '',
+          analisis: '',
+          fecha: null,
+          realizado: false,
+          operario: '',
+          protocolo: '',
+          observaciones: '',
+          facturado: false,
+          numeroFacturado: '',
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -695,6 +859,30 @@ function Tareas() {
         .then(response => {
           peticionGetVis();
           abrirCerrarModalEliminarDet();
+          setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            oferta: 0,
+            pedido: 0,
+            elemento: '',
+            periodo: '',
+            analisis: '',
+            fecha: null,
+            realizado: false,
+            operario: '',
+            protocolo: '',
+            observaciones: '',
+            facturado: false,
+            numeroFacturado: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+          })
         }).catch(error => {
           console.log(error);
         })
@@ -727,9 +915,9 @@ function Tareas() {
       ...prevState,
       cancelado: value
     }))
-    if(value == true){
+    if (value == true) {
       setEstadoCancelado(false)
-    } else{
+    } else {
       setEstadoCancelado(true)
     }
   }
@@ -780,15 +968,15 @@ function Tareas() {
       setEstadoInput(true)
     }
 
-    if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo"){
+    if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo") {
       setEstadoOperario(false)
-    } else{
+    } else {
       setEstadoOperario(true)
     }
 
-    if (value.analisis === "Desinfecciones"){
+    if (value.analisis === "Desinfecciones") {
       setEstadoProtocolo(false)
-    } else{
+    } else {
       setEstadoProtocolo(true)
     }
   }
@@ -796,6 +984,7 @@ function Tareas() {
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar tarea</h3>
+      {console.log(tareaSeleccionada)}
       <br />
       <div className="row g-3">
         <div className="col-md-3">
@@ -822,6 +1011,7 @@ function Tareas() {
           <Autocomplete
             disableClearable={true}
             id="CboClientes"
+            inputValue={tareaSeleccionada.nombreCliente}
             className={styles2.inputMaterial}
             options={clientes}
             filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
@@ -840,6 +1030,7 @@ function Tareas() {
             disableClearable={true}
             className={styles2.inputMaterial}
             id="Oferta"
+            inputValue={tareaSeleccionada.oferta}
             options={ofertas}
             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
@@ -847,7 +1038,24 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: parseInt(value.numeroOferta)
+              oferta: value.numeroOferta
+            }))}
+          />
+        </div>
+        <div className="col-md-3">
+          <h5> Pedido </h5>
+          <Autocomplete
+            disableClearable={true}
+            id="Pedido"
+            options={ofertas}
+            inputValue={tareaSeleccionada.pedido}
+            getOptionLabel={option => option.pedido}
+            filterOptions={options => ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta)}
+            sx={{ width: 250 }}
+            renderInput={(params) => <TextField {...params} name="pedido" />}
+            onChange={(event, value) => setTareaSeleccionada(prevState => ({
+              ...prevState,
+              pedido: value.pedido
             }))}
           />
         </div>
@@ -859,6 +1067,7 @@ function Tareas() {
             disableClearable={true}
             className={styles2.inputMaterial}
             id="CboElementosPlanta"
+            inputValue={tareaSeleccionada.elementoPlanta}
             options={elementosplanta}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
             getOptionLabel={option => option.elemento}
@@ -1313,10 +1522,10 @@ function Tareas() {
           ]}
 
           onRowClick={((evt, analisisSeleccionado) => {
-              setAnalisisSeleccionado(analisisSeleccionado)
-              peticionGetVis();
-              setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
-              abrirCerrarModalEditarDet();
+            setAnalisisSeleccionado(analisisSeleccionado)
+            peticionGetVis();
+            setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
+            abrirCerrarModalEditarDet();
           })}
           onSelectionChange={(filas) => {
             setFilasSeleccionadasVis(filas);
@@ -1325,7 +1534,7 @@ function Tareas() {
           }
           }
           options={{
-            sorting: true, paging: true, pageSizeOptions: [1, 3, 4 , 5], pageSize: 5, filtering: false, search: false, selection: true,
+            sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
             rowStyle: rowData => ({
               backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
@@ -1466,7 +1675,7 @@ function Tareas() {
   const bodyEditarDet = (
     <div className={styles.modal}>
       <h3>Detalle de tarea</h3>
-      <br/>
+      <br />
       <div className="row g-3">
         <div className="col-md-3">
           {/* Desplegable de Clientes */}
@@ -1642,7 +1851,7 @@ function Tareas() {
 
         title="Listado de Tareas"
       />
-      
+
       <Modal
         open={modalInsertar}
         onClose={abrirCerrarModalInsertar}>

@@ -109,7 +109,9 @@ function Visualizacion() {
     const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
         id: 0,
         codigoCliente: 0,
-        oferta: 0,
+        nombreCliente: '',
+        oferta: '',
+        pedido: '',
         elemento: '',
         periodo: '',
         analisis: '',
@@ -1036,12 +1038,12 @@ function Visualizacion() {
         }, [])
     }
 
-    const GetArchivos = async () => {
+    /*const GetArchivos = async () => {
         axios.get("/archivos", token).then(response => {
             const archivo = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setArchivos2(archivo);
         }, [])
-    }
+    }*/
 
     const GetAnalisis = async () => {
         axios.get("/analisis", token).then(response => {
@@ -1104,7 +1106,7 @@ function Visualizacion() {
 
     useEffect(() => {
         GetOperarios();
-        GetArchivos();
+        //GetArchivos();
         GetParametrosAnalisisPlanta();
         FiltrarData();
         GetOfertas();
@@ -1164,7 +1166,6 @@ function Visualizacion() {
     }
 
     const peticionPut = async () => {
-        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1182,7 +1183,6 @@ function Visualizacion() {
     }
 
     const peticionPut1 = async () => {
-        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1200,7 +1200,6 @@ function Visualizacion() {
     }
 
     const peticionPutOperario = async () => {
-        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1218,7 +1217,6 @@ function Visualizacion() {
     }
 
     const peticionPutAerobio = async () => {
-        console.log(analisisSeleccionado)
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1273,7 +1271,9 @@ function Visualizacion() {
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.codigo
+            [name]: value.codigo,
+            oferta: '',
+            elemento: ''
         }))
     }
 
@@ -1300,7 +1300,8 @@ function Visualizacion() {
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.numeroOferta
+            [name]: value.numeroOferta,
+            elemento: ''
         }))
     }
 
@@ -1335,8 +1336,30 @@ function Visualizacion() {
         setDataTablas(analisisNivelesPlantasCliente.filter((analisisPlanta) => analisisPlanta.codigoCliente === analisisSeleccionado.codigoCliente && analisisPlanta.oferta === analisisSeleccionado.oferta && analisisPlanta.elemento === analisisSeleccionado.elemento))
     }
 
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente);
+        (nombre.length > 0) && setAnalisisSeleccionado({
+            ...analisisSeleccionado,
+            nombreCliente: nombre[0].razonSocial,
+            pedido: ''
+        })
+
+    }, [ analisisSeleccionado.codigoCliente ])
+
+    useEffect(() => {
+
+        const pedido = oferta.filter(pedido => pedido.numeroOferta === analisisSeleccionado.oferta);
+        (pedido.length > 0) && setAnalisisSeleccionado({
+            ...analisisSeleccionado,
+            pedido: pedido[0].pedido
+        })
+
+    }, [ analisisSeleccionado.oferta ])
+
     return (
         <div className="home-container">
+            {console.log(analisisSeleccionado)}
             <h4> Visualizacion de datos </h4>
             <div className="datos">
                 <Autocomplete
@@ -1353,6 +1376,7 @@ function Visualizacion() {
                     disableClearable={true}
                     id="Oferta"
                     options={oferta}
+                    inputValue={analisisSeleccionado.oferta}
                     getOptionLabel={option => option.numeroOferta}
                     filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
                     sx={{ width: 250 }}
@@ -1363,11 +1387,43 @@ function Visualizacion() {
                     disableClearable={true}
                     id="Elemento"
                     options={elemento}
+                    inputValue={analisisSeleccionado.elemento}
                     filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta)}
                     getOptionLabel={option => option.elemento}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                     onChange={(event, value) => onChangeElemento(event, value, "elemento")}
+                />
+            </div>
+            <div className="datos2">
+                <Autocomplete
+                    disableClearable={true}
+                    id="Cliente"
+                    name="nombreCliente"
+                    options={clientes}
+                    inputValue={analisisSeleccionado.nombreCliente}
+                    getOptionLabel={option => option.razonSocial}
+                    filterOptions={options => clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente)}
+                    sx={{ width: 250 }}
+                    renderInput={(params) => <TextField {...params} label="NombreCliente" name="nombreCliente" />}
+                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                        ...prevState,
+                        nombreCliente: value.razonSocial
+                    }))}
+                />
+                <Autocomplete
+                    disableClearable={true}
+                    id="Pedido"
+                    options={oferta}
+                    inputValue={analisisSeleccionado.pedido}
+                    getOptionLabel={option => option.pedido}
+                    filterOptions={options => oferta.filter(pedido => pedido.numeroOferta === analisisSeleccionado.oferta)}
+                    sx={{ width: 250 }}
+                    renderInput={(params) => <TextField {...params} label="Pedido" name="pedido" />}
+                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                        ...prevState,
+                        pedido: value.pedido
+                    }))}
                 />
             </div>
             <br />

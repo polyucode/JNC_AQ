@@ -151,7 +151,7 @@ function Plantas() {
         id: 0,
         codigoCliente: 0,
         nombreCliente: '',
-        oferta: 0,
+        oferta: '',
         NumNiveles: 0,
         addDate: null,
         addIdUser: null,
@@ -160,33 +160,6 @@ function Plantas() {
         delDate: null,
         delIdUser: null,
         deleted: null,
-    });
-
-    const [tareaSeleccionada, setTareaSeleccionada] = useState({
-
-        id: 0,
-        codigoCliente: 0,
-        nombreCliente: "",
-        operario: "",
-        protocolo: "",
-        elementoPlanta: "",
-        oferta: 0,
-        analisis: "",
-        final: "",
-        valor: "",
-        nombreValor: "",
-        unidades: "",
-        tipo: 0,
-        cancelado: false,
-        comentarios: "",
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-
     });
 
     const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
@@ -528,8 +501,7 @@ function Plantas() {
         GetClientes();
         GetOfertas();
         GetAnalisis();
-    }, [])
-
+    }, []);
 
     const peticionPost = async () => {
         if (confPlantasCliente.NumNiveles > 5) {
@@ -716,6 +688,17 @@ function Plantas() {
         }));
     }
 
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === confPlantasCliente.codigoCliente);
+        (nombre.length > 0) && setConfPlantasCliente({
+            ...confPlantasCliente,
+            nombreCliente: nombre[0].razonSocial,
+            oferta: ''
+        })
+
+    }, [ confPlantasCliente.codigoCliente ])
+
 
     return (
 
@@ -748,6 +731,7 @@ function Plantas() {
                                     disableClearable={true}
                                     id="NombreCliente"
                                     options={clientes}
+                                    inputValue={confPlantasCliente.nombreCliente}
                                     filterOptions={options => clientes.filter(cliente => cliente.codigo === confPlantasCliente.codigoCliente)}
                                     getOptionLabel={option => option.razonSocial}
                                     sx={{ width: 250 }}
@@ -766,6 +750,7 @@ function Plantas() {
                                     disableClearable={true}
                                     id="oferta"
                                     options={oferta}
+                                    inputValue={confPlantasCliente.oferta}
                                     filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === confPlantasCliente.codigoCliente)}
                                     getOptionLabel={option => option.numeroOferta}
                                     sx={{ width: 250 }}
