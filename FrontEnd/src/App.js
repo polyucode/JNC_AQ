@@ -56,7 +56,7 @@ export default function App() {
               <Route path='/consumoarticulos' element={<ConsumoArticulos />} />
               <Route path='/visualizacion' element={<Visualizacion />} />
               <Route path='/pdf' element={<Pdf />} />
-              <Route path='/entregas' element={<Entregas />} />
+              {/*<Route path='/entregas' element={<Entregas />} />*/}
             </Routes>
           </div>
 

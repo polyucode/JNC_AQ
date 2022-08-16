@@ -280,7 +280,13 @@ function OfertasClientes() {
 
     const getOfertasProductos = async () => {
         axios.get("/ofertasproductos", token).then(response => {
-            setDataProducto(response.data.data)
+            setDataDet(response.data.data)
+        })
+    }
+
+    const getOfertasProductosDet = async () => {
+        axios.get("/ofertasproductos", token).then(response => {
+            setDataProducto(response.data.data.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
         })
     }
 
@@ -311,10 +317,6 @@ function OfertasClientes() {
         }, [])
     }
 
-    function FiltrarDataProducto() {
-        setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-    }
-
     useEffect(() => {
         const { cantidad, consumidos } = number
         setResta(Number(cantidad) - Number(consumidos))
@@ -326,14 +328,13 @@ function OfertasClientes() {
         getOfertas();
         getClientes();
         getOfertasProductos();
-        FiltrarDataProducto();
+        getOfertasProductosDet();
     }, [])
 
     useEffect(() => {
         const lookupClientes = {};
         clientes.map(fila => lookupClientes[fila.id] = fila.razonSocial);
         setClientesTable(lookupClientes);
-        console.log("clientesTable " + JSON.stringify(clientesTable))
     }, [clientes])
 
     const peticionPost = async () => {
@@ -443,6 +444,7 @@ function OfertasClientes() {
         await axios.post("/ofertasproductos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
+                getOfertasProductosDet();
                 getOfertasProductos();
                 setProductoSeleccionado({
                     id: 0,
@@ -474,12 +476,13 @@ function OfertasClientes() {
     const peticionPutProducto = async () => {
         await axios.put("/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
             .then(response => {
-                var productoModificado = dataDet;
+                var productoModificado = dataProducto;
                 productoModificado.map(producto => {
                     if (producto.id === productoSeleccionado.id) {
                         producto = productoSeleccionado
                     }
                 });
+                getOfertasProductosDet();
                 getOfertasProductos();
                 abrirCerrarModalEditarProducto();
                 setProductoSeleccionado({
@@ -514,6 +517,7 @@ function OfertasClientes() {
         while (i < productoEliminar.length) {
             await axios.delete("/ofertasproductos/" + productoEliminar[i].id, token)
                 .then(response => {
+                    getOfertasProductosDet();
                     getOfertasProductos();
                     abrirCerrarModalEliminarProducto();
                     setProductoSeleccionado({
@@ -854,7 +858,7 @@ function OfertasClientes() {
                 </div>
             </div>
             <br />
-            <MaterialTable columns={columnasProducto} data={dataDet}
+            <MaterialTable columns={columnasProducto} data={dataProducto}
                 localization={localization}
                 actions={[
                     {
@@ -884,7 +888,6 @@ function OfertasClientes() {
                 ]}
 
                 onRowClick={((evt, productoSeleccionado) => {
-                    console.log(productoSeleccionado)
                     setProductoSeleccionado(productoSeleccionado);
                     getOfertasProductos();
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
@@ -1197,7 +1200,7 @@ function OfertasClientes() {
                 onRowClick={(event, ofertaSeleccionada) => {
                     // Copy row data and set checked state
                     setOfertaSeleccionada(ofertaSeleccionada);
-                    setDataDet(dataProducto.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
+                    setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getOfertasProductos();
                     setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
                     setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));

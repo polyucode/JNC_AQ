@@ -341,6 +341,7 @@ function Tareas() {
 
   const [data, setData] = useState([]);
   const [dataVis, setDataVis] = useState([]);
+  const [dataAnalisis, setDataAnalisis] = useState([]);
 
   const [operarios, setOperarios] = useState([]);
 
@@ -461,6 +462,18 @@ function Tareas() {
     })
   }
 
+  const peticionGetVis = async () => {
+    axios.get("/parametrosanalisisplanta", token).then(response => {
+      setDataVis(response.data.data)
+    })
+  }
+
+  const peticionGetAnalisis = async () => {
+    axios.get("/parametrosanalisisplanta", token).then(response => {
+      setDataAnalisis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
+    })
+  }
+
   useEffect(() => {
     peticionGet();
     GetElementosPlanta();
@@ -469,6 +482,8 @@ function Tareas() {
     GetAnalisis();
     GetOfertas();
     GetConfAnalisisNivelesPlantasCliente();
+    peticionGetAnalisis();
+    peticionGetVis();
   }, [])
 
 
@@ -765,23 +780,19 @@ function Tareas() {
       })
   }
 
-
-  const peticionGetVis = async () => {
-    axios.get("/parametrosanalisisplanta", token).then(response => {
-      setDataVis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta))
-    })
-  }
-
   const peticionPostVis = async () => {
     analisisSeleccionado.id = 0;
     analisisSeleccionado.codigoCliente = tareaSeleccionada.codigoCliente;
     analisisSeleccionado.nombreCliente = tareaSeleccionada.nombreCliente;
     analisisSeleccionado.oferta = tareaSeleccionada.oferta;
+    analisisSeleccionado.analisis = tareaSeleccionada.analisis;
     analisisSeleccionado.pedido = tareaSeleccionada.pedido;
     analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
+    console.log(analisisSeleccionado)
     await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
         //abrirCerrarModalInsertarDet();
+        peticionGetAnalisis();
         peticionGetVis();
         setAnalisisSeleccionado({
           id: 0,
@@ -815,12 +826,13 @@ function Tareas() {
   const peticionPutVis = async () => {
     await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
       .then(response => {
-        var analisisSeleccionado = data;
+        var analisisSeleccionado = dataAnalisis;
         analisisSeleccionado.map(analisis => {
           if (analisis.id === analisisSeleccionado.id) {
             analisis = analisisSeleccionado
           }
         });
+        peticionGetAnalisis();
         peticionGetVis();
         abrirCerrarModalEditarDet();
         setAnalisisSeleccionado({
@@ -857,6 +869,7 @@ function Tareas() {
     while (i < AnalisisEliminar.length) {
       await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
         .then(response => {
+          peticionGetAnalisis();
           peticionGetVis();
           abrirCerrarModalEliminarDet();
           setAnalisisSeleccionado({
@@ -931,7 +944,6 @@ function Tareas() {
   }
 
   const handleChangeCheck = (event, value) => {
-    console.log(value)
     setAnalisisSeleccionado(prevState => ({
       ...prevState,
       realizado: value
@@ -983,8 +995,7 @@ function Tareas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar tarea</h3>
-      {console.log(tareaSeleccionada)}
+      <h3>Agregar tarea</h3>  
       <br />
       <div className="row g-3">
         <div className="col-md-3">
@@ -1205,13 +1216,6 @@ function Tareas() {
             }}
           />
         </div>
-        {/*<div className="col-md-3">
-          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Se Cancela" name="cancelado" onChange={handleChangeCheck3} />
-        </div>
-        <div className="col-md-12">
-          <h5> Comentarios </h5>
-          <TextField disabled={estadoCancelado} className={styles.inputMaterial} name="comentarios" onChange={handleChange} />
-          </div>*/}
       </div>
       <br />
       <div align="right">
@@ -1484,7 +1488,9 @@ function Tareas() {
         </div>
       </div>
       <div className="row">
-        <MaterialTable columns={columnasVis} data={dataVis}
+        {console.log(dataVis)}
+        {console.log(dataAnalisis)}
+        <MaterialTable columns={columnasVis} data={dataAnalisis}
           localization={localization}
           actions={[
             {
@@ -1813,6 +1819,7 @@ function Tareas() {
 
         onRowClick={(evt, tareaSeleccionada) => {
           setTareaSeleccionada(tareaSeleccionada);
+          setDataAnalisis(dataVis.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
           peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));

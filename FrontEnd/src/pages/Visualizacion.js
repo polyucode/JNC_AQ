@@ -298,6 +298,7 @@ function Visualizacion() {
     const [data14, setData14] = useState([]);
     const [data15, setData15] = useState([]);
     const [dataTablas, setDataTablas] = useState([]);
+    const [dataAguas, setDataAguas] = useState([]);
 
     const [archivos, setArchivos] = useState(null);
 
@@ -1086,6 +1087,14 @@ function Visualizacion() {
         })
     }
 
+    const GetParametrosAnalisisPlantaAguasResiduales = async () => {
+        axios.get("/parametrosanalisisplanta", token).then(response => {
+            setDataAguas(response.data.data.filter(analisis => analisis.analisis === "Aguas Residuales" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        })
+    }
+
+
+
     function FiltrarData() {
         setData1(data.filter(analisis => analisis.analisis === "Físico-Químico"))
         setData2(data.filter(analisis => analisis.analisis === "Aerobios"))
@@ -1115,8 +1124,10 @@ function Visualizacion() {
         GetElementos();
         GetAnalisisNivelesPlantasCliente();
         Tablas();
+        GetParametrosAnalisisPlantaAguasResiduales();
     }, [])
 
+    console.log(dataAguas)
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
         await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)

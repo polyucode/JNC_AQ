@@ -21,7 +21,7 @@ const token = {
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
-    width: 400,
+    width: 700,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -89,6 +89,8 @@ function Usuarios() {
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
 
+  const [estadoCodigoOperario, setEstadoCodigoOperario] = useState(true);
+
 
 
   const columnas = [
@@ -101,7 +103,7 @@ function Usuarios() {
     { title: 'Firma', field: 'firma', filtering: false },
     { title: 'Perfil', field: 'idPerfil', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, filterPlaceholder: "Filtrar por perfil" },
     { title: 'Codigo Operario', field: 'codigoOperario', filterPlaceholder: "Filtrar por codigo Operario" },
-    { title: 'Cliente', field: 'idCliente', lookup: clientesTable, filterPlaceholder: "Filtrar por cliente" },
+    { title: 'Cliente', field: 'idCliente', lookup: clientesTable },
 
     //Ocultas
     { title: 'Fecha creación', field: 'addDate', type: 'date', filterPlaceholder: "Filtrar por fecah creacion", hidden: true },
@@ -156,19 +158,47 @@ function Usuarios() {
   useEffect(() => {
 
     const lookupClientes = {};
-    clientes.map(fila => lookupClientes[fila.id] = fila.nombreComercial);
+    clientes.map(fila => lookupClientes[fila.id] = fila.razonSocial);
     setClientesTable(lookupClientes);
+
   }, [clientes])
+
+  /*useEffect(() => {
+    setUsuarioSeleccionado({
+      ...usuarioSeleccionado,
+      codigoOperario: '',
+      idCliente: ''
+    })
+  }, [usuarioSeleccionado.idPerfil])*/
 
   //Insertar usuario
   const peticionPost = async () => {
-    console.log(usuarioSeleccionado)
     usuarioSeleccionado.id = null;
     await axios.post("/usuario", usuarioSeleccionado, token)
       .then(response => {
-        //setData(data.concat(response.data));
         abrirCerrarModalInsertar();
         peticionGet();
+        setUsuarioSeleccionado({
+          id: 0,
+          nombre: '',
+          apellidos: '',
+          login: null,
+          telefono: '',
+          usuario: '',
+          password: '',
+          activo: false,
+          firma: '',
+          idCliente: 0,
+          idPerfil: 0,
+          codigoOperario: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -176,7 +206,6 @@ function Usuarios() {
 
   // Editar el usuario
   const peticionPut = async () => {
-    console.log(usuarioSeleccionado)
     await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
       .then(response => {
         var usuarioModificado = data;
@@ -187,6 +216,27 @@ function Usuarios() {
         });
         peticionGet();
         abrirCerrarModalEditar();
+        setUsuarioSeleccionado({
+          id: 0,
+          nombre: '',
+          apellidos: '',
+          login: null,
+          telefono: '',
+          usuario: '',
+          password: '',
+          activo: false,
+          firma: '',
+          idCliente: 0,
+          idPerfil: 0,
+          codigoOperario: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -194,14 +244,33 @@ function Usuarios() {
 
   // Borrar el usuario
   const peticionDelete = async () => {
-    console.log(UsuarioEliminar.length)
-    console.log("id=" + UsuarioEliminar[0].id)
     var i = 0;
     while (i < UsuarioEliminar.length) {
       await axios.delete("/usuario/" + UsuarioEliminar[i].id, token)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();
+          setUsuarioSeleccionado({
+            id: 0,
+            nombre: '',
+            apellidos: '',
+            login: null,
+            telefono: '',
+            usuario: '',
+            password: '',
+            activo: false,
+            firma: '',
+            idCliente: 0,
+            idPerfil: 0,
+            codigoOperario: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+          })
         }).catch(error => {
           console.log(error);
         })
@@ -222,6 +291,14 @@ function Usuarios() {
     }));
   }
 
+  const handleChangeCheckbox = e => {
+    const { name, value, checked } = e.target
+    setUsuarioSeleccionado(prevState => ({
+      ...prevState,
+      [name]: checked
+    }))
+  }
+
   const handleChangePerfil = (event, value) => {
     setUsuarioSeleccionado(prevState => ({
       ...prevState,
@@ -232,53 +309,79 @@ function Usuarios() {
     } else {
       setestadoCboCliente(true)
     }
+
+    if (value.id === 1004) {
+      setEstadoCodigoOperario(false)
+    } else {
+      setEstadoCodigoOperario(true)
+    }
   }
 
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Nuevo Usuario</h3>
-      <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} />
       <br />
-      <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChange} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Password" type="password" name="password" onChange={handleChange} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Repetir Contraseña" type="password" name="repetir_contraseña" onChange={handleChange} />
-      <br />
-      <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} />
-      <br />
-
-      {/* Desplegable de Perfiles */}
-      <Autocomplete
-        disableClearable={true}
-        id="CboPerfiles"
-        options={perfiles}
-        getOptionLabel={option => option.nombre}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-        onChange={handleChangePerfil}
-      />
-      <TextField className={styles.inputMaterial} label="Codigo Operario" type="number" name="codigoOperario" onChange={handleChange} />
-      <br />
-      {/* Desplegable de Clientes */}
-      <Autocomplete
-        disableClearable={true}
-        disabled={estadoCboCliente}
-        id="CboClientes"
-        options={clientes}
-        getOptionLabel={option => option.nombreComercial}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
-        onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
-          ...prevState,
-          idCliente: value.id
-        }))}
-      />
-
+      <div className="row g-4">
+        <div className="col-md-6">
+          <h5> Nombre </h5>
+          <TextField className={styles.inputMaterial} name="nombre" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Apellidos </h5>
+          <TextField className={styles.inputMaterial} name="apellidos" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Telefono </h5>
+          <TextField className={styles.inputMaterial} name="telefono" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Usuario </h5>
+          <TextField className={styles.inputMaterial} name="usuario" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Contraseña </h5>
+          <TextField className={styles.inputMaterial} type="password" name="password" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Repetir Contraseña </h5>
+          <TextField className={styles.inputMaterial} type="password" name="repetir_contraseña" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Activo" name="activo" checked={usuarioSeleccionado.activo} onChange={handleChangeCheckbox} />
+        </div>
+        <div className="col-md-6">
+          <h5> Perfil </h5>
+          <Autocomplete
+            disableClearable={true}
+            id="CboPerfiles"
+            options={perfiles}
+            getOptionLabel={option => option.nombre}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="idPerfil" />}
+            onChange={handleChangePerfil}
+          />
+        </div>
+        <div className="col-md-6">
+          <h5> Codigo Operario </h5>
+          <TextField disabled={estadoCodigoOperario} className={styles.inputMaterial} type="number" name="codigoOperario" onChange={handleChange} />
+        </div>
+        <div className="col-md-6">
+          <h5> Cliente </h5>
+          <Autocomplete
+            disableClearable={true}
+            disabled={estadoCboCliente}
+            id="CboClientes"
+            options={clientes}
+            getOptionLabel={option => option.razonSocial}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="idCliente" />}
+            onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
+              ...prevState,
+              idCliente: value.id
+            }))}
+          />
+        </div>
+      </div>
       <br /><br />
       <div align="right">
         <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
@@ -296,49 +399,67 @@ function Usuarios() {
   // Cuadro de editar usuario
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Usuario</h3>
-      <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} />
+      <h3> Usuario </h3>
       <br />
-      <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.apellidos} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.telefono} />
-      <br />
-      <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.usuario} />
-      <br />
-      <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.activo} />
-      <br />
-
-      {/* Desplegable de Perfiles */}
-      <Autocomplete
-        disableClearable={true}
-        id="CboPerfiles"
-        options={perfiles}
-        getOptionLabel={option => option.nombre}
-        defaultValue={perfilUsuarioEditar[0]}
-        sx={{ width: 300 }}
-        onChange={handleChangePerfil}
-        renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-      />
-
-      {/* Desplegable de Clientes */}
-      <Autocomplete
-        disableClearable={true}
-        disabled={estadoCboCliente}
-        id="CboClientes"
-        options={clientes}
-        getOptionLabel={option => option.nombreComercial}
-        defaultValue={clienteUsuarioEditar[0]}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente" />}
-        onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
-          ...prevState,
-          idCliente: value.id
-        }))}
-      />
-
+      <div className="row g-4">
+        <div className="col-md-6">
+          <h5> Nombre </h5>
+          <TextField className={styles.inputMaterial} name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} />
+        </div>
+        <div className="col-md-6">
+          <h5> Apellidos </h5>
+          <TextField className={styles.inputMaterial} name="apellidos" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.apellidos} />
+        </div>
+        <div className="col-md-6">
+          <h5> Telefono </h5>
+          <TextField className={styles.inputMaterial} name="telefono" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.telefono} />
+        </div>
+        <div className="col-md-6">
+          <h5> Usuario </h5>
+          <TextField className={styles.inputMaterial} name="usuario" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.usuario} />
+        </div>
+        <div className="col-md-6">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Activo" name="activo" checked={usuarioSeleccionado.activo} onChange={handleChangeCheckbox} />
+        </div>
+        <div className="col-md-6">
+          <h5> Perfil </h5>
+          <Autocomplete
+            disableClearable={true}
+            id="CboPerfiles"
+            options={perfiles}
+            defaultValue={perfilUsuarioEditar[0]}
+            getOptionLabel={option => option.nombre}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="idPerfil" />}
+            onChange={handleChangePerfil}
+          />
+        </div>
+        <div className="col-md-6">
+          <h5> Codigo Operario </h5>
+          <TextField disabled={estadoCodigoOperario} className={styles.inputMaterial} type="number" name="codigoOperario" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.codigoOperario} />
+        </div>
+        <div className="col-md-6">
+          <h5> Cliente </h5>
+          <Autocomplete
+            disableClearable={true}
+            disabled={estadoCboCliente}
+            id="CboClientes"
+            options={clientes}
+            inputValue={usuarioSeleccionado.idCliente}
+            defaultValue={clienteUsuarioEditar[0]}
+            getOptionLabel={option => option.razonSocial}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} name="idCliente" />}
+            onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
+              ...prevState,
+              idCliente: value.id
+            }))}
+          />
+        </div>
+      </div>
       <br /><br />
       <div align="right">
-        <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
+        <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
         <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
     </div>
@@ -351,7 +472,7 @@ function Usuarios() {
 
   const bodyEliminar = (
     <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el usuario ? </p>
+      <h5>Estás seguro que deseas eliminar el usuario ? </h5>
       <div align="right">
         <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
         <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
@@ -417,7 +538,6 @@ function Usuarios() {
             tooltip: "Añadir Usuario",
             isFreeAction: true,
             onClick: (e, data) => {
-
               abrirCerrarModalInsertar()
             },
           },
@@ -434,27 +554,27 @@ function Usuarios() {
             tooltip: "Editar Usuario",
             onClick: (e, data) => {
               setperfilUsuarioEditar(perfiles.filter(perfil => perfil.id === FilasSeleccionadas[0].idPerfil));
-              if (FilasSeleccionadas[0].idPerfil === 2) {
-                setclienteUsuarioEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-                setestadoCboCliente(false);
-              } else {
-                setclienteUsuarioEditar(false);
-                setestadoCboCliente(true);
-              }
+              setclienteUsuarioEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].cliente))
               abrirCerrarModalEditar();
             },
           },
         ]}
 
-        onRowClick={((evt, usuarioSeleccionado) => setUsuarioSeleccionado(usuarioSeleccionado.tableData.id))}
+        onRowClick={((evt, usuarioSeleccionado) => {
+          setUsuarioSeleccionado(usuarioSeleccionado)
+          setperfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.idPerfil));
+          setclienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.idCliente))
+          abrirCerrarModalEditar();
+        })}
         onSelectionChange={(filas) => {
           setFilasSeleccionadas(filas);
-          setUsuarioSeleccionado(filas[0]);
+          if (filas.length > 0)
+            setUsuarioSeleccionado(filas[0]);
         }
         }
         options={{
           sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-          columnsButton: true,
+          columnsButton: true, showSelectAllCheckbox: false,
           rowStyle: rowData => ({
             backgroundColor: (usuarioSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
             whiteSpace: "nowrap"

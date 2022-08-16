@@ -289,14 +289,15 @@ function Clientes() {
 
   const peticionGetContacto = async () => {
     axios.get("/clientescontactos", token).then(response => {
-      setDataDet(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+      setDataDet(response.data.data)
     })
   }
 
-  /*function FiltrarDataContacto () {
-    setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
-    //peticionGetContacto();
-  }*/
+  const peticionGetContactoCliente = async () => {
+    axios.get("/clientescontactos", token).then(response => {
+      setDataContacto(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+    })
+  }
 
   useEffect(() => {
 
@@ -322,18 +323,17 @@ function Clientes() {
   useEffect(() => {
     peticionGet();
     peticionGetContacto();
+    peticionGetContactoCliente();
     GetPerfiles();
     GetPoblacion();
     GetProvincia();
     GetComarca();
-    //FiltrarDataContacto();
   }, [])
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
     await axios.post("/cliente", clienteSeleccionado, token)
       .then(response => {
-        //setData(data.concat(response.data));
         abrirCerrarModalInsertar();
         peticionGet();
         setClienteSeleccionado({
@@ -447,6 +447,7 @@ function Clientes() {
       .then(response => {
         abrirCerrarModalInsertarContacto();
         peticionGetContacto();
+        peticionGetContactoCliente();
         setContactoSeleccionado({
           id: 0,
           codigoCliente: 0,
@@ -474,6 +475,7 @@ function Clientes() {
     while (i < ContactoClienteEliminar.length) {
       await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
         .then(response => {
+          peticionGetContactoCliente();
           peticionGetContacto();
           abrirCerrarModalEliminarContacto();
           setContactoSeleccionado({
@@ -502,12 +504,13 @@ function Clientes() {
   const peticionPutContacto = async () => {
     await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
       .then(response => {
-        var contactoModificado = data;
+        var contactoModificado = dataContacto;
         contactoModificado.map(contacto => {
           if (contacto.id === contactoSeleccionado.id) {
             contacto = contactoSeleccionado
           }
         });
+        peticionGetContactoCliente();
         peticionGetContacto();
         abrirCerrarModalEditarContacto();
         setContactoSeleccionado({
@@ -556,7 +559,6 @@ function Clientes() {
     <div className={styles.modal}>
       <h3>Agregar Nuevo Cliente</h3>
       <br />
-      {console.log(clienteSeleccionado)}
       <div className="row g-4">
         <div className="col-md-3">
           <h5> Codigo </h5>
@@ -694,29 +696,15 @@ function Clientes() {
         </div>
         <div className="col-md-3">
           <h5> Província </h5>
-          {/* Desplegable de Provincia */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboProvincia"
-            options={provincia}
-            getOptionLabel={option => option.descripcion}
-            defaultValue={provinciaClienteEditar[0]}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} name="provincia" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              provincia: value.descripcion
-            }))}
-          />
+          <TextField className={styles.inputMaterial} name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
         </div>
         <div className="col-md-3">
           <h5> Población </h5>
-          {/* Desplegable de Población */}
           <TextField className={styles.inputMaterial} name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
         </div>
       </div>
       <br />
-      <MaterialTable columns={columnasDet} data={dataDet}
+      <MaterialTable columns={columnasDet} data={dataContacto}
         localization={localization}
         actions={[
           {
@@ -724,7 +712,6 @@ function Clientes() {
             tooltip: "Añadir contacto cliente",
             isFreeAction: true,
             onClick: (e, data) => {
-              //setContactoClienteEditar();
               abrirCerrarModalInsertarContacto();
             },
           },
@@ -905,6 +892,7 @@ function Clientes() {
 
   return (
     <div>
+      {console.log(dataDet)}
       <MaterialTable columns={columnas} data={data}
         localization={{
           body: {
@@ -984,7 +972,7 @@ function Clientes() {
 
         onRowClick={((evt, clienteSeleccionado) => {
           setClienteSeleccionado(clienteSeleccionado)
-          //setDataDet(dataContacto.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+          setDataContacto(dataDet.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
           peticionGetContacto();
           setComarcaClienteEditar(comarca.filter(comarca => comarca.descripcion === clienteSeleccionado.comarca));
           setProvinciaClienteEditar(provincia.filter(provincia => provincia.descripcion === clienteSeleccionado.provincia));
