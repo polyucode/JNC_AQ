@@ -1,4 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useUsuarioActual } from '../hooks/useUsuarioActual';
+import Perfil from '../pages/Perfil';
 import {
     HomePage,
     UsuariosPage,
@@ -13,25 +15,42 @@ import {
     VisualizacionPage,
     LoginPage
 } from '../pages';
-import Perfil from '../pages/Perfil';
 
 export const AppRouter = () => {
 
+    const { usuarioActual } = useUsuarioActual();
+
+    console.log( usuarioActual.activo );
+
     return (
         <Routes>
-            <Route path='/' exact element={<HomePage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/usuarios' element={<UsuariosPage />} />
-            <Route path='/clientes' element={<ClientesPage />} />
-            <Route path='/mantenimientos' element={<MantenimientosPage />} />
-            <Route path='/perfil' element={<Perfil />} />
-            <Route path='/plantas' element={<PlantasPage />} />
-            <Route path='/plantasTabla' element={<PlantasTablaPage />} />
-            <Route path="/mantenimientoTecnico" element={<MantenimientoTecnicoPage />} />
-            <Route path="/ofertas" element={<OfertasClientesPage />} />
-            <Route path='/productos' element={<ProductosPage />} />
-            <Route path='/consumoarticulos' element={<ConsumoArticulosPage />} />
-            <Route path='/visualizacion' element={<VisualizacionPage />} />
+            {
+                ( usuarioActual.activo )
+                    ? (
+                        <>
+                            { console.log('Es usuario valido') }
+                            <Route path='/' exact element={ <HomePage /> } />
+                            <Route path='/login' element={ <Navigate to="/" replace={ true } /> } />
+                            <Route path='/usuarios' element={ <UsuariosPage /> } />
+                            <Route path='/clientes' element={ <ClientesPage /> } />
+                            <Route path='/mantenimientos' element={ <MantenimientosPage /> } />
+                            <Route path='/perfil' element={ <Perfil /> } />
+                            <Route path='/plantas' element={ <PlantasPage /> } />
+                            <Route path='/plantasTabla' element={ <PlantasTablaPage /> } />
+                            <Route path="/mantenimientoTecnico" element={ <MantenimientoTecnicoPage /> } />
+                            <Route path="/ofertas" element={ <OfertasClientesPage /> } />
+                            <Route path='/productos' element={ <ProductosPage /> } />
+                            <Route path='/consumoarticulos' element={ <ConsumoArticulosPage /> } />
+                            <Route path='/visualizacion' element={ <VisualizacionPage /> } />
+                        </>
+                    ) : (
+                        <>
+                            { console.log('Es usuario NO valido') }
+                            <Route path='/login' element={ <LoginPage /> } />
+                            <Route path='/*' element={ <Navigate to="/login" replace={ true } /> } />
+                        </>
+                    )
+            }
         </Routes>
     );
 }

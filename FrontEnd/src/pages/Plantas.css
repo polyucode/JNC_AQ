@@ -15,11 +15,11 @@ button {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
 }
-input[type=text] {
+/* input[type=text] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
     margin-top: 5px;
-}
+} */
 input[type=checkbox] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;

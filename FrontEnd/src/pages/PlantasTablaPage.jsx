@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import axios from "axios";
 import { Tab, Box } from '@mui/material';
-import { TabContext, TabList } from '@mui/lab';
+//import { TabContext, TabList } from '@mui/lab';
 import { Modal, TextField, Button } from '@material-ui/core';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
@@ -1711,7 +1711,7 @@ export const PlantasTablaPage = () => {
                     </table>
                 </div>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
-                    <TabContext value={value}>
+                    {/* <TabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <TabList id="tab-list" onChange={handleChange}>
                                 {
@@ -1722,7 +1722,7 @@ export const PlantasTablaPage = () => {
                         {
                             listaElementos.map((elemento, index) => <TablaElementosTabla key={index} nombre={elemento.nombre} value={index} plantilla={elemento.plantilla} />)
                         }
-                    </TabContext>
+                    </TabContext> */}
                 </Box>
                 <div className='botones-menu'>
                     <button>Cancelar</button>

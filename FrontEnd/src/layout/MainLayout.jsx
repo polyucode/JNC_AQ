@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Toolbar, Box } from '@mui/material';
 import { Appbar, Sidebar } from '../components/Menu';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const MainLayout = ({ title, children }) => {
 
-    const drawerWidth = 250;
+    const drawerWidth = 300;
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const onDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    
 
     return (
         <>
@@ -26,6 +29,7 @@ export const MainLayout = ({ title, children }) => {
                         width: { sm: `calc(100% - ${ drawerWidth }px)` },
                         ml: { sm: `${ drawerWidth }px` }
                     }}
+                    className="animate__animated animate__fadeInDown"
                 >
                     <Toolbar />
 

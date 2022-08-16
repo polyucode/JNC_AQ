@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { TabPanel } from '@mui/lab';
+// import { TabPanel } from '@mui/lab';
 
 import CampoPrincipalPlantasTabla from './CampoPrincipalPlantasTabla';
 import CampoPersPlantasTabla from './CampoPersPlantasTabla';
@@ -305,9 +305,10 @@ class TablaElementosTabla extends React.Component {
         );
 
         return (
-            <TabPanel value={this.props.value.toString()}>
-                {this.usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
-            </TabPanel>
+            <p>Prueba</p>
+            // <TabPanel value={this.props.value.toString()}>
+            //     {this.usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
+            // </TabPanel>
         );
     };
 

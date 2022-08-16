@@ -13,7 +13,16 @@ export const LoginLayout = ({ title, children }) => {
 
     return (
         <>
-            <Grid container justifyContent="center" flexDirection="column" sx={{ pl: 2, pr: 2 }}>
+            <Grid
+                container
+                justifyContent="center"
+                flexDirection="column"
+                sx={{
+                    pl: 2,
+                    pr: 2
+                }}
+                
+            >
 
                 <Appbar title={ title } variant='login-variant' onDrawerToggle={ onDrawerToggle } />
                 
