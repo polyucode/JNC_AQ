@@ -22,6 +22,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Observaciones { get; set; }
         public bool? Facturado { get; set; }
         public string NumeroFacturado { get; set; }
+        public string Resultado { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

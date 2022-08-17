@@ -21,5 +21,6 @@ namespace AnalisisQuimicos.Core.Entities
         public string Observaciones { get; set; }
         public bool? Facturado { get; set; }
         public string NumeroFacturado { get; set; }
+        public string Resultado { get; set; }
     }
 }
