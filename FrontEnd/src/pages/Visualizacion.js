@@ -198,6 +198,8 @@ function Visualizacion() {
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
 
+    const [operarioEditar, setOperarioEditar] = useState([]);
+
     const [analisisNombre, setAnalisisNombre] = useState([]);
 
     const [oferta, setOferta] = useState([]);
@@ -299,7 +301,6 @@ function Visualizacion() {
     const [data14, setData14] = useState([]);
     const [data15, setData15] = useState([]);
     const [dataTablas, setDataTablas] = useState([]);
-    const [dataAguas, setDataAguas] = useState([]);
 
     const [archivos, setArchivos] = useState(null);
 
@@ -405,7 +406,7 @@ function Visualizacion() {
                         renderInput={(params) => <TextField {...params} name="operario" />}
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
-                            operario: value.nombre + value.apellidos
+                            operario: value.nombre + ' ' + value.apellidos
                         }))}
                     />
                 </div>
@@ -586,7 +587,7 @@ function Visualizacion() {
                         renderInput={(params) => <TextField {...params} name="operario" />}
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
-                            operario: value.nombre + value.apellidos
+                            operario: value.nombre + ' ' + value.apellidos
                         }))}
                     />
                 </div>
@@ -738,14 +739,14 @@ function Visualizacion() {
                         id="Operarios"
                         options={operarios}
                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        defaultValue={operarioEditar[0]}
                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                         sx={{ width: 300 }}
                         renderInput={(params) => <TextField {...params} name="operario" />}
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
-                            operario: value.nombre + value.apellidos
+                            operario: value.nombre + ' ' + value.apellidos
                         }))}
-                        value={analisisSeleccionado && analisisSeleccionado.operario}
                     />
                 </div>
                 <div className="col-md-9">
@@ -901,14 +902,14 @@ function Visualizacion() {
                         id="Operarios"
                         options={operarios}
                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                        defaultValue={operarioEditar[0]}
                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                         sx={{ width: 300 }}
                         renderInput={(params) => <TextField {...params} name="operario" />}
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
-                            operario: value.nombre + value.apellidos
+                            operario: value.nombre + ' ' + value.apellidos
                         }))}
-                        value={analisisSeleccionado && analisisSeleccionado.operario}
                     />
                 </div>
                 <div className="col-md-4">
@@ -2346,6 +2347,7 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                setOperarioEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === analisisSeleccionado.operario))
                                                 abrirCerrarModalEditarOperario();
                                             })}
                                             onSelectionChange={(filas) => {

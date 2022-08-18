@@ -244,7 +244,8 @@ function OfertasClientes() {
     const styles3 = useStyles3();
 
     const [number, setNumber] = useState({ cantidad: 0, consumidos: 0 });
-    const [resta, setResta] = useState()
+    const [resta, setResta] = useState();
+    const [resta2, setResta2] = useState();
 
     const columnas = [
 
@@ -320,7 +321,8 @@ function OfertasClientes() {
     useEffect(() => {
         const { cantidad, consumidos } = number
         setResta(Number(cantidad) - Number(consumidos))
-    }, [number])
+        setResta2(productoSeleccionado.cantidad - productoSeleccionado.consumidos)
+    }, [number, productoSeleccionado.consumidos])
 
     useEffect(() => {
         getContactos();
@@ -368,7 +370,6 @@ function OfertasClientes() {
     }
 
     const peticionPut = async () => {
-        console.log(ofertaSeleccionada)
         await axios.put("/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
             .then(response => {
                 var ofertaModificada = data;
@@ -474,6 +475,7 @@ function OfertasClientes() {
     }
 
     const peticionPutProducto = async () => {
+        productoSeleccionado.entregar = resta2
         await axios.put("/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
             .then(response => {
                 var productoModificado = dataProducto;
@@ -618,10 +620,12 @@ function OfertasClientes() {
         const descripcion = productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto);
         (descripcion.length > 0) && setProductoSeleccionado({
             ...productoSeleccionado,
-            descripcionProducto: descripcion[0].descripcion
+            descripcionProducto: descripcion[0].descripcion,
+            adr: descripcion[0].adr
         });
 
     }, [productoSeleccionado.producto]);
+
 
     useEffect(() => {
 
@@ -718,7 +722,7 @@ function OfertasClientes() {
                         id="contacto1"
                         inputValue={ofertaSeleccionada.contacto1}
                         options={contactos}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto1" />}
@@ -735,7 +739,7 @@ function OfertasClientes() {
                         id="contacto2"
                         inputValue={ofertaSeleccionada.contacto2}
                         options={contactos}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto2" />}
@@ -825,10 +829,10 @@ function OfertasClientes() {
                     <Autocomplete
                         disableClearable={true}
                         id="contacto1"
-                        options={contactos}
                         inputValue={ofertaSeleccionada.contacto1}
+                        options={contactos}
                         defaultValue={contacto1Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto1" />}
@@ -844,9 +848,9 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto2"
                         options={contactos}
-                        inputValue={ofertaSeleccionada.contacto2}
                         defaultValue={contacto2Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente)}
+                        inputValue={ofertaSeleccionada.contacto2}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto2" />}
@@ -959,19 +963,12 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-9">
                     <h5> Descripcion </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="descripcion"
-                        inputValue={productoSeleccionado.descripcionProducto}
-                        options={productos}
-                        filterOptions={options => productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto)}
-                        getOptionLabel={option => option.descripcion}
-                        sx={{ width: 625 }}
-                        renderInput={(params) => <TextField {...params} name="descripcionProducto" />}
-                        onChange={(event, value) => setProductoSeleccionado(prevState => ({
-                            ...prevState,
-                            descripcionProducto: value.descripcion
-                        }))}
+                    <TextField
+                        id='descripcion'
+                        className={styles.inputMaterial}
+                        value={productoSeleccionado && productoSeleccionado.descripcionProducto}
+                        name="descripcionProducto"
+                        onChange={handleChangeProducto}
                     />
                 </div>
                 <div className="col-md-3">
@@ -1003,16 +1000,10 @@ function OfertasClientes() {
                     <TextField
                         id='adr'
                         className={styles3.inputMaterial}
-                        select
+                        value={productoSeleccionado && productoSeleccionado.adr}
                         name="adr"
                         onChange={handleChangeProducto}
-                    >
-                        {selections.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    />
                 </div>
                 <div className="col-md-12">
                     <h5> Portes </h5>
@@ -1063,7 +1054,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-3">
                     <h5> Entregar </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.entregar} />
+                    <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={resta2} />
                 </div>
                 <div className="col-md-3">
                     <h5> Precio </h5>
@@ -1199,6 +1190,7 @@ function OfertasClientes() {
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
                     // Copy row data and set checked state
+                    console.log(ofertaSeleccionada)
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getOfertasProductos();

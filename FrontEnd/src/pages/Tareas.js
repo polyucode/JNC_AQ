@@ -379,6 +379,8 @@ function Tareas() {
 
   let navigate = useNavigate();
 
+  console.log(confAnalisisNivelesPlantasCliente)
+
   const columnas = [
 
     //visibles
@@ -673,7 +675,7 @@ function Tareas() {
         abrirCerrarModalInsertar();
         peticionGet();
         setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-        { tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true }); }
+        { tareaSeleccionada.analisis === "Físico-Químico" && navigate("/plantasTabla", { replace: true }); }
         setTareaSeleccionada({
           id: 0,
           codigoCliente: 0,
@@ -1163,7 +1165,7 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="operario" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              operario: value.nombre
+              operario: value.nombre + ' ' + value.apellidos
             }))}
           />
         </div>
@@ -1300,6 +1302,7 @@ function Tareas() {
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
       <h3>Tarea</h3>
+      <br/>
       <div className="row g-3">
         <div className="col-md-3">
           <h5> Codigo Cliente </h5>
@@ -1436,7 +1439,7 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="operario" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              operario: value.nombre
+              operario: value.nombre + ' ' + value.apellidos
             }))}
           />
         </div>
@@ -1488,8 +1491,6 @@ function Tareas() {
         </div>
       </div>
       <div className="row">
-        {console.log(dataVis)}
-        {console.log(dataAnalisis)}
         <MaterialTable columns={columnasVis} data={dataAnalisis}
           localization={localization}
           actions={[
@@ -1819,15 +1820,40 @@ function Tareas() {
 
         onRowClick={(evt, tareaSeleccionada) => {
           setTareaSeleccionada(tareaSeleccionada);
+          console.log(tareaSeleccionada)
           setDataAnalisis(dataVis.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
           peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));
           setElementoTareaEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
           setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
-          setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
+          setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
           setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
           setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === tareaSeleccionada.oferta))
+          if (tareaSeleccionada.analisis === "Otros con Fechas de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fechas de Trabajo" || tareaSeleccionada.analisis === "Legionela" || tareaSeleccionada.analisis === "Aerobios" || tareaSeleccionada.analisis === "Aguas Residuales" || tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "AguaPozo" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Control Fuga gas" || tareaSeleccionada.analisis === "Revision de bandeja") {
+            setEstadoInput(false)
+          } else {
+            setEstadoInput(true)
+          }
+
+          if(tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Control Fuga Gas" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Revision de Bandeja" || tareaSeleccionada.analisis === "Otros con Fecha de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fecha de Trabajo"){
+            setEstadoOperario(false)
+          }else{
+            setEstadoOperario(true)
+          }
+
+          if (tareaSeleccionada.analisis === "Desinfecciones") {
+            setEstadoProtocolo(false)
+          } else {
+            setEstadoProtocolo(true)
+          }
+
+          if (tareaSeleccionada.valor === "Si") {
+            setEstadoValor(false)
+          } else {
+            setEstadoValor(true)
+          }
+
           abrirCerrarModalEditar();
         }}
         onSelectionChange={(filas) => {
