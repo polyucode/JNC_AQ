@@ -121,6 +121,7 @@ export const useParserBack = () => {
         feLimSup: 0,
         feUnidades: "",
         feVerInspector: false,
+        fecha: null,
         isotiazolonaActivo: false,
         isotiazolonaLimInf: 0,
         isotiazolonaLimSup: 0,

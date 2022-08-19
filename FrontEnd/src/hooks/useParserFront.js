@@ -10,7 +10,8 @@ export const useParserFront = () => {
             elemento: '',
             esPlantilla: true,
             nombreCliente: '',
-            oferta: 0
+            oferta: 0,
+            fecha: null
         },
         parametrosFijos: {
             alcalinitatM: {

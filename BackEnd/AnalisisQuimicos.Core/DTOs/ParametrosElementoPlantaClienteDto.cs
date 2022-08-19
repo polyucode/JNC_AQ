@@ -11,6 +11,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
         public string Elemento { get; set; }
+        public DateTime? Fecha { get; set; }
         public bool? EsPlantilla { get; set; }
         public int? ComptadorLimInf { get; set; }
         public int? ComptadorLimSup { get; set; }

@@ -145,9 +145,9 @@ function PlantasTabla() {
     const [data2, setData2] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront( setDatosParametrosBack );
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
 
-    useEffect( () => {
+    useEffect(() => {
         setDatosParametrosBack(parametrosFront)
     }, [parametrosFront])
 
@@ -160,6 +160,7 @@ function PlantasTabla() {
         nombreCliente: "",
         oferta: 0,
         elemento: "",
+        fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
         ComptadorLimSup: 0,
@@ -647,20 +648,21 @@ function PlantasTabla() {
     }*/
 
 
-    async function guardarElementos(){
-        
+    async function guardarElementos() {
+
         parametrosBack.codigoCliente = valores.codigo;
         parametrosBack.nombreCliente = valores.nombre;
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
-        
+        parametrosBack.fecha = parametrosSeleccionado.fecha
+
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
-                .then(response => {
-                    return response
-                }).catch(error => {
-                    console.log(error);
-                })
-        
+            .then(response => {
+                return response
+            }).catch(error => {
+                console.log(error);
+            })
+
         //handleObject()
     }
 
@@ -684,7 +686,7 @@ function PlantasTabla() {
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
         const response = await axios.get(url, token)
 
-        setDatosParametrosFront( response.data.data )
+        setDatosParametrosFront(response.data.data)
 
     }
 
@@ -697,6 +699,14 @@ function PlantasTabla() {
         GetClientes();
         GetConfAnalisisNivelesPlantasCliente();
     }, [])
+
+    const handleChangeFecha = e => {
+        const { name, value } = e.target;
+        setParametrosSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
 
     return (
         <div className="contenedor">
@@ -711,6 +721,7 @@ function PlantasTabla() {
                                 <th> Nombre </th>
                                 <th> Oferta </th>
                                 <th> Elemento </th>
+                                <th> Fecha </th>
                             </tr>
                             {!valores.codigo ?
                                 <tr>
@@ -778,6 +789,18 @@ function PlantasTabla() {
                                             }))}
                                         />
                                     </td>
+                                    <td>
+                                        <TextField
+                                            id="fecha"
+                                            type="date"
+                                            name="fecha"
+                                            sx={{ width: 220 }}
+                                            onChange={handleChangeFecha}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </td>
                                 </tr>
                                 :
                                 <tr>
@@ -792,6 +815,18 @@ function PlantasTabla() {
                                     </td>
                                     <td>
                                         <TextField disabled className="elemento" value={valores.elemento} />
+                                    </td>
+                                    <td>
+                                        <TextField
+                                            id="fecha"
+                                            type="date"
+                                            name="fecha"
+                                            sx={{ width: 220 }}
+                                            onChange={handleChangeFecha}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
                                     </td>
                                 </tr>
                             }

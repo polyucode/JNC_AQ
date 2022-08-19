@@ -4,7 +4,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -361,20 +360,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -448,7 +434,7 @@ function Visualizacion() {
             </div>
         </div>
     )
-
+                        
     const bodyInsertar1 = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Analisis</h3>
@@ -468,20 +454,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -542,20 +515,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -633,20 +593,7 @@ function Visualizacion() {
                 </div>
                 <div className="col-md-5">
                     <h5> Analisis </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Analisis"
-                        options={analisis}
-                        filterOptions={options => analisisNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento)}
-                        getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="analisis" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            analisis: value.analisis
-                        }))}
-                    />
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
                 </div>
                 <div className="col-md-3">
                     <h5> Periodo </h5>
@@ -1749,8 +1696,6 @@ function Visualizacion() {
 
     return (
         <div className="home-container">
-            {console.log(data4)}
-            {console.log(analisisSeleccionado)}
             <h4> Visualizacion de datos </h4>
             <div className="datos">
                 <Autocomplete
@@ -1833,7 +1778,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
-                                                        setAnalisisNombre(analisis.filter(analisi => analisi.nombre === dataTablas.analisis))
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Físico-Químico"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -1845,14 +1793,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas1[0].id));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -1860,12 +1800,15 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas1(filas);
 
-                                                setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                if (filas.length > 0) {
+                                                    setAnalisisSeleccionado(filas[0]);
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -1895,6 +1838,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Aerobios"
+                                                        })
                                                         abrirCerrarModalInsertarAerobio();
                                                     },
                                                 },
@@ -1906,14 +1853,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas2[0].idCliente));
-                                                        abrirCerrarModalEditarAerobio();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -1921,12 +1860,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditarAerobio();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas2(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -1956,6 +1897,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Legionela"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -1967,28 +1912,21 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas3[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
-                                                console.log(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas3(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2018,6 +1956,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Aguas Residuales"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -2029,14 +1971,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas4[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2044,12 +1978,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.nombre === analisisSeleccionado.analisis));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas4(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2079,6 +2015,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Desinfecciones"
+                                                        })
                                                         abrirCerrarModalInsertar();
                                                     },
                                                 },
@@ -2090,14 +2030,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas5[0].id));
-                                                        abrirCerrarModalEditar();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2105,12 +2037,14 @@ function Visualizacion() {
                                                 GetParametrosAnalisisPlanta();
                                                 abrirCerrarModalEditar();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas5(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2140,6 +2074,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Osmosis"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -2151,14 +2089,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas6[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2166,12 +2096,14 @@ function Visualizacion() {
                                                 GetParametrosAnalisisPlanta();
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas6(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2201,6 +2133,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "AguaPozo"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -2212,14 +2148,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas7[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2227,12 +2155,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas7(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2262,6 +2192,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Desinfección ACS"
+                                                        })
                                                         abrirCerrarModalInsertar();
                                                     },
                                                 },
@@ -2273,14 +2207,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas8[0].idCliente));
-                                                        abrirCerrarModalEditar();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2288,12 +2214,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas8(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2323,6 +2251,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Mantenimiento Maq Frio"
+                                                        })
                                                         abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
@@ -2334,14 +2266,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas9[0].id));
-                                                        abrirCerrarModalEditarOperario();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2350,12 +2274,14 @@ function Visualizacion() {
                                                 setOperarioEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === analisisSeleccionado.operario))
                                                 abrirCerrarModalEditarOperario();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas9(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2385,6 +2311,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Mediciones"
+                                                        })
                                                         abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
@@ -2396,14 +2326,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas10[0].idCliente));
-                                                        abrirCerrarModalEditarOperario();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2411,12 +2333,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditarOperario();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas10(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2446,6 +2370,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Control Fuga Gas"
+                                                        })
                                                         abrirCerrarModalInsertarOperario();
                                                     },
                                                 },
@@ -2457,14 +2385,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas11[0].idCliente));
-                                                        abrirCerrarModalEditarOperario();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2472,12 +2392,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditarOperario();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas11(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2507,6 +2429,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Agua Potable"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -2518,14 +2444,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas12[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2533,12 +2451,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas12(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2568,6 +2488,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Revision de Bandeja"
+                                                        })
                                                         abrirCerrarModalInsertar1();
                                                     },
                                                 },
@@ -2579,14 +2503,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas13[0].idCliente));
-                                                        abrirCerrarModalEditar1();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2594,12 +2510,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar1();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas13(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2629,6 +2547,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Otros con Fecha de Trabajo"
+                                                        })
                                                         abrirCerrarModalInsertar();
                                                     },
                                                 },
@@ -2640,14 +2562,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas14[0].idCliente));
-                                                        abrirCerrarModalEditar();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2655,12 +2569,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas14(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,
@@ -2690,6 +2606,10 @@ function Visualizacion() {
                                                     tooltip: "Añadir analisis",
                                                     isFreeAction: true,
                                                     onClick: (e, data) => {
+                                                        setAnalisisSeleccionado({
+                                                            ...analisisSeleccionado,
+                                                            analisis: "Otros sin Fecha de Trabajo"
+                                                        })
                                                         abrirCerrarModalInsertar();
                                                     },
                                                 },
@@ -2701,14 +2621,6 @@ function Visualizacion() {
                                                         abrirCerrarModalEliminar();
                                                     },
                                                 },
-                                                {
-                                                    icon: () => <Edit />,
-                                                    tooltip: "Editar analisis",
-                                                    onClick: (e, data) => {
-                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === FilasSeleccionadas15[0].idCliente));
-                                                        abrirCerrarModalEditar();
-                                                    },
-                                                },
                                             ]}
 
                                             onRowClick={((evt, analisisSeleccionado) => {
@@ -2716,12 +2628,14 @@ function Visualizacion() {
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
                                                 abrirCerrarModalEditar();
                                             })}
+
                                             onSelectionChange={(filas) => {
                                                 setFilasSeleccionadas15(filas);
-                                                if (filas.length > 0)
+                                                if (filas.length > 0) {
                                                     setAnalisisSeleccionado(filas[0]);
-                                            }
-                                            }
+                                                }
+                                            }}
+
                                             options={{
                                                 sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
                                                 columnsButton: false, showSelectAllCheckbox: false,

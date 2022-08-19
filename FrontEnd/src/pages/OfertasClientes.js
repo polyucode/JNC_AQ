@@ -4,7 +4,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -829,7 +828,6 @@ function OfertasClientes() {
                     <Autocomplete
                         disableClearable={true}
                         id="contacto1"
-                        inputValue={ofertaSeleccionada.contacto1}
                         options={contactos}
                         defaultValue={contacto1Editar[0]}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
@@ -849,7 +847,6 @@ function OfertasClientes() {
                         id="contacto2"
                         options={contactos}
                         defaultValue={contacto2Editar[0]}
-                        inputValue={ofertaSeleccionada.contacto2}
                         filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
@@ -881,14 +878,6 @@ function OfertasClientes() {
                             abrirCerrarModalEliminarProducto();
                         },
                     },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Producto",
-                        onClick: (e, data) => {
-                            setProductoEditar(productos.filter(producto => producto.codigoProducto === FilasSeleccionadasProducto[0].producto));
-                            abrirCerrarModalEditarProducto();
-                        },
-                    },
                 ]}
 
                 onRowClick={((evt, productoSeleccionado) => {
@@ -897,13 +886,14 @@ function OfertasClientes() {
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
                     abrirCerrarModalEditarProducto();
                 })}
+                
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadasProducto(filas);
                     if (filas.length > 0) {
                         setProductoSeleccionado(filas[0]);
                     }
-                }
-                }
+                }}
+
                 options={{
                     sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
                     columnsButton: true, showSelectAllCheckbox: false,
@@ -1177,16 +1167,6 @@ function OfertasClientes() {
                             abrirCerrarModalEliminar()
                         },
                     },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Oferta",
-                        onClick: (e, data) => {
-                            getOfertasProductos();
-                            setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente));
-                            setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].nombreCliente));
-                            abrirCerrarModalEditar();
-                        },
-                    },
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
                     // Copy row data and set checked state
@@ -1202,7 +1182,9 @@ function OfertasClientes() {
                 }}
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
-                    setOfertaSeleccionada(filas[0]);
+                    if(filas.length > 0){
+                        setOfertaSeleccionada(filas[0])
+                    }
                 }}
 
                 options={{

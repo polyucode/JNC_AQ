@@ -5,7 +5,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -534,6 +533,18 @@ function Tareas() {
 
   }, [tareaSeleccionada.oferta])
 
+  useEffect(() => {
+
+    const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
+    (nombre.length > 0) && setTareaSeleccionada({
+        ...tareaSeleccionada,
+        nombreCliente: nombre[0].razonSocial,
+        oferta: '',
+
+    })
+
+}, [tareaSeleccionada.codigoCliente])
+
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
     await axios.post("/tareas", tareaSeleccionada, token)
@@ -1021,20 +1032,12 @@ function Tareas() {
         <div className="col-md-3">
           <h5> Nombre Cliente </h5>
           {/* Desplegable de Clientes */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboClientes"
-            inputValue={tareaSeleccionada.nombreCliente}
-            className={styles2.inputMaterial}
-            options={clientes}
-            filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
-            getOptionLabel={option => option.razonSocial}
-            sx={{ width: 200 }}
-            renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              nombreCliente: value.razonSocial
-            }))}
+          <TextField
+            id='nombreCliente'
+            className={styles.inputMaterial}
+            value={tareaSeleccionada && tareaSeleccionada.nombreCliente}
+            name="nombreCliente"
+            onChange={handleChange}
           />
         </div>
         <div className="col-md-3">
@@ -1057,19 +1060,12 @@ function Tareas() {
         </div>
         <div className="col-md-3">
           <h5> Pedido </h5>
-          <Autocomplete
-            disableClearable={true}
-            id="Pedido"
-            options={ofertas}
-            inputValue={tareaSeleccionada.pedido}
-            getOptionLabel={option => option.pedido}
-            filterOptions={options => ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta)}
-            sx={{ width: 250 }}
-            renderInput={(params) => <TextField {...params} name="pedido" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              pedido: value.pedido
-            }))}
+          <TextField
+            id='pedido'
+            className={styles.inputMaterial}
+            value={tareaSeleccionada && tareaSeleccionada.pedido}
+            name="pedido"
+            onChange={handleChange}
           />
         </div>
 
@@ -1331,6 +1327,7 @@ function Tareas() {
             id="NombreCliente"
             options={clientes}
             className={stylesEditarDet.inputMaterial}
+            inputValue={tareaSeleccionada.nombreCliente}
             defaultValue={nombreClienteEditar[0]}
             filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.razonSocial}
@@ -1518,14 +1515,6 @@ function Tareas() {
                 abrirCerrarModalEliminarDet();
               },
             },
-            {
-              icon: () => <Edit />,
-              tooltip: "Editar detalle de tarea",
-              onClick: (e, data) => {
-                setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
-                abrirCerrarModalEditarDet();
-              },
-            },
           ]}
 
           onRowClick={((evt, analisisSeleccionado) => {
@@ -1534,12 +1523,13 @@ function Tareas() {
             setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
             abrirCerrarModalEditarDet();
           })}
+          
           onSelectionChange={(filas) => {
             setFilasSeleccionadasVis(filas);
             if (filas.length > 0)
               setAnalisisSeleccionado(filas[0]);
-          }
-          }
+          }}
+
           options={{
             sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
@@ -1799,28 +1789,10 @@ function Tareas() {
               abrirCerrarModalEliminar()
             },
           },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar Tarea",
-            onClick: (e, data) => {
-              peticionGetVis();
-
-              setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].nombreCliente))
-              setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente));
-              setElementoTareaEditar(elementosplanta.filter(elemento => elemento.nombre === FilasSeleccionadas[0].elementoPlanta));
-              setTipoTareaEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-              setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
-              setAnalisisEditar(analisis.filter(analisi => analisi.nombre === FilasSeleccionadas[0].analisis));
-              setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === FilasSeleccionadas[0].oferta))
-
-              abrirCerrarModalEditar();
-            },
-          },
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
           setTareaSeleccionada(tareaSeleccionada);
-          console.log(tareaSeleccionada)
           setDataAnalisis(dataVis.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
           peticionGetVis();
           setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
@@ -1853,15 +1825,15 @@ function Tareas() {
           } else {
             setEstadoValor(true)
           }
-
           abrirCerrarModalEditar();
         }}
+
         onSelectionChange={(filas) => {
           setFilasSeleccionadas(filas);
           if (filas.length > 0)
             setTareaSeleccionada(filas[0]);
-        }
-        }
+        }}
+
         options={{
           sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100], pageSize: 10, filtering: true, search: false, selection: true,
           columnsButton: true, showSelectAllCheckbox: false,

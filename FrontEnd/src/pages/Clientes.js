@@ -11,6 +11,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 
+import './Clientes.css';
+
 
 const token = {
   headers: {
@@ -314,9 +316,7 @@ function Clientes() {
         ...clienteSeleccionado,
         poblacion: pueblo[0].poblacion
       })
-
     }
-
   }, [clienteSeleccionado.cp])
 
 
@@ -723,14 +723,6 @@ function Clientes() {
               abrirCerrarModalEliminarContacto();
             },
           },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar detalle contacto",
-            onClick: (e, data) => {
-              setContactoClienteEditar(contactoSeleccionado[0]);
-              abrirCerrarModalEditarContacto();
-            },
-          },
         ]}
 
         onRowClick={((evt, contactoSeleccionado) => {
@@ -739,12 +731,13 @@ function Clientes() {
           setContactoClienteEditar(contactoSeleccionado[0]);
           abrirCerrarModalEditarContacto();
         })}
+
         onSelectionChange={(filas) => {
           setFilasSeleccionadasDet(filas);
           if (filas.length > 0)
             setContactoSeleccionado(filas[0]);
-        }
-        }
+        }}
+
         options={{
           sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
           columnsButton: true, showSelectAllCheckbox: false,
@@ -892,7 +885,6 @@ function Clientes() {
 
   return (
     <div>
-      {console.log(dataDet)}
       <MaterialTable columns={columnas} data={data}
         localization={{
           body: {
@@ -958,16 +950,6 @@ function Clientes() {
               abrirCerrarModalEliminar()
             },
           },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar Cliente",
-            onClick: (e, data) => {
-              setComarcaClienteEditar(comarca.filter(comarca => comarca.id === FilasSeleccionadas[0].comarca));
-              setProvinciaClienteEditar(provincia.filter(provincia => provincia.id === FilasSeleccionadas[0].provincia));
-              setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.id === FilasSeleccionadas[0].poblacion));
-              abrirCerrarModalEditar();
-            },
-          },
         ]}
 
         onRowClick={((evt, clienteSeleccionado) => {
@@ -981,10 +963,11 @@ function Clientes() {
         })}
         onSelectionChange={(filas) => {
           setFilasSeleccionadas(filas);
+          if (filas.length > 0) {
+            setClienteSeleccionado(filas[0]);
+          }
+        }}
 
-          setClienteSeleccionado(filas[0]);
-        }
-        }
         options={{
           sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
           columnsButton: true, showSelectAllCheckbox: false,

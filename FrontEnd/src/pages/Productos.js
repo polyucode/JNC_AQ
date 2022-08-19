@@ -4,7 +4,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -369,13 +368,6 @@ function Productos() {
                             abrirCerrarModalEliminar()
                         },
                     },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Producto",
-                        onClick: (e, data) => {
-                            abrirCerrarModalEditar();
-                        },
-                    },
                 ]}
 
                 onRowClick={((evt, productoSeleccionado) => {
@@ -383,12 +375,15 @@ function Productos() {
                     getProductos();
                     abrirCerrarModalEditar();
                 })}
+                
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
 
-                    setProductoSeleccionado(filas[0]);
-                }
-                }
+                    if (filas.length > 0) {
+                        setProductoSeleccionado(filas[0]);
+                    }
+                }}
+
                 options={{
                     sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
                     columnsButton: true, showSelectAllCheckbox: false,
