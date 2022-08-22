@@ -155,8 +155,8 @@ function OfertasClientes() {
         codigoCliente: 0,
         nombreCliente: '',
         descripcion: '',
-        fechaInicio: null,
-        fechaFinalizacion: null,
+        fechaInicio: '',
+        fechaFinalizacion: '',
         contacto1: '',
         contacto2: '',
         addDate: null,
@@ -760,6 +760,7 @@ function OfertasClientes() {
 
     const bodyEditar = (
         <div className={styles2.modal}>
+            {console.log(ofertaSeleccionada)}
             <h3>Oferta</h3>
             <br />
             <div className="row g-3">

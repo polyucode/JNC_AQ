@@ -378,8 +378,6 @@ function Tareas() {
 
   let navigate = useNavigate();
 
-  console.log(confAnalisisNivelesPlantasCliente)
-
   const columnas = [
 
     //visibles
@@ -530,6 +528,20 @@ function Tareas() {
       pedido: pedido[0].pedido,
       elementoPlanta: ''
     })
+
+    const analisisFiltro = confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta);
+    (analisisFiltro.length > 0) && console.log(analisisFiltro)
+    const newArray = [];
+    analisisFiltro.forEach(analisi => {
+      if(newArray === []){
+        newArray.push(analisi.elemento)
+      }else{
+        if(!newArray.includes(analisi.elemento)){
+          newArray.push(analisi.elemento)
+        }
+      }
+    })
+    console.log(newArray)
 
   }, [tareaSeleccionada.oferta])
 

@@ -158,7 +158,7 @@ function PlantasTabla() {
         id: 0,
         codigoCliente: 0,
         nombreCliente: "",
-        oferta: 0,
+        oferta: '',
         elemento: "",
         fecha: null,
         esPlantilla: false,
@@ -700,6 +700,18 @@ function PlantasTabla() {
         GetConfAnalisisNivelesPlantasCliente();
     }, [])
 
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
+        (nombre.length > 0) && setParametrosSeleccionado({
+            ...parametrosSeleccionado,
+            nombreCliente: nombre[0].razonSocial,
+            oferta: '',
+            elemento: ''
+        })
+    
+    }, [parametrosSeleccionado.codigoCliente])
+
     const handleChangeFecha = e => {
         const { name, value } = e.target;
         setParametrosSeleccionado(prevState => ({
@@ -745,6 +757,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             id="CboClientes"
                                             className={styles.inputMaterial}
+                                            inputValue={parametrosSeleccionado.nombreCliente}
                                             options={clientes}
                                             filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
                                             getOptionLabel={option => option.razonSocial}
@@ -762,6 +775,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             className={styles.inputMaterial}
                                             id="Oferta"
+                                            inputValue={parametrosSeleccionado.oferta}
                                             options={oferta}
                                             filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                             getOptionLabel={option => option.numeroOferta}
@@ -769,7 +783,8 @@ function PlantasTabla() {
                                             renderInput={(params) => <TextField {...params} name="oferta" />}
                                             onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                                 ...prevState,
-                                                oferta: parseInt(value.numeroOferta)
+                                                oferta: parseInt(value.numeroOferta),
+                                                elemento: ''
                                             }))}
                                         />
                                     </td>
@@ -778,6 +793,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             className={styles.inputMaterial}
                                             id="elemento"
+                                            inputValue={parametrosSeleccionado.elemento}
                                             options={elementos}
                                             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
                                             getOptionLabel={option => option.elemento}
