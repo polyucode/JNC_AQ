@@ -303,12 +303,17 @@ function Clientes() {
 
   useEffect(() => {
 
-    if (clienteSeleccionado.cp.length < 5) {
+    if (clienteSeleccionado.cp.length > 1 && clienteSeleccionado.cp.length < 5) {
       const prov = provincia.filter(prov => prov.codigo === clienteSeleccionado.cp.slice(0, 2));
       (prov.length > 0) && setClienteSeleccionado({
         ...clienteSeleccionado,
         provincia: prov[0].descripcion,
         poblacion: ''
+      })
+    } else if (clienteSeleccionado.cp.length == 0 || clienteSeleccionado.cp.length == 1) {
+      setClienteSeleccionado({
+        ...clienteSeleccionado,
+        provincia: ''
       })
     } else {
       const pueblo = poblacion.filter(pobl => pobl.cp === clienteSeleccionado.cp);

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { TabPanel } from '@mui/lab';
 import { ThemeContext } from '../App';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 import axios from "axios";
 
@@ -288,17 +290,10 @@ const TablaElementosTabla = (props) => {
                     </tbody>
                 </table>
             </div>
-            {/*<div className="col-3">
-                <div className="ver-inspector">
-                    <h6>Ver Inspector (todo)</h6>
-                    <hr />
-                    <div className='opciones'>
-                        <label><input type="radio" name="verInspector" value='true' onChange={handleVerInspector} /> Si</label>
-                        <label><input type="radio" name="verInspector" value='false' onChange={handleVerInspector} /> No</label>
-                    </div>
-                </div>
+            <div className="col-3">
+                <FormControlLabel control={<Checkbox />} label="Indices de estabilidad" name="indiceEstabilidad" />
+                <FormControlLabel control={<Checkbox />} label="Calculos complementarios caldera" name="calculosCaldera" />
             </div>
-            */}
         </>
     );
 

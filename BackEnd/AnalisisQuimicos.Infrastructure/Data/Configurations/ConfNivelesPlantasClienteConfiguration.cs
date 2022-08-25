@@ -23,7 +23,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Nivel).HasColumnName("Nivel");
 
-            builder.Property(e => e.Id_Elemento).HasColumnName("Id_Elemento");
+            builder.Property(e => e.Elemento).HasColumnName("Elemento");
 
             builder.Property(e => e.Visible).HasColumnName("Visible");
 

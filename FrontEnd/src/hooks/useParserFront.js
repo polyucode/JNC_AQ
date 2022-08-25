@@ -19,7 +19,7 @@ export const useParserFront = () => {
                 Nombre: 'alcalinitatM',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             alcalinitatP: {
@@ -27,7 +27,7 @@ export const useParserFront = () => {
                 Nombre: 'alcalinitatP',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             aquaproxAB5310: {
@@ -35,7 +35,7 @@ export const useParserFront = () => {
                 Nombre: 'aquaproxAB5310',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             biopolIB200: {
@@ -43,7 +43,7 @@ export const useParserFront = () => {
                 Nombre: 'biopolIB200',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             biopolLB5: {
@@ -51,7 +51,7 @@ export const useParserFront = () => {
                 Nombre: 'biopolLB5',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             brom: {
@@ -59,7 +59,7 @@ export const useParserFront = () => {
                 Nombre: 'brom',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorLliure: {
@@ -67,7 +67,7 @@ export const useParserFront = () => {
                 Nombre: 'clorLliure',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorTotal: {
@@ -75,7 +75,7 @@ export const useParserFront = () => {
                 Nombre: 'clorTotal',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorurs: {
@@ -83,7 +83,7 @@ export const useParserFront = () => {
                 Nombre: 'clorurs',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             comptador: {
@@ -91,7 +91,7 @@ export const useParserFront = () => {
                 Nombre: 'comptador',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'm3',
                 VerInspector: false
             },
             conductivitat: {
@@ -99,7 +99,7 @@ export const useParserFront = () => {
                 Nombre: 'conductivitat',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'µS/cm',
                 VerInspector: false
             },
             duresaCalcica: {
@@ -107,7 +107,7 @@ export const useParserFront = () => {
                 Nombre: 'duresaCalcica',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             duresaTotal: {
@@ -115,7 +115,7 @@ export const useParserFront = () => {
                 Nombre: 'duresaTotal',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             fe: {
@@ -123,7 +123,7 @@ export const useParserFront = () => {
                 Nombre: 'fe',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             isotiazolona: {
@@ -131,7 +131,7 @@ export const useParserFront = () => {
                 Nombre: 'isotiazolona',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             mefacideLG: {
@@ -139,7 +139,7 @@ export const useParserFront = () => {
                 Nombre: 'mefacideLG',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             moO4: {
@@ -147,7 +147,7 @@ export const useParserFront = () => {
                 Nombre: 'moO4',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             ortofosfatsPO4: {
@@ -155,7 +155,7 @@ export const useParserFront = () => {
                 Nombre: 'ortofosfatsPO4',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             ph: {
@@ -163,7 +163,7 @@ export const useParserFront = () => {
                 Nombre: 'ph',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'Un. pH',
                 VerInspector: false
             },
             silicats: {
@@ -171,7 +171,7 @@ export const useParserFront = () => {
                 Nombre: 'silicats',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             sulfats: {
@@ -179,7 +179,7 @@ export const useParserFront = () => {
                 Nombre: 'sulfats',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             sulfits: {
@@ -187,7 +187,7 @@ export const useParserFront = () => {
                 Nombre: 'sulfits',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             tds: {
@@ -195,7 +195,7 @@ export const useParserFront = () => {
                 Nombre: 'tds',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             temperatura: {
@@ -203,7 +203,7 @@ export const useParserFront = () => {
                 Nombre: 'temperatura',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'ºC',
                 VerInspector: false
             },
             terbolesa: {
@@ -211,7 +211,7 @@ export const useParserFront = () => {
                 Nombre: 'terbolesa',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'N.T.U',
                 VerInspector: false
             }
         },

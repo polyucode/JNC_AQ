@@ -211,6 +211,7 @@ function MantenimientoTecnico() {
                                 <TableRow>
                                     <TableCell><b>Codigo Cliente</b></TableCell>
                                     <TableCell><b>Nombre Cliente</b></TableCell>
+                                    <TableCell><b>Referencia</b></TableCell>
                                     <TableCell><b>Oferta</b></TableCell>
                                     <TableCell><b>Elemento</b></TableCell>
                                     <TableCell><b>Fecha</b></TableCell>
@@ -239,6 +240,14 @@ function MantenimientoTecnico() {
                                             className={styles.inputMaterial}
                                             value={parametrosSeleccionado && parametrosSeleccionado.nombreCliente}
                                             name="nombreCliente"
+                                            onChange={handleChange}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            id='referencia'
+                                            className={styles.inputMaterial}
+                                            name="referencia"
                                             onChange={handleChange}
                                         />
                                     </TableCell>

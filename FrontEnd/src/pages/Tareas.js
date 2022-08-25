@@ -272,11 +272,11 @@ function Tareas() {
     id: 0,
     codigoCliente: 0,
     nombreCliente: "",
+    oferta: 0,
+    pedido: 0,
     operario: "",
     protocolo: "",
     elementoPlanta: "",
-    oferta: '',
-    pedido: '',
     analisis: "",
     final: "",
     valor: "",
@@ -513,9 +513,7 @@ function Tareas() {
     (nombre.length > 0) && setTareaSeleccionada({
       ...tareaSeleccionada,
       nombreCliente: nombre[0].razonSocial,
-      pedido: '',
       oferta: '',
-      elementoPlanta: ''
     })
 
   }, [tareaSeleccionada.codigoCliente])
@@ -706,8 +704,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -747,8 +745,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -782,8 +780,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -1036,7 +1034,9 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              codigoCliente: parseInt(value.codigo)
+              codigoCliente: parseInt(value.codigo),
+              pedido: '',
+              elementoPlanta: ''
             }))}
           />
         </div>
@@ -1309,6 +1309,7 @@ function Tareas() {
 
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
+      {console.log(ofertaEditar)}
       <h3>Tarea</h3>
       <br/>
       <div className="row g-3">
@@ -1366,7 +1367,7 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: value.numeroOferta
+              oferta: parseInt(value.numeroOferta)
             }))}
           />
         </div>
@@ -1804,6 +1805,7 @@ function Tareas() {
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
+          console.log(tareaSeleccionada)
           setTareaSeleccionada(tareaSeleccionada);
           setDataAnalisis(dataVis.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
           peticionGetVis();

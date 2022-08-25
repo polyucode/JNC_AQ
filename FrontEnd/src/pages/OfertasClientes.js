@@ -468,6 +468,7 @@ function OfertasClientes() {
                     delIdUser: null,
                     deleted: null,
                 })
+                setNumber({ cantidad: 0, consumidos: 0})
             }).catch(error => {
                 console.log(error);
             })
@@ -508,6 +509,7 @@ function OfertasClientes() {
                     delIdUser: null,
                     deleted: null,
                 })
+                setNumber({ cantidad: 0, consumidos: 0 })
             }).catch(error => {
                 console.log(error);
             })
@@ -543,6 +545,7 @@ function OfertasClientes() {
                         delIdUser: null,
                         deleted: null,
                     })
+                    setNumber({ cantidad: 0, consumidos: 0 })
                 }).catch(error => {
                     console.log(error);
                 })
@@ -760,7 +763,6 @@ function OfertasClientes() {
 
     const bodyEditar = (
         <div className={styles2.modal}>
-            {console.log(ofertaSeleccionada)}
             <h3>Oferta</h3>
             <br />
             <div className="row g-3">

@@ -27,6 +27,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Productos> ProductosRepository { get; }
         IRepository<OfertasProductos> OfertasProductosRepository { get; }
         IRepository<Consumos> ConsumosRepository { get; }
+        IRepository<ValorParametros> ValorParametrosRepository { get; }
 
         void SaveChanges();
 

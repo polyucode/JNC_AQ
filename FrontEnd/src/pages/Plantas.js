@@ -340,7 +340,13 @@ function Plantas() {
                 React.createElement('option', { key: 'Caldera', value: "Caldera" }, "Caldera"),
                 React.createElement('option', { key: 'Torre', value: "Torre" }, "Torre"),
                 React.createElement('option', { key: 'Refrigeracion', value: "Refrigeracion" }, "Refrigeracion"),
-                React.createElement('option', { key: 'Deposito', value: "Deposito" }, "Deposito")
+                React.createElement('option', { key: 'Deposito', value: "Deposito" }, "Deposito"),
+                React.createElement('option', { key: 'Filtro', value: "Filtro" }, "Filtro"),
+                React.createElement('option', { key: 'Descalcificador', value: "Descalcificador" }, "Descalcificador"),
+                React.createElement('option', { key: 'Ultrafiltracion', value: "Ultrafiltracion" }, "Ultrafiltracion"),
+                React.createElement('option', { key: 'Arqueta', value: "Arqueta" }, "Arqueta"),
+                React.createElement('option', { key: 'Pozo', value: "Pozo" }, "Pozo"),
+                React.createElement('option', { key: 'Acometida', value: "Acometida" }, "Acometida")
             ]
 
             // Creamos el listado de elementos disponibles
@@ -383,6 +389,7 @@ function Plantas() {
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
+        console.log(listaElementos)
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         console.log(elementoAnalisisProps)
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
@@ -533,7 +540,7 @@ function Plantas() {
                 Oferta: confPlantasCliente.oferta,
                 Id_Planta: confPlantasCliente.id,
                 Nivel: elemento.nivel,
-                IdElemento: elemento.id,
+                Elemento: elemento.nombre + " " + elemento.numero,
                 Visible: false,
                 Conecta: "",
                 addDate: null,
@@ -589,7 +596,6 @@ function Plantas() {
 
     function crearNodo(elemento) {
 
-        console.log(listaElementos)
         console.log('Crear nodo');
 
         // Preparamos los input y output

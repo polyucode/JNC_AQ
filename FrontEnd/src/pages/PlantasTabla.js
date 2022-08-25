@@ -733,7 +733,6 @@ function PlantasTabla() {
                                 <th> Nombre </th>
                                 <th> Oferta </th>
                                 <th> Elemento </th>
-                                <th> Fecha </th>
                             </tr>
                             {!valores.codigo ?
                                 <tr>
@@ -805,18 +804,6 @@ function PlantasTabla() {
                                             }))}
                                         />
                                     </td>
-                                    <td>
-                                        <TextField
-                                            id="fecha"
-                                            type="date"
-                                            name="fecha"
-                                            sx={{ width: 220 }}
-                                            onChange={handleChangeFecha}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
-                                    </td>
                                 </tr>
                                 :
                                 <tr>
@@ -832,18 +819,6 @@ function PlantasTabla() {
                                     <td>
                                         <TextField disabled className="elemento" value={valores.elemento} />
                                     </td>
-                                    <td>
-                                        <TextField
-                                            id="fecha"
-                                            type="date"
-                                            name="fecha"
-                                            sx={{ width: 220 }}
-                                            onChange={handleChangeFecha}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
-                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -852,26 +827,17 @@ function PlantasTabla() {
                 {valores.codigo ?
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                     :
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
                         <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
-                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                 }
             </div>
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={value}>
-                    {/*<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList id="tab-list" onChange={handleChange}>
-                            {
-                                <Tab key="elemento" label={valores.elemento} value={value} />
-                            }
-                        </TabList>
-                    </Box>*/}
                     {
                         <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }

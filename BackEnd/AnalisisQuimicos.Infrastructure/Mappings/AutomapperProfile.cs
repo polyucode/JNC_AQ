@@ -32,6 +32,7 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<Productos, ProductosDTO>().ReverseMap();
             CreateMap<OfertasProductos, OfertasProductosDTO>().ReverseMap();
             CreateMap<Consumos, ConsumosDTO>().ReverseMap();
+            CreateMap<ValorParametros, ValorParametrosDTO>().ReverseMap();
 
         }
 
