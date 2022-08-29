@@ -94,11 +94,13 @@ function Visualizacion() {
     const [modalInsertar1, setModalInsertar1] = useState(false);
     const [modalInsertarOperario, setModalInsertarOperario] = useState(false);
     const [modalInsertarAerobio, setModalInsertarAerobio] = useState(false);
+    const [modalInsertarLegionela, setModalInsertarLegionela] = useState(false);
 
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEditar1, setModalEditar1] = useState(false);
     const [modalEditarOperario, setModalEditarOperario] = useState(false);
     const [modalEditarAerobio, setModalEditarAerobio] = useState(false);
+    const [modalEditarLegionela, setModalEditarLegionela] = useState(false);
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
@@ -124,6 +126,26 @@ function Visualizacion() {
         facturado: false,
         numeroFacturado: '',
         resultado: '',
+        recogido: false,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
+
+    const [entregaSeleccionada, setEntregaSeleccionada] = useState({
+
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: '',
+        oferta: 0,
+        elemento: '',
+        analisis: '',
+        descripcion: '',
+        entregado: false,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -271,6 +293,18 @@ function Visualizacion() {
         { title: 'Numero Facturado', field: 'numeroFacturado' },
     ];
 
+    const columnasLegionela = [
+
+        //visibles
+        { title: 'Periodo', field: 'periodo' },
+        { title: 'Fecha', field: 'fecha', type: 'date' },
+        { title: 'Realizado', field: 'realizado', type: 'boolean' },
+        { title: 'Observaciones', field: 'observaciones' },
+        { title: 'Facturado', field: 'facturado', type: 'boolean' },
+        { title: 'Numero Facturado', field: 'numeroFacturado' },
+        { title: 'Recogido', field: 'recogido', type: 'boolean' },
+    ];
+
     const columnasAerobios = [
 
         //visibles
@@ -280,6 +314,7 @@ function Visualizacion() {
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' },
         { title: 'Numero Facturado', field: 'numeroFacturado' },
+        { title: 'Recogido', field: 'recogido', type: 'boolean' },
         { title: 'Resultado', field: 'resultado' },
     ];
 
@@ -300,6 +335,7 @@ function Visualizacion() {
     const [data14, setData14] = useState([]);
     const [data15, setData15] = useState([]);
     const [dataTablas, setDataTablas] = useState([]);
+    const [dataEntregas, setDataEntregas] = useState([]);
 
     const [archivos, setArchivos] = useState(null);
 
@@ -434,7 +470,7 @@ function Visualizacion() {
             </div>
         </div>
     )
-                        
+
     const bodyInsertar1 = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Analisis</h3>
@@ -492,6 +528,70 @@ function Visualizacion() {
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost1()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar1()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
+    const bodyInsertarLegionela = (
+        <div className={styles.modal}>
+            <h3>Agregar Nuevo Analisis</h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostLegionela()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalInsertarLegionela()}>Cancelar</Button>
             </div>
         </div>
     )
@@ -629,6 +729,9 @@ function Visualizacion() {
                 <div className="col-md-12">
                     <h5> Observaciones </h5>
                     <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
                 </div>
             </div>
             <br />
@@ -802,6 +905,71 @@ function Visualizacion() {
         </div>
     )
 
+    const bodyEditarLegionela = (
+        <div className={styles.modal}>
+            <h3> Analisis </h3>
+            <br />
+            <div className="row g-4">
+                <div className="col-md-3">
+                    <h5> Codigo Cliente </h5>
+                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Oferta </h5>
+                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Elemento </h5>
+                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                </div>
+                <div className="col-md-5">
+                    <h5> Analisis </h5>
+                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Periodo </h5>
+                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChangeInput}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={analisisSeleccionado && analisisSeleccionado.fecha}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Numero Facturacion </h5>
+                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+                </div>
+                <div className="col-md-12">
+                    <h5> Observaciones </h5>
+                    <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+                </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPutLegionela()}>Guardar</Button>
+                <Button onClick={() => abrirCerrarModalEditarLegionela()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
     const bodyEditarOperario = (
         <div className={styles.modal}>
             <h3> Analisis </h3>
@@ -939,6 +1107,9 @@ function Visualizacion() {
                     <h5> Observaciones </h5>
                     <TextField className={styles.inputMaterial} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
                 </div>
+                <div className="col-md-4">
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+                </div>
             </div>
             <br />
             <div align="right">
@@ -975,6 +1146,10 @@ function Visualizacion() {
         setModalInsertarAerobio(!modalInsertarAerobio);
     }
 
+    const abrirCerrarModalInsertarLegionela = () => {
+        setModalInsertarLegionela(!modalInsertarLegionela);
+    }
+
     const abrirCerrarModalEditar = () => {
         setModalEditar(!modalEditar);
     }
@@ -989,6 +1164,10 @@ function Visualizacion() {
 
     const abrirCerrarModalEditarAerobio = () => {
         setModalEditarAerobio(!modalEditarAerobio);
+    }
+
+    const abrirCerrarModalEditarLegionela = () => {
+        setModalEditarLegionela(!modalEditarLegionela);
     }
 
     const abrirCerrarModalEliminar = () => {
@@ -1047,6 +1226,12 @@ function Visualizacion() {
     const GetParametrosAnalisisPlanta = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
             setData(response.data.data)
+        })
+    }
+
+    const peticionGetEntregas = async () => {
+        axios.get("/entregas", token).then(response => {
+            setDataEntregas(response.data.data)
         })
     }
 
@@ -1184,7 +1369,41 @@ function Visualizacion() {
         RevisionBandeja();
         FechaDeTrabajo();
         SinFechaDeTrabajo();
+        peticionGetEntregas();
     }, [])
+
+    const peticionPostEntrega = async () => {
+        entregaSeleccionada.id = 0;
+        entregaSeleccionada.codigoCliente = analisisSeleccionado.codigoCliente;
+        entregaSeleccionada.nombreCliente = analisisSeleccionado.nombreCliente;
+        entregaSeleccionada.oferta = analisisSeleccionado.oferta;
+        entregaSeleccionada.elemento = analisisSeleccionado.elemento;
+        entregaSeleccionada.analisis = analisisSeleccionado.analisis;
+        entregaSeleccionada.descripcion = `Muestra de ${analisisSeleccionado.analisis} del cliente ${analisisSeleccionado.nombreCliente}`;
+        await axios.post("/entregas", entregaSeleccionada, token)
+          .then(response => {
+            peticionGetEntregas();
+            setEntregaSeleccionada({
+              id: 0,
+              codigoCliente: 0,
+              nombreCliente: '',
+              oferta: 0,
+              elemento: '',
+              analisis: '',
+              descripcion: '',
+              entregado: false,
+              addDate: null,
+              addIdUser: null,
+              modDate: null,
+              modIdUser: null,
+              delDate: null,
+              delIdUser: null,
+              deleted: null,
+            })
+          }).catch(error => {
+            console.log(error);
+          })
+      }
 
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
@@ -1231,7 +1450,6 @@ function Visualizacion() {
             .then(response => {
                 //setData(data.concat(response.data));
                 FisicoQuimico();
-                Legionela();
                 AguasResiduales();
                 Osmosis();
                 AguaPozo();
@@ -1335,6 +1553,46 @@ function Visualizacion() {
                     facturado: false,
                     numeroFacturado: '',
                     resultado: '',
+                    recogido: false,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPostLegionela = async () => {
+        analisisSeleccionado.id = null;
+        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+            .then(response => {
+                Legionela();
+                abrirCerrarModalInsertarLegionela();
+                GetParametrosAnalisisPlanta();
+                setAnalisisSeleccionado({
+                    id: 0,
+                    codigoCliente: analisisSeleccionado.codigoCliente,
+                    nombreCliente: analisisSeleccionado.nombreCliente,
+                    oferta: analisisSeleccionado.oferta,
+                    pedido: analisisSeleccionado.pedido,
+                    elemento: analisisSeleccionado.elemento,
+                    periodo: '',
+                    analisis: '',
+                    nombreAnalisis: '',
+                    fecha: null,
+                    realizado: false,
+                    operario: '',
+                    protocolo: '',
+                    observaciones: '',
+                    facturado: false,
+                    numeroFacturado: '',
+                    resultado: '',
+                    recogido: false,
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1403,7 +1661,6 @@ function Visualizacion() {
                     }
                 });
                 FisicoQuimico();
-                Legionela();
                 AguasResiduales();
                 Osmosis();
                 AguaPozo();
@@ -1490,6 +1747,9 @@ function Visualizacion() {
     }
 
     const peticionPutAerobio = async () => {
+        if (analisisSeleccionado.recogido === true) {
+            peticionPostEntrega();
+        }
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisModificado = data;
@@ -1520,6 +1780,55 @@ function Visualizacion() {
                     facturado: false,
                     numeroFacturado: '',
                     resultado: '',
+                    recogido: false,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPutLegionela = async () => {
+        if (analisisSeleccionado.recogido === true) {
+            peticionPostEntrega();
+        }
+        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+            .then(response => {
+                var analisisModificado = data;
+                analisisModificado.map(analisi => {
+                    if (analisi.id === analisisSeleccionado.id) {
+                        analisi = analisisSeleccionado
+                    }
+                });
+                Legionela();
+                GetParametrosAnalisisPlanta();
+                insertarArchivos();
+                abrirCerrarModalEditarLegionela();
+                setAnalisisSeleccionado({
+                    id: 0,
+                    codigoCliente: analisisSeleccionado.codigoCliente,
+                    nombreCliente: analisisSeleccionado.nombreCliente,
+                    oferta: analisisSeleccionado.oferta,
+                    pedido: analisisSeleccionado.pedido,
+                    elemento: analisisSeleccionado.elemento,
+                    periodo: '',
+                    analisis: '',
+                    nombreAnalisis: '',
+                    fecha: null,
+                    realizado: false,
+                    operario: '',
+                    protocolo: '',
+                    observaciones: '',
+                    facturado: false,
+                    numeroFacturado: '',
+                    resultado: '',
+                    recogido: false,
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1889,7 +2198,7 @@ function Visualizacion() {
                                     )
                                 case "Legionela":
                                     return (
-                                        <MaterialTable columns={columnas1} data={data3}
+                                        <MaterialTable columns={columnasLegionela} data={data3}
                                             localization={localization}
                                             actions={[
                                                 {
@@ -1901,7 +2210,7 @@ function Visualizacion() {
                                                             ...analisisSeleccionado,
                                                             analisis: "Legionela"
                                                         })
-                                                        abrirCerrarModalInsertar1();
+                                                        abrirCerrarModalInsertarLegionela();
                                                     },
                                                 },
                                                 {
@@ -1917,7 +2226,7 @@ function Visualizacion() {
                                             onRowClick={((evt, analisisSeleccionado) => {
                                                 setAnalisisSeleccionado(analisisSeleccionado)
                                                 setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                abrirCerrarModalEditar1();
+                                                abrirCerrarModalEditarLegionela();
                                             })}
 
                                             onSelectionChange={(filas) => {
@@ -2687,6 +2996,12 @@ function Visualizacion() {
             </Modal>
 
             <Modal
+                open={modalInsertarLegionela}
+                onClose={abrirCerrarModalInsertarLegionela}>
+                {bodyInsertarLegionela}
+            </Modal>
+
+            <Modal
                 open={modalEliminar}
                 onClose={abrirCerrarModalEliminar}>
                 {bodyEliminar}
@@ -2714,6 +3029,12 @@ function Visualizacion() {
                 open={modalEditarAerobio}
                 onClose={abrirCerrarModalEditarAerobio}>
                 {bodyEditarAerobio}
+            </Modal>
+
+            <Modal
+                open={modalEditarLegionela}
+                onClose={abrirCerrarModalEditarLegionela}>
+                {bodyEditarLegionela}
             </Modal>
 
         </div>

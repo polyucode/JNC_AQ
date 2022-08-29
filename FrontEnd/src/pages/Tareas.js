@@ -37,9 +37,9 @@ const tipos = [
   { id: 2, nombre: "Bimensual" },
   { id: 3, nombre: "Trimestral" },
   { id: 4, nombre: "Semestral" },
-  { id: 5, nombre: "Anual" },
-  { id: 6, nombre: "Semanal" },
-  { id: 7, nombre: "Bisemanal" }
+  { id: 5, nombre: "Anual" }
+  /*{ id: 6, nombre: "Semanal" },
+  { id: 7, nombre: "Bisemanal" }*/
 ]
 
 const selections = [
@@ -112,7 +112,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 1020,
+    height: 1120,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -275,6 +275,7 @@ function Tareas() {
     oferta: 0,
     pedido: 0,
     operario: "",
+    recogido: false,
     protocolo: "",
     elementoPlanta: "",
     analisis: "",
@@ -321,6 +322,25 @@ function Tareas() {
     deleted: null,
   });
 
+  const [entregaSeleccionada, setEntregaSeleccionada] = useState({
+
+    id: 0,
+    codigoCliente: 0,
+    nombreCliente: '',
+    oferta: 0,
+    elemento: '',
+    analisis: '',
+    descripcion: '',
+    entregado: false,
+    addDate: null,
+    addIdUser: null,
+    modDate: null,
+    modIdUser: null,
+    delDate: null,
+    delIdUser: null,
+    deleted: null,
+  });
+
   const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
   const [FilasSeleccionadasVis, setFilasSeleccionadasVis] = useState([]);
 
@@ -341,6 +361,7 @@ function Tareas() {
   const [data, setData] = useState([]);
   const [dataVis, setDataVis] = useState([]);
   const [dataAnalisis, setDataAnalisis] = useState([]);
+  const [dataEntregas, setDataEntregas] = useState([]);
 
   const [operarios, setOperarios] = useState([]);
 
@@ -369,6 +390,7 @@ function Tareas() {
   const [estadoCancelado, setEstadoCancelado] = useState(true);
   const [estadoOperario, setEstadoOperario] = useState(true);
   const [estadoProtocolo, setEstadoProtocolo] = useState(true);
+  const [estadoRecogido, setEstadoRecogido] = useState(true);
 
   const styles = useStyles();
   const styles2 = useStyles2();
@@ -473,6 +495,12 @@ function Tareas() {
     })
   }
 
+  const peticionGetEntregas = async () => {
+    axios.get("/entregas", token).then(response => {
+      setDataEntregas(response.data.data)
+    })
+  }
+
   useEffect(() => {
     peticionGet();
     GetElementosPlanta();
@@ -483,6 +511,7 @@ function Tareas() {
     GetConfAnalisisNivelesPlantasCliente();
     peticionGetAnalisis();
     peticionGetVis();
+    peticionGetEntregas();
   }, [])
 
 
@@ -512,8 +541,7 @@ function Tareas() {
     const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
     (nombre.length > 0) && setTareaSeleccionada({
       ...tareaSeleccionada,
-      nombreCliente: nombre[0].razonSocial,
-      oferta: '',
+      nombreCliente: nombre[0].razonSocial
     })
 
   }, [tareaSeleccionada.codigoCliente])
@@ -523,18 +551,17 @@ function Tareas() {
     const pedido = ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta);
     (pedido.length > 0) && setTareaSeleccionada({
       ...tareaSeleccionada,
-      pedido: pedido[0].pedido,
-      elementoPlanta: ''
+      pedido: pedido[0].pedido
     })
 
     const analisisFiltro = confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta);
     (analisisFiltro.length > 0) && console.log(analisisFiltro)
     const newArray = [];
     analisisFiltro.forEach(analisi => {
-      if(newArray === []){
+      if (newArray === []) {
         newArray.push(analisi.elemento)
-      }else{
-        if(!newArray.includes(analisi.elemento)){
+      } else {
+        if (!newArray.includes(analisi.elemento)) {
           newArray.push(analisi.elemento)
         }
       }
@@ -543,17 +570,6 @@ function Tareas() {
 
   }, [tareaSeleccionada.oferta])
 
-  useEffect(() => {
-
-    const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
-    (nombre.length > 0) && setTareaSeleccionada({
-        ...tareaSeleccionada,
-        nombreCliente: nombre[0].razonSocial,
-        oferta: '',
-
-    })
-
-}, [tareaSeleccionada.codigoCliente])
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
@@ -571,7 +587,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short'});
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -593,7 +609,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short'});
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -615,7 +631,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short'});
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -637,7 +653,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short'});
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -658,7 +674,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short'});
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -671,7 +687,7 @@ function Tareas() {
             peticionPostVis();
           }
         }
-        if (tareaSeleccionada.tipo === 6) {
+        /*if (tareaSeleccionada.tipo === 6) {
           for (let i = 0; i < 48; i++) {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -691,7 +707,7 @@ function Tareas() {
             date.setDate(date.getDay() + 7)
             peticionPostVis();
           }
-        }
+        }*/
 
         abrirCerrarModalInsertar();
         peticionGet();
@@ -728,6 +744,9 @@ function Tareas() {
   }
 
   const peticionPut = async () => {
+    if(tareaSeleccionada.recogido === true){
+      peticionPostEntrega();
+    }
     await axios.put("/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
       .then(response => {
         var tareaSeleccionada = data;
@@ -926,6 +945,39 @@ function Tareas() {
     }
   }
 
+  const peticionPostEntrega = async () => {
+    entregaSeleccionada.id = 0;
+    entregaSeleccionada.codigoCliente = tareaSeleccionada.codigoCliente;
+    entregaSeleccionada.nombreCliente = tareaSeleccionada.nombreCliente;
+    entregaSeleccionada.oferta = tareaSeleccionada.oferta;
+    entregaSeleccionada.elemento = tareaSeleccionada.elementoPlanta;
+    entregaSeleccionada.analisis = tareaSeleccionada.analisis;
+    entregaSeleccionada.descripcion = `Muestra de ${tareaSeleccionada.analisis} del cliente ${tareaSeleccionada.nombreCliente}`;
+    await axios.post("/entregas", entregaSeleccionada, token)
+      .then(response => {
+        peticionGetEntregas();
+        setEntregaSeleccionada({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: '',
+          oferta: 0,
+          elemento: '',
+          analisis: '',
+          descripcion: '',
+          entregado: false,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
+      }).catch(error => {
+        console.log(error);
+      })
+  }
+
   //modal insertar mantenimientocab
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -992,6 +1044,14 @@ function Tareas() {
     }))
   }
 
+  const handleChangeCheck4 = (e) => {
+    const { name, value, checked } = e.target
+    setTareaSeleccionada(prevState => ({
+      ...prevState,
+      [name]: checked
+    }))
+  }
+
   const handleChangeAnalisis = (event, value) => {
     setTareaSeleccionada(prevState => ({
       ...prevState,
@@ -1018,7 +1078,7 @@ function Tareas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar tarea</h3>  
+      <h3>Agregar tarea</h3>
       <br />
       <div className="row g-3">
         <div className="col-md-3">
@@ -1066,7 +1126,7 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: value.numeroOferta
+              oferta: parseInt(value.numeroOferta)
             }))}
           />
         </div>
@@ -1309,9 +1369,8 @@ function Tareas() {
 
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
-      {console.log(ofertaEditar)}
       <h3>Tarea</h3>
-      <br/>
+      <br />
       <div className="row g-3">
         <div className="col-md-3">
           <h5> Codigo Cliente </h5>
@@ -1327,7 +1386,11 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              codigoCliente: value.codigo
+              codigoCliente: value.codigo,
+              oferta: '',
+              elementoPlanta: '',
+              analisis: '',
+              pedido: ''
             }))}
           />
         </div>
@@ -1361,17 +1424,29 @@ function Tareas() {
             options={ofertas}
             className={stylesEditarDet.inputMaterial}
             defaultValue={ofertaEditar[0]}
+            inputValue={tareaSeleccionada.oferta}
             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
             sx={{ width: 150 }}
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: parseInt(value.numeroOferta)
+              oferta: parseInt(value.numeroOferta),
+              elementoPlanta: '',
+              analisis: ''
             }))}
           />
         </div>
-
+        <div className="col-md-3">
+          <h5> Pedido </h5>
+          <TextField
+            id='pedido'
+            className={styles2.inputMaterial}
+            name="pedido"
+            value={tareaSeleccionada && tareaSeleccionada.pedido}
+            onChange={handleChange}
+          />
+        </div>
         <div className="col-md-3">
           <h5> Analisis </h5>
           {/* Desplegable de Técnicos */}
@@ -1381,6 +1456,7 @@ function Tareas() {
             options={analisis}
             className={stylesEditarDet.inputMaterial}
             defaultValue={analisisEditar[0]}
+            inputValue={tareaSeleccionada.analisis}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
             getOptionLabel={option => option.analisis}
             sx={{ width: 300 }}
@@ -1453,6 +1529,9 @@ function Tareas() {
             }))}
           />
         </div>
+        <div className="col-md-2">
+          <FormControlLabel control={<Checkbox />} disabled={estadoRecogido} className={styles.inputMaterial} checked={tareaSeleccionada.recogido} label="Recogido" name="recogido" onChange={handleChangeCheck4} />
+        </div>
         <div className="col-md-4">
 
           {/* Desplegable de elementos planta */}
@@ -1463,13 +1542,15 @@ function Tareas() {
             id="CboElementosPlanta"
             options={elementosplanta}
             defaultValue={elementoTareaEditar[0]}
+            inputValue={tareaSeleccionada.elementoPlanta}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
             getOptionLabel={option => option.elemento}
             sx={{ width: 225 }}
             renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              elementoPlanta: value.elemento
+              elementoPlanta: value.elemento,
+              analisis: ''
             }))}
           />
         </div>
@@ -1536,7 +1617,7 @@ function Tareas() {
             setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
             abrirCerrarModalEditarDet();
           })}
-          
+
           onSelectionChange={(filas) => {
             setFilasSeleccionadasVis(filas);
             if (filas.length > 0)
@@ -1544,7 +1625,7 @@ function Tareas() {
           }}
 
           options={{
-            sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
+            sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
             rowStyle: rowData => ({
               backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
@@ -1805,7 +1886,6 @@ function Tareas() {
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
-          console.log(tareaSeleccionada)
           setTareaSeleccionada(tareaSeleccionada);
           setDataAnalisis(dataVis.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
           peticionGetVis();
@@ -1822,9 +1902,9 @@ function Tareas() {
             setEstadoInput(true)
           }
 
-          if(tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Control Fuga Gas" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Revision de Bandeja" || tareaSeleccionada.analisis === "Otros con Fecha de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fecha de Trabajo"){
+          if (tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Control Fuga Gas" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Revision de Bandeja" || tareaSeleccionada.analisis === "Otros con Fecha de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fecha de Trabajo") {
             setEstadoOperario(false)
-          }else{
+          } else {
             setEstadoOperario(true)
           }
 
@@ -1838,6 +1918,12 @@ function Tareas() {
             setEstadoValor(false)
           } else {
             setEstadoValor(true)
+          }
+
+          if(tareaSeleccionada.analisis === "Aerobios" || tareaSeleccionada.analisis === "Legionela"){
+            setEstadoRecogido(false)
+          }else{
+            setEstadoRecogido(true)
           }
           abrirCerrarModalEditar();
         }}

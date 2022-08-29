@@ -1,10 +1,9 @@
-/*import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -23,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 900,
-        height: 700,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -115,6 +113,12 @@ function Entregas() {
         deleted: null,
     });
 
+    const [codigoClienteEditar, setCodigoClienteEditar] = useState([]);
+    const [nombreClienteEditar, setNombreClienteEditar] = useState([]);
+    const [elementoEditar, setElementoEditar] = useState([]);
+    const [ofertaEditar, setOfertaEditar] = useState([]);
+    const [analisisEditar, setAnalisisEditar] = useState([]);
+
     const [elementos, setElementos] = useState([]);
 
     const [clientes, setClientes] = useState([]);
@@ -142,7 +146,7 @@ function Entregas() {
         { title: 'Elemento', field: 'elemento', filterPlaceholder: "Filtrar por elemento" },
         { title: 'Analisis', field: 'analisis', filterPlaceholder: "Filtrar por analisis" },
         { title: 'Descripcion', field: 'descripcion' },
-        { title: 'Entregado', field: 'entregado', filterPlaceholder: "Filtrar por entregado" },
+        { title: 'Entregado', field: 'entregado', type: 'boolean', filterPlaceholder: "Filtrar por entregado" },
 
     ];
 
@@ -162,6 +166,23 @@ function Entregas() {
             .then(response => {
                 abrirCerrarModalInsertar();
                 getEntregas();
+                setEntregaSeleccionada({
+                    id: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    oferta: 0,
+                    elemento: '',
+                    analisis: '',
+                    descripcion: '',
+                    entregado: false,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -178,6 +199,23 @@ function Entregas() {
                 });
                 getEntregas();
                 abrirCerrarModalEditar();
+                setEntregaSeleccionada({
+                    id: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    oferta: 0,
+                    elemento: '',
+                    analisis: '',
+                    descripcion: '',
+                    entregado: false,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -190,6 +228,23 @@ function Entregas() {
                 .then(response => {
                     getEntregas();
                     abrirCerrarModalEliminar();
+                    setEntregaSeleccionada({
+                        id: 0,
+                        codigoCliente: 0,
+                        nombreCliente: '',
+                        oferta: 0,
+                        elemento: '',
+                        analisis: '',
+                        descripcion: '',
+                        entregado: false,
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
                 }).catch(error => {
                     console.log(error);
                 })
@@ -226,13 +281,31 @@ function Entregas() {
         }, [])
     }
 
+    const GetConfAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfAnalisisNivelesPlantasCliente(niveles);
+        }, [])
+    }
+
 
     useEffect(() => {
         GetOfertas();
         GetClientes();
         GetElementos();
         GetAnalisis();
+        GetConfAnalisisNivelesPlantasCliente();
     }, [])
+
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === entregaSeleccionada.codigoCliente);
+        (nombre.length > 0) && setEntregaSeleccionada({
+            ...entregaSeleccionada,
+            nombreCliente: nombre[0].razonSocial
+        })
+
+    }, [entregaSeleccionada.codigoCliente])
 
     //Modales
     const abrirCerrarModalInsertar = () => {
@@ -256,18 +329,19 @@ function Entregas() {
         }));
     }
 
-    const handleChangeCheck = (event, value) => {
+    const handleChangeCheck = (e) => {
+        const { name, value, checked } = e.target
         setEntregaSeleccionada(prevState => ({
-          ...prevState,
-          entregado: value
+            ...prevState,
+            [name]: checked
         }))
-      }
+    }
 
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3> Agregar Nueva Entrega </h3>
             <br />
-            <div className="row g-3">
+            <div className="row g-4">
                 <div className="col-md-6">
                     <h5> Codigo Cliente </h5>
                     <Autocomplete
@@ -286,21 +360,15 @@ function Entregas() {
                 </div>
                 <div className="col-md-4">
                     <h5> Nombre Cliente </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="NombreCliente"
-                        options={clientes}
-                        filterOptions={options => clientes.filter(cliente => cliente.codigo === entregaSeleccionada.codigoCliente)}
-                        getOptionLabel={option => option.razonSocial}
-                        sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-                        onChange={(event, value) => setEntregaSeleccionada(prevState => ({
-                            ...prevState,
-                            nombreCliente: value.razonSocial
-                        }))}
+                    <TextField
+                        id='nombreCliente'
+                        className={styles.inputMaterial}
+                        value={entregaSeleccionada && entregaSeleccionada.nombreCliente}
+                        name="nombreCliente"
+                        onChange={handleChange}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Oferta </h5>
                     <Autocomplete
                         disableClearable={true}
@@ -317,7 +385,7 @@ function Entregas() {
                         }))}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Elemento </h5>
                     <Autocomplete
                         disableClearable={true}
@@ -334,16 +402,16 @@ function Entregas() {
                         }))}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Analisis </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="analisis"
                         options={analisis}
                         className={styles.inputMaterial}
-                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === entregaSeleccionada.codigoCliente && planta.oferta === entregaSeleccionada.oferta && planta.elemento === entregaSeleccionada.elementoPlanta)}
+                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === entregaSeleccionada.codigoCliente && planta.oferta === entregaSeleccionada.oferta && planta.elemento === entregaSeleccionada.elemento)}
                         getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
+                        sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="analisis" />}
                         onChange={(event, value) => setEntregaSeleccionada(prevState => ({
                             ...prevState,
@@ -356,7 +424,7 @@ function Entregas() {
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
                 <div className="col-md-12">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Entregado" name="entregado" onChange={handleChangeCheck} />
+                    <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Entregado" name="entregado" onChange={handleChangeCheck} />
                 </div>
             </div>
             <br />
@@ -376,9 +444,11 @@ function Entregas() {
                     <h5> Codigo Cliente </h5>
                     <Autocomplete
                         type="number"
+                        disabled
                         disableClearable={true}
                         id="CodigoCliente"
                         options={clientes}
+                        defaultValue={codigoClienteEditar[0]}
                         getOptionLabel={option => parseInt(option.codigo)}
                         sx={{ width: 200 }}
                         renderInput={(params) => <TextField {...params} type="number" name="codigoCliente" />}
@@ -391,9 +461,11 @@ function Entregas() {
                 <div className="col-md-4">
                     <h5> Nombre Cliente </h5>
                     <Autocomplete
+                        disabled
                         disableClearable={true}
                         id="NombreCliente"
                         options={clientes}
+                        defaultValue={nombreClienteEditar[0]}
                         filterOptions={options => clientes.filter(cliente => cliente.codigo === entregaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.razonSocial}
                         sx={{ width: 250 }}
@@ -404,13 +476,15 @@ function Entregas() {
                         }))}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Oferta </h5>
                     <Autocomplete
+                        disabled
                         disableClearable={true}
                         id="Oferta"
                         options={ofertas}
                         className={styles.inputMaterial}
+                        defaultValue={ofertaEditar[0]}
                         filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === entregaSeleccionada.codigoCliente)}
                         getOptionLabel={option => option.numeroOferta}
                         sx={{ width: 150 }}
@@ -421,13 +495,15 @@ function Entregas() {
                         }))}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Elemento </h5>
                     <Autocomplete
+                        disabled
                         disableClearable={true}
                         className={styles.inputMaterial}
                         id="elemento"
                         options={elementos}
+                        defaultValue={elementoEditar[0]}
                         filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === entregaSeleccionada.codigoCliente && planta.oferta === entregaSeleccionada.oferta)}
                         getOptionLabel={option => option.elemento}
                         sx={{ width: 225 }}
@@ -438,16 +514,18 @@ function Entregas() {
                         }))}
                     />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h5> Analisis </h5>
                     <Autocomplete
+                        disabled
                         disableClearable={true}
                         id="analisis"
                         options={analisis}
                         className={styles.inputMaterial}
-                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === entregaSeleccionada.codigoCliente && planta.oferta === entregaSeleccionada.oferta && planta.elemento === entregaSeleccionada.elementoPlanta)}
+                        defaultValue={analisisEditar[0]}
+                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === entregaSeleccionada.codigoCliente && planta.oferta === entregaSeleccionada.oferta && planta.elemento === entregaSeleccionada.elemento)}
                         getOptionLabel={option => option.analisis}
-                        sx={{ width: 300 }}
+                        sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="analisis" />}
                         onChange={(event, value) => setEntregaSeleccionada(prevState => ({
                             ...prevState,
@@ -457,16 +535,16 @@ function Entregas() {
                 </div>
                 <div className="col-md-12">
                     <h5> Descripcion </h5>
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Entregado" name="entregado" onChange={handleChangeCheck} value={entregaSeleccionada && entregaSeleccionada.entregado} />
+                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={entregaSeleccionada && entregaSeleccionada.descripcion} />
                 </div>
                 <div className="col-md-12">
-                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={entregaSeleccionada && entregaSeleccionada.descripcion} />
+                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={entregaSeleccionada.entregado} label="Entregado" name="entregado" onChange={handleChangeCheck} />
                 </div>
             </div>
             <br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
+                <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
+                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
             </div>
         </div>
     )
@@ -548,17 +626,15 @@ function Entregas() {
                             abrirCerrarModalEliminar()
                         },
                     },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Entrega",
-                        onClick: (e, data) => {
-                            abrirCerrarModalEditar();
-                        },
-                    },
                 ]}
 
                 onRowClick={((evt, entregaSeleccionada) => {
                     setEntregaSeleccionada(entregaSeleccionada)
+                    setCodigoClienteEditar(clientes.filter(cliente => cliente.codigo === entregaSeleccionada.codigoCliente))
+                    setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === entregaSeleccionada.nombreCliente))
+                    setElementoEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === entregaSeleccionada.elemento));
+                    setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === entregaSeleccionada.analisis));
+                    setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === entregaSeleccionada.oferta))
                     getEntregas();
                     abrirCerrarModalEditar();
                 })}
@@ -608,4 +684,4 @@ function Entregas() {
     )
 }
 
-export default Entregas;*/
+export default Entregas;
