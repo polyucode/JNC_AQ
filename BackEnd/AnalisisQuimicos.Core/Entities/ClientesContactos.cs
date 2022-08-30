@@ -12,5 +12,6 @@ namespace AnalisisQuimicos.Core.Entities
             public string Email { get; set; }
             public string Cargo { get; set; }
             public string Comentarios { get; set; }
+            public bool? Correo { get; set; }
     }
 }

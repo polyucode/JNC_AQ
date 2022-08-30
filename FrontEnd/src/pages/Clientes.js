@@ -26,7 +26,6 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 870,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -60,6 +59,27 @@ const useStyles = makeStyles((theme) => ({
   },
   inputMaterial: {
     width: '100%'
+  }
+}));
+
+const useStylesParagrafh = makeStyles((theme) => ({
+  modal: {
+    position: 'absolute',
+    width: 1000,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  iconos: {
+    cursor: 'pointer'
+  },
+  inputMaterial: {
+    width: '100%',
+    border: '1px solid #DBDBDB'
   }
 }));
 
@@ -164,6 +184,7 @@ function Clientes() {
     email: '',
     cargo: '',
     comentarios: '',
+    correo: false,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -199,6 +220,7 @@ function Clientes() {
   const [comarca, setComarca] = useState([]);
 
   const styles = useStyles();
+  const stylesParagrafh = useStylesParagrafh();
 
   const stylesEditarDet = useStylesEditarDet();
 
@@ -240,6 +262,7 @@ function Clientes() {
     { title: 'Email', field: 'email', type: 'email', filterPlaceholder: "Filtrar por email" },
     { title: 'Cargo', field: 'cargo', filterPlaceholder: "Filtrar por cargo" },
     { title: 'Comentarios', field: 'comentarios', filterPlaceholder: "Filtrar por comentarios" },
+    { title: 'Enviar documentación correo', field: 'correo', type: 'boolean' },
 
     //Ocultas
     { title: 'CodigoCliente', field: 'CodigoCliente', type: 'numeric', filterPlaceholder: "Filtrar por CodigoCliente", hidden: true, },
@@ -461,6 +484,7 @@ function Clientes() {
           email: '',
           cargo: '',
           comentarios: '',
+          correo: false,
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -491,6 +515,7 @@ function Clientes() {
             email: '',
             cargo: '',
             comentarios: '',
+            correo: false,
             addDate: null,
             addIdUser: null,
             modDate: null,
@@ -526,6 +551,7 @@ function Clientes() {
           email: '',
           cargo: '',
           comentarios: '',
+          correo: false,
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -558,6 +584,14 @@ function Clientes() {
       ...prevState,
       [name]: value
     }));
+  }
+
+  const handleChangeCheckbox = e => {
+    const { name, value, checked } = e.target
+    setContactoSeleccionado(prevState => ({
+      ...prevState,
+      [name]: checked
+    }))
   }
 
   const bodyInsertar = (
@@ -796,7 +830,7 @@ function Clientes() {
       <h3>Agregar Nuevo Contacto</h3>
       <br />
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-3">
           <h5> Cliente </h5>
           <TextField disabled className={stylesEditarDet.inputMaterial} name="codigoCliente" onChange={handleChangeContacto} value={clienteSeleccionado && clienteSeleccionado.codigo} />
         </div>
@@ -804,11 +838,11 @@ function Clientes() {
           <h5> Nombre </h5>
           <TextField className={styles.inputMaterial} name="nombre" onChange={handleChangeContacto} />
         </div>
-        <div className="col-md-5">
+        <div className="col-md-3">
           <h5> Telefono </h5>
           <TextField className={stylesEditarDet.inputMaterial} name="telefono" onChange={handleChangeContacto} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-9">
           <h5> Email </h5>
           <TextField className={styles.inputMaterial} name="email" onChange={handleChangeContacto} />
         </div>
@@ -816,9 +850,12 @@ function Clientes() {
           <h5> Cargo </h5>
           <TextField className={stylesEditarDet.inputMaterial} name="cargo" onChange={handleChangeContacto} />
         </div>
+        <div className="col-md-4">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Recibir documentación por correo electrónico" name="correo" onChange={handleChangeCheckbox} />
+        </div>
         <div className="col-md-12">
           <h5> Comentarios </h5>
-          <TextField className={styles.inputMaterial} name="comentarios" onChange={handleChangeContacto} />
+          <TextField className={stylesParagrafh.inputMaterial} multiline rows={5} name="comentarios" onChange={handleChangeContacto} />
         </div>
         <br />
         <div align="right">
@@ -834,7 +871,7 @@ function Clientes() {
       <h3> Contacto </h3>
       <br />
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-md-3">
           <h5> Cliente </h5>
           <TextField disabled className={stylesEditarDet.inputMaterial} name="codigoCliente" onChange={handleChangeContacto} value={clienteSeleccionado && clienteSeleccionado.codigo} />
         </div>
@@ -842,11 +879,11 @@ function Clientes() {
           <h5> Nombre </h5>
           <TextField className={styles.inputMaterial} name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
         </div>
-        <div className="col-md-5">
+        <div className="col-md-3">
           <h5> Teléfono </h5>
           <TextField className={stylesEditarDet.inputMaterial} name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-9">
           <h5> Email </h5>
           <TextField className={styles.inputMaterial} name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
         </div>
@@ -854,9 +891,12 @@ function Clientes() {
           <h5> Cargo </h5>
           <TextField className={stylesEditarDet.inputMaterial} name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
         </div>
+        <div className="col-md-4">
+          <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={contactoSeleccionado.correo} label="Recibir documentación por correo electrónico" name="correo" onChange={handleChangeCheckbox} />
+        </div>
         <div className="col-md-12">
           <h5> Comentarios </h5>
-          <TextField className={styles.inputMaterial} name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
+          <TextField className={stylesParagrafh.inputMaterial} multiline rows={5} name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
         </div>
         <div align="right">
           <Button color="primary" onClick={() => peticionPutContacto()}>Guardar</Button>

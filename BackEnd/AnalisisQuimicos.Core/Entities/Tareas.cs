@@ -11,7 +11,6 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Oferta { get; set; }
         public int? Pedido { get; set; }
         public string Operario { get; set; }
-        public bool? Recogido { get; set; } 
         public string Protocolo { get; set; }
         public string ElementoPlanta { get; set; }
         public string Analisis { get; set; }

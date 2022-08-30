@@ -24,125 +24,6 @@ const token = {
     }
 };
 
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1050,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%',
-        height: 50
-    }
-}));
-
-const useStyles2 = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1150,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '45%',
-        height: 55
-    }
-}));
-
-const tipos = [
-    { id: 1, nombre: "Mensual" },
-    { id: 2, nombre: "Bimensual" },
-    { id: 3, nombre: "Trimestral" },
-    { id: 4, nombre: "Semestral" },
-    { id: 5, nombre: "Anual" },
-    { id: 6, nombre: "Semanal" },
-    { id: 7, nombre: "Bisemanal" }
-]
-
-const selections = [
-    {
-        value: 'Si',
-        label: 'Si',
-    },
-    {
-        value: 'No',
-        label: 'No',
-    }
-];
-
-const final = [
-    {
-        value: 'PDF',
-        label: 'PDF',
-    },
-    {
-        value: 'Ok',
-        label: 'Ok',
-    }
-];
-
-const protocolos = [
-    {
-        value: 'Desinfeccion Parado 4B',
-        label: 'Desinfeccion Parado 4B'
-    },
-    {
-        value: 'Desinfeccion Continuo 4B',
-        label: 'Desinfeccion Continuo 4B'
-    },
-    {
-        value: 'Desinfeccion limpieza parado',
-        label: 'Desinfeccion limpieza parado'
-    },
-    {
-        value: 'Desinfeccion limpieza continuo',
-        label: 'Desinfeccion limpieza continuo'
-    },
-    {
-        value: 'Desinfeccion Protocolo 4C',
-        label: 'Desinfeccion Protocolo 4C'
-    },
-    {
-        value: 'Desinfeccion de aporte',
-        label: 'Desinfeccion de aporte'
-    },
-    {
-        value: 'Desinfeccion contraincendios',
-        label: 'Desinfeccion contraincendios'
-    },
-    {
-        value: 'Desinfeccion parado fuente ornamental',
-        label: 'Desinfeccion parado fuente ornamental'
-    },
-    {
-        value: 'Desinfeccion ACS (termico)',
-        label: 'Desinfeccion ACS (termico)'
-    },
-    {
-        value: 'Desinfeccion AFCH (cloracion)',
-        label: 'Desinfeccion AFCH (cloracion)'
-    }
-]
-
 function Plantas() {
 
     const [modalTarea, setModalTarea] = useState(false);
@@ -192,21 +73,6 @@ function Plantas() {
     const [operarios, setOperarios] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
-
-    const [nombreCliente, setNombreCliente] = useState([]);
-
-    const styles = useStyles();
-    const styles2 = useStyles2();
-
-    const [data, setData] = useState([]);
-
-    const [estadoInput, setEstadoInput] = useState(true);
-    const [estadoValor, setEstadoValor] = useState(true);
-    const [estadoCancelado, setEstadoCancelado] = useState(true);
-    const [estadoOperario, setEstadoOperario] = useState(true);
-    const [estadoProtocolo, setEstadoProtocolo] = useState(true);
-
-    const [fechaprevista, setfechaprevista] = useState("");
 
     let navigate = useNavigate();
 
@@ -445,6 +311,21 @@ function Plantas() {
                 break;
             case '15':
                 elementoAnalisisProps[14].value = e.target.checked;
+                break;
+            case '16':
+                elementoAnalisisProps[15].value = e.target.checked;
+                break;
+            case '17':
+                elementoAnalisisProps[16].value = e.target.checked;
+                break;
+            case '18':
+                elementoAnalisisProps[17].value = e.target.checked;
+                break;
+            case '19':
+                elementoAnalisisProps[18].value = e.target.checked;
+                break;
+            case '20':
+                elementoAnalisisProps[19].value = e.target.checked;
                 break;
         }
 
@@ -703,7 +584,7 @@ function Plantas() {
             oferta: ''
         })
 
-    }, [ confPlantasCliente.codigoCliente ])
+    }, [confPlantasCliente.codigoCliente])
 
 
     return (

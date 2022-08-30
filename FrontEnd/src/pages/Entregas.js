@@ -103,6 +103,7 @@ function Entregas() {
         elemento: '',
         analisis: '',
         descripcion: '',
+        fecha: null,
         entregado: false,
         addDate: null,
         addIdUser: null,
@@ -146,6 +147,7 @@ function Entregas() {
         { title: 'Elemento', field: 'elemento', filterPlaceholder: "Filtrar por elemento" },
         { title: 'Analisis', field: 'analisis', filterPlaceholder: "Filtrar por analisis" },
         { title: 'Descripcion', field: 'descripcion' },
+        { title: 'Fecha', field: 'fecha', type: 'date' },
         { title: 'Entregado', field: 'entregado', type: 'boolean', filterPlaceholder: "Filtrar por entregado" },
 
     ];
@@ -174,6 +176,7 @@ function Entregas() {
                     elemento: '',
                     analisis: '',
                     descripcion: '',
+                    fecha: null,
                     entregado: false,
                     addDate: null,
                     addIdUser: null,
@@ -207,6 +210,7 @@ function Entregas() {
                     elemento: '',
                     analisis: '',
                     descripcion: '',
+                    fecha: null,
                     entregado: false,
                     addDate: null,
                     addIdUser: null,
@@ -236,6 +240,7 @@ function Entregas() {
                         elemento: '',
                         analisis: '',
                         descripcion: '',
+                        fecha: null,
                         entregado: false,
                         addDate: null,
                         addIdUser: null,
@@ -423,6 +428,19 @@ function Entregas() {
                     <h5> Descripcion </h5>
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
                 <div className="col-md-12">
                     <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Entregado" name="entregado" onChange={handleChangeCheck} />
                 </div>
@@ -536,6 +554,20 @@ function Entregas() {
                 <div className="col-md-12">
                     <h5> Descripcion </h5>
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={entregaSeleccionada && entregaSeleccionada.descripcion} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Fecha </h5>
+                    <TextField
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 220 }}
+                        onChange={handleChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={entregaSeleccionada && entregaSeleccionada.fecha}
+                    />
                 </div>
                 <div className="col-md-12">
                     <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={entregaSeleccionada.entregado} label="Entregado" name="entregado" onChange={handleChangeCheck} />

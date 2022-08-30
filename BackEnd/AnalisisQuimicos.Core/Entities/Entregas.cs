@@ -12,6 +12,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string Elemento { get; set; }
         public string Analisis { get; set; }
         public string Descripcion { get; set; }
+        public DateTime? Fecha { get; set; }
         public bool? Entregado { get; set; }
 
     }
