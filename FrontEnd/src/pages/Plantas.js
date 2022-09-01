@@ -255,9 +255,7 @@ function Plantas() {
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
-        console.log(listaElementos)
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-        console.log(elementoAnalisisProps)
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
     }
 
@@ -596,9 +594,9 @@ function Plantas() {
 
                         {/* BUSQUEDA DE CLIENTES */}
                         <div className="busqueda-clientes">
-                            <h5>Cliente</h5>
+                            <h4>Cliente</h4>
                             <hr />
-                            <p>Codigo</p>
+                            <h5>Codigo</h5>
                             <Autocomplete
                                 disableClearable={true}
                                 id="CodigoCliente"
@@ -613,7 +611,7 @@ function Plantas() {
                             />
                             <br />
                             <div className="col-md-6">
-                                <p>Nombre</p>
+                                <h5>Nombre</h5>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="NombreCliente"
@@ -631,7 +629,7 @@ function Plantas() {
                             </div>
                             <br /><br />
                             <div className='numero-oferta'>
-                                <h5>Numero de Oferta</h5>
+                                <h4>Numero de Oferta</h4>
                                 <hr />
                                 <Autocomplete
                                     disableClearable={true}
@@ -652,10 +650,10 @@ function Plantas() {
 
                         {/* NUMERO DE NIVELES */}
                         <div className='numero-niveles'>
-                            <h5>Número de niveles en planta</h5>
+                            <h4>Número de niveles en planta</h4>
                             <hr />
                             <center>
-                                <p>Número</p>
+                                <h5>Número</h5>
                                 <input id="numero-niveles" size="2" type="number" min="0" name="NumNiveles" onChange={handleChange} />
                             </center>
                             <div className='botones'>
@@ -668,7 +666,7 @@ function Plantas() {
 
                     {/* ANÁLISIS POR ELEMENTO */}
                     <div className='analisis-elemento'>
-                        <h5>Análisis por elemento</h5>
+                        <h4>Análisis por elemento</h4>
                         <hr />
                         <div className='elementos'>
                             <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
@@ -691,7 +689,7 @@ function Plantas() {
 
                     {/* ELEMENTOS DE PLANTA */}
                     <div className='elementos-planta'>
-                        <h5>Elementos de planta</h5>
+                        <h4>Elementos de planta</h4>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
                     </div>
@@ -701,7 +699,7 @@ function Plantas() {
             </div>
 
             <div className='row2-2'>
-                <h5>Diagrama</h5>
+                <h4>Diagrama</h4>
                 <hr />
                 <div style={{ height: '22.5rem' }}>
                     <Diagram schema={schema} onChange={onChange} />

@@ -21,7 +21,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import './Mantenimientos.css';
 import { FamilyRestroomRounded } from "@mui/icons-material";
 
 
@@ -957,8 +956,6 @@ function Tareas() {
     entregaSeleccionada.fecha = analisisSeleccionado.fecha;
     await axios.post("/entregas", entregaSeleccionada, token)
       .then(response => {
-        console.log(entregaSeleccionada)
-        console.log(response)
         peticionGetEntregas();
         setEntregaSeleccionada({
           id: 0,

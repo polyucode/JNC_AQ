@@ -32,6 +32,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
+import { useParserFront } from "../hooks/useParserFront";
+import { useParserBack } from "../hooks/useParserBack";
+
 import './MantenimientoTecnico.css';
 
 const token = {
@@ -46,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
         width: 1050,
         height: 750,
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         top: '50%',
@@ -57,8 +59,7 @@ const useStyles = makeStyles((theme) => ({
         cursor: 'pointer'
     },
     inputMaterial: {
-        width: '100%',
-        height: 50
+        width: '100%'
     }
 }));
 
@@ -68,7 +69,6 @@ const useStyles2 = makeStyles((theme) => ({
         width: 1150,
         height: 750,
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         top: '50%',
@@ -79,12 +79,14 @@ const useStyles2 = makeStyles((theme) => ({
         cursor: 'pointer'
     },
     inputMaterial: {
-        width: '45%',
-        height: 55
+        width: '45%'
     }
 }));
 
 function MantenimientoTecnico() {
+
+    const { parametrosBack, setDatosParametrosBack } = useParserBack();
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
 
     const [open, setOpen] = React.useState(true);
     const [contextMenu, setContextMenu] = React.useState(null);
@@ -100,15 +102,26 @@ function MantenimientoTecnico() {
         id: 0,
         codigoCliente: 0,
         nombreCliente: '',
-        oferta: '',
+        referencia: '',
+        oferta: 0,
         elemento: '',
-        fecha: ''
+        fecha: null,
+        parametro: '',
+        unidad: '',
+        valor: 0
 
     })
+
+    const [data, setData] = useState([]);
+    const [dataParametros, setDataParametros] = useState([]);
 
     const styles = useStyles();
     const styles2 = useStyles2();
 
+    console.log(parametrosBack)
+    console.log(parametrosFront)
+
+    console.log(data)
     const GetClientes = async () => {
         axios.get("/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -137,12 +150,28 @@ function MantenimientoTecnico() {
         }, [])
     }
 
+    const GetParametrosPlantaCliente = async () => {
+        axios.get("/parametroselementoplantacliente", token).then(response => {
+            setData(response.data.data)
+        })
+    }
+
+    function Parametros() {
+        setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
+    }
+
     useEffect(() => {
         GetClientes();
         GetElementos();
         GetOfertas();
         GetConfAnalisisNivelesPlantasCliente();
+        GetParametrosPlantaCliente();
+        Parametros();
     }, [])
+
+    useEffect(() => {
+        setDatosParametrosBack(parametrosFront)
+    }, [parametrosFront])
 
     useEffect(() => {
 
@@ -151,9 +180,9 @@ function MantenimientoTecnico() {
             ...parametrosSeleccionado,
             nombreCliente: nombre[0].razonSocial,
             oferta: '',
-    
+
         })
-    
+
     }, [parametrosSeleccionado.codigoCliente])
 
     const handleClick = () => {
@@ -178,8 +207,8 @@ function MantenimientoTecnico() {
     const handleChange = e => {
         const { name, value } = e.target;
         setParametrosSeleccionado(prevState => ({
-          ...prevState,
-          [name]: value
+            ...prevState,
+            [name]: value
         }));
     }
 
@@ -187,8 +216,56 @@ function MantenimientoTecnico() {
         setContextMenu(null);
     };
 
-    function createData(parametro, unidad, valor) {
-        return { parametro, unidad, valor };
+    const onChangeCliente = (e, value, name) => {
+
+        if (e.target.textContent !== "") {
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento))
+        }
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.codigo
+        }))
+
+    }
+
+    const onChangeOferta = (e, value, name) => {
+
+        if(e.target.textContent !== ""){
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.elemento === parametrosSeleccionado.elemento))
+        }
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.numeroOferta
+        }))
+
+    }
+
+    const onChangeElemento = (e, value, name) => {
+
+        if(e.target.textContent !== ""){
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === e.target.textContent))
+        }
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.elemento
+        }))
+
+    }
+
+    const GetParametros = async () => {
+
+        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
+        const response = await axios.get(url, token)
+
+        setDatosParametrosFront(response.data.data)
+
+    }
+
+    function createData(parametro, unidad, valor, valor1Mes, valor2Meses) {
+        return { parametro, unidad, valor, valor1Mes, valor2Meses };
     }
 
     const rows = [
@@ -202,6 +279,7 @@ function MantenimientoTecnico() {
     return (
         <div className="main-container">
             <div className='row1'>
+                {console.log(parametrosFront)}
                 <h4>Mantenimiento</h4>
                 <hr />
                 <div className='header-contenedor'>
@@ -228,10 +306,7 @@ function MantenimientoTecnico() {
                                             getOptionLabel={option => option.codigo}
                                             sx={{ width: 200 }}
                                             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                ...prevState,
-                                                codigoCliente: parseInt(value.codigo)
-                                            }))}
+                                            onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -262,11 +337,7 @@ function MantenimientoTecnico() {
                                             getOptionLabel={option => option.numeroOferta}
                                             sx={{ width: 150 }}
                                             renderInput={(params) => <TextField {...params} name="oferta" />}
-                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                ...prevState,
-                                                oferta: value.numeroOferta,
-                                                elemento: ''
-                                            }))}
+                                            onChange={(event, value) => onChangeOferta(event, value, "oferta")}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -280,10 +351,7 @@ function MantenimientoTecnico() {
                                             getOptionLabel={option => option.elemento}
                                             sx={{ width: 225 }}
                                             renderInput={(params) => <TextField {...params} name="elemento" />}
-                                            onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                ...prevState,
-                                                elemento: value.elemento
-                                            }))}
+                                            onChange={(event, value) => onChangeElemento(event, value, "elemento")}
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -329,13 +397,13 @@ function MantenimientoTecnico() {
                                             </TableCell>
                                             <TableCell>{row.unidad}</TableCell>
                                             <TableCell>
-                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
+                                                {<TextField type="number" id="filled-basic" name="valor" hiddenLabel variant="filled" size="small" />}
                                             </TableCell>
                                             <TableCell>
-                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
+                                                {<TextField disabled type="number" id="filled-basic" hiddenLabel variant="filled" size="small" />}
                                             </TableCell>
                                             <TableCell>
-                                                {<TextField id="filled-basic" hiddenLabel variant="filled" size="small" />}
+                                                {<TextField disabled type="number" id="filled-basic" hiddenLabel variant="filled" size="small" />}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -499,6 +567,7 @@ function MantenimientoTecnico() {
             </div>
             <div className="botones-menu">
                 <button> Guardar datos </button>
+                <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
             </div>
         </div>
     )
