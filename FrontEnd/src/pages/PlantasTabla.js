@@ -584,6 +584,7 @@ function PlantasTabla() {
             }
         }
     }
+    
     let listaElementos = planta.elementos;
 
     const [value, setValue] = React.useState('0');

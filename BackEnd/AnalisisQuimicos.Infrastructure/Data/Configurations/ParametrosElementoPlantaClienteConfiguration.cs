@@ -22,6 +22,8 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
 
+            builder.Property(e => e.Parametro).HasColumnName("Parametro");
+
             builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
             builder.Property(e => e.NombreCliente).HasColumnName("NombreCliente");
@@ -32,8 +34,18 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.EsPlantilla).HasColumnName("EsPlantilla");
 
+            builder.Property(e => e.LimInf).HasColumnName("LimInf");
 
-            builder.Property(e => e.ComptadorLimInf).HasColumnName("ComptadorLimInf");
+            builder.Property(e => e.LimSup).HasColumnName("LimSup");
+
+            builder.Property(e => e.Unidades).HasColumnName("Unidades");
+
+            builder.Property(e => e.Activo).HasColumnName("Activo");
+
+            builder.Property(e => e.VerInspector).HasColumnName("VerInspector");
+
+
+            /*builder.Property(e => e.ComptadorLimInf).HasColumnName("ComptadorLimInf");
 
             builder.Property(e => e.ComptadorLimSup).HasColumnName("ComptadorLimSup");
 
@@ -409,7 +421,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Campo8Activo).HasColumnName("Campo8Activo");
 
-            builder.Property(e => e.Campo8VerInspector).HasColumnName("Campo8VerInspector");
+            builder.Property(e => e.Campo8VerInspector).HasColumnName("Campo8VerInspector");*/
 
 
         }

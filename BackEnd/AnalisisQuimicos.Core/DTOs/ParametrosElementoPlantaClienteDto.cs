@@ -7,12 +7,18 @@ namespace AnalisisQuimicos.Core.DTOs
     public class ParametrosElementoPlantaClienteDto
     {
         public int? Id { get; set; }
+        public int? Parametro { get; set; }
         public int? CodigoCliente { get; set; }
         public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
         public string Elemento { get; set; }
         public bool? EsPlantilla { get; set; }
-        public int? ComptadorLimInf { get; set; }
+        public int? LimInf { get; set; }
+        public int? LimSup { get; set; }
+        public string Unidades { get; set; }
+        public bool? Activo { get; set; }
+        public bool? VerInspector { get; set; }
+        /*public int? ComptadorLimInf { get; set; }
         public int? ComptadorLimSup { get; set; }
         public string ComptadorUnidades { get; set; }
         public bool? ComptadorActivo { get; set; }
@@ -184,7 +190,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Campo8LimSup { get; set; }
         public string Campo8Unidades { get; set; }
         public bool? Campo8Activo { get; set; }
-        public bool? Campo8VerInspector { get; set; }
+        public bool? Campo8VerInspector { get; set; }*/
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

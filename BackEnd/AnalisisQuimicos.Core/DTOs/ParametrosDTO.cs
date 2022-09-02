@@ -4,18 +4,12 @@ using System.Text;
 
 namespace AnalisisQuimicos.Core.DTOs
 {
-    public class OfertasClientesDTO
+    public class ParametrosDTO
     {
         public int? Id { get; set; }
-        public int? NumeroOferta { get; set; }
-        public int? Pedido { get; set; }
-        public int? CodigoCliente { get; set; }
-        public string NombreCliente { get; set; }
-        public string Descripcion { get; set; }
-        public string FechaInicio { get; set; }
-        public string FechaFinalizacion { get; set; }
-        public string Contacto1 { get; set; }
-        public string Contacto2 { get; set; }
+        public string Nombre { get; set; }
+        public bool? Personalizado { get; set; }
+        public string Unidad { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }
