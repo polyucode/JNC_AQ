@@ -1142,6 +1142,10 @@ function Visualizacion() {
                 <div className="col-md-4">
                     <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
                 </div>
+                <div className="col-md-12">
+                    <h5> Subir PDF </h5>
+                    <input type="file" name="files" multiple onChange={(e) => subirArchivos(e.target.files)} />
+                </div>
             </div>
             <br />
             <div align="right">
@@ -2175,6 +2179,7 @@ function Visualizacion() {
             </div>
             <br />
             <div className='home-container-elements'>
+                {console.log(dataTablas)}
                 <div className="visualizacion">
                     <div className="visualizacion-tablas">
                         {dataTablas.map((analisi, index) => {

@@ -118,10 +118,9 @@ function MantenimientoTecnico() {
     const styles = useStyles();
     const styles2 = useStyles2();
 
-    console.log(parametrosBack)
-    console.log(parametrosFront)
+    const [ datos, setDatos ] = useState([]);
 
-    console.log(data)
+
     const GetClientes = async () => {
         axios.get("/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -171,6 +170,7 @@ function MantenimientoTecnico() {
 
     useEffect(() => {
         setDatosParametrosBack(parametrosFront)
+
     }, [parametrosFront])
 
     useEffect(() => {
@@ -279,7 +279,6 @@ function MantenimientoTecnico() {
     return (
         <div className="main-container">
             <div className='row1'>
-                {console.log(parametrosFront)}
                 <h4>Mantenimiento</h4>
                 <hr />
                 <div className='header-contenedor'>
@@ -390,7 +389,8 @@ function MantenimientoTecnico() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows.map((row) => (
+                                    {/*parametrosFront.parametrosFijos.Nombre + 'Activo' === true &&
+                                    rows.map((row) => (
                                         <TableRow key={row.parametro}>
                                             <TableCell component="th" scope="row">
                                                 {row.parametro}
@@ -406,7 +406,7 @@ function MantenimientoTecnico() {
                                                 {<TextField disabled type="number" id="filled-basic" hiddenLabel variant="filled" size="small" />}
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    ))*/}
                                 </TableBody>
                             </Table>
                         </TableContainer>
