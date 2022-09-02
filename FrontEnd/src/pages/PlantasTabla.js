@@ -126,6 +126,8 @@ function PlantasTabla() {
     const [actualState, changeCheckState] = useState(false);
     const [actualState2, changeActualState] = useState(false);
 
+    const [datosParametros, setDatosParametros] = useState([]);
+
     const columnas = [
 
         //visibles
@@ -823,7 +825,7 @@ function PlantasTabla() {
                         </TabList>
                     </Box>*/}
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setDatosParametros={setDatosParametros} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }
                 </TabContext>
             </Box>
