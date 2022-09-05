@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { TabPanel } from '@mui/lab';
 import { ThemeContext } from '../App';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 import axios from "axios";
 
@@ -256,10 +258,10 @@ const TablaElementosTabla = (props) => {
                         <th><center>Ver Insp.</center></th>
                     </tr>
                     <CampoPrincipalPlantasTabla key="19" name="ortofosfats" nombre="OrtofosfatsPO4" datos={state.plantilla.Ortofosfats} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.ortofosfatsPO4} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                    {/* <CampoPrincipalPlantasTabla key="20" name="mo" nombre="MoO4" datos={state.plantilla.Mo} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.mo} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} /> */}
+                    <CampoPrincipalPlantasTabla key="20" name="mo" nombre="MoO4" datos={state.plantilla.Mo} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.moO4} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="21" name="isotiazolona" nombre="Isotiazolona" datos={state.plantilla.Isotiazolona} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.isotiazolona} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="22" name="aquaproxAB5310" nombre="AquaproxAB5310" datos={state.plantilla.AquaproxAB5310} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.aquaproxAB5310} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
-                    <CampoPrincipalPlantasTabla key="23" name="biopolLB5" nombre="BiopolLB5" datos={state.plantilla.BiopolLB5} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.biopolIB200} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                    <CampoPrincipalPlantasTabla key="23" name="biopolLB5" nombre="BiopolLB5" datos={state.plantilla.BiopolLB5} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.biopolLB5} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="24" name="mefacideLG" nombre="MefacideLG" datos={state.plantilla.MefacideLG} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.mefacideLG} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                     <CampoPrincipalPlantasTabla key="25" name="biopolIB200" nombre="BiopolIB200" datos={state.plantilla.BiopolIB200} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.biopolIB200} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
                 </tbody>
@@ -288,17 +290,10 @@ const TablaElementosTabla = (props) => {
                     </tbody>
                 </table>
             </div>
-            {/*<div className="col-3">
-                <div className="ver-inspector">
-                    <h6>Ver Inspector (todo)</h6>
-                    <hr />
-                    <div className='opciones'>
-                        <label><input type="radio" name="verInspector" value='true' onChange={handleVerInspector} /> Si</label>
-                        <label><input type="radio" name="verInspector" value='false' onChange={handleVerInspector} /> No</label>
-                    </div>
-                </div>
+            <div className="col-3">
+                <FormControlLabel control={<Checkbox />} label="Indices de estabilidad" name="indiceEstabilidad" />
+                <FormControlLabel control={<Checkbox />} label="Calculos complementarios caldera" name="calculosCaldera" />
             </div>
-            */}
         </>
     );
 

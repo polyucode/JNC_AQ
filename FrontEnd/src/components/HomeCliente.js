@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -19,8 +20,28 @@ import "hammerjs";
 import '@progress/kendo-theme-default/dist/all.css';
 import './HomeCliente.css';
 
+const token = {
+    headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+};
+
 
 function HomeCliente() {
+
+    const [ valores, setValores ] = useState([]);
+
+
+    const getValorParametros = async () => {
+        axios.get("/valorparametros", token).then(response => {
+            const valor = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setValores(valor);
+        }, [])
+    }
+
+    useEffect(() => {
+        getValorParametros();
+    }, [])
 
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (

@@ -4,7 +4,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -462,17 +461,6 @@ function ConsumoArticulos() {
                             abrirCerrarModalEliminar()
                         },
                     },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Consumo",
-                        onClick: (e, data) => {
-                            getConsumos();
-                            setClienteEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente))
-                            setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === FilasSeleccionadas[0].oferta))
-                            setProductoEditar(productos.filter(producto => producto.codigoProducto === FilasSeleccionadas[0].codigoProducto))
-                            abrirCerrarModalEditar();
-                        },
-                    },
                 ]}
 
                 onRowClick={((evt, consumoSeleccionado) => {
@@ -482,11 +470,14 @@ function ConsumoArticulos() {
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === consumoSeleccionado.codigoProducto))
                     abrirCerrarModalEditar();
                 })}
+
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
-                    setConsumoSeleccionado(filas[0]);
-                }
-                }
+                    if (filas.length > 0) {
+                        setConsumoSeleccionado(filas[0]);
+                    }
+                }}
+
                 options={{
                     sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
                     columnsButton: true, showSelectAllCheckbox: false,

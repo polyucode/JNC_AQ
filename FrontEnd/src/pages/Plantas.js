@@ -24,125 +24,6 @@ const token = {
     }
 };
 
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1050,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%',
-        height: 50
-    }
-}));
-
-const useStyles2 = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1150,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '45%',
-        height: 55
-    }
-}));
-
-const tipos = [
-    { id: 1, nombre: "Mensual" },
-    { id: 2, nombre: "Bimensual" },
-    { id: 3, nombre: "Trimestral" },
-    { id: 4, nombre: "Semestral" },
-    { id: 5, nombre: "Anual" },
-    { id: 6, nombre: "Semanal" },
-    { id: 7, nombre: "Bisemanal" }
-]
-
-const selections = [
-    {
-        value: 'Si',
-        label: 'Si',
-    },
-    {
-        value: 'No',
-        label: 'No',
-    }
-];
-
-const final = [
-    {
-        value: 'PDF',
-        label: 'PDF',
-    },
-    {
-        value: 'Ok',
-        label: 'Ok',
-    }
-];
-
-const protocolos = [
-    {
-        value: 'Desinfeccion Parado 4B',
-        label: 'Desinfeccion Parado 4B'
-    },
-    {
-        value: 'Desinfeccion Continuo 4B',
-        label: 'Desinfeccion Continuo 4B'
-    },
-    {
-        value: 'Desinfeccion limpieza parado',
-        label: 'Desinfeccion limpieza parado'
-    },
-    {
-        value: 'Desinfeccion limpieza continuo',
-        label: 'Desinfeccion limpieza continuo'
-    },
-    {
-        value: 'Desinfeccion Protocolo 4C',
-        label: 'Desinfeccion Protocolo 4C'
-    },
-    {
-        value: 'Desinfeccion de aporte',
-        label: 'Desinfeccion de aporte'
-    },
-    {
-        value: 'Desinfeccion contraincendios',
-        label: 'Desinfeccion contraincendios'
-    },
-    {
-        value: 'Desinfeccion parado fuente ornamental',
-        label: 'Desinfeccion parado fuente ornamental'
-    },
-    {
-        value: 'Desinfeccion ACS (termico)',
-        label: 'Desinfeccion ACS (termico)'
-    },
-    {
-        value: 'Desinfeccion AFCH (cloracion)',
-        label: 'Desinfeccion AFCH (cloracion)'
-    }
-]
-
 function Plantas() {
 
     const [modalTarea, setModalTarea] = useState(false);
@@ -192,21 +73,6 @@ function Plantas() {
     const [operarios, setOperarios] = useState([]);
 
     const [analisis, setAnalisis] = useState([]);
-
-    const [nombreCliente, setNombreCliente] = useState([]);
-
-    const styles = useStyles();
-    const styles2 = useStyles2();
-
-    const [data, setData] = useState([]);
-
-    const [estadoInput, setEstadoInput] = useState(true);
-    const [estadoValor, setEstadoValor] = useState(true);
-    const [estadoCancelado, setEstadoCancelado] = useState(true);
-    const [estadoOperario, setEstadoOperario] = useState(true);
-    const [estadoProtocolo, setEstadoProtocolo] = useState(true);
-
-    const [fechaprevista, setfechaprevista] = useState("");
 
     let navigate = useNavigate();
 
@@ -340,7 +206,13 @@ function Plantas() {
                 React.createElement('option', { key: 'Caldera', value: "Caldera" }, "Caldera"),
                 React.createElement('option', { key: 'Torre', value: "Torre" }, "Torre"),
                 React.createElement('option', { key: 'Refrigeracion', value: "Refrigeracion" }, "Refrigeracion"),
-                React.createElement('option', { key: 'Deposito', value: "Deposito" }, "Deposito")
+                React.createElement('option', { key: 'Deposito', value: "Deposito" }, "Deposito"),
+                React.createElement('option', { key: 'Filtro', value: "Filtro" }, "Filtro"),
+                React.createElement('option', { key: 'Descalcificador', value: "Descalcificador" }, "Descalcificador"),
+                React.createElement('option', { key: 'Ultrafiltracion', value: "Ultrafiltracion" }, "Ultrafiltracion"),
+                React.createElement('option', { key: 'Arqueta', value: "Arqueta" }, "Arqueta"),
+                React.createElement('option', { key: 'Pozo', value: "Pozo" }, "Pozo"),
+                React.createElement('option', { key: 'Acometida', value: "Acometida" }, "Acometida")
             ]
 
             // Creamos el listado de elementos disponibles
@@ -384,7 +256,6 @@ function Plantas() {
         // Obtenemos el elemento mediante si posición
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
-        console.log(elementoAnalisisProps)
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
     }
 
@@ -438,6 +309,21 @@ function Plantas() {
                 break;
             case '15':
                 elementoAnalisisProps[14].value = e.target.checked;
+                break;
+            case '16':
+                elementoAnalisisProps[15].value = e.target.checked;
+                break;
+            case '17':
+                elementoAnalisisProps[16].value = e.target.checked;
+                break;
+            case '18':
+                elementoAnalisisProps[17].value = e.target.checked;
+                break;
+            case '19':
+                elementoAnalisisProps[18].value = e.target.checked;
+                break;
+            case '20':
+                elementoAnalisisProps[19].value = e.target.checked;
                 break;
         }
 
@@ -533,7 +419,7 @@ function Plantas() {
                 Oferta: confPlantasCliente.oferta,
                 Id_Planta: confPlantasCliente.id,
                 Nivel: elemento.nivel,
-                IdElemento: elemento.id,
+                Elemento: elemento.nombre + " " + elemento.numero,
                 Visible: false,
                 Conecta: "",
                 addDate: null,
@@ -589,7 +475,6 @@ function Plantas() {
 
     function crearNodo(elemento) {
 
-        console.log(listaElementos)
         console.log('Crear nodo');
 
         // Preparamos los input y output
@@ -697,7 +582,7 @@ function Plantas() {
             oferta: ''
         })
 
-    }, [ confPlantasCliente.codigoCliente ])
+    }, [confPlantasCliente.codigoCliente])
 
 
     return (
@@ -709,9 +594,9 @@ function Plantas() {
 
                         {/* BUSQUEDA DE CLIENTES */}
                         <div className="busqueda-clientes">
-                            <h5>Cliente</h5>
+                            <h4>Cliente</h4>
                             <hr />
-                            <p>Codigo</p>
+                            <h5>Codigo</h5>
                             <Autocomplete
                                 disableClearable={true}
                                 id="CodigoCliente"
@@ -726,7 +611,7 @@ function Plantas() {
                             />
                             <br />
                             <div className="col-md-6">
-                                <p>Nombre</p>
+                                <h5>Nombre</h5>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="NombreCliente"
@@ -744,7 +629,7 @@ function Plantas() {
                             </div>
                             <br /><br />
                             <div className='numero-oferta'>
-                                <h5>Numero de Oferta</h5>
+                                <h4>Numero de Oferta</h4>
                                 <hr />
                                 <Autocomplete
                                     disableClearable={true}
@@ -765,10 +650,10 @@ function Plantas() {
 
                         {/* NUMERO DE NIVELES */}
                         <div className='numero-niveles'>
-                            <h5>Número de niveles en planta</h5>
+                            <h4>Número de niveles en planta</h4>
                             <hr />
                             <center>
-                                <p>Número</p>
+                                <h5>Número</h5>
                                 <input id="numero-niveles" size="2" type="number" min="0" name="NumNiveles" onChange={handleChange} />
                             </center>
                             <div className='botones'>
@@ -781,7 +666,7 @@ function Plantas() {
 
                     {/* ANÁLISIS POR ELEMENTO */}
                     <div className='analisis-elemento'>
-                        <h5>Análisis por elemento</h5>
+                        <h4>Análisis por elemento</h4>
                         <hr />
                         <div className='elementos'>
                             <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
@@ -804,7 +689,7 @@ function Plantas() {
 
                     {/* ELEMENTOS DE PLANTA */}
                     <div className='elementos-planta'>
-                        <h5>Elementos de planta</h5>
+                        <h4>Elementos de planta</h4>
                         <hr />
                         <div className='elementos-planta-elements' id='elementos-planta'></div>
                     </div>
@@ -814,7 +699,7 @@ function Plantas() {
             </div>
 
             <div className='row2-2'>
-                <h5>Diagrama</h5>
+                <h4>Diagrama</h4>
                 <hr />
                 <div style={{ height: '22.5rem' }}>
                     <Diagram schema={schema} onChange={onChange} />

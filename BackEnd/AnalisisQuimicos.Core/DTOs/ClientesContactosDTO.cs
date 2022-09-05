@@ -13,6 +13,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Email { get; set; }
         public string Cargo { get; set; }
         public string Comentarios { get; set; }
+        public bool? Correo { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

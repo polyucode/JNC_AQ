@@ -71,10 +71,10 @@ export const SlidebarData = [
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
-    /*{
+    {
         title: 'Entregas',
         path: '/entregas',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
-    }*/
+    }
 ]

@@ -147,9 +147,9 @@ function PlantasTabla() {
     const [data2, setData2] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront( setDatosParametrosBack );
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
 
-    useEffect( () => {
+    useEffect(() => {
         setDatosParametrosBack(parametrosFront)
     }, [parametrosFront])
 
@@ -160,8 +160,9 @@ function PlantasTabla() {
         id: 0,
         codigoCliente: 0,
         nombreCliente: "",
-        oferta: 0,
+        oferta: '',
         elemento: "",
+        fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
         ComptadorLimSup: 0,
@@ -650,20 +651,21 @@ function PlantasTabla() {
     }*/
 
 
-    async function guardarElementos(){
-        
+    async function guardarElementos() {
+
         parametrosBack.codigoCliente = valores.codigo;
         parametrosBack.nombreCliente = valores.nombre;
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
-        
+        parametrosBack.fecha = parametrosSeleccionado.fecha
+
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
-                .then(response => {
-                    return response
-                }).catch(error => {
-                    console.log(error);
-                })
-        
+            .then(response => {
+                return response
+            }).catch(error => {
+                console.log(error);
+            })
+
         //handleObject()
     }
 
@@ -687,7 +689,7 @@ function PlantasTabla() {
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
         const response = await axios.get(url, token)
 
-        setDatosParametrosFront( response.data.data )
+        setDatosParametrosFront(response.data.data)
 
     }
 
@@ -700,6 +702,26 @@ function PlantasTabla() {
         GetClientes();
         GetConfAnalisisNivelesPlantasCliente();
     }, [])
+
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
+        (nombre.length > 0) && setParametrosSeleccionado({
+            ...parametrosSeleccionado,
+            nombreCliente: nombre[0].razonSocial,
+            oferta: '',
+            elemento: ''
+        })
+    
+    }, [parametrosSeleccionado.codigoCliente])
+
+    const handleChangeFecha = e => {
+        const { name, value } = e.target;
+        setParametrosSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
 
     return (
         <div className="contenedor">
@@ -737,6 +759,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             id="CboClientes"
                                             className={styles.inputMaterial}
+                                            inputValue={parametrosSeleccionado.nombreCliente}
                                             options={clientes}
                                             filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
                                             getOptionLabel={option => option.razonSocial}
@@ -754,6 +777,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             className={styles.inputMaterial}
                                             id="Oferta"
+                                            inputValue={parametrosSeleccionado.oferta}
                                             options={oferta}
                                             filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                             getOptionLabel={option => option.numeroOferta}
@@ -761,7 +785,8 @@ function PlantasTabla() {
                                             renderInput={(params) => <TextField {...params} name="oferta" />}
                                             onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                                 ...prevState,
-                                                oferta: parseInt(value.numeroOferta)
+                                                oferta: parseInt(value.numeroOferta),
+                                                elemento: ''
                                             }))}
                                         />
                                     </td>
@@ -770,6 +795,7 @@ function PlantasTabla() {
                                             disableClearable={true}
                                             className={styles.inputMaterial}
                                             id="elemento"
+                                            inputValue={parametrosSeleccionado.elemento}
                                             options={elementos}
                                             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
                                             getOptionLabel={option => option.elemento}
@@ -804,26 +830,17 @@ function PlantasTabla() {
                 {valores.codigo ?
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                     :
                     <div className='botones-menu'>
                         <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
                         <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
                         <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
-                        <button className="plantilla" target="_blank"><Link to='/pdf'> Generar PDF </Link></button>
                     </div>
                 }
             </div>
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={value}>
-                    {/*<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList id="tab-list" onChange={handleChange}>
-                            {
-                                <Tab key="elemento" label={valores.elemento} value={value} />
-                            }
-                        </TabList>
-                    </Box>*/}
                     {
                         <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setDatosParametros={setDatosParametros} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }

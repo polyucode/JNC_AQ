@@ -5,7 +5,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -22,7 +21,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import './Mantenimientos.css';
 import { FamilyRestroomRounded } from "@mui/icons-material";
 
 
@@ -38,9 +36,9 @@ const tipos = [
   { id: 2, nombre: "Bimensual" },
   { id: 3, nombre: "Trimestral" },
   { id: 4, nombre: "Semestral" },
-  { id: 5, nombre: "Anual" },
-  { id: 6, nombre: "Semanal" },
-  { id: 7, nombre: "Bisemanal" }
+  { id: 5, nombre: "Anual" }
+  /*{ id: 6, nombre: "Semanal" },
+  { id: 7, nombre: "Bisemanal" }*/
 ]
 
 const selections = [
@@ -113,7 +111,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
     width: 1500,
-    height: 1020,
+    height: 1120,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -273,11 +271,11 @@ function Tareas() {
     id: 0,
     codigoCliente: 0,
     nombreCliente: "",
+    oferta: 0,
+    pedido: 0,
     operario: "",
     protocolo: "",
     elementoPlanta: "",
-    oferta: '',
-    pedido: '',
     analisis: "",
     final: "",
     valor: "",
@@ -313,6 +311,27 @@ function Tareas() {
     observaciones: '',
     facturado: false,
     numeroFacturado: '',
+    recogido: false,
+    addDate: null,
+    addIdUser: null,
+    modDate: null,
+    modIdUser: null,
+    delDate: null,
+    delIdUser: null,
+    deleted: null,
+  });
+
+  const [entregaSeleccionada, setEntregaSeleccionada] = useState({
+
+    id: 0,
+    codigoCliente: 0,
+    nombreCliente: '',
+    oferta: 0,
+    elemento: '',
+    analisis: '',
+    descripcion: '',
+    fecha: null,
+    entregado: false,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -342,6 +361,7 @@ function Tareas() {
   const [data, setData] = useState([]);
   const [dataVis, setDataVis] = useState([]);
   const [dataAnalisis, setDataAnalisis] = useState([]);
+  const [dataEntregas, setDataEntregas] = useState([]);
 
   const [operarios, setOperarios] = useState([]);
 
@@ -370,6 +390,7 @@ function Tareas() {
   const [estadoCancelado, setEstadoCancelado] = useState(true);
   const [estadoOperario, setEstadoOperario] = useState(true);
   const [estadoProtocolo, setEstadoProtocolo] = useState(true);
+  const [estadoRecogido, setEstadoRecogido] = useState(true);
 
   const styles = useStyles();
   const styles2 = useStyles2();
@@ -474,6 +495,12 @@ function Tareas() {
     })
   }
 
+  const peticionGetEntregas = async () => {
+    axios.get("/entregas", token).then(response => {
+      setDataEntregas(response.data.data)
+    })
+  }
+
   useEffect(() => {
     peticionGet();
     GetElementosPlanta();
@@ -484,6 +511,7 @@ function Tareas() {
     GetConfAnalisisNivelesPlantasCliente();
     peticionGetAnalisis();
     peticionGetVis();
+    peticionGetEntregas();
   }, [])
 
 
@@ -513,10 +541,7 @@ function Tareas() {
     const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
     (nombre.length > 0) && setTareaSeleccionada({
       ...tareaSeleccionada,
-      nombreCliente: nombre[0].razonSocial,
-      pedido: '',
-      oferta: '',
-      elementoPlanta: ''
+      nombreCliente: nombre[0].razonSocial
     })
 
   }, [tareaSeleccionada.codigoCliente])
@@ -526,11 +551,25 @@ function Tareas() {
     const pedido = ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta);
     (pedido.length > 0) && setTareaSeleccionada({
       ...tareaSeleccionada,
-      pedido: pedido[0].pedido,
-      elementoPlanta: ''
+      pedido: pedido[0].pedido
     })
 
+    const analisisFiltro = confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta);
+    (analisisFiltro.length > 0) && console.log(analisisFiltro)
+    const newArray = [];
+    analisisFiltro.forEach(analisi => {
+      if (newArray === []) {
+        newArray.push(analisi.elemento)
+      } else {
+        if (!newArray.includes(analisi.elemento)) {
+          newArray.push(analisi.elemento)
+        }
+      }
+    })
+    console.log(newArray)
+
   }, [tareaSeleccionada.oferta])
+
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
@@ -548,7 +587,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -570,7 +609,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -592,7 +631,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -614,7 +653,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -635,7 +674,7 @@ function Tareas() {
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
             analisisSeleccionado.elemento = response.data.data.elementoPlanta;
-            analisisSeleccionado.periodo = "";
+            analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
             analisisSeleccionado.realizado = false;
@@ -648,7 +687,7 @@ function Tareas() {
             peticionPostVis();
           }
         }
-        if (tareaSeleccionada.tipo === 6) {
+        /*if (tareaSeleccionada.tipo === 6) {
           for (let i = 0; i < 48; i++) {
             analisisSeleccionado.id = null;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
@@ -668,12 +707,12 @@ function Tareas() {
             date.setDate(date.getDay() + 7)
             peticionPostVis();
           }
-        }
+        }*/
 
         abrirCerrarModalInsertar();
         peticionGet();
         setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-        { tareaSeleccionada.analisis === "Físico-Quimico" && navigate("/plantasTabla", { replace: true }); }
+        { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); }
         setTareaSeleccionada({
           id: 0,
           codigoCliente: 0,
@@ -681,8 +720,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -722,8 +761,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -757,8 +796,8 @@ function Tareas() {
           operario: "",
           protocolo: "",
           elementoPlanta: "",
-          oferta: '',
-          pedido: '',
+          oferta: 0,
+          pedido: 0,
           analisis: "",
           final: "",
           valor: "",
@@ -824,6 +863,9 @@ function Tareas() {
   }
 
   const peticionPutVis = async () => {
+    if (analisisSeleccionado.recogido === true) {
+      peticionPostEntrega();
+    }
     await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
       .then(response => {
         var analisisSeleccionado = dataAnalisis;
@@ -903,6 +945,41 @@ function Tareas() {
     }
   }
 
+  const peticionPostEntrega = async () => {
+    entregaSeleccionada.id = 0;
+    entregaSeleccionada.codigoCliente = analisisSeleccionado.codigoCliente;
+    entregaSeleccionada.nombreCliente = analisisSeleccionado.nombreCliente;
+    entregaSeleccionada.oferta = analisisSeleccionado.oferta;
+    entregaSeleccionada.elemento = analisisSeleccionado.elemento;
+    entregaSeleccionada.analisis = analisisSeleccionado.analisis;
+    entregaSeleccionada.descripcion = `Muestra de ${analisisSeleccionado.analisis} del cliente ${analisisSeleccionado.nombreCliente}`;
+    entregaSeleccionada.fecha = analisisSeleccionado.fecha;
+    await axios.post("/entregas", entregaSeleccionada, token)
+      .then(response => {
+        peticionGetEntregas();
+        setEntregaSeleccionada({
+          id: 0,
+          codigoCliente: 0,
+          nombreCliente: '',
+          oferta: 0,
+          elemento: '',
+          analisis: '',
+          descripcion: '',
+          fecha: null,
+          entregado: false,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
+      }).catch(error => {
+        console.log(error);
+      })
+  }
+
   //modal insertar mantenimientocab
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -969,6 +1046,14 @@ function Tareas() {
     }))
   }
 
+  const handleChangeCheck4 = (e) => {
+    const { name, value, checked } = e.target
+    setAnalisisSeleccionado(prevState => ({
+      ...prevState,
+      [name]: checked
+    }))
+  }
+
   const handleChangeAnalisis = (event, value) => {
     setTareaSeleccionada(prevState => ({
       ...prevState,
@@ -995,7 +1080,7 @@ function Tareas() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar tarea</h3>  
+      <h3>Agregar tarea</h3>
       <br />
       <div className="row g-3">
         <div className="col-md-3">
@@ -1011,7 +1096,9 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              codigoCliente: parseInt(value.codigo)
+              codigoCliente: parseInt(value.codigo),
+              pedido: '',
+              elementoPlanta: ''
             }))}
           />
         </div>
@@ -1019,20 +1106,12 @@ function Tareas() {
         <div className="col-md-3">
           <h5> Nombre Cliente </h5>
           {/* Desplegable de Clientes */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboClientes"
-            inputValue={tareaSeleccionada.nombreCliente}
-            className={styles2.inputMaterial}
-            options={clientes}
-            filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
-            getOptionLabel={option => option.razonSocial}
-            sx={{ width: 200 }}
-            renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              nombreCliente: value.razonSocial
-            }))}
+          <TextField
+            id='nombreCliente'
+            className={styles.inputMaterial}
+            value={tareaSeleccionada && tareaSeleccionada.nombreCliente}
+            name="nombreCliente"
+            onChange={handleChange}
           />
         </div>
         <div className="col-md-3">
@@ -1049,25 +1128,18 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: value.numeroOferta
+              oferta: parseInt(value.numeroOferta)
             }))}
           />
         </div>
         <div className="col-md-3">
           <h5> Pedido </h5>
-          <Autocomplete
-            disableClearable={true}
-            id="Pedido"
-            options={ofertas}
-            inputValue={tareaSeleccionada.pedido}
-            getOptionLabel={option => option.pedido}
-            filterOptions={options => ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta)}
-            sx={{ width: 250 }}
-            renderInput={(params) => <TextField {...params} name="pedido" />}
-            onChange={(event, value) => setTareaSeleccionada(prevState => ({
-              ...prevState,
-              pedido: value.pedido
-            }))}
+          <TextField
+            id='pedido'
+            className={styles.inputMaterial}
+            value={tareaSeleccionada && tareaSeleccionada.pedido}
+            name="pedido"
+            onChange={handleChange}
           />
         </div>
 
@@ -1123,7 +1195,7 @@ function Tareas() {
             ))}
           </TextField>
         </div>
-        <div className="col-md-4">
+        {/*<div className="col-md-4">
           <h5> Valor </h5>
           <TextField
             disabled={estadoInput}
@@ -1147,7 +1219,7 @@ function Tareas() {
         <div className="col-md-2">
           <h5> Unidades </h5>
           <TextField disabled={estadoValor} className={styles.inputMaterial} name="unidades" onChange={handleChange} />
-        </div>
+        </div>*/}
         <div className="col-md-5">
           <h5> Operario </h5>
           {/* Desplegable de Técnicos */}
@@ -1163,7 +1235,7 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="operario" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              operario: value.nombre
+              operario: value.nombre + ' ' + value.apellidos
             }))}
           />
         </div>
@@ -1300,6 +1372,7 @@ function Tareas() {
   const bodyEditar = (
     <div className={stylesEditarDet.modal}>
       <h3>Tarea</h3>
+      <br />
       <div className="row g-3">
         <div className="col-md-3">
           <h5> Codigo Cliente </h5>
@@ -1315,7 +1388,11 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="codigoCliente" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              codigoCliente: value.codigo
+              codigoCliente: value.codigo,
+              oferta: '',
+              elementoPlanta: '',
+              analisis: '',
+              pedido: ''
             }))}
           />
         </div>
@@ -1328,6 +1405,7 @@ function Tareas() {
             id="NombreCliente"
             options={clientes}
             className={stylesEditarDet.inputMaterial}
+            inputValue={tareaSeleccionada.nombreCliente}
             defaultValue={nombreClienteEditar[0]}
             filterOptions={options => clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.razonSocial}
@@ -1348,17 +1426,29 @@ function Tareas() {
             options={ofertas}
             className={stylesEditarDet.inputMaterial}
             defaultValue={ofertaEditar[0]}
+            inputValue={tareaSeleccionada.oferta}
             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
             getOptionLabel={option => option.numeroOferta}
             sx={{ width: 150 }}
             renderInput={(params) => <TextField {...params} name="oferta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              oferta: value.numeroOferta
+              oferta: parseInt(value.numeroOferta),
+              elementoPlanta: '',
+              analisis: ''
             }))}
           />
         </div>
-
+        <div className="col-md-3">
+          <h5> Pedido </h5>
+          <TextField
+            id='pedido'
+            className={styles2.inputMaterial}
+            name="pedido"
+            value={tareaSeleccionada && tareaSeleccionada.pedido}
+            onChange={handleChange}
+          />
+        </div>
         <div className="col-md-3">
           <h5> Analisis </h5>
           {/* Desplegable de Técnicos */}
@@ -1368,6 +1458,7 @@ function Tareas() {
             options={analisis}
             className={stylesEditarDet.inputMaterial}
             defaultValue={analisisEditar[0]}
+            inputValue={tareaSeleccionada.analisis}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
             getOptionLabel={option => option.analisis}
             sx={{ width: 300 }}
@@ -1393,7 +1484,7 @@ function Tareas() {
             ))}
           </TextField>
         </div>
-        <div className="col-md-3">
+        {/*<div className="col-md-3">
           <h5> Valor </h5>
           <TextField
             disabled={estadoInput}
@@ -1418,7 +1509,7 @@ function Tareas() {
         <div className="col-md-3">
           <h5> Unidades </h5>
           <TextField disabled={estadoValor} className={styles2.inputMaterial} name="unidades" onChange={handleChange} value={tareaSeleccionada.unidades} />
-        </div>
+        </div>*/}
 
         <div className="col-md-4">
           {/* Desplegable de Técnicos */}
@@ -1436,12 +1527,11 @@ function Tareas() {
             renderInput={(params) => <TextField {...params} name="operario" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              operario: value.nombre
+              operario: value.nombre + ' ' + value.apellidos
             }))}
           />
         </div>
         <div className="col-md-4">
-
           {/* Desplegable de elementos planta */}
           <h5> Elemento de planta </h5>
           <Autocomplete
@@ -1450,13 +1540,15 @@ function Tareas() {
             id="CboElementosPlanta"
             options={elementosplanta}
             defaultValue={elementoTareaEditar[0]}
+            inputValue={tareaSeleccionada.elementoPlanta}
             filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
             getOptionLabel={option => option.elemento}
             sx={{ width: 225 }}
             renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              elementoPlanta: value.elemento
+              elementoPlanta: value.elemento,
+              analisis: ''
             }))}
           />
         </div>
@@ -1488,8 +1580,6 @@ function Tareas() {
         </div>
       </div>
       <div className="row">
-        {console.log(dataVis)}
-        {console.log(dataAnalisis)}
         <MaterialTable columns={columnasVis} data={dataAnalisis}
           localization={localization}
           actions={[
@@ -1517,30 +1607,28 @@ function Tareas() {
                 abrirCerrarModalEliminarDet();
               },
             },
-            {
-              icon: () => <Edit />,
-              tooltip: "Editar detalle de tarea",
-              onClick: (e, data) => {
-                setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
-                abrirCerrarModalEditarDet();
-              },
-            },
           ]}
 
           onRowClick={((evt, analisisSeleccionado) => {
             setAnalisisSeleccionado(analisisSeleccionado)
             peticionGetVis();
             setClienteAnalisisEditar(clientes.filter(cliente => cliente.codigoCliente === tareaSeleccionada.codigoCliente));
+            if (analisisSeleccionado.analisis === "Aerobios" || analisisSeleccionado.analisis === "Legionela") {
+              setEstadoRecogido(false)
+            } else {
+              setEstadoRecogido(true)
+            }
             abrirCerrarModalEditarDet();
           })}
+
           onSelectionChange={(filas) => {
             setFilasSeleccionadasVis(filas);
             if (filas.length > 0)
               setAnalisisSeleccionado(filas[0]);
-          }
-          }
+          }}
+
           options={{
-            sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 5, filtering: false, search: false, selection: true,
+            sorting: true, paging: true, pageSizeOptions: [1, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
             columnsButton: false, showSelectAllCheckbox: false,
             rowStyle: rowData => ({
               backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
@@ -1694,11 +1782,11 @@ function Tareas() {
         </div>
         <div className="col-md-3">
           <h5> Analisis </h5>
-          <TextField className={styles.inputMaterial} name="idAnalisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idAnalisis} />
+          <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.analisis} />
         </div>
         <div className="col-md-3">
           <h5> Elemento de planta </h5>
-          <TextField className={styles.inputMaterial} name="idElemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.idElementoPlanta} />
+          <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeVis} value={tareaSeleccionada && tareaSeleccionada.elementoPlanta} />
         </div>
         <div className="col-md-3">
           <h5> Periodo </h5>
@@ -1717,6 +1805,9 @@ function Tareas() {
             }}
             value={analisisSeleccionado && analisisSeleccionado.fecha}
           />
+        </div>
+        <div className="col-md-2">
+          <FormControlLabel control={<Checkbox />} disabled={estadoRecogido} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheck4} />
         </div>
         <div className="col-md-5">
           {/* Fecha realizacion */}
@@ -1798,23 +1889,6 @@ function Tareas() {
               abrirCerrarModalEliminar()
             },
           },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar Tarea",
-            onClick: (e, data) => {
-              peticionGetVis();
-
-              setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === FilasSeleccionadas[0].nombreCliente))
-              setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === FilasSeleccionadas[0].codigoCliente));
-              setElementoTareaEditar(elementosplanta.filter(elemento => elemento.nombre === FilasSeleccionadas[0].elementoPlanta));
-              setTipoTareaEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-              setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
-              setAnalisisEditar(analisis.filter(analisi => analisi.nombre === FilasSeleccionadas[0].analisis));
-              setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === FilasSeleccionadas[0].oferta))
-
-              abrirCerrarModalEditar();
-            },
-          },
         ]}
 
         onRowClick={(evt, tareaSeleccionada) => {
@@ -1825,17 +1899,42 @@ function Tareas() {
           setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente));
           setElementoTareaEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
           setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
-          setTecnicoTareaEditar(operarios.filter(operario => operario.nombre === tareaSeleccionada.operario));
+          setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
           setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
           setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === tareaSeleccionada.oferta))
+          if (tareaSeleccionada.analisis === "Otros con Fechas de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fechas de Trabajo" || tareaSeleccionada.analisis === "Legionela" || tareaSeleccionada.analisis === "Aerobios" || tareaSeleccionada.analisis === "Aguas Residuales" || tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "AguaPozo" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Control Fuga gas" || tareaSeleccionada.analisis === "Revision de bandeja") {
+            setEstadoInput(false)
+          } else {
+            setEstadoInput(true)
+          }
+
+          if (tareaSeleccionada.analisis === "Desinfecciones" || tareaSeleccionada.analisis === "Desinfeccion ACS" || tareaSeleccionada.analisis === "Mantenimiento Maq Frio" || tareaSeleccionada.analisis === "Mediciones" || tareaSeleccionada.analisis === "Control Fuga Gas" || tareaSeleccionada.analisis === "Agua Potable" || tareaSeleccionada.analisis === "Revision de Bandeja" || tareaSeleccionada.analisis === "Otros con Fecha de Trabajo" || tareaSeleccionada.analisis === "Otros sin Fecha de Trabajo") {
+            setEstadoOperario(false)
+          } else {
+            setEstadoOperario(true)
+          }
+
+          if (tareaSeleccionada.analisis === "Desinfecciones") {
+            setEstadoProtocolo(false)
+          } else {
+            setEstadoProtocolo(true)
+          }
+
+          if (tareaSeleccionada.valor === "Si") {
+            setEstadoValor(false)
+          } else {
+            setEstadoValor(true)
+          }
+
           abrirCerrarModalEditar();
         }}
+
         onSelectionChange={(filas) => {
           setFilasSeleccionadas(filas);
           if (filas.length > 0)
             setTareaSeleccionada(filas[0]);
-        }
-        }
+        }}
+
         options={{
           sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100], pageSize: 10, filtering: true, search: false, selection: true,
           columnsButton: true, showSelectAllCheckbox: false,

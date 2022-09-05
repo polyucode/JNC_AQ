@@ -8,5 +8,6 @@ namespace AnalisisQuimicos.Core.Entities
     {
         public string CodigoProducto { get; set; }
         public string Descripcion { get; set; }
+        public string ADR { get; set; }
     }
 }
