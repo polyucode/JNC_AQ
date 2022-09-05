@@ -1,5 +1,6 @@
 import React from 'react';
 import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
+import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -124,144 +125,169 @@ function HomeCliente() {
       }
 
     return (
-        <div className="home-container">
-            <h4>Hola! Hecha un vistazo al estado de tu planta</h4>
-            <div className='home-container-elements'>
-                <div className="home-col-1">
-                    <div className="home-diagrama">
-                        <h5>Diagrama de planta</h5>
-                        <hr />
-                        <div style={{ height: '22rem' }}>
-                            <Diagram schema={schema} onChange={onChange} />
-                        </div>
-                    </div>
-                    <div className="home-tabla-parametros-elemento">
-                        <h5>Parámetros del elemento: <b>Torre 1</b></h5>
-                        <hr />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>Parámetro</th>
-                                    <th>Un.</th>
-                                    <th>Ene</th>
-                                    <th>Feb</th>
-                                    <th>Mar</th>
-                                    <th>Abr</th>
-                                    <th>May</th>
-                                    <th>Jun</th>
-                                    <th>Jul</th>
-                                    <th>Ago</th>
-                                    <th>Sep</th>
-                                    <th>Oct</th>
-                                    <th>Nov</th>
-                                    <th>Dic</th>
-                                </tr>
-                                <tr>
-                                    <td>pH</td>
-                                    <td>pH</td>
-                                    <td>4,5</td>
-                                    <td>4,4</td>
-                                    <td>4,4</td>
-                                    <td>4,3</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Temperatura</td>
-                                    <td>ºC</td>
-                                    <td>25</td>
-                                    <td>32</td>
-                                    <td>26</td>
-                                    <td>37</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>  
-                </div>
-                <div className="home-col-2">
-                    <div className='home-calendario-mantenimiento'>
-                        <h5>Calendario de mantenimientos</h5>
-                        <hr />
-                        <FullCalendar
-                            plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
-                            headerToolbar={{
-                            left: 'today prev,next',
-                            center: 'title',
-                            right: 'resourceTimelineYear,resourceTimelineMonth',
-                            }}
-                            locale= 'esLocale'
-                            timeZone= 'UTC'
-                            initialView= 'resourceTimelineYear'
-                            scrollTime= '08:00'
-                            aspectRatio= {1.5}
-                            weekends={false}
-                            height= {350}
-                            resourceAreaHeaderContent= 'Elementos'
-                            resources= {[
-                            {    
-                                id: 1,
-                                title: 'Elemento 1'
-                            },
-                            {    
-                                id: 2,
-                                title: 'Elemento 2'
-                            },
-                            {    
-                                id: 3,
-                                title: 'Elemento 3'
-                            },
-                            ]}
-                            events={ [
-                            {
-                                id: 1,
-                                title: 'Mantenimiento 1',
-                                start: '2022-03-01',
-                                end: '2022-03-06',
-                                resourceId: 1,
-                                color: 'red'
-                            },
-                            {
-                                id: 2,
-                                title: 'Mantenimiento 2',
-                                start: '2022-03-05',
-                                end: '2022-03-11',
-                                resourceId: 3,
-                                color: 'green'
-                            },
-                            {
-                                id: 3,
-                                title: 'Mantenimiento 3',
-                                start: '2022-03-15',
-                                end: '2022-03-23',
-                                resourceId: 2,
-                                color: 'orange'
-                            }
-                            ]}
-                            //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
-                        />
-                    </div>
-                    <div className='home-grafico'>
-                        <h5>Parámetros del elemento (gráfico): <b>Torre 1</b></h5>
-                        <hr />
-                        <ChartContainer />
-                    </div>
-                </div>
-            </div>
-        </div>
+        <>
+
+            <Grid item>
+                <Typography variant='h4' sx={{ textAlign: 'center', mb: 4, mt: 2 }}>Hola! Hecha un vistazo al estado de tu planta</Typography>
+            </Grid>
+            <Grid container spacing={ 2 }>
+
+                <Grid item xl={ 6 }>
+                    <Card>
+                        <CardContent sx={{ p: 0, mb: 2 }}>
+
+                            <Typography variant='h5'>Diagrama de planta</Typography>
+                            <div style={{ height: '22rem' }}>
+                                <Diagram schema={schema} onChange={onChange} />
+                            </div>
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xl={ 6 }>
+                    <Card>
+                        <CardContent sx={{ p: 0, mb: 2 }}>
+
+                            <Typography variant='h5'>Calendario de mantenimientos</Typography>
+                            <FullCalendar
+                                plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
+                                headerToolbar={{
+                                left: 'today prev,next',
+                                center: 'title',
+                                right: 'resourceTimelineYear,resourceTimelineMonth',
+                                }}
+                                locale= 'esLocale'
+                                timeZone= 'UTC'
+                                initialView= 'resourceTimelineYear'
+                                scrollTime= '08:00'
+                                aspectRatio= {1.5}
+                                weekends={false}
+                                height= {350}
+                                resourceAreaHeaderContent= 'Elementos'
+                                resources= {[
+                                {    
+                                    id: 1,
+                                    title: 'Elemento 1'
+                                },
+                                {    
+                                    id: 2,
+                                    title: 'Elemento 2'
+                                },
+                                {    
+                                    id: 3,
+                                    title: 'Elemento 3'
+                                },
+                                ]}
+                                events={ [
+                                {
+                                    id: 1,
+                                    title: 'Mantenimiento 1',
+                                    start: '2022-03-01',
+                                    end: '2022-03-06',
+                                    resourceId: 1,
+                                    color: 'red'
+                                },
+                                {
+                                    id: 2,
+                                    title: 'Mantenimiento 2',
+                                    start: '2022-03-05',
+                                    end: '2022-03-11',
+                                    resourceId: 3,
+                                    color: 'green'
+                                },
+                                {
+                                    id: 3,
+                                    title: 'Mantenimiento 3',
+                                    start: '2022-03-15',
+                                    end: '2022-03-23',
+                                    resourceId: 2,
+                                    color: 'orange'
+                                }
+                                ]}
+                                //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
+                            />
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xl={ 6 }>
+                    <Card>
+                        <CardContent sx={{ p: 0, mb: 2 }}>
+
+                            <Typography variant='h5'>Parámetros del elemento: <b>Torre 1</b></Typography>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>Parámetro</th>
+                                        <th>Un.</th>
+                                        <th>Ene</th>
+                                        <th>Feb</th>
+                                        <th>Mar</th>
+                                        <th>Abr</th>
+                                        <th>May</th>
+                                        <th>Jun</th>
+                                        <th>Jul</th>
+                                        <th>Ago</th>
+                                        <th>Sep</th>
+                                        <th>Oct</th>
+                                        <th>Nov</th>
+                                        <th>Dic</th>
+                                    </tr>
+                                    <tr>
+                                        <td>pH</td>
+                                        <td>pH</td>
+                                        <td>4,5</td>
+                                        <td>4,4</td>
+                                        <td>4,4</td>
+                                        <td>4,3</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Temperatura</td>
+                                        <td>ºC</td>
+                                        <td>25</td>
+                                        <td>32</td>
+                                        <td>26</td>
+                                        <td>37</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xl={ 6 }>
+                    <Card>
+                        <CardContent sx={{ p: 0, mb: 2 }}>
+
+                            <Typography variant='h5'>Parámetros del elemento (gráfico): <b>Torre 1</b></Typography>
+                            <ChartContainer />
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+            </Grid>
+            
+        </>
     );
 
 }

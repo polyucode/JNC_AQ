@@ -5,7 +5,7 @@ import HomeCliente from "../components/HomeCliente";
 import './Home.css';
 
 const token = {
-    headers:{
+    headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
     }
 };
