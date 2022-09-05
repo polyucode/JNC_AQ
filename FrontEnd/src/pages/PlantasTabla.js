@@ -657,7 +657,6 @@ function PlantasTabla() {
         parametrosBack.nombreCliente = valores.nombre;
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
-        parametrosBack.fecha = parametrosSeleccionado.fecha
 
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
