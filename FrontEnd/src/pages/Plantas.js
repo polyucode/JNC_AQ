@@ -15,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@mui/material/MenuItem';
 
 
+import { AddAnalisis } from '../components/AddAnalisis';
+
 import 'beautiful-react-diagrams/styles.css';
 import './Plantas.css';
 
@@ -254,6 +256,8 @@ function Plantas() {
 
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
+        console.log(listaElementos)
+        console.log(elementoAnalisisProps)
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
@@ -319,12 +323,9 @@ function Plantas() {
             case '18':
                 elementoAnalisisProps[17].value = e.target.checked;
                 break;
-            case '19':
-                elementoAnalisisProps[18].value = e.target.checked;
-                break;
-            case '20':
-                elementoAnalisisProps[19].value = e.target.checked;
-                break;
+            default:
+                elementoAnalisisProps[e.target.id].value = e.target.checked;
+
         }
 
         // UNa vez actualizado, guardamos las propiedades en el elemento
@@ -584,6 +585,12 @@ function Plantas() {
 
     }, [confPlantasCliente.codigoCliente])
 
+    const onAddAnalisis = e => {
+        console.log("He pulsado el boton");
+        e.preventDefault();
+        <AddAnalisis/>
+    }
+
 
     return (
 
@@ -679,6 +686,8 @@ function Plantas() {
                                 {
                                     analisis.map((analisi, index) => <div key={index}><input type="checkbox" id={analisi.id} onChange={changeAnalisisElemento} /> {analisi.nombre} </div>)
                                 }
+                                <AddAnalisis guardarAnalisis={setAnalisis} verAnalisis={analisis} />
+                                <input type="button" onClick={onAddAnalisis} value="Añadir Analisis" />
                             </div>
                         </div>
                         <button onClick={datosAnalisisElementos}>Guardar</button>
