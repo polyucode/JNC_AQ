@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,5 +24,6 @@ namespace AnalisisQuimicos.Core.Entities
         public string NumeroFacturado { get; set; }
         public string Resultado { get; set; }
         public bool? Recogido { get; set; }
+        public string Pdf { get; set; }
     }
 }

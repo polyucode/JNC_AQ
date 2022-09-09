@@ -464,3 +464,5 @@ C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.dll
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.pdb
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.genruntimeconfig.cache
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Http.Features.dll
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\System.IO.Pipelines.dll

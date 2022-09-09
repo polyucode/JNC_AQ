@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,6 +25,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string NumeroFacturado { get; set; }
         public string Resultado { get; set; }
         public bool? Recogido { get; set; }
+        public string Pdf { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

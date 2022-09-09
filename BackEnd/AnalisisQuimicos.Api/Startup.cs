@@ -38,7 +38,12 @@ namespace AnalisisQuimicos.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddCors();
+            //services.AddCors();
+            services.AddCors(o => o.AddPolicy("LowCorsPolicy", builder => {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -87,12 +92,19 @@ namespace AnalisisQuimicos.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(options =>
+            /*app.UseCors(options =>
             {
                 options.WithOrigins("http://localhost:3000");
                 options.AllowAnyMethod();
                 options.AllowAnyHeader();
             });
+            */
+
+            app.UseCors("LowCorsPolicy");
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

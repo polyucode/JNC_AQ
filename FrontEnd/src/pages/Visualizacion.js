@@ -148,6 +148,7 @@ function Visualizacion() {
         numeroFacturado: '',
         resultado: '',
         recogido: false,
+        pdf: "",
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -1170,8 +1171,11 @@ function Visualizacion() {
                     <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
                 </div>
                 <div className="col-md-12">
+                    <form>
+                        
+                    </form>
                     <h5> Subir PDF </h5>
-                    <input type="file" name="files" multiple onChange={(e) => subirArchivos(e.target.files)} />
+                    <input type="file" name="pdf" multiple onChange={(e) => subirArchivos(e.target.files)} value={archivos} />
                 </div>
             </div>
             <br />

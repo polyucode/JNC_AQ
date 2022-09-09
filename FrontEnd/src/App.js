@@ -40,7 +40,7 @@ export default function App() {
       <ThemeContext.Provider value={{ valores, setValores }}>
         <Router>
           <Navbar />
-          <div className='container-fluid'>
+      {/*<div className='container-fluid'>
             <Routes>
               <Route path='/' exact element={<Home />} />
               <Route path='/login' element={<Login />} />
@@ -58,8 +58,28 @@ export default function App() {
               <Route path='/pdf' element={<Pdf />} />
               <Route path='/entregas' element={<Entregas />} />
             </Routes>
+            </div>
+  */}
+          <div className='container-fluid'>
+            <Routes>
+              <Route path='/YC_React' exact element={<Home />} />
+              <Route path='/YC_React/login' element={<Login />} />
+              <Route path='/YC_React/usuarios' element={<Usuarios />} />
+              <Route path='/YC_React/clientes' element={<Clientes />} />
+              <Route path='/YC_React/tareas' element={<Tareas />} />
+              <Route path='/YC_React/perfil' element={<Perfil />} />
+              <Route path='/YC_React/plantas' element={<Plantas />} />
+              <Route path='/YC_React/plantasTabla' element={<PlantasTabla />} />
+              <Route path="/YC_React/mantenimientoTecnico" element={<MantenimientoTecnico />} />
+              <Route path="/YC_React/ofertas" element={<OfertasClientes />} />
+              <Route path='/YC_React/productos' element={<Productos />} />
+              <Route path='/YC_React/consumoarticulos' element={<ConsumoArticulos />} />
+              <Route path='/YC_React/visualizacion' element={<Visualizacion />} />
+              <Route path='/YC_React/pdf' element={<Pdf />} />
+              <Route path='/YC_React/entregas' element={<Entregas />} />
+            </Routes>
           </div>
-
+  
         </Router>
       </ThemeContext.Provider>
     </div>
