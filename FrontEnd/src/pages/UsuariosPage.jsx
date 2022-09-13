@@ -5,12 +5,14 @@ import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
-import {Modal, TextField, Button} from '@material-ui/core';
+import { TextField, Button} from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+import { Modal } from '@mui/material';
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 
 const token = {
     headers:{
@@ -454,11 +456,17 @@ export const UsuariosPage = () => {
             title="Listado de usuarios"
         />
 
-        <Modal
+        <ModalLayout
+          titulo="Agregar nuevo usuario"
+          open={ modalInsertar }
+          onClose={abrirCerrarModalInsertar}
+        />
+
+        {/* <Modal
           open={modalInsertar}
           onClose={abrirCerrarModalInsertar}>
           {bodyInsertar}
-        </Modal>
+        </Modal> */}
 
         <Modal
         open={modalEditar}

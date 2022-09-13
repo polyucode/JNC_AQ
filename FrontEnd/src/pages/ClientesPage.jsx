@@ -7,10 +7,27 @@ import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+
+// Table MUI
+import { DataGrid } from '@mui/x-data-grid';
+
+// MUI Table columns
+    const columns = [
+      { field: 'codigo', headerName: 'Código', width: 70 },
+      { field: 'cif', headerName: 'CIF', width: 130 },
+      { field: 'razonSocial', headerName: 'Razón Social', width: 130 },
+      { field: 'nombreComercial', headerName: 'Nombre Comercial', width: 90 },
+      { field: 'telefono1', headerName: 'Teléfono 1', width: 130 },
+      { field: 'movil', headerName: 'Móbil', width: 130 },
+      { field: 'email', headerName: 'Email', width: 130 },
+    ];
+
+// MUI Table rows
+const rows = [
+  //{ id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+];
 
 
 const token = {
@@ -20,47 +37,46 @@ const token = {
 };
 
 //estilos modal
+// const useStylesEditarDet = makeStyles((theme) => ({
+//   modal: {
+//     position: 'absolute',
+//     width: 1500,
+//     height: 780,
+//     backgroundColor: theme.palette.background.paper,
+//     border: '2px solid #000',
+//     boxShadow: theme.shadows[5],
+//     padding: theme.spacing(2, 4, 3),
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)'
+//   },
+//   iconos: {
+//     cursor: 'pointer'
+//   },
+//   inputMaterial: {
+//     width: '100%'
+//   }
+// }));
 
-const useStylesEditarDet = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 1500,
-    height: 780,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos: {
-    cursor: 'pointer'
-  },
-  inputMaterial: {
-    width: '100%'
-  }
-}));
-
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 700,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos: {
-    cursor: 'pointer'
-  },
-  inputMaterial: {
-    width: '100%'
-  }
-}));
+// const useStyles = makeStyles((theme) => ({
+//   modal: {
+//     position: 'absolute',
+//     width: 700,
+//     backgroundColor: theme.palette.background.paper,
+//     border: '2px solid #000',
+//     boxShadow: theme.shadows[5],
+//     padding: theme.spacing(2, 4, 3),
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)'
+//   },
+//   iconos: {
+//     cursor: 'pointer'
+//   },
+//   inputMaterial: {
+//     width: '100%'
+//   }
+// }));
 
 // tablas español
 const localization = {
@@ -198,9 +214,9 @@ export const ClientesPage = () => {
 
   const [comarca, setComarca] = useState([]);
 
-  const styles = useStyles();
+  //const styles = useStyles();
 
-  const stylesEditarDet = useStylesEditarDet();
+  //const stylesEditarDet = useStylesEditarDet();
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
 
@@ -287,8 +303,9 @@ export const ClientesPage = () => {
   }
 
   const peticionGet = async () => {
-    axios.get("/cliente", token).then(response => {
+    axios.get("http://localhost:44343/api/cliente", token).then(response => {
       setData(response.data.data)
+      console.log(response.data.data)
     })
   }
 
@@ -422,94 +439,94 @@ export const ClientesPage = () => {
     }));
   }
 
-  const bodyInsertar = (
-    <div className={styles.modal}>
-      <h3>Agregar Nuevo Cliente</h3>
-      <div className="row g-3">
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          {/* Desplegable de Comarca */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboCamarca"
-            options={comarca}
-            getOptionLabel={option => option.descripcion}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              comarca: value.id
-            }))}
-          />
-        </div>
-        <div className="col-md-6">
-          {/* Desplegable de Provincia */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboProvincia"
-            options={provincia}
-            getOptionLabel={option => option.descripcion}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              provincia: value.id
-            }))}
-          />
-        </div>
-        <div className="col-md-6">
-          {/* Desplegable de Población */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboPoblacion"
-            options={poblacion}
-            getOptionLabel={option => option.poblacion}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              poblacion: value.id
-            }))}
-          />
-        </div>
-      </div>
+  // const bodyInsertar = (
+  //   <div className={styles.modal}>
+  //     <h3>Agregar Nuevo Cliente</h3>
+  //     <div className="row g-3">
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} />
+  //       </div>
+  //       <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} />
+  //       </div>
+  //       {/* <div className="col-md-6">
+  //         <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} />
+  //       </div> */}
+  //       <div className="col-md-6">
+  //         {/* Desplegable de Comarca */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboCamarca"
+  //           options={comarca}
+  //           getOptionLabel={option => option.descripcion}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             comarca: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //       <div className="col-md-6">
+  //         {/* Desplegable de Provincia */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboProvincia"
+  //           options={provincia}
+  //           getOptionLabel={option => option.descripcion}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             provincia: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //       <div className="col-md-6">
+  //         {/* Desplegable de Población */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboPoblacion"
+  //           options={poblacion}
+  //           getOptionLabel={option => option.poblacion}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             poblacion: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //     </div>
 
-      <br /><br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-        <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-      </div>
-    </div>
-  )
+  //     <br /><br />
+  //     <div align="right">
+  //       <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
+  //       <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
+  //     </div>
+  //   </div>
+  // )
 
   //modal editar cliente
 
@@ -517,164 +534,164 @@ export const ClientesPage = () => {
     setModalEditar(!modalEditar);
   }
 
-  const bodyEditar = (
-    <div className={stylesEditarDet.modal}>
-      <h3>Editar Cliente</h3>
-      <div className="row g-3">
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
-        </div>
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
-        </div>
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
-        </div>
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono1} />
-        </div>
-        <div className="col-md-2">
-          <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono2} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
-        </div>
-        <div className="col-md-3">
-          <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
-        </div>
-        <div className="col-md-3">
-          {/* Desplegable de Comarca */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboCamarca"
-            options={comarca}
-            getOptionLabel={option => option.descripcion}
-            defaultValue={comarcaClienteEditar[0]}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              comarca: value.id
-            }))}
-          />
-        </div>
-        <div className="col-md-3">
-          {/* Desplegable de Provincia */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboProvincia"
-            options={provincia}
-            getOptionLabel={option => option.descripcion}
-            defaultValue={provinciaClienteEditar[0]}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              provincia: value.id
-            }))}
-          />
-        </div>
-        <div className="col-md-3">
-          {/* Desplegable de Población */}
-          <Autocomplete
-            disableClearable={true}
-            id="CboPoblacion"
-            options={poblacion}
-            getOptionLabel={option => option.poblacion}
-            defaultValue={poblacionClienteEditar[0]}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
-            onChange={(event, value) => setClienteSeleccionado(prevState => ({
-              ...prevState,
-              poblacion: value.id
-            }))}
-          />
-        </div>
-      </div>
-      <br />
-      <MaterialTable columns={columnasDet} data={dataDet}
-        localization={localization}
-        actions={[
-          {
-            icon: () => <AddCircle style={{ fill: "green" }} />,
-            tooltip: "Añadir contacto cliente",
-            isFreeAction: true,
-            onClick: (e, data) => {
-              //setContactoClienteEditar();
-              abrirCerrarModalInsertarContacto();
-              console.log(dataDet)
-            },
-          },
-          {
-            icon: () => <RemoveCircle style={{ fill: "red" }} />,
-            tooltip: "Eliminar contacto cliente",
-            onClick: (event, rowData) => {
-              setContactoClienteEliminar(FilasSeleccionadasDet);
-              abrirCerrarModalEliminarContacto();
-            },
-          },
-          {
-            icon: () => <Edit />,
-            tooltip: "Editar detalle contacto",
-            onClick: (e, data) => {
-              setContactoClienteEditar(contactoSeleccionado[0]);
-              // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-              // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
-              // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-              // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
-              // if(FilasSeleccionadas[0].idPerfil === 2){
-              //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
-              //   setestadoCboCliente(false);
-              // }else{
-              //   setclienteUsuarioEditar(false);
-              //   setestadoCboCliente(true);
-              // }
-              abrirCerrarModalEditarContacto();
-            },
-          },
-        ]}
+  // const bodyEditar = (
+  //   <div className={stylesEditarDet.modal}>
+  //     <h3>Editar Cliente</h3>
+  //     <div className="row g-3">
+  //       <div className="col-md-2">
+  //         <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+  //       </div>
+  //       <div className="col-md-2">
+  //         <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
+  //       </div>
+  //       <div className="col-md-2">
+  //         <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
+  //       </div>
+  //       <div className="col-md-2">
+  //         <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono1} />
+  //       </div>
+  //       <div className="col-md-2">
+  //         <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono2} />
+  //       </div>
+  //       <div className="col-md-3">
+  //         <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
+  //       </div>
+  //       <div className="col-md-3">
+  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
+  //       </div>
+  //       <div className="col-md-3">
+  //         <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
+  //       </div>
+  //       <div className="col-md-3">
+  //         <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
+  //       </div>
+  //       {/* <div className="col-md-3">
+  //         <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
+  //       </div> */}
+  //       <div className="col-md-3">
+  //         {/* Desplegable de Comarca */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboCamarca"
+  //           options={comarca}
+  //           getOptionLabel={option => option.descripcion}
+  //           defaultValue={comarcaClienteEditar[0]}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             comarca: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //       <div className="col-md-3">
+  //         {/* Desplegable de Provincia */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboProvincia"
+  //           options={provincia}
+  //           getOptionLabel={option => option.descripcion}
+  //           defaultValue={provinciaClienteEditar[0]}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             provincia: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //       <div className="col-md-3">
+  //         {/* Desplegable de Población */}
+  //         <Autocomplete
+  //           disableClearable={true}
+  //           id="CboPoblacion"
+  //           options={poblacion}
+  //           getOptionLabel={option => option.poblacion}
+  //           defaultValue={poblacionClienteEditar[0]}
+  //           sx={{ width: 300 }}
+  //           renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
+  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
+  //             ...prevState,
+  //             poblacion: value.id
+  //           }))}
+  //         />
+  //       </div>
+  //     </div>
+  //     <br />
+  //     <MaterialTable columns={columnasDet} data={dataDet}
+  //       localization={localization}
+  //       actions={[
+  //         {
+  //           icon: () => <AddCircle style={{ fill: "green" }} />,
+  //           tooltip: "Añadir contacto cliente",
+  //           isFreeAction: true,
+  //           onClick: (e, data) => {
+  //             //setContactoClienteEditar();
+  //             abrirCerrarModalInsertarContacto();
+  //             console.log(dataDet)
+  //           },
+  //         },
+  //         {
+  //           icon: () => <RemoveCircle style={{ fill: "red" }} />,
+  //           tooltip: "Eliminar contacto cliente",
+  //           onClick: (event, rowData) => {
+  //             setContactoClienteEliminar(FilasSeleccionadasDet);
+  //             abrirCerrarModalEliminarContacto();
+  //           },
+  //         },
+  //         {
+  //           icon: () => <Edit />,
+  //           tooltip: "Editar detalle contacto",
+  //           onClick: (e, data) => {
+  //             setContactoClienteEditar(contactoSeleccionado[0]);
+  //             // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
+  //             // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
+  //             // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
+  //             // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
+  //             // if(FilasSeleccionadas[0].idPerfil === 2){
+  //             //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
+  //             //   setestadoCboCliente(false);
+  //             // }else{
+  //             //   setclienteUsuarioEditar(false);
+  //             //   setestadoCboCliente(true);
+  //             // }
+  //             abrirCerrarModalEditarContacto();
+  //           },
+  //         },
+  //       ]}
 
-        onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
-        onSelectionChange={(filas) => {
-          setFilasSeleccionadasDet(filas);
-          if (filas.length > 0)
-            setContactoSeleccionado(filas[0]);
-        }
-        }
-        options={{
-          sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-          columnsButton: true,
-          rowStyle: rowData => ({
-            backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-            whiteSpace: "nowrap"
-          }),
-          exportMenu: [{
-            label: 'Export PDF',
-            exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
-          }, {
-            label: 'Export CSV',
-            exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
-          }]
-        }}
+  //       onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
+  //       onSelectionChange={(filas) => {
+  //         setFilasSeleccionadasDet(filas);
+  //         if (filas.length > 0)
+  //           setContactoSeleccionado(filas[0]);
+  //       }
+  //       }
+  //       options={{
+  //         sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
+  //         columnsButton: true,
+  //         rowStyle: rowData => ({
+  //           backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+  //           whiteSpace: "nowrap"
+  //         }),
+  //         exportMenu: [{
+  //           label: 'Export PDF',
+  //           exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
+  //         }, {
+  //           label: 'Export CSV',
+  //           exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
+  //         }]
+  //       }}
 
-        title="Lista contactos del cliente"
-      />
-      <br /><br />
-      <div align="right">
-        <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
-        <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-      </div>
-    </div>
-  )
+  //       title="Lista contactos del cliente"
+  //     />
+  //     <br /><br />
+  //     <div align="right">
+  //       <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
+  //       <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
+  //     </div>
+  //   </div>
+  // )
 
 
   //modal eliminar cliente
@@ -698,87 +715,99 @@ export const ClientesPage = () => {
     setModalEliminarContacto(!modalEliminarContacto);
   }
 
-  const bodyInsertarContacto = (
-    <div className={styles.modal}>
-      <h3>Agregar Nuevo Contacto</h3>
-      <div className="row g-3">
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} />
-        </div>
-        <div align="right">
-          <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
-          <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
-        </div>
-      </div>
-    </div>
-  )
+  // const bodyInsertarContacto = (
+  //   <div className={styles.modal}>
+  //     <h3>Agregar Nuevo Contacto</h3>
+  //     <div className="row g-3">
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChangeContacto} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} />
+  //       </div>
+  //       <div align="right">
+  //         <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
+  //         <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
 
-  const bodyEditarContacto = (
-    <div className={styles.modal}>
-      <h3>Editar Contacto </h3>
-      <div className="row g-3">
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
-        </div>
-        <div className="col-md-12">
-          <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
-        </div>
-        <div align="right">
-          <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>
-          <Button onClick={() => abrirCerrarModalEditarContacto()}>Cancelar</Button>
-        </div>
-      </div>
-    </div>
-  )
+  // const bodyEditarContacto = (
+  //   <div className={styles.modal}>
+  //     <h3>Editar Contacto </h3>
+  //     <div className="row g-3">
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
+  //       </div>
+  //       <div className="col-md-12">
+  //         <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
+  //       </div>
+  //       <div align="right">
+  //         <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>
+  //         <Button onClick={() => abrirCerrarModalEditarContacto()}>Cancelar</Button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
 
-  const bodyEliminarContacto = (
-    <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el contacto ? </p>
-      <div align="right">
-        <Button color="secondary" onClick={() => peticionDeleteContacto()}>Sí</Button>
-        <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
+  // const bodyEliminarContacto = (
+  //   <div className={styles.modal}>
+  //     <p>Estás seguro que deseas eliminar el contacto ? </p>
+  //     <div align="right">
+  //       <Button color="secondary" onClick={() => peticionDeleteContacto()}>Sí</Button>
+  //       <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
 
-      </div>
-    </div>
-  )
+  //     </div>
+  //   </div>
+  // )
 
-  const bodyEliminar = (
-    <div className={styles.modal}>
-      <p>Estás seguro que deseas eliminar el cliente ? </p>
-      <div align="right">
-        <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-        <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
+  // const bodyEliminar = (
+  //   <div className={styles.modal}>
+  //     <p>Estás seguro que deseas eliminar el cliente ? </p>
+  //     <div align="right">
+  //       <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
+  //       <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
 
-      </div>
-    </div>
-  )
+  //     </div>
+  //   </div>
+  // )
 
+  const handleRowClick = (params) => {
+    console.log(params)
+  }
 
   return (
     <MainLayout title='Clientes'>
-      <div>
-        <MaterialTable columns={columnas} data={data}
+
+      <DataGrid
+        sx={{ width: '100%', height: 700, backgroundColor: '#FFFFFF' }}
+        rows={rows}
+        columns={columns}
+        pageSize={9}
+        rowsPerPageOptions={[9]}
+        checkboxSelection
+      />
+
+        {/* <MaterialTable columns={columnas} data={data}
           localization={{
             body: {
               emptyDataSourceMessage: 'No hay datos por mostrar',
@@ -880,9 +909,9 @@ export const ClientesPage = () => {
           }}
 
           title="Listado de clientes"
-        />
+        /> */}
 
-        <Modal
+        {/* <Modal
           open={modalInsertar}
           onClose={abrirCerrarModalInsertar}>
           {bodyInsertar}
@@ -917,8 +946,7 @@ export const ClientesPage = () => {
           open={modalEditarContacto}
           onClose={abrirCerrarModalEditarContacto}>
           {bodyEditarContacto}
-        </Modal>
-      </div>
+        </Modal> */}
     </MainLayout>
   );
 

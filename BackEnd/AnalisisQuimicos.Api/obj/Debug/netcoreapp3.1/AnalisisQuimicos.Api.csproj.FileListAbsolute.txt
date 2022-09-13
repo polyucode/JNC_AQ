@@ -461,6 +461,5 @@ C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.dll
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.pdb
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.genruntimeconfig.cache
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.StaticWebAssets.xml
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.AssemblyReference.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.GeneratedMSBuildEditorConfig.editorconfig
