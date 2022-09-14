@@ -1,9 +1,9 @@
 {
   "name": "jnc_analisis_quimico_front",
   "version": "0.1.0",
-  "homepage": "http://172.26.0.169/YC_React/",
+  "homepage": "http://localhost:3000/",
   "private": true,
-  "proxy": "https://172.26.0.169:44343/api",
+  "proxy": "https://localhost:44343/api",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",

@@ -1,20 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
-import axios from 'axios';
-
-const token = {
-    headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }
-}
-
-const getPerfiles = async () => {
-
-    axios.get('/perfil', token).then(response => {
-
-        return Object.entries(response.data.data).map(([key,value]) => (key, value));
-
-    },[]);
-
-}
+import { getPerfiles } from '../../api/apiBackend';
 
 export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }) =>{
 
@@ -23,7 +9,10 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }
     useEffect(() => {
 
         getPerfiles()
-            .then( perfil => setPerfiles(perfil) );
+            .then( perfil => {
+                setPerfiles(perfil);
+            })
+            .catch( err => console.log('Ha habido un error:', err));
 
     }, []);
 

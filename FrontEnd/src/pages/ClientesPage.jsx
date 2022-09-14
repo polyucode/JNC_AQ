@@ -1,33 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { Grid, Card, Typography, Button } from '@mui/material';
 import MaterialTable from '@material-table/core';
 import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField, Button } from '@material-ui/core';
+import { Modal, TextField } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+import AddIcon from '@mui/icons-material/Add';
 
 // Table MUI
 import { DataGrid } from '@mui/x-data-grid';
 
-// MUI Table columns
-    const columns = [
-      { field: 'codigo', headerName: 'Código', width: 70 },
-      { field: 'cif', headerName: 'CIF', width: 130 },
-      { field: 'razonSocial', headerName: 'Razón Social', width: 130 },
-      { field: 'nombreComercial', headerName: 'Nombre Comercial', width: 90 },
-      { field: 'telefono1', headerName: 'Teléfono 1', width: 130 },
-      { field: 'movil', headerName: 'Móbil', width: 130 },
-      { field: 'email', headerName: 'Email', width: 130 },
-    ];
 
-// MUI Table rows
-const rows = [
-  //{ id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-];
 
 
 const token = {
@@ -220,7 +208,47 @@ export const ClientesPage = () => {
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
 
+  // MUI Table columns
+  const columns = [
+    { field: 'id', headerName: 'Id', width: 20 },
+    { field: 'codigo', headerName: 'Código', width: 70 },
+    { field: 'cif', headerName: 'CIF', width: 130 },
+    { field: 'razonSocial', headerName: 'Razón Social', width: 160 },
+    { field: 'nombreComercial', headerName: 'Nombre Comercial', width: 160 },
+    { field: 'telefono1', headerName: 'Teléfono 1', width: 130 },
+    { field: 'movil', headerName: 'Móbil', width: 130 },
+    { field: 'email', headerName: 'Email', width: 220 },
+  ];
 
+// MUI Table rows
+const [rows, setRows] = useState([]);
+
+useEffect(() => {
+
+  if( data.length > 0 ) {
+    data.map( row => {
+
+      const newRow = {
+        id: row.id,
+        codigo: row.codigo,
+        cif: row.cif,
+        razonSocial: row.razonSocial,
+        combreComercial: row.razonSocial,
+        telefono1: row.telefono,
+        movil: row.movil,
+        email: row.email
+      }
+  
+      setRows((prevState) => ([ ...prevState, newRow ]));
+
+    })
+  }
+
+}, [data]);
+
+useEffect(() => {
+  console.log(rows)
+}, [rows]);
 
   const columnas = [
 
@@ -303,7 +331,7 @@ export const ClientesPage = () => {
   }
 
   const peticionGet = async () => {
-    axios.get("http://localhost:44343/api/cliente", token).then(response => {
+    axios.get("/cliente", token).then(response => {
       setData(response.data.data)
       console.log(response.data.data)
     })
@@ -798,14 +826,35 @@ export const ClientesPage = () => {
   return (
     <MainLayout title='Clientes'>
 
-      <DataGrid
-        sx={{ width: '100%', height: 700, backgroundColor: '#FFFFFF' }}
-        rows={rows}
-        columns={columns}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        checkboxSelection
-      />
+      <Grid container spacing={ 2 }>
+        <Grid item xs={ 12 }>
+          <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant='h6'>Listado de clientes</Typography>
+            <Button
+              color='success'
+              variant='contained'
+              startIcon={ <AddIcon /> }
+            >Añadir</Button>
+          </Card>
+        </Grid>
+
+        <Grid item xs={ 12 }>
+          <Card>
+            <DataGrid
+              sx={{
+                width: '100%',
+                height: 700,
+                backgroundColor: '#FFFFFF'
+              }}
+              rows={rows}
+              columns={columns}
+              pageSize={9}
+              rowsPerPageOptions={[9]}
+              checkboxSelection
+            />
+          </Card>
+        </Grid>
+      </Grid>
 
         {/* <MaterialTable columns={columnas} data={data}
           localization={{

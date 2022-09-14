@@ -83,7 +83,7 @@ const useStyles2 = makeStyles((theme) => ({
     }
 }));
 
-function MantenimientoTecnico() {
+export const MantenimientoTecnicoPage = () => {
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -572,5 +572,3 @@ function MantenimientoTecnico() {
         </div>
     )
 }
-
-export default MantenimientoTecnico;

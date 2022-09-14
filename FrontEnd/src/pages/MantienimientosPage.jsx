@@ -19,7 +19,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import './Mantenimientos.css';
 import { MainLayout } from "../layout/MainLayout";
 
 const token = {

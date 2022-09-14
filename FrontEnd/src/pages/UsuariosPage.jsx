@@ -132,7 +132,6 @@ export const UsuariosPage = () => {
     // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
     useEffect(() => {
       peticionGet();
-      GetPerfiles();
       GetClientes();
     }, [])
 
@@ -198,11 +197,19 @@ export const UsuariosPage = () => {
 
     const handleChange = (e) => {
 
-      const { name, value } = e.target;
-      setUsuarioSeleccionado( prevState => ({
-        ...prevState,
-        [name]: value
-      }));
+      const { name, value, checked } = e.target;
+
+      if( e.target.name === 'activo') {
+        setUsuarioSeleccionado( prevState => ({
+          ...prevState,
+          [name]: checked
+        }));
+      } else {
+        setUsuarioSeleccionado( prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+      }
 
     }
 
@@ -218,57 +225,57 @@ export const UsuariosPage = () => {
     }
     }
 
-    const bodyInsertar=(
-      <div className={styles.modal}>
-        <h3>Agregar Nuevo Usuario</h3>
-        <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange}/>
-        <br />
-        <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange}/>          
-        <br />
-        <TextField className={styles.inputMaterial} label="Teléfono" type="number" name="telefono" onChange={handleChange}/>
-        <br />
-        <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange}/>
-        <br />
-        <TextField className={styles.inputMaterial} label="Password" type="password" name="password" onChange={handleChange}/>
-        <br />
-        <TextField className={styles.inputMaterial} label="Repetir Contraseña" type="password" name="repetir_contraseña" onChange={handleChange}/>
-        <br />
-        <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} />
-        <br />
+    // const bodyInsertar=(
+    //   <div className={styles.modal}>
+    //     <h3>Agregar Nuevo Usuario</h3>
+    //     <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange}/>
+    //     <br />
+    //     <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange}/>          
+    //     <br />
+    //     <TextField className={styles.inputMaterial} label="Teléfono" type="number" name="telefono" onChange={handleChange}/>
+    //     <br />
+    //     <TextField className={styles.inputMaterial} label="Usuario" name="usuario" onChange={handleChange}/>
+    //     <br />
+    //     <TextField className={styles.inputMaterial} label="Password" type="password" name="password" onChange={handleChange}/>
+    //     <br />
+    //     <TextField className={styles.inputMaterial} label="Repetir Contraseña" type="password" name="repetir_contraseña" onChange={handleChange}/>
+    //     <br />
+    //     <FormControlLabel control={<Checkbox defaultChecked />} className={styles.inputMaterial} label="Activo" name="activo" onChange={handleChange} />
+    //     <br />
 
-        {/* Desplegable de Perfiles */}
-        <Autocomplete
-          disableClearable={true}
-          id="CboPerfiles"
-          options={perfiles}
-          getOptionLabel={option => option.nombre}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
-          onChange={handleChangePerfil}
-        />
+    //     {/* Desplegable de Perfiles */}
+    //     <Autocomplete
+    //       disableClearable={true}
+    //       id="CboPerfiles"
+    //       options={perfiles}
+    //       getOptionLabel={option => option.nombre}
+    //       sx={{ width: 300}}
+    //       renderInput={(params) => <TextField {...params} label="Perfil" name="idPerfil" />}
+    //       onChange={handleChangePerfil}
+    //     />
 
-        {/* Desplegable de Clientes */}
-        <Autocomplete
-          disableClearable={true}
-          disabled={estadoCboCliente}
-          id="CboClientes"
-          options={clientes}
-          getOptionLabel={option => option.nombreComercial}
-          sx={{ width: 300}}
-          renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
-          onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
-            ...prevState,
-            idCliente:value.id
-          }))}
-          />
+    //     {/* Desplegable de Clientes */}
+    //     <Autocomplete
+    //       disableClearable={true}
+    //       disabled={estadoCboCliente}
+    //       id="CboClientes"
+    //       options={clientes}
+    //       getOptionLabel={option => option.nombreComercial}
+    //       sx={{ width: 300}}
+    //       renderInput={(params) => <TextField {...params} label="Clientes" name="idCliente"/>}
+    //       onChange={(event, value) => setUsuarioSeleccionado(prevState=>({
+    //         ...prevState,
+    //         idCliente:value.id
+    //       }))}
+    //       />
 
-        <br /><br />
-        <div align="right">
-          <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
-          <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
-        </div>
-      </div>
-    )
+    //     <br /><br />
+    //     <div align="right">
+    //       <Button color="primary" onClick={()=>peticionPost()}>Insertar</Button>
+    //       <Button onClick={()=>abrirCerrarModalInsertar()}>Cancelar</Button>
+    //     </div>
+    //   </div>
+    // )
 
     // Modal editar usuario
     const abrirCerrarModalEditar=()=>{
@@ -294,7 +301,7 @@ export const UsuariosPage = () => {
         <Autocomplete
           disableClearable={true}
           id="CboPerfiles"
-          options={perfiles}
+          //options={perfiles}
           getOptionLabel={option => option.nombre}
           defaultValue={perfilUsuarioEditar[0]}
           sx={{ width: 300}}
@@ -415,7 +422,7 @@ export const UsuariosPage = () => {
                     icon: () => <Edit/>,
                   tooltip: "Editar Usuario",
                   onClick: (e,data) => {
-                    setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
+                    //setperfilUsuarioEditar(perfiles.filter(perfil=>perfil.id===FilasSeleccionadas[0].idPerfil));
                     if(FilasSeleccionadas[0].idPerfil === 2){
                       setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
                       setestadoCboCliente(false);
