@@ -33,6 +33,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Telefono).HasMaxLength(250);
 
             builder.Property(e => e.Usuario).HasMaxLength(50);
+
         }
     }
 

@@ -2,6 +2,14 @@ hr {
     margin-bottom: 0;
 }
 
+table.MuiTable-root tbody tr td {
+    border: 2px solid rgba(224, 224, 224, 1);
+}
+
+table.MuiTable-root thead tr th {
+    border: 2px solid rgba(224, 224, 224, 1);
+}
+
 h4 {
     font-size: 28px;
 }
@@ -10,7 +18,7 @@ div.main-container {
     width: 100%;
     background-color: #FFFFFF;
     box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
-    padding-top: 25px;
+    padding-top: 15px;
 }
 
 .row1 {
@@ -18,7 +26,7 @@ div.main-container {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding: 0 8px;
+    padding: 15px;
 }
 
 .row1 > table {

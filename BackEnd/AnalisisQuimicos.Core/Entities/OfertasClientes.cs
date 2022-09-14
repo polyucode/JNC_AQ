@@ -9,14 +9,12 @@ namespace AnalisisQuimicos.Core.Entities
         public int? NumeroOferta { get; set; }
         public int? Pedido { get; set; }
         public int? CodigoCliente { get; set; }
+        public string NombreCliente { get; set; }
         public string Descripcion { get; set; }
-        public int? Cantidad { get; set; }
-        public decimal Precio { get; set; }
-        public int? StockMin { get; set; }
-        public int? StockMax { get; set; }
-        public int? Consumidos { get; set; }
-        public int? FaltaEntregar { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinalizacion { get; set; }
+        public string Contacto1 { get; set; }
+        public string Contacto2 { get; set; }
+   
     }
 }

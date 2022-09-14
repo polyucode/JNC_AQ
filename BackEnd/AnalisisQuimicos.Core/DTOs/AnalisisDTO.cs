@@ -6,6 +6,7 @@ namespace AnalisisQuimicos.Core.DTOs
 {
     public class AnalisisDTO
     {
+        public int? Id { get; set; }
         public string Nombre { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }

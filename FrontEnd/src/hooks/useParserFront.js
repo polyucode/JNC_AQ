@@ -5,211 +5,213 @@ export const useParserFront = () => {
 
     const [ parametrosFront, setParametrosFront ] = useState({
         cliente: {
+            id: 0,
             codigoCliente: 0,
             elemento: '',
             esPlantilla: true,
             nombreCliente: '',
-            oferta: 0
+            oferta: 0,
+            fecha: null
         },
         parametrosFijos: {
             alcalinitatM: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'alcalinitatM',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             alcalinitatP: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'alcalinitatP',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             aquaproxAB5310: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'aquaproxAB5310',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             biopolIB200: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'biopolIB200',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             biopolLB5: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'biopolLB5',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             brom: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'brom',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorLliure: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorLliure',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorTotal: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorTotal',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             clorurs: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'clorurs',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             comptador: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'comptador',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'm3',
                 VerInspector: false
             },
             conductivitat: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'conductivitat',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'µS/cm',
                 VerInspector: false
             },
             duresaCalcica: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'duresaCalcica',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             duresaTotal: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'duresaTotal',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l CaCO3',
                 VerInspector: false
             },
             fe: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'fe',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             isotiazolona: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'isotiazolona',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             mefacideLG: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'mefacideLG',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             moO4: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'moO4',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             ortofosfatsPO4: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'ortofosfatsPO4',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             ph: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'ph',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'Un. pH',
                 VerInspector: false
             },
             silicats: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'silicats',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             sulfats: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'sulfats',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             sulfits: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'sulfits',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             tds: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'tds',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'mg/l',
                 VerInspector: false
             },
             temperatura: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'temperatura',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'ºC',
                 VerInspector: false
             },
             terbolesa: {
                 Activo: false,
-                Nombre: '',
+                Nombre: 'terbolesa',
                 LimInf: 0,
                 LimSup: 0,
-                Unidades: '',
+                Unidades: 'N.T.U',
                 VerInspector: false
             }
         },
@@ -293,13 +295,26 @@ export const useParserFront = () => {
     };
 
     const cambiarCampoFijo = ( nombreCampo, objeto, nombreParametro, dato ) => {
-
-        console.log( objeto );
         
         setParametrosFront({
             ...parametrosFront,
             parametrosFijos: {
                 ...parametrosFront.parametrosFijos,
+                [nombreCampo]: {
+                    ...objeto,
+                    [nombreParametro]: dato
+                }
+            }
+        });
+
+    };
+
+    const cambiarCampoPersonalizado = ( nombreCampo, objeto, nombreParametro, dato ) => {
+        
+        setParametrosFront({
+            ...parametrosFront,
+            parametrosPersonalizados: {
+                ...parametrosFront.parametrosPersonalizados,
                 [nombreCampo]: {
                     ...objeto,
                     [nombreParametro]: dato
@@ -315,6 +330,7 @@ export const useParserFront = () => {
 
         //* Métodos
         setDatosParametrosFront,
-        cambiarCampoFijo
+        cambiarCampoFijo,
+        cambiarCampoPersonalizado
     }
 }

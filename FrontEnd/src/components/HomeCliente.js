@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
 import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import FullCalendar from '@fullcalendar/react'
@@ -20,8 +21,28 @@ import "hammerjs";
 import '@progress/kendo-theme-default/dist/all.css';
 import './HomeCliente.css';
 
+const token = {
+    headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+};
+
 
 function HomeCliente() {
+
+    const [ valores, setValores ] = useState([]);
+
+
+    const getValorParametros = async () => {
+        axios.get("/valorparametros", token).then(response => {
+            const valor = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setValores(valor);
+        }, [])
+    }
+
+    useEffect(() => {
+        getValorParametros();
+    }, [])
 
 
     const CustomRender = ({ id, content, data, inputs, outputs }) => (
@@ -38,7 +59,7 @@ function HomeCliente() {
 
     const initialSchema = createSchema({
         nodes: [
-            /*{
+            {
                 id: 'node-1',
                 content: 'Osmosis 1',
                 coordinates: [20, 120],
@@ -91,7 +112,7 @@ function HomeCliente() {
         { input: 'port-3', output: 'port-8' },
         { input: 'port-5', output: 'port-8' },
         { input: 'port-7', output: 'port-8' },
-        */
+        
         ]
     })
 

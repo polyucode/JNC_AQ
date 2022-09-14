@@ -4,7 +4,7 @@ export const crearParametrizacionFront = ( datos ) => {
     // Parametros fijos
     let parametros = [
       'alcalinitatM', 'alcalinitatP', 'aquaproxAB5310', 'biopolIB200', 'biopolLB5', 'brom', 'clorLliure', 'clorTotal',
-      'clorurs', 'comptador', 'conductivitat', 'duresaCalcica', 'duresaTotal', 'fe', 'isotiazolona', 'mefacideLG', 'moO4', 'ortofosfatsPO4',
+      'clorurs', 'comptador', 'conductivitat', 'duresaCalcica', 'duresaTotal', 'fe', 'id', 'isotiazolona', 'mefacideLG', 'moO4', 'ortofosfatsPO4',
       'ph', 'silicats', 'sulfats', 'sulfits', 'tds', 'temperatura', 'terbolesa',
     ];
 
@@ -22,7 +22,7 @@ export const crearParametrizacionFront = ( datos ) => {
     for ( let parametro in datos ) {
 
       // Preparamos el bloque de "cliente"
-      if(parametro === 'codigoCliente' || parametro === 'elemento' || parametro === 'esPlantilla' || parametro === 'nombreCliente' || parametro === 'oferta'){
+      if(parametro === 'id' || parametro === 'codigoCliente' || parametro === 'elemento' || parametro === 'esPlantilla' || parametro === 'nombreCliente' || parametro === 'oferta'){
         cliente = { ...cliente, [parametro]: datos[parametro] }
       }
 

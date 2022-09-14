@@ -17,13 +17,13 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
+            builder.Property(e => e.Oferta).HasColumnName("Oferta");
+
             builder.Property(e => e.Id_Planta).HasColumnName("Id_Planta");
 
             builder.Property(e => e.Nivel).HasColumnName("Nivel");
 
-            builder.Property(e => e.Id_Elemento).HasColumnName("Id_Elemento");
-
-            builder.Property(e => e.Orden).HasColumnName("Orden");
+            builder.Property(e => e.Elemento).HasColumnName("Elemento");
 
             builder.Property(e => e.Visible).HasColumnName("Visible");
 

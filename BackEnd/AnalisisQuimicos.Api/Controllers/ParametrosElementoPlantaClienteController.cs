@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,11 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class ParametrosElementoPlantaClienteController : ControllerBase
     {
-        private readonly IRepository<ParametrosElementoPlantaCliente> _parametrosElementoPlantaClienteService;
+        private readonly IParametrosElementoPlantaClienteService _parametrosElementoPlantaClienteService;
         private readonly IMapper _mapper;
 
 
-        public ParametrosElementoPlantaClienteController(IRepository<ParametrosElementoPlantaCliente> confPlantasClienteService, IMapper mapper)
+        public ParametrosElementoPlantaClienteController(IParametrosElementoPlantaClienteService confPlantasClienteService, IMapper mapper)
         {
             _parametrosElementoPlantaClienteService = confPlantasClienteService;
             _mapper = mapper;
@@ -41,6 +42,15 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var cliente = await _parametrosElementoPlantaClienteService.GetById(id);
+            var clienteDto = _mapper.Map<ParametrosElementoPlantaCliente>(cliente);
+            var response = new ApiResponses<ParametrosElementoPlantaCliente>(clienteDto);
+            return Ok(response);
+        }
+
+        [HttpGet("parametros")]
+        public IActionResult GetParameters([FromQuery]ParametrosElementoQueryFilter filtro)
+        {
+            var cliente = _parametrosElementoPlantaClienteService.GetParameters(filtro).Result;
             var clienteDto = _mapper.Map<ParametrosElementoPlantaCliente>(cliente);
             var response = new ApiResponses<ParametrosElementoPlantaCliente>(clienteDto);
             return Ok(response);

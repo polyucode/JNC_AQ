@@ -18,6 +18,7 @@ namespace AnalisisQuimicos.Infrastructure.Data
         {
         }
 
+        public virtual DbSet<Archivos> GesArchivos { get; set; }
         public virtual DbSet<Analisis> GesAnalisis { get; set; }
         public virtual DbSet<Clientes> GesClientes { get; set; }
         public virtual DbSet<AnalisisNivelesPlantasCliente> GesConfAnalisisNivelesPlantasCliente { get; set; }
@@ -25,7 +26,7 @@ namespace AnalisisQuimicos.Infrastructure.Data
         public virtual DbSet<ConfPlantasCliente> GesConfPlantasCliente { get; set; }
         public virtual DbSet<ElementosPlanta> GesElementosPlanta { get; set; }
         public virtual DbSet<PlantasCliente> GesPlantasCliente { get; set; }
-        public virtual DbSet<ServMantenimientoCab> GesServMantenimientoCab { get; set; }
+        public virtual DbSet<Tareas> GesServMantenimientoCab { get; set; }
         public virtual DbSet<ServMantenimientoDet> GesServMantenimientoDet { get; set; }
         public virtual DbSet<Comarcas> LstComarcas { get; set; }
         public virtual DbSet<Poblaciones> LstPoblaciones { get; set; }

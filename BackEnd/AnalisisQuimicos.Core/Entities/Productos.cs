@@ -6,7 +6,8 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class Productos : BaseEntity
     {
-        public int? CodigoProducto { get; set; }
+        public string CodigoProducto { get; set; }
         public string Descripcion { get; set; }
+        public string ADR { get; set; }
     }
 }

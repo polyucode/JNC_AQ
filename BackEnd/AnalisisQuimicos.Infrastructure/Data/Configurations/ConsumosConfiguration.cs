@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 {
     public class ConsumosConfiguration : IEntityTypeConfiguration<Consumos>
@@ -22,5 +23,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.ModDate).HasColumnType("datetime");
 
         }
+
+
     }
 }

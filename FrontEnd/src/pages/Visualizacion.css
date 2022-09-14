@@ -16,17 +16,26 @@ div.home-container-elements {
     display: flex;
 }
 
-div.home-col-1 {
-    width: calc(50% - 6px);
-    margin-right: 6px;
+div.visualizacion {
+    width: 100%;
 }
 
 div.datos {
     display: flex;
-    margin-bottom: 15px;
     justify-content: center;
 }
 
 div.datos > div.MuiAutocomplete-root {
     margin: 15px;
+}
+
+div.datos2 > div.MuiAutocomplete-root {
+    margin: 15px;
+}
+
+div.datos2 {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: center;
+    margin-left: -280px;
 }

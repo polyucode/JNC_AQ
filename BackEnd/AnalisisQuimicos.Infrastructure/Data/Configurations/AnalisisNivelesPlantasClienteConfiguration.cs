@@ -15,13 +15,15 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.ToTable("GES_Conf_Analisis_NivelesPlantasCliente");
 
-            builder.Property(e => e.IdCliente).HasColumnName("Id_Cliente");
+            builder.Property(e => e.CodigoCliente).HasColumnName("CodigoCliente");
 
-            builder.Property(e => e.IdElemento).HasColumnName("Id_Elemento");
+            builder.Property(e => e.Oferta).HasColumnName("Oferta");
+
+            builder.Property(e => e.Elemento).HasColumnName("Elemento");
 
             builder.Property(e => e.IdPlanta).HasColumnName("Id_Planta");
 
-            builder.Property(e => e.IdAnalisis).HasColumnName("Id_Analisis");
+            builder.Property(e => e.Analisis).HasColumnName("Analisis");
 
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 
