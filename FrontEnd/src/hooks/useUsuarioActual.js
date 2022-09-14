@@ -33,8 +33,6 @@ if( usuarioLocalStorage === null ) {
 export const useUsuarioActual = () => {
 
     const [ usuarioActual, setUsuarioActual ] = useState( usuarioLocalStorage );
-    
-    console.log( usuarioActual );
 
     return {
         //* Propiedades

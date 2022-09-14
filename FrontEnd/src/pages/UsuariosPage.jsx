@@ -13,6 +13,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { Modal } from '@mui/material';
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import AddIcon from '@mui/icons-material/Add';
+import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
 
 const token = {
     headers:{
@@ -47,6 +49,16 @@ export const UsuariosPage = () => {
     const [modalInsertar, setModalInsertar]= useState(false);
     const [modalEditar, setModalEditar]= useState(false);
     const [modalEliminar, setModalEliminar]= useState(false);
+    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
+    const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
+    const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
+    const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
+    const [data, setData] = useState([]);
+    
+    const [clientes, setClientes] = useState([]);
+    const [clientesTable, setClientesTable] = useState({});
+    const styles= useStyles();
+    const [estadoCboCliente, setestadoCboCliente] = useState(true);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
       id: 0,
       nombre: '',
@@ -67,17 +79,6 @@ export const UsuariosPage = () => {
       delIdUser: null,
       deleted: null,
     });
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-    const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
-    const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
-    const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
-    const [data, setData] = useState([]);
-    const [perfiles, setPerfiles] = useState([]);
-    const [clientes, setClientes] = useState([]);
-    const [clientesTable, setClientesTable] = useState({});
-    const styles= useStyles();
-    const [estadoCboCliente, setestadoCboCliente] = useState(true);
   
     const columnas=[
       //visibles
@@ -113,12 +114,7 @@ export const UsuariosPage = () => {
       },[])
     }
 
-    const GetPerfiles = async () => {
-      axios.get("/perfil", token).then(response => {
-        const perfil = Object.entries(response.data.data).map(([key,value]) => (key, value))
-        setPerfiles(perfil);
-      },[])
-    }
+    
 
     // Recoger Usuarios
     const peticionGet = async () => {
@@ -200,12 +196,14 @@ export const UsuariosPage = () => {
       setModalInsertar(!modalInsertar);
     }
 
-    const handleChange=e=>{
-      const {name, value}=e.target;
-      setUsuarioSeleccionado(prevState=>({
+    const handleChange = (e) => {
+
+      const { name, value } = e.target;
+      setUsuarioSeleccionado( prevState => ({
         ...prevState,
         [name]: value
       }));
+
     }
 
     const handleChangePerfil=(event,value) => {
@@ -272,8 +270,7 @@ export const UsuariosPage = () => {
       </div>
     )
 
-    //modal editar usuario
-
+    // Modal editar usuario
     const abrirCerrarModalEditar=()=>{
       setModalEditar(!modalEditar);
     }
@@ -344,7 +341,6 @@ export const UsuariosPage = () => {
         </div>
       </div>
     )
-
 
     return (
       <MainLayout title='Usuarios'>
@@ -458,21 +454,31 @@ export const UsuariosPage = () => {
 
         <ModalLayout
           titulo="Agregar nuevo usuario"
+          contenido={
+            <InsertarUsuarioModal
+              change={ handleChange }
+              handleChangePerfil={ handleChangePerfil }
+            />
+          }
+          botones={[ InsertarUsuarioModalBotones( <AddIcon />, 'Insertar', () => peticionPost() ) ]}
           open={ modalInsertar }
           onClose={abrirCerrarModalInsertar}
         />
 
-        {/* <Modal
-          open={modalInsertar}
-          onClose={abrirCerrarModalInsertar}>
-          {bodyInsertar}
-        </Modal> */}
+        <ModalLayout
+          titulo="Editar usuario"
+          contenido={ <InsertarUsuarioModal /> }
+          botones={[ InsertarUsuarioModalBotones( <AddIcon />, 'Editar', () => peticionPost() ) ]}
+          open={ modalEditar }
+          onClose={abrirCerrarModalEditar}
+        />
 
-        <Modal
+
+        {/* <Modal
         open={modalEditar}
         onClose={abrirCerrarModalEditar}>
           {bodyEditar}
-        </Modal>
+        </Modal> */}
 
         <Modal
         open={modalEliminar}
