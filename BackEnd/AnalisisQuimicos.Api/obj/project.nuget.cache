@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ke3gVn3DS5lbpS36Uv0EBgYvmb66zXHXc7wQfog4n6oviSfz+svoUtxVnJi0+fsHJQc3tTLYhIHiQZUVWDv+4A==",
+  "dgSpecHash": "nlWl8qxwj7wo1q/rKxT/r4pmeZHeBEQ83wEXp0H3scZgVkF8B1W9nJMuA1yRLc+lcxkMEz6KznwJwDKuEDpgrw==",
   "success": true,
   "projectFilePath": "C:\\Users\\aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
   "expectedPackageFiles": [
@@ -136,7 +136,8 @@
     "C:\\Users\\aitor\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\aitor\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\aitor\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\aitor\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\aitor\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\aitor\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.28\\microsoft.netcore.app.host.win-x64.3.1.28.nupkg.sha512"
   ],
   "logs": [
     {

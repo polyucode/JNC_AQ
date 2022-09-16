@@ -81,18 +81,3 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }
         </>
     )
 }
-
-export const InsertarUsuarioModalBotones = ( icono, texto, accion ) => {
-    return (
-        <Grid item>
-            <Button
-                color='primary'
-                variant='contained'
-                startIcon={ icono }
-                onClick={ accion }
-            >
-                { texto }
-            </Button>
-        </Grid>
-    )
-}

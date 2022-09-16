@@ -12,9 +12,10 @@ import Checkbox from '@mui/material/Checkbox';
 import {makeStyles} from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { Modal } from '@mui/material';
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import AddIcon from '@mui/icons-material/Add';
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
+import { insertarBotonesModal } from "../helpers/insertarBotonesModal";
 
 const token = {
     headers:{
@@ -467,7 +468,7 @@ export const UsuariosPage = () => {
               handleChangePerfil={ handleChangePerfil }
             />
           }
-          botones={[ InsertarUsuarioModalBotones( <AddIcon />, 'Insertar', () => peticionPost() ) ]}
+          botones={[ insertarBotonesModal( <AddIcon />, 'Insertar', () => peticionPost() ) ]}
           open={ modalInsertar }
           onClose={abrirCerrarModalInsertar}
         />
@@ -475,7 +476,7 @@ export const UsuariosPage = () => {
         <ModalLayout
           titulo="Editar usuario"
           contenido={ <InsertarUsuarioModal /> }
-          botones={[ InsertarUsuarioModalBotones( <AddIcon />, 'Editar', () => peticionPost() ) ]}
+          botones={[ insertarBotonesModal( <AddIcon />, 'Editar', () => peticionPost() ) ]}
           open={ modalEditar }
           onClose={abrirCerrarModalEditar}
         />
