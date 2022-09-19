@@ -40,7 +40,7 @@ export default function App() {
       <ThemeContext.Provider value={{ valores, setValores }}>
         <Router>
           <Navbar />
-      {/*<div className='container-fluid'>
+    <div className='container-fluid'>
             <Routes>
               <Route path='/' exact element={<Home />} />
               <Route path='/login' element={<Login />} />
@@ -59,7 +59,7 @@ export default function App() {
               <Route path='/entregas' element={<Entregas />} />
             </Routes>
             </div>
-  */}
+  {/*
           <div className='container-fluid'>
             <Routes>
               <Route path='/YC_React' exact element={<Home />} />
@@ -79,7 +79,7 @@ export default function App() {
               <Route path='/YC_React/entregas' element={<Entregas />} />
             </Routes>
           </div>
-  
+  */}
         </Router>
       </ThemeContext.Provider>
     </div>

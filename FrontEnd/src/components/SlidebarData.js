@@ -7,73 +7,73 @@ import { MdOutlineConstruction } from "react-icons/md";
 export const SlidebarData = [
     {
         title: 'Inicio',
-        path: '/YC_React',
+        path: '/',
         icon: <AiIcons.AiFillHome />,
         cName: 'nav-text'
     },
     {
         title: 'Usuarios',
-        path: '/YC_React/usuarios',
+        path: '/usuarios',
         icon: <AiIcons.AiOutlineUser />,
         cName: 'nav-text'
     },
     {
         title: 'Clientes',
-        path: '/YC_React/clientes',
+        path: '/clientes',
         icon: <HiOutlineBriefcase />,
         cName: 'nav-text'
     },
     {
         title: 'Ofertas',
-        path: '/YC_React/ofertas',
+        path: '/ofertas',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Plantas',
-        path: '/YC_React/plantas',
+        path: '/plantas',
         icon: <MdOutlineConstruction />,
         cName: 'nav-text'
     },
     {
         title: 'Tareas',
-        path: '/YC_React/tareas',
+        path: '/tareas',
         icon: <MdOutlineConstruction />,
         cName: 'nav-text'
     },
     {
         title: 'Visualizacion',
-        path: '/YC_React/visualizacion',
+        path: '/visualizacion',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Plantas (Tabla)',
-        path: '/YC_React/plantasTabla',
+        path: '/plantasTabla',
         icon: <MdOutlineConstruction />,
         cName: 'nav-text'
     },
     {
         title: 'Mantenimiento (Tecnico)',
-        path: '/YC_React/mantenimientoTecnico',
+        path: '/mantenimientoTecnico',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Productos',
-        path: '/YC_React/productos',
+        path: '/productos',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Consumos de Articulos',
-        path: '/YC_React/consumoarticulos',
+        path: '/consumoarticulos',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     },
     {
         title: 'Entregas',
-        path: '/YC_React/entregas',
+        path: '/entregas',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
     }
