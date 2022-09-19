@@ -21,7 +21,7 @@ function Login(){
             User, Password
         }
 
-        axios.post('/token/', login)
+        axios.post('http://172.26.0.169:44343/api/token/', login)
             .then(res=> {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('UsuarioActual', JSON.stringify(res.data.item2));
@@ -29,6 +29,7 @@ function Login(){
                 window.location.reload(false);
                 alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
 
+                {res && navigate("http://172.26.0.169/YC_React/", {replace: true})}
                 //guardoamos usuario en cookies
                 // cookies.set('activo', res.data.item2, {path: '/'})
                 // cookies.set('addDate', res.data.item2, {path: '/'})

@@ -248,7 +248,7 @@ function Plantas() {
     }
 
     const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
