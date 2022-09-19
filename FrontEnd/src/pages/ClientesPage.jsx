@@ -190,7 +190,6 @@ export const ClientesPage = () => {
 
   // Columnas de la tabla
   const columns = [
-    { field: 'id', headerName: 'id', width: 20 },
     { field: 'codigo', headerName: 'Código', width: 100 },
     { field: 'cif', headerName: 'CIF', width: 100 },
     { field: 'razonSocial', headerName: 'Razón social', width: 180 },
@@ -203,7 +202,8 @@ export const ClientesPage = () => {
     { field: 'pais', headerName: 'País', width: 100 },
     { field: 'email', headerName: 'Email', width: 240 },
     { field: 'movil', headerName: 'Movil', width: 100 },
-    { field: 'telefono', headerName: 'Teléfono', width: 100 }
+    { field: 'telefono', headerName: 'Teléfono', width: 100 },
+    { field: 'id', headerName: 'id', width: 20, hidden: true }
   ]
 
   // Efectos de React
