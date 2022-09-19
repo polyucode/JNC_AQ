@@ -594,34 +594,34 @@ function PlantasTabla() {
     };
 
     const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOferta(oferta);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
             const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(analisisNiveles);
         })
     }
 
     const GetConfParametrosElementoPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametroselementoplantacliente", token).then(response => {
             setData2(response.data.data)
         })
     }
 
     const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
@@ -656,7 +656,7 @@ function PlantasTabla() {
         parametrosBack.elemento = valores.elemento;
         parametrosBack.fecha = parametrosSeleccionado.fecha
 
-        await axios.post("/parametroselementoplantacliente", parametrosBack, token)
+        await axios.post("http://172.26.0.169:44343/api/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
                 return response
             }).catch(error => {
@@ -667,7 +667,7 @@ function PlantasTabla() {
     }
 
     const editarPlantilla = async () => {
-        await axios.put("/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
+        await axios.put("http://172.26.0.169:44343/api/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
             .then(response => {
                 var parametrosModificado = data2;
                 parametrosModificado.map(parametro => {
@@ -683,7 +683,7 @@ function PlantasTabla() {
 
     const GetParametros = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
+        const url = "http://172.26.0.169:44343/api/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
         const response = await axios.get(url, token)
 
         setDatosParametrosFront(response.data.data)

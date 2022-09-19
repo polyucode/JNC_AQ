@@ -334,47 +334,47 @@ function Plantas() {
     }
 
     const GetConfPlantasCliente = async () => {
-        axios.get("/confplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/confplantascliente", token).then(response => {
             setConfPlantasCliente(response.data.data)
         })
     }
 
     const GetConfNivelesPlantaCliente = async () => {
-        axios.get("/confnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", token).then(response => {
             setConfNivelesPlantaCliente(response.data.data)
         })
     }
 
     const GetElementosPlanta = async () => {
-        axios.get("/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElemento(elemento);
         })
     }
 
     const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOferta(oferta);
         }, [])
     }
 
     const GetAnalisis = async () => {
-        axios.get("/analisis", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
             const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisis(analisi);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(niveles);
         }, [])
     }
 
     const GetOperarios = async () => {
-        axios.get("/usuario", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
             const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOperarios(usuario);
         }, [])
@@ -399,7 +399,7 @@ function Plantas() {
             return;
         }
         else {
-            await axios.post("/confplantascliente", confPlantasCliente, token)
+            await axios.post("http://172.26.0.169:44343/api/confplantascliente", confPlantasCliente, token)
                 .then(response => {
                     confPlantasCliente.id = response.data.data.id
                     return response.data.data,
@@ -431,7 +431,7 @@ function Plantas() {
                 delIdUser: null,
                 deleted: null
             }
-            axios.post("/confnivelesplantascliente", elem, token)
+            axios.post("http://172.26.0.169:44343/api/confnivelesplantascliente", elem, token)
                 .then(response => {
                     return response
                 })
@@ -461,7 +461,7 @@ function Plantas() {
                         delIdUser: null,
                         deleted: null
                     }
-                    axios.post("/analisisnivelesplantascliente", analisisElem, token)
+                    axios.post("http://172.26.0.169:44343/api/analisisnivelesplantascliente", analisisElem, token)
                         .then(response => {
                             { response && navigate('/tareas', { replace: true }) }
                             return response
@@ -715,7 +715,7 @@ function Plantas() {
                 </div>
             </div>
             <div className='botones'>
-                <button><Link to='/plantasTabla'>Siguiente</Link></button>
+                <button><Link to='http://172.26.0.169/YC_React/plantasTabla'>Siguiente</Link></button>
             </div>
         </div>
     )

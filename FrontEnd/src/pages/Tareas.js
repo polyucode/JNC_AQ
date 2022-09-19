@@ -436,42 +436,42 @@ function Tareas() {
 
   //peticiones API
   const GetClientes = async () => {
-    axios.get("/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
       const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setClientes(cliente);
     }, [])
   }
 
   const GetOperarios = async () => {
-    axios.get("/usuario", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
       const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOperarios(usuario);
     }, [])
   }
 
   const GetElementosPlanta = async () => {
-    axios.get("/elementosplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
       const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setElementosPlanta(elemento);
     }, [])
   }
 
   const GetAnalisis = async () => {
-    axios.get("/analisis", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
       const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setAnalisis(analisi);
     }, [])
   }
 
   const GetOfertas = async () => {
-    axios.get("/ofertasclientes", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
       const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOfertas(oferta);
     }, [])
   }
 
   const GetConfAnalisisNivelesPlantasCliente = async () => {
-    axios.get("/analisisnivelesplantascliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
       const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setConfAnalisisNivelesPlantasCliente(niveles);
     }, [])
@@ -480,25 +480,25 @@ function Tareas() {
   console.log(confAnalisisNivelesPlantasCliente)
 
   const peticionGet = async () => {
-    axios.get("/tareas", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/tareas", token).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionGetVis = async () => {
-    axios.get("/parametrosanalisisplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
       setDataVis(response.data.data)
     })
   }
 
   const peticionGetAnalisis = async () => {
-    axios.get("/parametrosanalisisplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
       setDataAnalisis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
     })
   }
 
   const peticionGetEntregas = async () => {
-    axios.get("/entregas", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
       setDataEntregas(response.data.data)
     })
   }
@@ -575,7 +575,7 @@ function Tareas() {
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
-    await axios.post("/tareas", tareaSeleccionada, token)
+    await axios.post("http://172.26.0.169:44343/api/tareas", tareaSeleccionada, token)
       .then(response => {
         //Creamos los detalles
         var date = new Date(fechaprevista);
@@ -714,7 +714,7 @@ function Tareas() {
         abrirCerrarModalInsertar();
         peticionGet();
         setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-        { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); }
+        { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("http://172.26.0.169:44343/YC_React/plantasTabla", { replace: true }); }
         setTareaSeleccionada({
           id: 0,
           codigoCliente: 0,
@@ -746,7 +746,7 @@ function Tareas() {
   }
 
   const peticionPut = async () => {
-    await axios.put("/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
+    await axios.put("http://172.26.0.169:44343/api/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
       .then(response => {
         var tareaSeleccionada = data;
         tareaSeleccionada.map(tarea => {
@@ -787,7 +787,7 @@ function Tareas() {
   }
 
   const peticionDelete = async () => {
-    await axios.delete("/tareas/" + TareaEliminar[0].id, token)
+    await axios.delete("http://172.26.0.169:44343/api/tareas/" + TareaEliminar[0].id, token)
       .then(response => {
         peticionGet();
         abrirCerrarModalEliminar();
@@ -829,8 +829,7 @@ function Tareas() {
     analisisSeleccionado.analisis = tareaSeleccionada.analisis;
     analisisSeleccionado.pedido = tareaSeleccionada.pedido;
     analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
-    console.log(analisisSeleccionado)
-    await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
         //abrirCerrarModalInsertarDet();
         peticionGetAnalisis();
@@ -868,7 +867,7 @@ function Tareas() {
     if (analisisSeleccionado.recogido === true) {
       peticionPostEntrega();
     }
-    await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
       .then(response => {
         var analisisSeleccionado = dataAnalisis;
         analisisSeleccionado.map(analisis => {
@@ -911,7 +910,7 @@ function Tareas() {
   const peticionDeleteVis = async () => {
     var i = 0;
     while (i < AnalisisEliminar.length) {
-      await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
         .then(response => {
           peticionGetAnalisis();
           peticionGetVis();
@@ -956,7 +955,7 @@ function Tareas() {
     entregaSeleccionada.analisis = analisisSeleccionado.analisis;
     entregaSeleccionada.descripcion = `Muestra de ${analisisSeleccionado.analisis} del cliente ${analisisSeleccionado.nombreCliente}`;
     entregaSeleccionada.fecha = analisisSeleccionado.fecha;
-    await axios.post("/entregas", entregaSeleccionada, token)
+    await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, token)
       .then(response => {
         peticionGetEntregas();
         setEntregaSeleccionada({

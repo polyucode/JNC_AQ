@@ -153,7 +153,7 @@ function Entregas() {
     ];
 
     const getEntregas = async () => {
-        axios.get("/entregas", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
             setData(response.data.data)
         })
     }
@@ -164,7 +164,7 @@ function Entregas() {
 
     const peticionPost = async () => {
         entregaSeleccionada.id = null;
-        await axios.post("/entregas", entregaSeleccionada, token)
+        await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getEntregas();
@@ -192,7 +192,7 @@ function Entregas() {
     }
 
     const peticionPut = async () => {
-        await axios.put("/entregas?id=" + entregaSeleccionada.id, entregaSeleccionada, token)
+        await axios.put("http://172.26.0.169:44343/api/entregas?id=" + entregaSeleccionada.id, entregaSeleccionada, token)
             .then(response => {
                 var entregaModificada = data;
                 entregaModificada.map(entrega => {
@@ -228,7 +228,7 @@ function Entregas() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < EntregaEliminar.length) {
-            await axios.delete("/entregas/" + EntregaEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/entregas/" + EntregaEliminar[i].id, token)
                 .then(response => {
                     getEntregas();
                     abrirCerrarModalEliminar();
@@ -259,35 +259,35 @@ function Entregas() {
 
 
     const GetAnalisis = async () => {
-        axios.get("/analisis", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
             const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisis(analisi);
         }, [])
     }
 
     const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOfertas(oferta);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(niveles);
         }, [])

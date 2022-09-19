@@ -40,7 +40,7 @@ function handleClick(e)
         <div className='navbar-login'>
           {localStorage.getItem('UsuarioActual') === null ? 
           (
-            <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
+            <Link  className='nav-link' to={'YC_React/login'} onClick={() => handleClick('Login')}>
               <FaIcons.FaUser/>
             </Link>
           ) 

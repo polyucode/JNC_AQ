@@ -32,7 +32,7 @@ export const AddAnalisis = ({ guardarAnalisis, verAnalisis }) => {
             deleted: null
         }
 
-        axios.post("/analisis", analisis2, token)
+        axios.post("http://172.26.0.169:44343/api/analisis", analisis2, token)
             .then(response => {
                 guardarAnalisis(analisis => [...analisis, response.data.data])
             })

@@ -279,39 +279,39 @@ function OfertasClientes() {
     ];
 
     const getOfertasProductos = async () => {
-        axios.get("/ofertasproductos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasproductos", token).then(response => {
             setDataDet(response.data.data)
         })
     }
 
     const getOfertasProductosDet = async () => {
-        axios.get("/ofertasproductos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasproductos", token).then(response => {
             setDataProducto(response.data.data.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
         })
     }
 
     const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/productos", token).then(response => {
             const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setProductos(producto);
         }, [])
     }
 
     const getContactos = async () => {
-        axios.get("/clientescontactos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
             const contacto = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setContactos(contacto);
         }, [])
     }
 
     const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             setData(response.data.data)
         })
     }
 
     const getClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
@@ -340,7 +340,7 @@ function OfertasClientes() {
 
     const peticionPost = async () => {
         ofertaSeleccionada.id = null;
-        await axios.post("/ofertasclientes", ofertaSeleccionada, token)
+        await axios.post("http://172.26.0.169:44343/api/ofertasclientes", ofertaSeleccionada, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getOfertas();
@@ -369,7 +369,7 @@ function OfertasClientes() {
     }
 
     const peticionPut = async () => {
-        await axios.put("/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
+        await axios.put("http://172.26.0.169:44343/api/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
             .then(response => {
                 var ofertaModificada = data;
                 ofertaModificada.map(oferta => {
@@ -406,7 +406,7 @@ function OfertasClientes() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("/ofertasclientes/" + OfertaEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/ofertasclientes/" + OfertaEliminar[i].id, token)
                 .then(response => {
                     getOfertas();
                     abrirCerrarModalEliminar();
@@ -441,7 +441,7 @@ function OfertasClientes() {
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
         productoSeleccionado.entregar = resta
-        await axios.post("/ofertasproductos", productoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/ofertasproductos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
                 getOfertasProductosDet();
@@ -476,7 +476,7 @@ function OfertasClientes() {
 
     const peticionPutProducto = async () => {
         productoSeleccionado.entregar = resta2
-        await axios.put("/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
             .then(response => {
                 var productoModificado = dataProducto;
                 productoModificado.map(producto => {
@@ -518,7 +518,7 @@ function OfertasClientes() {
     const peticionDeleteProducto = async () => {
         var i = 0;
         while (i < productoEliminar.length) {
-            await axios.delete("/ofertasproductos/" + productoEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/ofertasproductos/" + productoEliminar[i].id, token)
                 .then(response => {
                     getOfertasProductosDet();
                     getOfertasProductos();

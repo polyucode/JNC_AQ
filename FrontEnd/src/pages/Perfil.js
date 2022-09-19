@@ -83,7 +83,7 @@ function Perfil() {
     const uploader = React.createRef();
 
     const peticionPut=async()=>{
-      await axios.put("/usuario?id=" + User.id, User, token)
+      await axios.put("http://172.26.0.169:44343/api/usuario?id=" + User.id, User, token)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{

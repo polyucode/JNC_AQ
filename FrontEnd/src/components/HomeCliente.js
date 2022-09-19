@@ -33,7 +33,7 @@ function HomeCliente() {
 
 
     const getValorParametros = async () => {
-        axios.get("/valorparametros", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/valorparametros", token).then(response => {
             const valor = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setValores(valor);
         }, [])

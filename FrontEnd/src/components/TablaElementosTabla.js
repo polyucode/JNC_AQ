@@ -198,7 +198,7 @@ const TablaElementosTabla = (props) => {
 
     const GetParametros = async () => {
 
-        const url = "/parametroselementoplantascliente/parametros/?CodigoCliente=" + props.parametrosSeleccionado.codigoCliente + "&Oferta=" + props.parametrosSeleccionado.oferta + "&Elemento=" + props.parametrosSeleccionado.elemento
+        const url = "http://172.26.0.169:44343/api/parametroselementoplantascliente/parametros/?CodigoCliente=" + props.parametrosSeleccionado.codigoCliente + "&Oferta=" + props.parametrosSeleccionado.oferta + "&Elemento=" + props.parametrosSeleccionado.elemento
         axios.get(url , token).then(response => {
             console.log(response)            
         }, [])

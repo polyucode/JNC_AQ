@@ -279,47 +279,47 @@ function Clientes() {
 
   //peticiones API
   const GetPoblacion = async () => {
-    axios.get("/poblacion", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/poblacion", token).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
   }
 
   const GetProvincia = async () => {
-    axios.get("/provincia", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/provincia", token).then(response => {
       const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setProvincia(provincia);
     }, [])
   }
 
   const GetComarca = async () => {
-    axios.get("/comarca", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/comarca", token).then(response => {
       const comarca = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setComarca(comarca);
     }, [])
   }
 
   const GetPerfiles = async () => {
-    axios.get("/perfil", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/perfil", token).then(response => {
       const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPerfiles(perfil);
     }, [])
   }
 
   const peticionGet = async () => {
-    axios.get("/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionGetContacto = async () => {
-    axios.get("/clientescontactos", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
       setDataDet(response.data.data)
     })
   }
 
   const peticionGetContactoCliente = async () => {
-    axios.get("/clientescontactos", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
       setDataContacto(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
     })
   }
@@ -360,7 +360,7 @@ function Clientes() {
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    await axios.post("/cliente", clienteSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, token)
       .then(response => {
         abrirCerrarModalInsertar();
         peticionGet();
@@ -393,7 +393,7 @@ function Clientes() {
   }
 
   const peticionPut = async () => {
-    await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
       .then(response => {
         var clienteModificado = data;
         clienteModificado.map(cliente => {
@@ -434,7 +434,7 @@ function Clientes() {
   const peticionDelete = async () => {
     var i = 0;
     while (i < ClienteEliminar.length) {
-      await axios.delete("/cliente/" + ClienteEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i].id, token)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();
@@ -471,7 +471,7 @@ function Clientes() {
   const peticionPostContacto = async () => {
     contactoSeleccionado.id = 0;
     contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
-    await axios.post("/clientescontactos", contactoSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, token)
       .then(response => {
         abrirCerrarModalInsertarContacto();
         peticionGetContacto();
@@ -502,7 +502,7 @@ function Clientes() {
   const peticionDeleteContacto = async () => {
     var i = 0;
     while (i < ContactoClienteEliminar.length) {
-      await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i].id, token)
         .then(response => {
           peticionGetContactoCliente();
           peticionGetContacto();
@@ -532,7 +532,7 @@ function Clientes() {
   }
 
   const peticionPutContacto = async () => {
-    await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
       .then(response => {
         var contactoModificado = dataContacto;
         contactoModificado.map(contacto => {

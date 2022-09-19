@@ -122,35 +122,35 @@ function MantenimientoTecnico() {
 
 
     const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOfertas(oferta);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(niveles);
         }, [])
     }
 
     const GetParametrosPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametroselementoplantacliente", token).then(response => {
             setData(response.data.data)
         })
     }
@@ -257,7 +257,7 @@ function MantenimientoTecnico() {
 
     const GetParametros = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
+        const url = "http://172.26.0.169:44343/api/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
         const response = await axios.get(url, token)
 
         setDatosParametrosFront(response.data.data)
