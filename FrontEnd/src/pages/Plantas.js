@@ -256,8 +256,6 @@ function Plantas() {
 
     function selAnalisisElemento() {
         // Obtenemos el elemento mediante si posición
-        console.log(listaElementos)
-        console.log(elementoAnalisisProps)
         elementoAnalisisId = document.getElementById('analisis-elemento-list').value;
         elementoAnalisisProps = listaElementos[elementoAnalisisId].propiedades;
         elementoAnalisisProps.map((analisi, index) => document.getElementById(analisi.id).checked = elementoAnalisisProps[index].value)
@@ -463,7 +461,7 @@ function Plantas() {
                     }
                     axios.post("http://172.26.0.169:44343/api/analisisnivelesplantascliente", analisisElem, token)
                         .then(response => {
-                            { response && navigate('/tareas', { replace: true }) }
+                            { response && navigate('/YC_React/tareas', { replace: true }) }
                             return response
                         })
                         .catch(error => {

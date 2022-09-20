@@ -28,8 +28,6 @@ function Login(){
                 localStorage.setItem('Perfil', res.data.item2.idPerfil);
                 window.location.reload(false);
                 alert("Bienvenido " + res.data.item2.nombre + ' ' + res.data.item2.apellidos)
-
-                {res && navigate("http://172.26.0.169/YC_React/", {replace: true})}
                 //guardoamos usuario en cookies
                 // cookies.set('activo', res.data.item2, {path: '/'})
                 // cookies.set('addDate', res.data.item2, {path: '/'})
@@ -53,6 +51,8 @@ function Login(){
                 alert("Usuario o contraseña incorrectos")
                 console.log(err)
             })
+            
+            {login && navigate("/YC_React/", {replace: true})}
     }
 
     return (
