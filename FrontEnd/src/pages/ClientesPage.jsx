@@ -41,22 +41,21 @@ const token = {
   }
 };
 
-const clienteSeleccionadoInicial = { 
-  cif: '',
-  codigo: '',
-  comarca: '',
-  cp: '',
-  cuentaContable: '',
-  direccion: '',
-  email: '',
+const clienteSeleccionadoInicial = {
   id: 0,
-  idSector: 0,
-  movil: '',
-  pais: '',
-  poblacion: '',
-  provincia: '',
+  codigo: 0,
+  cif: '',
   razonSocial: '',
   telefono: '',
+  movil: '',
+  email: '',
+  direccion: '',
+  poblacion: '',
+  provincia: '',
+  cp: '',
+  pais: '',
+  comarca: '',
+  idSector: 0,
   addDate: null,
   addIdUser: null,
   modDate: null,
@@ -122,7 +121,7 @@ const localization = {
 export const ClientesPage = () => {
 
   const [rowsSelected, setRowsSelected] = useState(false);
-  const [rowsIds, setRowsIds]= useState([]);
+  const [rowsIds, setRowsIds] = useState([]);
 
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
@@ -139,8 +138,8 @@ export const ClientesPage = () => {
 
   const [modalEliminarContacto, setModalEliminarContacto] = useState(false);
 
-  
-  const [clienteSeleccionado, setClienteSeleccionado] = useState( clienteSeleccionadoInicial );
+
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(clienteSeleccionadoInicial);
 
   const [contactoSeleccionado, setContactoSeleccionado] = useState({
 
@@ -173,11 +172,11 @@ export const ClientesPage = () => {
   const [contactoClienteEditar, setContactoClienteEditar] = useState([]);
   const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
-  
+
   const [dataDet, setDataDet] = useState([]);
-  
+
   const [rows, setRows] = useState([]);
-  
+
   const [clientes, setClientes] = useState([]);
   const [perfiles, setPerfiles] = useState([]);
   const [poblacion, setPoblacion] = useState([]);
@@ -186,7 +185,7 @@ export const ClientesPage = () => {
 
 
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
-  const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success'});
+  const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
   // Columnas de la tabla
   const columns = [
@@ -209,16 +208,16 @@ export const ClientesPage = () => {
   // Efectos de React
   // Llamadas a las APIs
   useEffect(() => {
-  
+
     getClientes()
-      .then( clientes => {
-        setClientes( clientes );
+      .then(clientes => {
+        setClientes(clientes);
       });
     getComarcas()
-      .then( comarcas => {
-        setComarcas( comarcas );
+      .then(comarcas => {
+        setComarcas(comarcas);
       });
-  
+
     // peticionGetContacto();
     // GetPerfiles();
     // GetPoblacion();
@@ -228,25 +227,25 @@ export const ClientesPage = () => {
   // Obtener la lista de clientes
   useEffect(() => {
 
-    if( clientes.length > 0 ) {
-      setRows( clientes );
+    if (clientes.length > 0) {
+      setRows(clientes);
     }
 
-  }, [ clientes ]);
+  }, [clientes]);
 
   // Obtener la lista de comarcas
   useEffect(() => {
 
-    if( comarcas.length > 0 ) {
-      setComarcas( comarcas );
+    if (comarcas.length > 0) {
+      setComarcas(comarcas);
     }
 
-  }, [ comarcas ]);
+  }, [comarcas]);
 
 
-  
 
-  
+
+
 
   const peticionPut = async () => {
     console.log(clienteSeleccionado)
@@ -312,7 +311,7 @@ export const ClientesPage = () => {
       })
   }
 
-  
+
 
   const handleChange = e => {
 
@@ -332,7 +331,7 @@ export const ClientesPage = () => {
     }));
   }
 
-  
+
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -504,7 +503,7 @@ export const ClientesPage = () => {
 
 
   //modal eliminar cliente
-  
+
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   }
@@ -525,15 +524,15 @@ export const ClientesPage = () => {
     setModalEliminarContacto(!modalEliminarContacto);
   }
 
-  const handleAutocompleteChange = ( e ) => {
+  const handleAutocompleteChange = (e) => {
 
     // Obtenemos el nombre del campo y su valor
     const name = e.target.id.split('-')[0];
     const value = e.target.innerText;
 
     setClienteSeleccionado(prevState => ({
-        ...prevState,
-        [name]: value
+      ...prevState,
+      [name]: value
     }));
 
   }
@@ -608,15 +607,15 @@ export const ClientesPage = () => {
     console.log(params)
   }
 
-  const handleSelectRow = ( ids ) => {
+  const handleSelectRow = (ids) => {
 
-    if( ids.length > 0) {
-      setClienteSeleccionado( clientes.filter( cliente => cliente.id === ids[0] )[0] );
+    if (ids.length > 0) {
+      setClienteSeleccionado(clientes.filter(cliente => cliente.id === ids[0])[0]);
     } else {
-      setClienteSeleccionado( clienteSeleccionadoInicial );
+      setClienteSeleccionado(clienteSeleccionadoInicial);
     }
-    
-    setRowsIds( ids );
+
+    setRowsIds(ids);
 
   }
 
@@ -634,41 +633,41 @@ export const ClientesPage = () => {
 
   return (
     <MainLayout title='Clientes'>
-      <Grid container spacing={ 2 }>
+      <Grid container spacing={2}>
 
         {/* Título y botones de opción */}
-        <Grid item xs={ 12 }>
+        <Grid item xs={12}>
           <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant='h6'>Listado de clientes</Typography>
             {
-              ( rowsIds.length > 0 ) ? 
-              (
-                <Grid item>
-                  <Button sx={{ mr: 2 }} color='error' variant='contained' startIcon={ <DeleteIcon /> } onClick={ abrirCerrarModalEliminar } >
-                    Eliminar
-                  </Button>
-                  <Button color='primary' variant='contained' startIcon={ <EditIcon /> } onClick={ abrirCerrarModalEditar }>
-                    Editar
-                  </Button>
-                </Grid>
-              ) : (
-                <Button
-                  color='success'
-                  variant='contained'
-                  startIcon={ <AddIcon /> }
-                  onClick={ abrirCerrarModalInsertar }
-                >Añadir</Button>
-              )
+              (rowsIds.length > 0) ?
+                (
+                  <Grid item>
+                    <Button sx={{ mr: 2 }} color='error' variant='contained' startIcon={<DeleteIcon />} onClick={abrirCerrarModalEliminar} >
+                      Eliminar
+                    </Button>
+                    <Button color='primary' variant='contained' startIcon={<EditIcon />} onClick={abrirCerrarModalEditar}>
+                      Editar
+                    </Button>
+                  </Grid>
+                ) : (
+                  <Button
+                    color='success'
+                    variant='contained'
+                    startIcon={<AddIcon />}
+                    onClick={abrirCerrarModalInsertar}
+                  >Añadir</Button>
+                )
             }
           </Card>
         </Grid>
 
         {/* Tabla donde se muestran los registros de los clientes */}
-        <Grid item xs={ 12 }>
+        <Grid item xs={12}>
           <Card>
             <DataGrid
               components={{ Toolbar: GridToolbar }}
-              localeText={ DATAGRID_LOCALE_TEXT }
+              localeText={DATAGRID_LOCALE_TEXT}
               sx={{
                 width: '100%',
                 height: 700,
@@ -679,7 +678,7 @@ export const ClientesPage = () => {
               pageSize={9}
               rowsPerPageOptions={[9]}
               checkboxSelection
-              onSelectionModelChange={ (ids) => handleSelectRow(ids) }
+              onSelectionModelChange={(ids) => handleSelectRow(ids)}
             />
           </Card>
         </Grid>
@@ -690,24 +689,24 @@ export const ClientesPage = () => {
         <ModalLayout
           titulo="Agregar nuevo cliente"
           contenido={
-            <InsertarClienteModal change={ handleChange } autocompleteChange={ handleAutocompleteChange } />
+            <InsertarClienteModal change={handleChange} autocompleteChange={handleAutocompleteChange} />
           }
           botones={[
-            insertarBotonesModal( <AddIcon />, 'Añadir', async () => {
-              
-                const result = await addCliente( clienteSeleccionado );
-                abrirCerrarModalInsertar();
+            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
 
-                if( result ){
-                  setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
-                }
-              
+              const result = await addCliente(clienteSeleccionado);
+              abrirCerrarModalInsertar();
+
+              if (result) {
+                setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
+              } else {
+                setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
+              }
+
             }, 'success')
           ]}
-          open={ modalInsertar }
-          onClose={ abrirCerrarModalInsertar }
+          open={modalInsertar}
+          onClose={abrirCerrarModalInsertar}
         />
 
       </Grid>
@@ -717,40 +716,40 @@ export const ClientesPage = () => {
         titulo="Eliminar cliente"
         contenido={
           <>
-            <Grid item xs={ 12 }>
+            <Grid item xs={12}>
               <Typography>Estás seguro que deseas eliminar el cliente?</Typography>
             </Grid>
-            <Grid item xs={ 12 }>
-            <Typography><b>{ clienteSeleccionado.razonSocial }</b></Typography>
-          </Grid>
-        </>
+            <Grid item xs={12}>
+              <Typography><b>{clienteSeleccionado.razonSocial}</b></Typography>
+            </Grid>
+          </>
         }
         botones={[
-          insertarBotonesModal( <DeleteIcon />, 'Eliminar', async () => {
+          insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
 
-            const result = await deleteCliente( clienteSeleccionado.id );
+            const result = await deleteCliente(clienteSeleccionado.id);
             abrirCerrarModalEliminar();
 
-            if( result ){
-              setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${ clienteSeleccionado.razonSocial }`, severity: 'success' });
+            if (result) {
+              setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${clienteSeleccionado.razonSocial}`, severity: 'success' });
             } else {
               setSnackData({ open: true, msg: 'Ha habido un error al eliminar el cliente', severity: 'error' })
             }
 
           }, 'error'),
-          insertarBotonesModal( <CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+          insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
         ]}
-        open={ modalEliminar }
-        onClose={ abrirCerrarModalEliminar }
+        open={modalEliminar}
+        onClose={abrirCerrarModalEliminar}
       />
 
-      <Snackbar open={ snackData.open } autoHideDuration={ 6000 } onClose={ handleSnackClose } TransitionComponent={ (props) => (<Slide {...props} direction="left" />) } >
-        <Alert onClose={ handleSnackClose } severity={ snackData.severity } sx={{ width: '100%' }}>
-          { snackData.msg }
+      <Snackbar open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+          {snackData.msg}
         </Alert>
       </Snackbar>
 
-        {/* <Modal
+      {/* <Modal
           open={modalInsertar}
           onClose={abrirCerrarModalInsertar}>
           {bodyInsertar}
