@@ -463,6 +463,7 @@ function Plantas() {
                     }
                     axios.post("/analisisnivelesplantascliente", analisisElem, token)
                         .then(response => {
+                            alert("La planta se ha guardado correctamente")
                             { response && navigate('/tareas', { replace: true }) }
                             return response
                         })
