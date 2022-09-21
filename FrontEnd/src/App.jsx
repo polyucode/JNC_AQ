@@ -1,17 +1,16 @@
 
 import { AppTheme } from './theme';
 import { AppRouter } from './router/AppRouter';
-
-// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import './App.css';
-
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
 
   return (
     <>
     <AppTheme>
-      <AppRouter />
+      <AuthProvider>
+        <AppRouter />
+      </AuthProvider>
     </AppTheme>
     </>
   );

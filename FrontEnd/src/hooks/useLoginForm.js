@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 export const useLoginForm = () => {
 
+    const { login } = useContext( AuthContext );
     const navigate = useNavigate();
 
     const [loginData, setLoginData] = useState({
@@ -51,21 +53,27 @@ export const useLoginForm = () => {
 
         }
 
-        const login = {
+        // Seteamos los valores de los campos
+        const loginValues = {
             User: loginData.usuario,
             Password: loginData.contrasena
         }
 
         try {
 
-            const { data } = await axios.post('/token/', login);
+            const { data } = await axios.post('/token/', loginValues);
 
             // Seteamos el token en el localStorage
             localStorage.setItem( 'token', data.token );
             localStorage.setItem( 'usuarioActual', JSON.stringify( data.item2 ) );
             
+            // Despachamos la acción
+            login( data.item2 );
+
             // Redireccionamos al usuario
-            navigate('/', { replace: true });
+            navigate('/', {
+                replace: true
+            });
             
         } catch ( error ) {
 
@@ -81,16 +89,16 @@ export const useLoginForm = () => {
     
     }
 
-    const logout = () => {
+    // const logout = () => {
 
-        localStorage.clear();
+    //     localStorage.clear();
 
 
-        setTimeout(() => {
-            navigate('/login', { replace: true });
-        }, 1000);
+    //     setTimeout(() => {
+    //         navigate('/login', { replace: true });
+    //     }, 1000);
 
-    }
+    // }
 
     return {
         //* Propiedades
@@ -100,6 +108,6 @@ export const useLoginForm = () => {
         //* Métodos
         handleChange,
         handleSubmit,
-        logout
+        //logout
     }
 }

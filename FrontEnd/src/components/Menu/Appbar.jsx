@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -12,13 +12,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import CoPresent from '@mui/icons-material/CoPresent';
 import Logout from '@mui/icons-material/Logout';
 import { useLoginForm } from '../../hooks/useLoginForm';
+import { AuthContext } from '../../context/AuthContext';
 
 export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
 
+    const { logout } = useContext( AuthContext );
     const navigate = useNavigate();
 
     const { usuarioActual } = useUsuarioActual();
-    const { logout } = useLoginForm();
 
     // Variables para el menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,6 +37,16 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+
+        logout();
+
+        navigate('/login', {
+            replace: true
+        });
+
+    }
+
     const loginMenu = (
         <Menu
             id="login-menu"
@@ -49,7 +60,7 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
                 </ListItemIcon>
                 Perfil
             </MenuItem>
-            <MenuItem onClick={ logout }>
+            <MenuItem onClick={ handleLogout }>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>

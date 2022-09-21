@@ -138,11 +138,9 @@ function HomeCliente() {
       );
 
       function prueba(id) {
-        console.log('Prueba: '+id);
       }
 
       function mostrarElementos () {
-          console.log("Me ha seleccionado")
       }
 
     return (
