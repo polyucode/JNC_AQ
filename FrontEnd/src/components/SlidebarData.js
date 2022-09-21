@@ -76,5 +76,17 @@ export const SlidebarData = [
         path: '/entregas',
         icon: <AiIcons.AiOutlineDatabase />,
         cName: 'nav-text'
+    },
+    {
+        title: 'Proveedores',
+        path: '/proveedores',
+        icon: <AiIcons.AiOutlineDatabase />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Modo de Envio',
+        path: '/modoenvio',
+        icon: <AiIcons.AiOutlineDatabase />,
+        cName: 'nav-text'
     }
 ]

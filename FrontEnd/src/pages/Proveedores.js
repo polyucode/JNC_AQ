@@ -90,7 +90,7 @@ const localization = {
 }
 
 
-function Productos() {
+function Proveedores() {
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -98,11 +98,10 @@ function Productos() {
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-    const [productoSeleccionado, setProductoSeleccionado] = useState({
+    const [proveedorSeleccionado, setProveedorSeleccionado] = useState({
         id: 0,
-        codigoProducto: '',
-        descripcion: '',
-        adr: '',
+        codigo: 0,
+        nombre: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -112,20 +111,9 @@ function Productos() {
         deleted: null,
     });
 
-    const selections = [
-        {
-            value: 'Si',
-            label: 'Si',
-        },
-        {
-            value: 'No',
-            label: 'No',
-        }
-    ];
-
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
-    const [ProductoEliminar, setProductoEliminar] = useState([]);
+    const [ProveedorEliminar, setProveedorEliminar] = useState([]);
 
     const [data, setData] = useState([]);
 
@@ -134,44 +122,43 @@ function Productos() {
     const columnas = [
 
         //Visibles
-        { title: 'CodigoProducto', field: 'codigoProducto', filterPlaceholder: "Filtrar por codigo de producto" },
-        { title: 'Descripcion', field: 'descripcion'},
-        { title: 'ADR', field: 'adr', filterPlaceholder: "Filtrar por ADR" }
+        { title: 'Codigo Proveedor', field: 'codigo', filterPlaceholder: "Filtrar por codigo de proveedor" },
+        { title: 'Nombre Proveedor', field: 'nombre', filterPlaceholder: "Filtrar por nombre de proveedor"}
 
     ];
 
-    const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
+    const getProveedores = async () => {
+        axios.get("/proveedores", token).then(response => {
             setData(response.data.data)
         })
     }
 
     useEffect(() => {
-        getProductos();
+        getProveedores();
     }, [])
 
     const peticionPost = async () => {
-        productoSeleccionado.id = null;
-        await axios.post("/productos", productoSeleccionado, token)
+        proveedorSeleccionado.id = null;
+        console.log(proveedorSeleccionado)
+        await axios.post("/proveedores", proveedorSeleccionado, token)
             .then(response => {
-                console.log(response)
                 abrirCerrarModalInsertar();
-                getProductos();
+                getProveedores();
             }).catch(error => {
                 console.log(error);
             })
     }
 
     const peticionPut = async () => {
-        await axios.put("/productos?id=" + productoSeleccionado.id, productoSeleccionado, token)
+        await axios.put("/proveedores?id=" + proveedorSeleccionado.id, proveedorSeleccionado, token)
             .then(response => {
-                var productoModificado = data;
-                productoModificado.map(producto => {
-                    if (producto.id === productoSeleccionado.id) {
-                        producto = productoSeleccionado
+                var proveedorModificado = data;
+                proveedorModificado.map(proveedor => {
+                    if (proveedor.id === proveedorSeleccionado.id) {
+                        proveedor = proveedorSeleccionado
                     }
                 });
-                getProductos();
+                getProveedores();
                 abrirCerrarModalEditar();
             }).catch(error => {
                 console.log(error);
@@ -180,10 +167,10 @@ function Productos() {
 
     const peticionDelete = async () => {
         var i = 0;
-        while (i < ProductoEliminar.length) {
-            await axios.delete("/productos/" + ProductoEliminar[i].id, token)
+        while (i < ProveedorEliminar.length) {
+            await axios.delete("/proveedores/" + ProveedorEliminar[i].id, token)
                 .then(response => {
-                    getProductos();
+                    getProveedores();
                     abrirCerrarModalEliminar();
                 }).catch(error => {
                     console.log(error);
@@ -208,7 +195,7 @@ function Productos() {
 
     const handleChange = e => {
         const { name, value } = e.target;
-        setProductoSeleccionado(prevState => ({
+        setProveedorSeleccionado(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
@@ -216,32 +203,16 @@ function Productos() {
 
     const bodyInsertar = (
         <div className={styles.modal}>
-            <h3>Agregar Nuevo Producto</h3>
+            <h3>Agregar Nuevo Proveedor</h3>
             <br/>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <h5> Codigo Producto </h5>
-                    <TextField className={styles.inputMaterial} name="codigoProducto" onChange={handleChange} />
+                    <h5> Codigo Proveedor </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="codigo" onChange={handleChange} />
                 </div>
                 <div className="col-md-12">
-                    <h5> Descripcion </h5>
-                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
-                </div>
-                <div className="col-md-12">
-                    <h5> ADR </h5>
-                    <TextField
-                        id='adr'
-                        className={styles.inputMaterial}
-                        select
-                        name="adr"
-                        onChange={handleChange}
-                    >
-                        {selections.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <h5> Nombre Proveedor </h5>
+                    <TextField className={styles.inputMaterial} name="nombre" onChange={handleChange} />
                 </div>
             </div>
             <br/>
@@ -254,33 +225,16 @@ function Productos() {
 
     const bodyEditar = (
         <div className={styles.modal}>
-            <h3> Producto </h3>
+            <h3> Proveedor </h3>
             <br/>
             <div className="row g-3">
                 <div className="col-md-6">
-                    <h5> Codigo Producto </h5>
-                    <TextField className={styles.inputMaterial} name="codigoProducto" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.codigoProducto} />
+                    <h5> Codigo Proveedor </h5>
+                    <TextField className={styles.inputMaterial} type="number" name="codigo" onChange={handleChange} value={proveedorSeleccionado && proveedorSeleccionado.codigo} />
                 </div>
                 <div className="col-md-12">
-                    <h5> Descripción </h5>
-                    <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.descripcion} />
-                </div>
-                <div className="col-md-12">
-                    <h5> ADR </h5>
-                    <TextField
-                        id='adr'
-                        className={styles.inputMaterial}
-                        select
-                        name="adr"
-                        onChange={handleChange}
-                        value={productoSeleccionado && productoSeleccionado.adr}
-                    >
-                        {selections.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <h5> Nombre Proveedor </h5>
+                    <TextField className={styles.inputMaterial} name="nombre" onChange={handleChange} value={proveedorSeleccionado && proveedorSeleccionado.nombre} />
                 </div>
             </div>
             <br/>
@@ -293,7 +247,7 @@ function Productos() {
 
     const bodyEliminar = (
         <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el producto ? </p>
+            <p>Estás seguro que deseas eliminar el proveedor ? </p>
             <div align="right">
                 <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
                 <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
@@ -308,7 +262,7 @@ function Productos() {
                 actions={[
                     {
                         icon: () => <AddCircle style={{ fill: "green" }} />,
-                        tooltip: "Añadir Producto",
+                        tooltip: "Añadir Proveedor",
                         isFreeAction: true,
                         onClick: (e, data) => {
                             abrirCerrarModalInsertar()
@@ -316,17 +270,17 @@ function Productos() {
                     },
                     {
                         icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                        tooltip: "Eliminar Producto",
+                        tooltip: "Eliminar Proveedor",
                         onClick: (event, rowData) => {
-                            setProductoEliminar(FilasSeleccionadas);
+                            setProveedorEliminar(FilasSeleccionadas);
                             abrirCerrarModalEliminar()
                         },
                     },
                 ]}
 
-                onRowClick={((evt, productoSeleccionado) => {
-                    setProductoSeleccionado(productoSeleccionado)
-                    getProductos();
+                onRowClick={((evt, proveedorSeleccionado) => {
+                    setProveedorSeleccionado(proveedorSeleccionado)
+                    getProveedores();
                     abrirCerrarModalEditar();
                 })}
                 
@@ -334,7 +288,7 @@ function Productos() {
                     setFilasSeleccionadas(filas);
 
                     if (filas.length > 0) {
-                        setProductoSeleccionado(filas[0]);
+                        setProveedorSeleccionado(filas[0]);
                     }
                 }}
 
@@ -342,20 +296,20 @@ function Productos() {
                     sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
                     columnsButton: true, showSelectAllCheckbox: false,
                     rowStyle: rowData => ({
-                        backgroundColor: (productoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                        backgroundColor: (proveedorSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
                         whiteSpace: "nowrap"
                     }),
 
                     exportMenu: [{
                         label: 'Export PDF',
-                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Productos')
+                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Proveedores')
                     }, {
                         label: 'Export CSV',
-                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Productos')
+                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Proveedores')
                     }]
                 }}
 
-                title="Listado de Productos"
+                title="Listado de Proveedores"
             />
             <Modal
                 open={modalInsertar}
@@ -378,4 +332,4 @@ function Productos() {
     )
 }
 
-export default Productos;
+export default Proveedores;

@@ -9,5 +9,8 @@ namespace AnalisisQuimicos.Core.Entities
         public DateTime? Fecha { get; set; }
         public string CodigoProducto { get; set; }
         public int? Cantidad { get; set; }
+        public int? CodigoProveedor { get; set; }
+        public string ModoEnvio { get; set; }
+        public int? NumAlbaran { get; set; }
     }
 }

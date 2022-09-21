@@ -19,6 +19,8 @@ import ConsumoArticulos from './pages/ConsumoArticulos'
 import Visualizacion from './pages/Visualizacion';
 import Pdf from './pages/Pdf';
 import Entregas from './pages/Entregas';
+import Proveedores from './pages/Proveedores';
+import ModoEnvio from './pages/ModoEnvio';
 
 export const ThemeContext = React.createContext();
 
@@ -57,6 +59,8 @@ export default function App() {
               <Route path='/visualizacion' element={<Visualizacion />} />
               <Route path='/pdf' element={<Pdf />} />
               <Route path='/entregas' element={<Entregas />} />
+              <Route path='/proveedores' element={<Proveedores />} />
+              <Route path='/modoenvio' element={<ModoEnvio />} />
             </Routes>
             </div>
   {/*
@@ -77,6 +81,7 @@ export default function App() {
               <Route path='/YC_React/visualizacion' element={<Visualizacion />} />
               <Route path='/YC_React/pdf' element={<Pdf />} />
               <Route path='/YC_React/entregas' element={<Entregas />} />
+              <Route path='/YC_React/proveedores' element={<Proveedores />} />
             </Routes>
           </div>
   */}

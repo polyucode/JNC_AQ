@@ -15,6 +15,7 @@ namespace AnalisisQuimicos.Core.Entities
         public DateTime? FechaFinalizacion { get; set; }
         public string Contacto1 { get; set; }
         public string Contacto2 { get; set; }
-   
+        public string Contacto3 { get; set; }
+
     }
 }
