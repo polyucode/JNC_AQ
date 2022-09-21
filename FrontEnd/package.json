@@ -1,7 +1,6 @@
 {
   "name": "jnc_analisis_quimico_front",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000/",
   "private": true,
   "proxy": "https://localhost:44343/api",
   "dependencies": {
