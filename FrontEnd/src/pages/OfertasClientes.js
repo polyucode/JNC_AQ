@@ -156,8 +156,8 @@ function OfertasClientes() {
         codigoCliente: 0,
         nombreCliente: '',
         descripcion: '',
-        fechaInicio: '',
-        fechaFinalizacion: '',
+        fechaInicio: null,
+        fechaFinalizacion: null,
         contacto1: '',
         contacto2: '',
         contacto3: '',
@@ -346,6 +346,7 @@ function OfertasClientes() {
         ofertaSeleccionada.id = null;
         await axios.post("/ofertasclientes", ofertaSeleccionada, token)
             .then(response => {
+                console.log(ofertaSeleccionada)
                 abrirCerrarModalInsertar();
                 getOfertas();
                 setOfertaSeleccionada({
@@ -359,6 +360,7 @@ function OfertasClientes() {
                     fechaFinalizacion: null,
                     contacto1: '',
                     contacto2: '',
+                    contacto3: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -394,6 +396,7 @@ function OfertasClientes() {
                     fechaFinalizacion: null,
                     contacto1: '',
                     contacto2: '',
+                    contacto3: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -425,6 +428,7 @@ function OfertasClientes() {
                         fechaFinalizacion: null,
                         contacto1: '',
                         contacto2: '',
+                        contacto3: '',
                         addDate: null,
                         addIdUser: null,
                         modDate: null,
@@ -638,9 +642,7 @@ function OfertasClientes() {
         const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
         (nombre.length > 0) && setOfertaSeleccionada({
             ...ofertaSeleccionada,
-            nombreCliente: nombre[0].razonSocial,
-            contacto1: '',
-            contacto2: ''
+            nombreCliente: nombre[0].razonSocial
         })
 
     }, [ofertaSeleccionada.codigoCliente])
@@ -674,7 +676,10 @@ function OfertasClientes() {
                         renderInput={(params) => <TextField {...params} type="number" name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
-                            codigoCliente: parseInt(value.codigo)
+                            codigoCliente: parseInt(value.codigo),
+                            contacto1: '',
+                            contacto2: '',
+                            contacto3: ''
                         }))}
                     />
                 </div>
@@ -788,15 +793,12 @@ function OfertasClientes() {
         const fecha2 = fecha1.getFullYear() +
         '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
         '-' +  String(fecha1.getDate()).padStart(2,'0')
-
-        console.log("FECHA: ", fecha2)
         
         return fecha2
     }
 
     const bodyEditar = (
         <div className={styles2.modal}>
-            {console.log(ofertaSeleccionada)}
             <h3>Oferta</h3>
             <br />
             <div className="row g-3">
@@ -824,7 +826,10 @@ function OfertasClientes() {
                         renderInput={(params) => <TextField {...params} name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
-                            codigoCliente: parseInt(value.codigo)
+                            codigoCliente: parseInt(value.codigo),
+                            contacto1: '',
+                            contacto2: '',
+                            contacto3: ''
                         }))}
                     />
                 </div>
@@ -870,8 +875,9 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto1"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto1}
                         defaultValue={contacto1Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2 && contacto.nombre !== ofertaSeleccionada.contacto3)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto1" />}
@@ -887,8 +893,9 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto2"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto2}
                         defaultValue={contacto2Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1 && contacto.nombre !== ofertaSeleccionada.contacto3)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto2" />}
@@ -904,8 +911,9 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto3"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto3}
                         defaultValue={contacto3Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1 && contacto.nombre !== ofertaSeleccionada.contacto2)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto3" />}
@@ -1181,8 +1189,6 @@ function OfertasClientes() {
                     },
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
-                    // Copy row data and set checked state
-                    console.log(ofertaSeleccionada)
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getOfertasProductos();

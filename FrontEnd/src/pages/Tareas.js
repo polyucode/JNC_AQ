@@ -477,8 +477,6 @@ function Tareas() {
     }, [])
   }
 
-  console.log(confAnalisisNivelesPlantasCliente)
-
   const peticionGet = async () => {
     axios.get("/tareas", token).then(response => {
       setData(response.data.data)
@@ -568,7 +566,6 @@ function Tareas() {
         }
       }
     })
-    console.log(newArray)
 
   }, [tareaSeleccionada.oferta])
 
