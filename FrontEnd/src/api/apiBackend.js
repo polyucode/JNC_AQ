@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const urlBase = 'http://';
+const urlBase = 'https://localhost:44343/api';
 
 const token = {
     headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }
@@ -94,6 +94,21 @@ export const getElementos = async () => {
     const resp = await axios.get('/elementosplanta', token)
     return Object.entries(resp.data.data).map(([key, value]) => (key, value));
 
+}
+
+export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
+
+    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Elemento=${ elemento }`;
+    const resp = await axios.get(url, token);
+    return resp.data.data;
+
+}
+
+export const getParametros = async () => {
+
+    const resp = await axios.get('/parametros', token);
+    return resp.data.data;
+    
 }
 
 ///peticiones API

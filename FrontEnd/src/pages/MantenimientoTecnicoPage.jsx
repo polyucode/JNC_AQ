@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, Card, CardContent, Autocomplete } from '@mui/material';
+import { Grid, Card, CardContent, Autocomplete, Typography } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 
@@ -20,13 +20,13 @@ import { useParserBack } from "../hooks/useParserBack";
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento } from "../api/apiBackend";
 
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
+// const token = {
+//     headers: {
+//         Authorization: 'Bearer ' + localStorage.getItem('token')
+//     }
+// };
 
 // const useStyles = makeStyles((theme) => ({
 //     modal: {
@@ -70,9 +70,12 @@ const token = {
 
 export const MantenimientoTecnicoPage = () => {
 
+    // Declaración de variables
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [elementos, setElementos] = useState([]);
+    const [parametros, setParametros] = useState([]);
+    const [parametrosElemento, setParametrosElemento] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -80,7 +83,6 @@ export const MantenimientoTecnicoPage = () => {
     const [contextMenu, setContextMenu] = React.useState(null);
 
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
-
         id: 0,
         codigoCliente: 0,
         nombreCliente: '',
@@ -91,7 +93,6 @@ export const MantenimientoTecnicoPage = () => {
         parametro: '',
         unidad: '',
         valor: 0
-
     })
 
     const [data, setData] = useState([]);
@@ -114,6 +115,9 @@ export const MantenimientoTecnicoPage = () => {
 
         getElementos()
             .then(( res ) => setElementos( res ));
+
+        getParametros()
+            .then(( res ) => setParametros( res ));
 
         // GetConfAnalisisNivelesPlantasCliente();
         // GetParametrosPlantaCliente();
@@ -207,14 +211,7 @@ export const MantenimientoTecnicoPage = () => {
 
     }
 
-    const GetParametros = async () => {
-
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
-        const response = await axios.get(url, token)
-
-        setDatosParametrosFront(response.data.data)
-
-    }
+    
 
     function createData(parametro, unidad, valor, valor1Mes, valor2Meses) {
         return { parametro, unidad, valor, valor1Mes, valor2Meses };
@@ -227,6 +224,14 @@ export const MantenimientoTecnicoPage = () => {
         createData('TDS', 'mg/l'),
         createData('Dureza cálcica', 'mg/l CaCO3'),
     ];
+
+    const handleGetParametros = async () => {
+
+        const resp = await getParametrosElemento( '1', '1243', 'Torre 1' );
+        console.log({ resp });
+
+        setParametrosElemento( prevState => ([ ...prevState, resp]));
+    }
 
     return (
         <MainLayout title='Mantenimiento técnico'>
@@ -315,31 +320,41 @@ export const MantenimientoTecnicoPage = () => {
                 <Grid item xs={ 12 }>
                     <Card>
                         <CardContent>
-                            <TableContainer>
-                                <Table size="small">
+                            {
+                                ( parametrosElemento.length > 0 ) ? (
+                                    <TableContainer>
+                                        <Table size="small">
 
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell><b>Parámetro</b></TableCell>
-                                            <TableCell><b>Valor</b></TableCell>
-                                            <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
-                                            <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell><b>Parámetro</b></TableCell>
+                                                    <TableCell><b>Valor</b></TableCell>
+                                                    <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
+                                                    <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
+                                                </TableRow>
+                                            </TableHead>
 
-                                    <TableBody>
-                                        
-                                        <ParametroMantenimiento />
-                                        <ParametroMantenimiento />
-                                        <ParametroMantenimiento />
-                                        <ParametroMantenimiento />
-                                        <ParametroMantenimiento />
-                                        <ParametroMantenimiento />
+                                            <TableBody>
+                                                {
+                                                    parametrosElemento.map( parametro => {
+                                                        return (
+                                                            parametro.activo &&
+                                                            <ParametroMantenimiento
+                                                                key={ parametro.id }
+                                                                nombre={ parametros.filter( param => param.id === parametro.parametro )[0].nombre }
+                                                                unidades={ parametro.unidades }
+                                                            />
+                                                        )
+                                                    })
+                                                }
+                                            </TableBody>
 
-                                    </TableBody>
-
-                                </Table>
-                            </TableContainer>
+                                        </Table>
+                                    </TableContainer>
+                                ) : (
+                                    <Typography>No hay parametros para mostrar</Typography>
+                                )
+                            }   
                         </CardContent>
                     </Card>
                 </Grid>
@@ -363,7 +378,7 @@ export const MantenimientoTecnicoPage = () => {
                                     <Button
                                         variant="contained"
                                         startIcon={ <FileOpenIcon /> }
-                                        onClick={ GetParametros }
+                                        onClick={ handleGetParametros }
                                     >
                                         Abrir Plantilla
                                     </Button>
