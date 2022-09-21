@@ -124,6 +124,9 @@ function ConsumoArticulos() {
         fecha: null,
         codigoProducto: '',
         cantidad: 0,
+        codigoProveedor: 0,
+        modoEnvio: '',
+        numAlbaran: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -142,11 +145,15 @@ function ConsumoArticulos() {
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
+    const [envios, setEnvios] = useState([]);
 
     const [clienteEditar, setClienteEditar] = useState([]);
     const [ofertaEditar, setOfertaEditar] = useState([]);
     const [productoEditar, setProductoEditar] = useState([]);
+    const [proveedorEditar, setProveedorEditar] = useState([]);
     const [descripcionEditar, setDescripcionEditar] = useState([]);
+    const [envioEditar, setEnvioEditar] = useState([]);
 
     const styles = useStyles();
     const styles2 = useStyles2();
@@ -157,7 +164,10 @@ function ConsumoArticulos() {
         { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por numero oferta" },
         { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
         { title: 'Producto', field: 'codigoProducto', filterPlaceholder: "Filtrar por producto" },
-        { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" }
+        { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
+        { title: 'Codigo Proveedor', field: 'codigoProveedor', filterPlaceholder: "Filtrar por codigo de proveedor" },
+        { title: 'Modo de Envio', field: 'modoEnvio', filterPlaceholder: "Filtrar por modo de envio" },
+        { title: 'Numero Albaran', field: 'numAlbaran', filterPlaceholder: "Filtrar por numero albaran" }
     ];
 
 
@@ -181,10 +191,26 @@ function ConsumoArticulos() {
         }, [])
     }
 
+    const getProveedores = async () => {
+        axios.get("/proveedores", token).then(response => {
+            const proveedor = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setProveedores(proveedor);
+        }, [])
+    }
+
+    const getEnvios = async () => {
+        axios.get("/modoenvio", token).then(response => {
+            const envio = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setEnvios(envio);
+        }, [])
+    }
+
     useEffect(() => {
         getConsumos();
         getOfertas();
         getProductos();
+        getProveedores();
+        getEnvios();
     }, [])
 
     const peticionPost = async () => {
@@ -306,6 +332,40 @@ function ConsumoArticulos() {
                     <h5> Cantidad </h5>
                     <TextField className={styles2.inputMaterial} type="number" name="cantidad" onChange={handleChange} />
                 </div>
+                <div className="col-md-4">
+                    <h5> Codigo Proveedor </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="codigoProveedor"
+                        options={proveedores}
+                        getOptionLabel={option => option.codigo}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            codigoProveedor: value.codigo
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Modo de Envio </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="modoEnvio"
+                        options={envios}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="modoEnvio" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            modoEnvio: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Numero Albaran </h5>
+                    <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChange} />
+                </div>
             </div>
             <br />
             <div align="right">
@@ -371,6 +431,42 @@ function ConsumoArticulos() {
                 <div className="col-md-6">
                     <h5> Cantidad </h5>
                     <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
+                </div>
+                <div className="col-md-4">
+                    <h5> Codigo Proveedor </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="codigoProveedor"
+                        options={proveedores}
+                        defaultValue={proveedorEditar[0]}
+                        getOptionLabel={option => option.codigo}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            codigoProveedor: value.codigo
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Modo de Envio </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="modoEnvio"
+                        options={envios}
+                        defaultValue={envioEditar[0]}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="modoEnvio" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            modoEnvio: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-3">
+                    <h5> Numero Albaran </h5>
+                    <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.numAlbaran} />
                 </div>
             </div>
             <br />
@@ -468,6 +564,8 @@ function ConsumoArticulos() {
                     getConsumos();
                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.oferta))
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === consumoSeleccionado.codigoProducto))
+                    setProveedorEditar(proveedores.filter(proveedor => proveedor.codigo === consumoSeleccionado.codigoProveedor))
+                    setEnvioEditar(envios.filter(envio => envio.nombre === consumoSeleccionado.modoEnvio))
                     abrirCerrarModalEditar();
                 })}
 
