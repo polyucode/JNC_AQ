@@ -4,7 +4,7 @@ const CampoPrincipalPlantasTabla = (props) => {
 
     const [state, setState] = useState(props.datos);
 
-    const [ checkboxActivo, setCheckboxActivo ] = useState(false)
+    const [ checkboxActivo, setCheckboxActivo ] = useState(false);
     
     useEffect(() => {
 
@@ -25,6 +25,7 @@ const CampoPrincipalPlantasTabla = (props) => {
 
     const handleActivo = (e) => {
         const { name, value, checked } = e.target
+
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
         if (checked) {
             document.getElementById(props.parametros.Nombre + 'LimInf').removeAttribute('disabled');
@@ -66,17 +67,29 @@ const CampoPrincipalPlantasTabla = (props) => {
     const handleLimitSuperior = (e) => {
         const { name, value } = e.target
         // Actualiza el valor en la variable
-        props.cambiarDatos( props.parametros.Nombre, props.parametros, 'LimSup', parseInt( value ) );
+        props.datosParametros(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
     }
 
 
     return (
         <tr key={props.parametros.Nombre}>
             <td>{props.nombre}</td>
-            <td><input type="number" name={props.parametros.Nombre + 'LimInf'} id={props.parametros.Nombre + 'LimInf'} onChange={handleLimitInferior} value={props.parametros.LimInf} /></td>
-            <td><input type="number" name={props.parametros.Nombre + 'LimSup'} id={props.parametros.Nombre + 'LimSup'} onChange={handleLimitSuperior} value={props.parametros.LimSup} /></td>
+            <td><input type="number" name='LimInf' id={props.parametros.Nombre + 'LimInf'} onChange={handleLimitInferior} value={props.parametros.LimInf} /></td>
+            <td><input type="number" name='LimSup' id={props.parametros.Nombre + 'LimSup'} onChange={handleLimitSuperior} value={props.parametros.LimSup} /></td>
             <td>
-                <input type="text" name={props.parametros.Nombre + 'Unidades'} id={props.parametros.Nombre + 'Unidades'} onChange={handleUnidad} value={props.parametros.Unidades} />
+                <select name={props.parametros.Nombre + 'Unidades'} id={props.parametros.Nombre + 'Unidades'} onChange={handleUnidad} value={props.parametros.Unidades} >
+                    <option value=''></option>
+                    <option value='m3'>m3</option>
+                    <option value='Un. pH'>Un. pH</option>
+                    <option value='ºC'>ºC</option>
+                    <option value='mg/l'>mg/l</option>
+                    <option value='mg/l CaCO3'>mg/l CaCO3</option>
+                    <option value='N.T.U'>N.T.U</option>
+                    <option value='µS/cm'>µS/cm</option>
+                </select>
             </td>
             <td><center><input type="checkbox" name={props.parametros.Nombre + 'Activo'} id={props.parametros.Nombre + 'Activo'} onChange={handleActivo} checked={props.parametros.Activo} value={props.parametros.Activo} /></center></td>
             <td><center><input type="checkbox" name={props.parametros.Nombre + 'VerInspector'} id={props.parametros.Nombre + 'VerInspector'} onChange={handleVerInspector} checked={props.parametros.VerInspector} value={props.parametros.VerInspector} /></center></td>

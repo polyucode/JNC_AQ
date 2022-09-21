@@ -11,6 +11,9 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
     {
         public AutomapperProfile()
         {
+            CreateMap<string, DateTime>().ConvertUsing(new DateTimeTypeConverter());
+            CreateMap<DateTime, string>().ConvertUsing(new StringTypeConverter());
+
             CreateMap<Archivos, ArchivosDTO>().ReverseMap();
             CreateMap<Analisis, AnalisisDTO>().ReverseMap();
             CreateMap<Usuarios, UsuarioDto>().ReverseMap();
@@ -28,12 +31,16 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<ParametrosElementoPlantaCliente, ParametrosElementoPlantaClienteDto>().ReverseMap();
             CreateMap<AnalisisNivelesPlantasCliente, AnalisisNivelesPlantasClienteDTO>().ReverseMap();
             CreateMap<ClientesContactos, ClientesContactosDTO>().ReverseMap();
+
             CreateMap<OfertasClientes, OfertasClientesDTO>().ReverseMap();
+
             CreateMap<Productos, ProductosDTO>().ReverseMap();
             CreateMap<OfertasProductos, OfertasProductosDTO>().ReverseMap();
             CreateMap<Consumos, ConsumosDTO>().ReverseMap();
             CreateMap<ValorParametros, ValorParametrosDTO>().ReverseMap();
             CreateMap<Entregas, EntregasDTO>().ReverseMap();
+
+            CreateMap<Parametros, ParametrosDTO>().ReverseMap();
 
         }
 

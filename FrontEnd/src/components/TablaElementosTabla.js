@@ -238,6 +238,7 @@ class TablaElementosTabla extends React.Component {
                             <th>Unidades</th>
                             <th><center>Activar</center></th>
                             <th><center>Ver Insp.</center></th>
+<<<<<<< HEAD
                         </tr>                       
                             <CampoPrincipalPlantasTabla key="15" nombre="Clor Lliure" datos={this.state.plantilla.ClorLliure} />
                             <CampoPrincipalPlantasTabla key="16" nombre="Clor Total" datos={this.state.plantilla.ClorTotal} />
@@ -299,6 +300,27 @@ class TablaElementosTabla extends React.Component {
             <>
                 <table className="tabla-tecnico">
                     <tbody id={'tabla-' + this.props.value.toString()}>
+=======
+                        </tr>
+                        <CampoPrincipalPlantasTabla key="1" name="comptador" nombre="Comptador" datos={state.plantilla.Comptador} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.comptador} datosParametros={props.setDatosParametros} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="2" name="ph" nombre="pH" datos={state.plantilla.PH} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.ph} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="3" name="temperatura" nombre="Temperatura" datos={state.plantilla.Temperatura} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.temperatura} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="4" name="conductivitat" nombre="Conductivitat" datos={state.plantilla.Conductivitat} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.conductivitat} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="5" name="TDS" nombre="TDS" datos={state.plantilla.TDS} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.tds} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="6" name="alcalinitatM" nombre="AlcalinitatM" datos={state.plantilla.AlcalinitatM} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.alcalinitatM} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="7" name="alcalinitatP" nombre="AlcalinitatP" datos={state.plantilla.AlcalinitatP} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.alcalinitatP} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="8" name="duresaCalcica" nombre="DuresaCalcica" datos={state.plantilla.DuresaCalcica} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.duresaCalcica} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="9" name="duresaTotal" nombre="DuresaTotal" datos={state.plantilla.DuresaTotal} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.duresaTotal} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="10" name="terbolesa" nombre="Terbolesa" datos={state.plantilla.Terbolesa} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.terbolesa} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="11" name="fe" nombre="Fe" datos={state.plantilla.Fe} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.fe} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="12" name="clorurs" nombre="Clorurs" datos={state.plantilla.Clorurs} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.clorurs} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="13" name="sulfats" nombre="Sulfats" datos={state.plantilla.Sulfats} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.sulfats} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="14" name="silicats" nombre="Silicats" datos={state.plantilla.Silicats} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.silicats} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="15" name="clorLliure" nombre="ClorLliure" datos={state.plantilla.ClorLliure} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.clorLliure} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="16" name="clorTotal" nombre="ClorTotal" datos={state.plantilla.ClorTotal} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.clorTotal} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="17" name="brom" nombre="Brom" datos={state.plantilla.Brom} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.brom} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+                        <CampoPrincipalPlantasTabla key="18" name="sulfits" nombre="Sulfits" datos={state.plantilla.Sulfits} cambiarDatos={props.cambiarDatos} parametros={props.parametros.parametrosFijos.sulfits} parametrosSeleccionado={props.parametrosSeleccionado} setParametrosSeleccionado={props.setParametrosSeleccionado} />
+>>>>>>> origin/cambios-marc
                     </tbody>
                 </table>
             </>
