@@ -1,30 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Grid, Card, CardContent, Autocomplete } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import PersonIcon from '@mui/icons-material/Person';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FolderIcon from '@mui/icons-material/Folder';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import Divider from '@mui/material/Divider';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -35,7 +17,10 @@ import TableRow from '@mui/material/TableRow';
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 
-import './MantenimientoTecnico.css';
+//import './MantenimientoTecnico.css';
+import { MainLayout } from "../layout/MainLayout";
+import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
+import { getClientes, getElementos, getOfertas } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -43,59 +28,56 @@ const token = {
     }
 };
 
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1050,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
+// const useStyles = makeStyles((theme) => ({
+//     modal: {
+//         position: 'absolute',
+//         width: 1050,
+//         height: 750,
+//         backgroundColor: theme.palette.background.paper,
+//         boxShadow: theme.shadows[5],
+//         padding: theme.spacing(2, 4, 3),
+//         top: '50%',
+//         left: '50%',
+//         transform: 'translate(-50%, -50%)'
+//     },
+//     iconos: {
+//         cursor: 'pointer'
+//     },
+//     inputMaterial: {
+//         width: '100%'
+//     }
+// }));
 
-const useStyles2 = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1150,
-        height: 750,
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '45%'
-    }
-}));
+// const useStyles2 = makeStyles((theme) => ({
+//     modal: {
+//         position: 'absolute',
+//         width: 1150,
+//         height: 750,
+//         backgroundColor: theme.palette.background.paper,
+//         boxShadow: theme.shadows[5],
+//         padding: theme.spacing(2, 4, 3),
+//         top: '50%',
+//         left: '50%',
+//         transform: 'translate(-50%, -50%)'
+//     },
+//     iconos: {
+//         cursor: 'pointer'
+//     },
+//     inputMaterial: {
+//         width: '45%'
+//     }
+// }));
 
 export const MantenimientoTecnicoPage = () => {
 
+    const [clientes, setClientes] = useState([]);
+    const [ofertas, setOfertas] = useState([]);
+    const [elementos, setElementos] = useState([]);
+
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
-
     const [open, setOpen] = React.useState(true);
     const [contextMenu, setContextMenu] = React.useState(null);
-
-    const [clientes, setClientes] = useState([]);
-    const [elementos, setElementos] = useState([]);
-    const [ofertas, setOfertas] = useState([]);
-
-    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
 
@@ -114,58 +96,28 @@ export const MantenimientoTecnicoPage = () => {
 
     const [data, setData] = useState([]);
     const [dataParametros, setDataParametros] = useState([]);
-
-    const styles = useStyles();
-    const styles2 = useStyles2();
-
-    const [ datos, setDatos ] = useState([]);
-
-
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
-    }
-
-    const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setElementos(elemento);
-        }, [])
-    }
-
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOfertas(oferta);
-        }, [])
-    }
-
-    const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfAnalisisNivelesPlantasCliente(niveles);
-        }, [])
-    }
-
-    const GetParametrosPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
-            setData(response.data.data)
-        })
-    }
+    // const styles = useStyles();
+    // const styles2 = useStyles2(); 
 
     function Parametros() {
         setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
     }
 
+    // Peticiones a la api
     useEffect(() => {
-        GetClientes();
-        GetElementos();
-        GetOfertas();
-        GetConfAnalisisNivelesPlantasCliente();
-        GetParametrosPlantaCliente();
-        Parametros();
+
+        getClientes()
+            .then(( res ) => setClientes( res ));
+
+        getOfertas()
+            .then(( res ) => setOfertas( res ));
+
+        getElementos()
+            .then(( res ) => setElementos( res ));
+
+        // GetConfAnalisisNivelesPlantasCliente();
+        // GetParametrosPlantaCliente();
+        // Parametros();
     }, [])
 
     useEffect(() => {
@@ -277,298 +229,152 @@ export const MantenimientoTecnicoPage = () => {
     ];
 
     return (
-        <div className="main-container">
-            <div className='row1'>
-                <h4>Mantenimiento</h4>
-                <hr />
-                <div className='header-contenedor'>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell><b>Codigo Cliente</b></TableCell>
-                                    <TableCell><b>Nombre Cliente</b></TableCell>
-                                    <TableCell><b>Referencia</b></TableCell>
-                                    <TableCell><b>Oferta</b></TableCell>
-                                    <TableCell><b>Elemento</b></TableCell>
-                                    <TableCell><b>Fecha</b></TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>
-                                        <Autocomplete
-                                            disableClearable={true}
-                                            className={styles2.inputMaterial}
-                                            id="codigoCliente"
-                                            options={clientes}
-                                            getOptionLabel={option => option.codigo}
-                                            sx={{ width: 200 }}
-                                            renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-                                            onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            id='nombreCliente'
-                                            className={styles.inputMaterial}
-                                            value={parametrosSeleccionado && parametrosSeleccionado.nombreCliente}
-                                            name="nombreCliente"
-                                            onChange={handleChange}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            id='referencia'
-                                            className={styles.inputMaterial}
-                                            name="referencia"
-                                            onChange={handleChange}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Autocomplete
-                                            disableClearable={true}
-                                            className={styles2.inputMaterial}
-                                            id="Oferta"
-                                            inputValue={parametrosSeleccionado.oferta}
-                                            options={ofertas}
-                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
-                                            getOptionLabel={option => option.numeroOferta}
-                                            sx={{ width: 150 }}
-                                            renderInput={(params) => <TextField {...params} name="oferta" />}
-                                            onChange={(event, value) => onChangeOferta(event, value, "oferta")}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Autocomplete
-                                            disableClearable={true}
-                                            className={styles2.inputMaterial}
-                                            id="elemento"
-                                            inputValue={parametrosSeleccionado.elemento}
-                                            options={elementos}
-                                            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                            getOptionLabel={option => option.elemento}
-                                            sx={{ width: 225 }}
-                                            renderInput={(params) => <TextField {...params} name="elemento" />}
-                                            onChange={(event, value) => onChangeElemento(event, value, "elemento")}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            className={styles.inputMaterial}
-                                            id="fecha"
-                                            type="date"
-                                            name="fecha"
-                                            sx={{ width: 225 }}
-                                            onChange={handleChange}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </div>
-            </div>
-            <div className='row2'>
-                <div className='col1'>
-                    <h5>Parámetros</h5>
-                    <hr />
-                    <div className='parametros-contenedor'>
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell><b>Parámetro</b></TableCell>
-                                        <TableCell><b>Un.</b></TableCell>
-                                        <TableCell><b>Valor</b></TableCell>
-                                        <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
-                                        <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {/*parametrosFront.parametrosFijos.Nombre + 'Activo' === true &&
-                                    rows.map((row) => (
-                                        <TableRow key={row.parametro}>
-                                            <TableCell component="th" scope="row">
-                                                {row.parametro}
-                                            </TableCell>
-                                            <TableCell>{row.unidad}</TableCell>
-                                            <TableCell>
-                                                {<TextField type="number" id="filled-basic" name="valor" hiddenLabel variant="filled" size="small" />}
-                                            </TableCell>
-                                            <TableCell>
-                                                {<TextField disabled type="number" id="filled-basic" hiddenLabel variant="filled" size="small" />}
-                                            </TableCell>
-                                            <TableCell>
-                                                {<TextField disabled type="number" id="filled-basic" hiddenLabel variant="filled" size="small" />}
-                                            </TableCell>
+        <MainLayout title='Mantenimiento técnico'>
+            <Grid container spacing={ 2 }>
+
+                {/* Sección de búsqueda */}
+                <Grid item xs={ 12 }>
+                    <Card>
+                        <CardContent>
+                            <Grid container spacing={ 2 }>
+
+                                <Grid item xs={ 4 }>
+                                    <Autocomplete
+                                        disableClearable={ true }
+                                        id="codigoCliente"
+                                        options={ clientes }
+                                        getOptionLabel={ option => option.codigo.toString() }
+                                        renderInput={ params => <TextField {...params} label="Código de cliente" name="codigoCliente" /> }
+                                        onChange={ (event, value) => onChangeCliente(event, value, "codigoCliente") }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={ 4 }>
+                                    <Autocomplete
+                                        disableClearable={ true }
+                                        id="codigoOferta"
+                                        options={ ofertas }
+                                        //filterOptions={ options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente) }
+                                        getOptionLabel={ option => option.numeroOferta.toString() }
+                                        renderInput={ params => <TextField {...params} label="Código de oferta" name="codigoOferta" /> }
+                                        onChange={ (event, value) => onChangeOferta(event, value, "codigoOferta") }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={ 4 }>
+                                    <Autocomplete
+                                        disableClearable={ true }
+                                        id="elemento"
+                                        options={ elementos }
+                                        //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                        getOptionLabel={ option => (option.nombre) }
+                                        renderInput={ params => <TextField {...params} label="Elemento" name="elemento" /> }
+                                        onChange={ (event, value) => onChangeElemento(event, value, "elemento") }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={ 4 }>
+                                    <TextField
+                                        sx={{ width: '100%' }}
+                                        label="Nombre del cliente"
+                                        id='nombreCliente'
+                                        name="nombreCliente"
+                                        value={ parametrosSeleccionado && parametrosSeleccionado.nombreCliente }
+                                        onChange={ handleChange }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={ 4 }>
+                                    <TextField
+                                        sx={{ width: '100%' }}
+                                        label="Referencia"
+                                        id='referencia'
+                                        name="referencia"
+                                        onChange={ handleChange }
+                                    />
+                                </Grid>
+
+                                <Grid item xs={ 4 }>
+                                    <TextField
+                                        sx={{ width: '100%' }}
+                                        label="Fecha"
+                                        id="fecha"
+                                        name="fecha"
+                                        type="date"
+                                        placeholder="fuck"
+                                        onChange={ handleChange }
+                                    />
+                                </Grid>
+
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                {/* Sección tabla de parámetros */}
+                <Grid item xs={ 12 }>
+                    <Card>
+                        <CardContent>
+                            <TableContainer>
+                                <Table size="small">
+
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell><b>Parámetro</b></TableCell>
+                                            <TableCell><b>Valor</b></TableCell>
+                                            <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
+                                            <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
                                         </TableRow>
-                                    ))*/}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </div>
-                </div>
-                <div className='col3'>
-                    <h5>Comentarios del Elemento de Planta</h5>
-                    <hr />
-                    <div className='box-com-contenedor'>
-                        <List>
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <PersonIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Hola, esto es un mensaje de prueba"
-                                    secondary="Usuario Random"
-                                />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <PersonIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Hola, esto es un mensaje de prueba"
-                                    secondary="Usuario Random"
-                                />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem
-                                alignItems="flex-start"
-                                secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <PersonIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Hola, esto es un mensaje de prueba"
-                                    secondary="Usuario Random"
-                                />
-                            </ListItem>
-                        </List>
-                    </div>
-                    <div className='box-com-crear'>
-                        <TextField
-                            id="filled-multiline-static"
-                            label="Introduce un comentario"
-                            multiline
-                            rows={4}
-                            variant="filled"
-                            style={{ marginBottom: '18px' }}
-                        />
-                        <Button
-                            variant="contained"
-                            startIcon={<AddOutlinedIcon />}
-                            style={{ width: '100%' }}
-                        >Añadir</Button>
-                    </div>
-                </div>
-                <div className='col4'>
-                    <h5>Documentos</h5>
-                    <hr />
-                    <div className='documentos-contenedor'>
-                        <List component="nav" aria-labelledby="nested-list-subheader">
+                                    </TableHead>
 
-                            <ListItemButton onClick={handleClick}>
-                                <ListItemIcon>
-                                    <FolderIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Carpeta principal" />
-                                {open ? <ExpandLess /> : <ExpandMore />}
-                            </ListItemButton>
+                                    <TableBody>
+                                        
+                                        <ParametroMantenimiento />
+                                        <ParametroMantenimiento />
+                                        <ParametroMantenimiento />
+                                        <ParametroMantenimiento />
+                                        <ParametroMantenimiento />
+                                        <ParametroMantenimiento />
 
-                            <Collapse in={open} timeout="auto" unmountOnExit>
-                                <List component="div" disablePadding>
+                                    </TableBody>
 
-                                    <ListItemButton sx={{ pl: 4 }} onClick={handleClick}>
-                                        <ListItemIcon>
-                                            <FolderIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="GENERALES" />
-                                        {open ? <ExpandLess /> : <ExpandMore />}
-                                    </ListItemButton>
+                                </Table>
+                            </TableContainer>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                                    <Collapse in={open} timeout="auto" unmountOnExit>
-                                        <List component="div" disablePadding>
+                {/* Sección de botones */}
+                <Grid item xs={ 12 }>
+                    <Card>
+                        <CardContent>
+                            <Grid container sx={{ justifyContent: 'flex-end' }} spacing={ 2 }>
 
-                                            <ListItemButton onContextMenu={handleContextMenu} sx={{ pl: 6 }}>
-                                                <ListItemIcon>
-                                                    <InsertDriveFileIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Archivo 1.pdf" />
-                                            </ListItemButton>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="success"
+                                        startIcon={ <SaveIcon /> }
+                                    >
+                                        Guardar datos
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={ <FileOpenIcon /> }
+                                        onClick={ GetParametros }
+                                    >
+                                        Abrir Plantilla
+                                    </Button>
+                                </Grid>
 
-                                            <ListItemButton sx={{ pl: 6 }}>
-                                                <ListItemIcon>
-                                                    <InsertDriveFileIcon />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Archivo 2.pdf" />
-                                            </ListItemButton>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                                        </List>
-                                    </Collapse>
-
-                                    <ListItemButton onClick={handleClick}>
-                                        <ListItemIcon>
-                                            <FolderIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Carpeta 2" />
-                                        {open ? <ExpandLess /> : <ExpandMore />}
-                                    </ListItemButton>
-
-                                </List>
-                            </Collapse>
-                        </List>
-                        <Menu
-                            open={contextMenu !== null}
-                            onClose={handleClose}
-                            anchorReference="anchorPosition"
-                            anchorPosition={
-                                contextMenu !== null
-                                    ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                                    : undefined
-                            }
-                        >
-                            <MenuItem onClick={handleClose}>Crear carpeta</MenuItem>
-                            <MenuItem onClick={handleClose}>Cambiar nombre</MenuItem>
-                            <MenuItem onClick={handleClose}>Subir documento</MenuItem>
-                            <MenuItem onClick={handleClose}>Abrir</MenuItem>
-                        </Menu>
-                    </div>
-                </div>
-            </div>
-            <div className="botones-menu">
-                <button> Guardar datos </button>
-                <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
-            </div>
-        </div>
+            </Grid>
+        </MainLayout>
     )
 }

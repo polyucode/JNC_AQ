@@ -1,12 +1,14 @@
 import axios from 'axios';
 
+const urlBase = 'http://';
+
 const token = {
     headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }
 }
 
 export const getPerfiles = async () => {
 
-    const resp = await axios.get('/perfil', token);
+    const resp = await axios.get(`/perfil`, token);
     return Object.entries(resp.data.data).map(([key,value]) => (key, value));
 
 }
@@ -32,7 +34,7 @@ export const getPoblaciones = async () => {
     
 }
 
-//*** CLIENTES  */
+//*** CLIENTES  ***/
 
 export const getClientes = async () => {
 
@@ -76,6 +78,24 @@ export const deleteCliente = async ( idCliente ) => {
 
 }
 
+//*** OFERTAS ***/
+
+export const getOfertas = async () => {
+
+    const resp = await axios.get('/ofertasclientes', token);
+    return Object.entries(resp.data.data).map(([key, value]) => (key, value));
+
+}
+
+/*** ELEMENTOS ***/
+
+export const getElementos = async () => {
+
+    const resp = await axios.get('/elementosplanta', token)
+    return Object.entries(resp.data.data).map(([key, value]) => (key, value));
+
+}
+
 ///peticiones API
 //   const peticionGetContacto = async () => {
     //     console.log("MEtodo Get Ejecutandose")
@@ -83,3 +103,18 @@ export const deleteCliente = async ( idCliente ) => {
         //       setDataDet(response.data.data)
 //     })
 //   }
+
+
+
+// const GetConfAnalisisNivelesPlantasCliente = async () => {
+//     axios.get("/analisisnivelesplantascliente", token).then(response => {
+//         const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+//         setConfAnalisisNivelesPlantasCliente(niveles);
+//     }, [])
+// }
+
+// const GetParametrosPlantaCliente = async () => {
+//     axios.get("/parametroselementoplantacliente", token).then(response => {
+//         setData(response.data.data)
+//     })
+// }

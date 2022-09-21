@@ -148,9 +148,6 @@ function HomeCliente() {
     return (
         <>
 
-            <Grid item>
-                <Typography variant='h4' sx={{ textAlign: 'center', mb: 4, mt: 2 }}>Hola! Hecha un vistazo al estado de tu planta</Typography>
-            </Grid>
             <Grid container spacing={ 2 }>
 
                 <Grid item xl={ 6 }>
