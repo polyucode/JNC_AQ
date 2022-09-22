@@ -128,7 +128,7 @@ function Proveedores() {
     ];
 
     const getProveedores = async () => {
-        axios.get("/proveedores", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/proveedores", token).then(response => {
             setData(response.data.data)
         })
     }
@@ -140,7 +140,7 @@ function Proveedores() {
     const peticionPost = async () => {
         proveedorSeleccionado.id = null;
         console.log(proveedorSeleccionado)
-        await axios.post("/proveedores", proveedorSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/proveedores", proveedorSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getProveedores();
@@ -150,7 +150,7 @@ function Proveedores() {
     }
 
     const peticionPut = async () => {
-        await axios.put("/proveedores?id=" + proveedorSeleccionado.id, proveedorSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/proveedores?id=" + proveedorSeleccionado.id, proveedorSeleccionado, token)
             .then(response => {
                 var proveedorModificado = data;
                 proveedorModificado.map(proveedor => {
@@ -168,7 +168,7 @@ function Proveedores() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ProveedorEliminar.length) {
-            await axios.delete("/proveedores/" + ProveedorEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/proveedores/" + ProveedorEliminar[i].id, token)
                 .then(response => {
                     getProveedores();
                     abrirCerrarModalEliminar();

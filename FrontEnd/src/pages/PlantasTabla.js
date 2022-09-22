@@ -658,6 +658,7 @@ function PlantasTabla() {
 
         await axios.post("http://172.26.0.169:44343/api/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
+                alert("Los parametros se han guardado correctamente")
                 return response
             }).catch(error => {
                 console.log(error);

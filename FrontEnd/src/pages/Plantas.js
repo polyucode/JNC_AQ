@@ -461,6 +461,7 @@ function Plantas() {
                     }
                     axios.post("http://172.26.0.169:44343/api/analisisnivelesplantascliente", analisisElem, token)
                         .then(response => {
+                            alert("La planta se ha guardado correctamente")
                             { response && navigate('/YC_React/tareas', { replace: true }) }
                             return response
                         })

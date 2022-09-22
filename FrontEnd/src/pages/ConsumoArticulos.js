@@ -192,14 +192,14 @@ function ConsumoArticulos() {
     }
 
     const getProveedores = async () => {
-        axios.get("/proveedores", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/proveedores", token).then(response => {
             const proveedor = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setProveedores(proveedor);
         }, [])
     }
 
     const getEnvios = async () => {
-        axios.get("/modoenvio", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/modoenvio", token).then(response => {
             const envio = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setEnvios(envio);
         }, [])
