@@ -12,7 +12,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Producto { get; set; }
         public string DescripcionProducto { get; set; }
         public int? Cantidad { get; set; }
-        public double Precio { get; set; }
+        public decimal Precio { get; set; }
         public int? StockMin { get; set; }
         public int? StockMax { get; set; }
         public int? Consumidos { get; set; }

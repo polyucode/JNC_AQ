@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 800,
-        height: 425,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -247,7 +246,7 @@ function Proveedores() {
 
     const bodyEliminar = (
         <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el proveedor ? </p>
+            <h5>Estás seguro que deseas eliminar el proveedor ? </h5>
             <div align="right">
                 <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
                 <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
