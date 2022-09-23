@@ -70,7 +70,6 @@ const useStyles3 = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 800,
-        height: 120,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -84,6 +83,26 @@ const useStyles3 = makeStyles((theme) => ({
     },
     inputMaterial: {
         width: '30%'
+    }
+}));
+
+const useStylesConsumido = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 850,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '100%'
     }
 }));
 
@@ -181,7 +200,7 @@ function OfertasClientes() {
         producto: '',
         descripcionProducto: '',
         cantidad: 0,
-        precio: 0,
+        precio: '',
         stockMin: 0,
         stockMax: 0,
         consumidos: 0,
@@ -268,10 +287,20 @@ function OfertasClientes() {
     const styles = useStyles();
     const styles2 = useStyles2();
     const styles3 = useStyles3();
+    const stylesConsumido = useStylesConsumido();
 
     const [number, setNumber] = useState({ cantidad: 0, consumidos: 0 });
     const [resta, setResta] = useState();
     const [resta2, setResta2] = useState();
+
+    const [number2, setNumber2] = useState({ consumidos: 0, cantidad: 0 });
+    const [suma, setSuma] = useState();
+    const [suma2, setSuma2] = useState();
+
+    const formatterEuro = new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR'
+    })
 
     const columnas = [
 
@@ -299,7 +328,7 @@ function OfertasClientes() {
         { title: 'Estimacion', field: 'cantidad', filterPlaceholder: "Filtrar por cantidad" },
         { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
         { title: 'Pdt. Entregar', field: 'entregar', filterPlaceholder: "Filtrar por Pdt. Entregar" },
-        { title: 'Precio/u (€)', field: 'precio', type: 'money', render: rowData => rowData.precio.toLocaleString('es'), filterPlaceholder: "Filtrar por precio" },
+        { title: 'Precio/u (€)', field: 'precio', type: 'money', render: rowData => formatterEuro.format(rowData.precio.toLocaleString('es')), filterPlaceholder: "Filtrar por precio" },
         { title: 'Stock Min', field: 'stockMin', filterPlaceholder: "Filtrar por Stock Min" },
         { title: 'Stock Max', field: 'stockMax', filterPlaceholder: "Filtrar por Stock Max" },
         { title: 'ADR', field: 'adr', filterPlaceholder: "Filtrar por ADR" },
@@ -364,6 +393,12 @@ function OfertasClientes() {
         setResta(Number(cantidad) - Number(consumidos))
         setResta2(productoSeleccionado.cantidad - productoSeleccionado.consumidos)
     }, [number, productoSeleccionado.consumidos])
+
+    useEffect(() => {
+        const { consumidos, cantidad } = number2
+        setSuma(Number(consumidos) + Number(cantidad))
+        setSuma2(productoSeleccionado.consumidos + consumoSeleccionado.cantidad)
+    }, [number2, consumoSeleccionado.cantidad])
 
     useEffect(() => {
         getContactos();
@@ -489,6 +524,7 @@ function OfertasClientes() {
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
         productoSeleccionado.entregar = resta
+        console.log(productoSeleccionado)
         await axios.post("/ofertasproductos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
@@ -603,10 +639,33 @@ function OfertasClientes() {
 
     const peticionPostConsumido = async () => {
         consumoSeleccionado.id = 0;
+        consumoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
+        consumoSeleccionado.codigoProducto = productoSeleccionado.producto;
+        productoSeleccionado.consumidos = suma2;
         await axios.post("/consumos", consumoSeleccionado, token)
             .then(response => {
-                //setData(data.concat(response.data));
-                abrirCerrarModalInsertar();
+                peticionPutProducto();
+                getOfertasProductosDet();
+                getOfertasProductos();
+                abrirCerrarModalInsertarConsumido();
+                abrirCerrarModalEditarProducto();
+                setConsumoSeleccionado({
+                    id: 0,
+                    oferta: 0,
+                    fecha: null,
+                    codigoProducto: '',
+                    cantidad: 0,
+                    codigoProveedor: 0,
+                    modoEnvio: '',
+                    numAlbaran: 0,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -676,8 +735,24 @@ function OfertasClientes() {
         const { name, value } = e.target;
         setProductoSeleccionado(prevState => ({
             ...prevState,
-            [e.target.name]: e.target.name === 'precio' ? parseFloat(e.target.value) : e.target.value
+            [e.target.name]: e.target.type === 'number' ? parseFloat(e.target.value).toFixed(2) : e.target.value
         }));
+    }
+
+    const handleChangeConsumo = e => {
+        const { name, value } = e.target;
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+        }));
+    }
+
+    const handleChangeFecha2 = e => {
+        const { name, value } = e.target;
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
     }
 
     useEffect(() => {
@@ -1099,6 +1174,7 @@ function OfertasClientes() {
                     <TextField
                         className={styles.inputMaterial}
                         type="number"
+                        step="0,01"
                         name="precio"
                         InputProps={{
                             endAdornment: <InputAdornment position="end">€</InputAdornment>,
@@ -1240,23 +1316,13 @@ function OfertasClientes() {
     )
 
     const bodyInsertarConsumido = (
-        <div className={styles.modal}>
+        <div className={stylesConsumido.modal}>
             <h3>Agregar Nuevo Consumo</h3>
             <br />
             <div className="row g-3">
                 <div className="col-md-4">
                     <h5> Oferta </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Oferta"
-                        getOptionLabel={option => option.numeroOferta}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} type="number" name="oferta" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            oferta: parseInt(value.numeroOferta)
-                        }))}
-                    />
+                    <TextField className={stylesConsumido.inputMaterial} disabled name="oferta" value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
                 </div>
                 <div className="col-md-2">
                     {/* Fecha prevista */}
@@ -1266,8 +1332,8 @@ function OfertasClientes() {
                         id="fecha"
                         type="date"
                         name="fecha"
-                        sx={{ width: 225 }}
-                        onChange={handleChange}
+                        sx={{ width: 200 }}
+                        onChange={handleChangeFecha2}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -1275,24 +1341,13 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-4">
                     <h5> Producto </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="codigoProducto"
-                        options={productos}
-                        getOptionLabel={option => option.codigoProducto}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            codigoProducto: value.codigoProducto
-                        }))}
-                    />
+                    <TextField className={stylesConsumido.inputMaterial} disabled name="codigoProducto" value={productoSeleccionado && productoSeleccionado.producto} />
                 </div>
                 <div className="col-md-3">
                     <h5> Cantidad </h5>
-                    <TextField className={styles2.inputMaterial} type="number" name="cantidad" onChange={handleChange} />
+                    <TextField className={stylesConsumido.inputMaterial} type="number" name="cantidad" onChange={handleChangeConsumo} />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-9">
                     <h5> Codigo Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
@@ -1307,7 +1362,7 @@ function OfertasClientes() {
                         }))}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-5">
                     <h5> Modo de Envio </h5>
                     <Autocomplete
                         disableClearable={true}
@@ -1324,7 +1379,7 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-3">
                     <h5> Numero Albaran </h5>
-                    <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChange} />
+                    <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChangeConsumo} />
                 </div>
             </div>
             <br />

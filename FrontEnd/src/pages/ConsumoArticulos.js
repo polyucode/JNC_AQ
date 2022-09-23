@@ -281,7 +281,7 @@ function ConsumoArticulos() {
         <div className={styles.modal}>
             <h3>Agregar Nuevo Consumo</h3>
             <br />
-            <div className="row g-3">
+            <div className="row g-4">
                 <div className="col-md-4">
                     <h5> Oferta </h5>
                     <Autocomplete
