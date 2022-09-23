@@ -1217,6 +1217,11 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">
+                    <Button onClick={abrirCerrarModalInsertarConsumido} variant="contained" size="small" href="#contained-buttons">
+                        +
+                    </Button>
+                </div>
+                <div className="col-md-3">
                     <h5> Pdt. Entregar </h5>
                     <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={resta2} />
                 </div>
