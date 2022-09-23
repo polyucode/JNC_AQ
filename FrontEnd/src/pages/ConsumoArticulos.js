@@ -122,9 +122,9 @@ function ConsumoArticulos() {
         id: 0,
         oferta: 0,
         fecha: null,
-        codigoProducto: '',
+        producto: '',
         cantidad: 0,
-        codigoProveedor: 0,
+        nombreProveedor: 0,
         modoEnvio: '',
         numAlbaran: 0,
         addDate: null,
@@ -278,6 +278,24 @@ function ConsumoArticulos() {
         }));
     }
 
+    const handleChangeFecha = e => {
+        const { name, value } = e.target;
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
+    function formateandofechas(fecha) {
+        const fecha1 = new Date(fecha)
+
+        const fecha2 = fecha1.getFullYear() +
+            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+            '-' + String(fecha1.getDate()).padStart(2, '0')
+
+        return fecha2
+    }
+
     const bodyInsertar = (
         <div className={styles.modal}>
             <h3>Agregar Nuevo Consumo</h3>
@@ -317,14 +335,14 @@ function ConsumoArticulos() {
                     <h5> Producto </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProducto"
+                        id="producto"
                         options={productos}
-                        getOptionLabel={option => option.codigoProducto}
+                        getOptionLabel={option => option.descripcion}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProducto: value.codigoProducto
+                            producto: value.descripcion
                         }))}
                     />
                 </div>
@@ -333,17 +351,17 @@ function ConsumoArticulos() {
                     <TextField className={styles2.inputMaterial} type="number" name="cantidad" onChange={handleChange} />
                 </div>
                 <div className="col-md-4">
-                    <h5> Codigo Proveedor </h5>
+                    <h5> Nombre Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProveedor"
+                        id="nombreProveedor"
                         options={proveedores}
-                        getOptionLabel={option => option.codigo}
+                        getOptionLabel={option => option.nombre}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProveedor: value.codigo
+                            nombreProveedor: value.nombre
                         }))}
                     />
                 </div>
@@ -405,26 +423,26 @@ function ConsumoArticulos() {
                         type="date"
                         name="fecha"
                         sx={{ width: 225 }}
-                        onChange={handleChange}
+                        onChange={handleChangeFecha}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        value={consumoSeleccionado && consumoSeleccionado.fecha}
+                        value={consumoSeleccionado && formateandofechas(consumoSeleccionado.fecha)}
                     />
                 </div>
                 <div className="col-md-6">
                     <h5> Producto </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProducto"
+                        id="producto"
                         options={productos}
-                        getOptionLabel={option => option.codigoProducto}
+                        getOptionLabel={option => option.descripcion}
                         defaultValue={productoEditar[0]}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProducto: value.codigoProducto
+                            producto: value.descripcion
                         }))}
                     />
                 </div>
@@ -433,18 +451,18 @@ function ConsumoArticulos() {
                     <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
                 </div>
                 <div className="col-md-4">
-                    <h5> Codigo Proveedor </h5>
+                    <h5> Nombre Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="codigoProveedor"
                         options={proveedores}
                         defaultValue={proveedorEditar[0]}
-                        getOptionLabel={option => option.codigo}
+                        getOptionLabel={option => option.nombre}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProveedor: value.codigo
+                            nombreProveedor: value.nombre
                         }))}
                     />
                 </div>
@@ -563,8 +581,8 @@ function ConsumoArticulos() {
                     setConsumoSeleccionado(consumoSeleccionado)
                     getConsumos();
                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.oferta))
-                    setProductoEditar(productos.filter(producto => producto.codigoProducto === consumoSeleccionado.codigoProducto))
-                    setProveedorEditar(proveedores.filter(proveedor => proveedor.codigo === consumoSeleccionado.codigoProveedor))
+                    setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.producto))
+                    setProveedorEditar(proveedores.filter(proveedor => proveedor.nombre === consumoSeleccionado.nombreProveedor))
                     setEnvioEditar(envios.filter(envio => envio.nombre === consumoSeleccionado.modoEnvio))
                     abrirCerrarModalEditar();
                 })}
