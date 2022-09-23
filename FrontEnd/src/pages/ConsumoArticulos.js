@@ -163,9 +163,9 @@ function ConsumoArticulos() {
         //Visibles
         { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por numero oferta" },
         { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
-        { title: 'Producto', field: 'codigoProducto', filterPlaceholder: "Filtrar por producto" },
+        { title: 'Producto', field: 'producto', filterPlaceholder: "Filtrar por producto" },
         { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
-        { title: 'Codigo Proveedor', field: 'codigoProveedor', filterPlaceholder: "Filtrar por codigo de proveedor" },
+        { title: 'Nombre Proveedor', field: 'nombreProveedor', filterPlaceholder: "Filtrar por nombre de proveedor" },
         { title: 'Modo de Envio', field: 'modoEnvio', filterPlaceholder: "Filtrar por modo de envio" },
         { title: 'Numero Albaran', field: 'numAlbaran', filterPlaceholder: "Filtrar por numero albaran" }
     ];
@@ -316,14 +316,14 @@ function ConsumoArticulos() {
                     <h5> Producto </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProducto"
+                        id="producto"
                         options={productos}
-                        getOptionLabel={option => option.codigoProducto}
+                        getOptionLabel={option => option.descripcion}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProducto: value.codigoProducto
+                            producto: value.descripcion
                         }))}
                     />
                 </div>
@@ -332,17 +332,17 @@ function ConsumoArticulos() {
                     <TextField className={styles2.inputMaterial} type="number" name="cantidad" onChange={handleChange} />
                 </div>
                 <div className="col-md-4">
-                    <h5> Codigo Proveedor </h5>
+                    <h5> Nombre Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProveedor"
+                        id="nombreProveedor"
                         options={proveedores}
-                        getOptionLabel={option => option.codigo}
+                        getOptionLabel={option => option.nombre}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProveedor: value.codigo
+                            nombreProveedor: value.nombre
                         }))}
                     />
                 </div>
@@ -361,7 +361,7 @@ function ConsumoArticulos() {
                         }))}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-5">
                     <h5> Numero Albaran </h5>
                     <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChange} />
                 </div>
@@ -378,7 +378,7 @@ function ConsumoArticulos() {
         <div className={styles.modal}>
             <h3> Consumo </h3>
             <br />
-            <div className="row g-3">
+            <div className="row g-4">
                 <div className="col-md-6">
                     <h5> Oferta </h5>
                     <Autocomplete
@@ -415,15 +415,15 @@ function ConsumoArticulos() {
                     <h5> Producto </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProducto"
+                        id="producto"
                         options={productos}
-                        getOptionLabel={option => option.codigoProducto}
+                        getOptionLabel={option => option.descripcion}
                         defaultValue={productoEditar[0]}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
+                        renderInput={(params) => <TextField {...params} name="producto" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProducto: value.codigoProducto
+                            producto: value.descripcion
                         }))}
                     />
                 </div>
@@ -432,22 +432,22 @@ function ConsumoArticulos() {
                     <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
                 </div>
                 <div className="col-md-4">
-                    <h5> Codigo Proveedor </h5>
+                    <h5> Nombre Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
                         id="codigoProveedor"
                         options={proveedores}
                         defaultValue={proveedorEditar[0]}
-                        getOptionLabel={option => option.codigo}
+                        getOptionLabel={option => option.nombre}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProveedor: value.codigo
+                            nombreProveedor: value.nombre
                         }))}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-4">
                     <h5> Modo de Envio </h5>
                     <Autocomplete
                         disableClearable={true}
@@ -463,7 +463,7 @@ function ConsumoArticulos() {
                         }))}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-5">
                     <h5> Numero Albaran </h5>
                     <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.numAlbaran} />
                 </div>
@@ -562,8 +562,8 @@ function ConsumoArticulos() {
                     setConsumoSeleccionado(consumoSeleccionado)
                     getConsumos();
                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.oferta))
-                    setProductoEditar(productos.filter(producto => producto.codigoProducto === consumoSeleccionado.codigoProducto))
-                    setProveedorEditar(proveedores.filter(proveedor => proveedor.codigo === consumoSeleccionado.codigoProveedor))
+                    setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.producto))
+                    setProveedorEditar(proveedores.filter(proveedor => proveedor.nombre === consumoSeleccionado.nombreProveedor))
                     setEnvioEditar(envios.filter(envio => envio.nombre === consumoSeleccionado.modoEnvio))
                     abrirCerrarModalEditar();
                 })}
