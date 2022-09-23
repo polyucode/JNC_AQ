@@ -220,9 +220,9 @@ function OfertasClientes() {
         id: 0,
         oferta: 0,
         fecha: null,
-        codigoProducto: '',
+        producto: '',
         cantidad: 0,
-        codigoProveedor: 0,
+        nombreProveedor: '',
         modoEnvio: '',
         numAlbaran: 0,
         addDate: null,
@@ -635,9 +635,9 @@ function OfertasClientes() {
                     id: 0,
                     oferta: 0,
                     fecha: null,
-                    codigoProducto: '',
+                    producto: '',
                     cantidad: 0,
-                    codigoProveedor: 0,
+                    nombreProveedor: '',
                     modoEnvio: '',
                     numAlbaran: 0,
                     addDate: null,
@@ -1311,24 +1311,24 @@ function OfertasClientes() {
                 </div>
                 <div className="col-md-4">
                     <h5> Producto </h5>
-                    <TextField className={stylesConsumido.inputMaterial} disabled name="codigoProducto" value={productoSeleccionado && productoSeleccionado.producto} />
+                    <TextField className={stylesConsumido.inputMaterial} disabled name="producto" value={productoSeleccionado && productoSeleccionado.descripcionProducto} />
                 </div>
                 <div className="col-md-3">
                     <h5> Cantidad </h5>
                     <TextField className={stylesConsumido.inputMaterial} type="number" name="cantidad" onChange={handleChangeConsumo} />
                 </div>
                 <div className="col-md-9">
-                    <h5> Codigo Proveedor </h5>
+                    <h5> Nombre Proveedor </h5>
                     <Autocomplete
                         disableClearable={true}
-                        id="codigoProveedor"
+                        id="nombreProveedor"
                         options={proveedores}
-                        getOptionLabel={option => option.codigo}
+                        getOptionLabel={option => option.nombre}
                         sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProveedor" />}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
                         onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                             ...prevState,
-                            codigoProveedor: value.codigo
+                            nombreProveedor: value.nombre
                         }))}
                     />
                 </div>
@@ -1347,7 +1347,7 @@ function OfertasClientes() {
                         }))}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-5">
                     <h5> Numero Albaran </h5>
                     <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChangeConsumo} />
                 </div>
