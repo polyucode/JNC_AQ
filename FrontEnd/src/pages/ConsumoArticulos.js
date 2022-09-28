@@ -163,9 +163,9 @@ function ConsumoArticulos() {
         //Visibles
         { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por numero oferta" },
         { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
-        { title: 'Producto', field: 'codigoProducto', filterPlaceholder: "Filtrar por producto" },
+        { title: 'Producto', field: 'producto', filterPlaceholder: "Filtrar por producto" },
         { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
-        { title: 'Codigo Proveedor', field: 'codigoProveedor', filterPlaceholder: "Filtrar por codigo de proveedor" },
+        { title: 'Nombre Proveedor', field: 'nombreProveedor', filterPlaceholder: "Filtrar por nombre de proveedor" },
         { title: 'Modo de Envio', field: 'modoEnvio', filterPlaceholder: "Filtrar por modo de envio" },
         { title: 'Numero Albaran', field: 'numAlbaran', filterPlaceholder: "Filtrar por numero albaran" }
     ];
