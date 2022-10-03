@@ -5,15 +5,22 @@ import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Switch } from '@mui/material';
+import { Button, Card, Divider, Grid, IconButton, List, ListItem, ListItemText, Switch, Tooltip } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityBorderIcon from '@mui/icons-material/Visibility';
+import Swal from 'sweetalert2';
 
-import 'beautiful-react-diagrams/styles.css';
-import './Plantas.css';
+//import 'beautiful-react-diagrams/styles.css';
+//mport './Plantas.css';
 import { MainLayout } from "../layout/MainLayout";
+import { getClientes, getElementos, getOfertas, postConfPlantaCliente } from "../api/apiBackend";
+import { CheckBox } from "@mui/icons-material";
 
 const token = {
     headers: {
@@ -23,12 +30,13 @@ const token = {
 
 export const PlantasPage = () => {
 
-    const [confPlantasCliente, setConfPlantasCliente] = useState({
+    // Configuración planta del cliente
+    const [confPlantaCliente, setConfPlantaCliente] = useState({
         id: 0,
         CodigoCliente: 0,
-        NombrePlanta: "",
+        nombreCliente: '',
+        Oferta: 0,
         NumNiveles: 0,
-        IdPlanta: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -38,6 +46,10 @@ export const PlantasPage = () => {
         deleted: null,
     });
 
+    // Datos de los autocomplete
+    const [clientes, setClientes] = useState([]);
+    const [ofertas, setOfertas] = useState([]);
+    const [elementosPlanta, setElementosPlanta] = useState([]);
 
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
         id: 0,
@@ -76,12 +88,7 @@ export const PlantasPage = () => {
 
     //const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
 
-    const [elementosPlanta, setElementosPlanta] = useState([]);
-
-    const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
-
-    const [oferta, setOferta] = useState([]);
 
     const [nombreCliente, setNombreCliente] = useState([]);
 
@@ -218,59 +225,55 @@ export const PlantasPage = () => {
 
     function crearNiveles() {
 
-        // Obtenemos el valor de la cantidad de niveles a crear
-        let numNiveles = document.getElementById('numero-niveles').value;
-        let listadoNiveles = [];
+        console.log('Niveles')
 
-        if (numNiveles > 5) {
-            alert('El número máximo de niveles que se pueden crear son 5');
-            return;
-        }
+        // Obtenemos el valor de la cantidad de niveles a crear
+        // let numNiveles = document.getElementById('numero-niveles').value;
+        // let listadoNiveles = [];
+
+        // if (numNiveles > 5) {
+        //     alert('El número máximo de niveles que se pueden crear son 5');
+        //     return;
+        // }
 
         // Generamos en el DOM la interfaz de los niveles
-        for (let i = 0; i < numNiveles; i++) {
+        //for (let i = 0; i < numNiveles; i++) {
 
             // Creamos el listado de elementos disponibles
-            let listadoElementos = [
-                React.createElement('option', { value: 'Osmosis' }, 'Osmosis'),
-                React.createElement('option', { value: 'Depósito' }, 'Depósito'),
-                React.createElement('option', { value: 'Refrigeración' }, 'Refrigeración'),
-                React.createElement('option', { value: 'Torre' }, 'Torre'),
-                React.createElement('option', { value: 'Caldera' }, 'Caldera')
-            ];
+            // let listadoElementos = [
+            //     React.createElement('option', { value: 'Osmosis' }, 'Osmosis'),
+            //     React.createElement('option', { value: 'Depósito' }, 'Depósito'),
+            //     React.createElement('option', { value: 'Refrigeración' }, 'Refrigeración'),
+            //     React.createElement('option', { value: 'Torre' }, 'Torre'),
+            //     React.createElement('option', { value: 'Caldera' }, 'Caldera')
+            // ];
 
             // Creamos todos los componentes de la interfaz del nivel
-            let elementos = [
-                React.createElement('h6', null, 'Nivel ' + (i + 1)),
-                React.createElement('hr', null, null),
-                React.createElement('select', { id: 'lista-nivel-' + (i + 1) }, listadoElementos),
-                React.createElement('button', { onClick: () => crearElemento(i + 1) }, '+'),
-                React.createElement('button', { onClick: () => eliminarElemento(i + 1) }, '-'),
-                React.createElement('select', { className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
-                React.createElement('input', { type: 'checkbox' }, null),
-                React.createElement('label', null, 'Ver inspector'),
-                React.createElement('button', { onClick: () => eliminarNivel() }, 'Eliminar')
-            ]
+            // let elementos = [
+            //     React.createElement('h6', null, 'Nivel ' + (i + 1)),
+            //     React.createElement('hr', null, null),
+            //     React.createElement('select', { id: 'lista-nivel-' + (i + 1) }, listadoElementos),
+            //     React.createElement('button', { onClick: () => crearElemento(i + 1) }, '+'),
+            //     React.createElement('button', { onClick: () => eliminarElemento(i + 1) }, '-'),
+            //     React.createElement('select', { className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
+            //     React.createElement('input', { type: 'checkbox' }, null),
+            //     React.createElement('label', null, 'Ver inspector'),
+            //     React.createElement('button', { onClick: () => eliminarNivel() }, 'Eliminar')
+            // ]
 
             // Creamos el contenedor de planta principal para añadir todos los demás componentes
-            let contenido = React.createElement('div', { className: 'planta' }, elementos);
-            listadoNiveles.push(contenido);
-        }
+        //     let contenido = React.createElement('div', { className: 'planta' }, elementos);
+        //     listadoNiveles.push(contenido);
+        // }
 
         // Finalmente renderizamos
-        ReactDOM.render(listadoNiveles, document.getElementById('elementos-planta'));
+        //ReactDOM.render(listadoNiveles, document.getElementById('elementos-planta'));
+
     }
 
     function eliminarNivel() {
         let listaElementosNivel = []
         listaElementosNivel.pop(ReactDOM.render(listaElementosNivel, document.getElementById('elementos-planta')))
-    }
-
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
     }
 
     function selAnalisisElemento() {
@@ -346,11 +349,7 @@ export const PlantasPage = () => {
         listaElementos[elementoAnalisisId].propiedades = elementoAnalisisProps;
     }
 
-    const GetConfPlantasCliente = async () => {
-        axios.get("/confplantascliente", token).then(response => {
-            setConfPlantasCliente(response.data.data)
-        })
-    }
+    
 
     const GetConfNivelesPlantaCliente = async () => {
         axios.get("/confnivelesplantascliente", token).then(response => {
@@ -358,50 +357,75 @@ export const PlantasPage = () => {
         })
     }
 
-    const GetElementosPlanta = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            setElementosPlanta(response.data.data)
-        })
-    }
 
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOferta(oferta);
-        }, [])
-    }
+    // Obtenemos todos los datos necesarios de la base de datos
+    useEffect(() => {
+        //GetConfPlantasCliente();
+        GetConfNivelesPlantaCliente();
+        
+        getClientes()
+            .then( resp => { setClientes(resp) });
+
+        getOfertas()
+            .then( resp => { setOfertas(resp) });
+
+        getElementos()
+            .then( resp => { setElementosPlanta(resp) });
+        
+            //peticionGet();
+    }, []);
+
+    // Setea el nombre del cliente cada vez que se selecciona un código de cliente
+    useEffect(() => {
+
+        if( confPlantaCliente.CodigoCliente != 0 ) {
+            const clienteSeleccionado = clientes.filter( cliente => cliente.codigo === confPlantaCliente.CodigoCliente )[0];
+            setConfPlantaCliente({
+                ...confPlantaCliente,
+                nombreCliente: clienteSeleccionado.razonSocial
+            });
+        }
+
+    },[confPlantaCliente.CodigoCliente])
 
     useEffect(() => {
-        GetConfPlantasCliente();
-        GetConfNivelesPlantaCliente();
-        GetElementosPlanta();
-        GetClientes();
-        GetOfertas();
-        //peticionGet();
-        //GetPerfiles();
-        //GetPoblacion();
-        //GetProvincia();
-        //GetComarca();
-    }, [])
-
+        console.log(elementosPlanta)
+    },[elementosPlanta]);
 
     const peticionPost = async () => {
-        if (confPlantasCliente.NumNiveles > 5) {
-            alert('El número máximo de niveles que se pueden crear son 5');
+
+        //crearNiveles();
+
+        if ( confPlantaCliente.NumNiveles > 5 ) {
+
+            Swal.fire({
+                title: 'Error',
+                text: 'El número máximo de niveles que se pueden crear son 5',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
             return;
-        } else if (confPlantasCliente.CodigoCliente == null || confPlantasCliente.oferta == null || confPlantasCliente.NumNiveles <= 0 || confPlantasCliente.NumNiveles == null) {
-            alert('Faltan introducir datos correctos para crear los niveles');
+
+        } else if (confPlantaCliente.CodigoCliente == null || confPlantaCliente.Oferta == null || confPlantaCliente.NumNiveles <= 0 || confPlantaCliente.NumNiveles == null) {
+            
+            Swal.fire({
+                title: 'Error',
+                text: 'Faltan introducir datos correctos para crear los niveles',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
             return;
         }
         else {
-            await axios.post("/confplantascliente", confPlantasCliente, token)
-                .then(response => {
-                    return response,
-                        crearNiveles();
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            
+            // TODO: Obtener el nombre del cliente
+
+            // Registramos todos los datos en la base de datos
+            const resp = await postConfPlantaCliente( confPlantaCliente );
+            console.log({ resp });
+
+            // TODO: Añadimos el ID de planta generado en el estado
+
         }
     }
 
@@ -505,80 +529,190 @@ export const PlantasPage = () => {
             })
     }
 
-    const handleChange = e => {
+
+    const handleChange = (e) => {
+
         const { name, value } = e.target;
-        setConfPlantasCliente(prevState => ({
-            ...prevState,
-            //[name]: value
-            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
-        }));
+        // setConfPlantasCliente(prevState => ({
+        //     ...prevState,
+        //     //[name]: value
+        //     [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+        // }));
+    }
+
+    const handleConfPlantaClienteChange = ( event ) => {
+
+        switch( event.target.tagName) {
+
+            case 'LI':
+
+                const name = event.target.id.split('-')[0];
+                setConfPlantaCliente({
+                    ...confPlantaCliente,
+                    [name]: parseInt(event.target.textContent, 10)
+                });
+
+                break;
+
+            case 'INPUT':
+
+                setConfPlantaCliente({
+                    ...confPlantaCliente,
+                    [event.target.name]: parseInt(event.target.value, 10)
+                });
+
+                break;
+
+            default:
+                break;
+
+        }
+
     }
 
 
     return (
         <MainLayout title="Plantas">
+
+            <Grid container spacing={2}>
+
+                {/* APARTADO DE DATOS DE PLANTA */}
+                <Grid item xs={12}>
+                    <Card sx={{ p: 2, display: 'flex' }}>
+                        <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
+
+                            {/* Código de Cliente */}
+                            <Grid item xs={ 4 }>
+                                <Autocomplete
+                                    disableClearable={ true }
+                                    id="CodigoCliente"
+                                    options={ clientes }
+                                    getOptionLabel={ option => option.codigo.toString() }
+                                    renderInput={ params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" /> }
+                                    onChange={ handleConfPlantaClienteChange }
+                                />
+                            </Grid>
+
+                            {/* Número de Oferta */}
+                            <Grid item xs={ 4 }>
+                                <Autocomplete
+                                    disableClearable={ true }
+                                    id="Oferta"
+                                    options={ ofertas }
+                                    getOptionLabel={ option => option.numeroOferta.toString() }
+                                    renderInput={ params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                    onChange={ handleConfPlantaClienteChange }
+                                />
+                            </Grid>
+
+                            {/* Número de niveles */}
+                            <Grid item xs={ 2 }>
+                                <TextField sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } />
+                            </Grid>
+
+                            {/* Botón para crear */}
+                            <Grid item xs={ 2 }>
+                                <Button sx={{ width: '100%' }} color='success' variant='contained' startIcon={<AddIcon />} onClick={ peticionPost }>
+                                    Crear
+                                </Button>
+                            </Grid>
+
+                        </Grid>
+                    </Card>
+                </Grid>
+
+                {/* APARTADO DE NIVELES */}
+                <Grid item xs={ 12 }>
+                    <Grid container spacing={ 2 }>
+
+                        <Grid item xs={ 4 }>
+                            <Card sx={{ p: 2, display: 'flex' }}>
+                                <Grid container spacing={ 2 }>
+
+                                    <Grid item xs={ 12 }>
+                                        <Typography variant="h6">Nivel 1</Typography>
+                                    </Grid>
+
+                                    <Grid item xs={ 12 }>
+                                        <Autocomplete
+                                            disableClearable={ true }
+                                            id="Oferta"
+                                            options={ ofertas }
+                                            getOptionLabel={ option => option.numeroOferta.toString() }
+                                            renderInput={ params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
+                                            onChange={ handleConfPlantaClienteChange }
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={ 12 }>
+                                        <List dense>
+
+                                            <ListItem
+                                                secondaryAction={
+                                                    <>
+
+                                                        <Tooltip title="Eliminar elemento">
+                                                            <IconButton color="error" edge="end" aria-label="delete">
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    
+                                                    </>
+                                                  }
+                                            >
+                                                <ListItemText
+                                                    primary="Torre 1"
+                                                />
+                                            </ListItem>
+
+                                            <Divider />
+
+                                            <ListItem
+                                                secondaryAction={
+                                                    
+                                                    <IconButton color="error" edge="end" aria-label="delete">
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                  }
+                                            >
+                                                <ListItemText
+                                                    primary="Osmosis 1"
+                                                />
+                                            </ListItem>
+
+                                            <Divider />
+
+                                            <ListItem
+                                                secondaryAction={
+                                                    <IconButton color="error" edge="end" aria-label="delete">
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                  }
+                                            >
+                                                <ListItemText
+                                                    primary="Caldera 1"
+                                                />
+                                            </ListItem>
+
+                                        </List>
+                                    </Grid>
+
+                                </Grid>
+                            </Card>
+                        </Grid>
+
+                        
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+
         <div className="main-container">
             <div className='row1-1'>
                 <div className='col1-1'>
-                    <div className='cliente-niveles-container'>
-
-                        {/* BUSQUEDA DE CLIENTES */}
-                        <div className="busqueda-clientes">
-                            <h5>Cliente</h5>
-                            <hr />
-                            <p>Codigo</p>
-                            <Autocomplete
-                                disableClearable={true}
-                                id="CodigoCliente"
-                                options={clientes}
-                                getOptionLabel={option => option.codigo}
-                                sx={{ width: 250 }}
-                                renderInput={(params) => <TextField {...params} type="number" min="0" label="" name="CodigoCliente" />}
-                                onChange={(event, value) => setConfPlantasCliente(prevState => ({
-                                    ...prevState,
-                                    CodigoCliente: parseInt(value.codigo)
-                                }))}
-                            />
-                            <br/>
-                            {/*<div className="col-md-6">
-                                <p>Nombre</p>
-                                <TextField style={{width: 250}} name="nombre" onChange={handleChange} />
-                            </div>*/}
-                            <br /><br />
-                            <div className='nombre-planta'>
-                                <h5>Numero de Oferta</h5>
-                                <hr />
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="oferta"
-                                    options={oferta}
-                                    getOptionLabel={option => option.numeroOferta}
-                                    sx={{ width: 250 }}
-                                    renderInput={(params) => <TextField {...params} type="number" name="numeroOferta" />}
-                                    onChange={(event, value) => setConfPlantasCliente(prevState => ({
-                                        ...prevState,
-                                        oferta: parseInt(value.numeroOferta)
-                                    }))}
-                                />
-                            </div>
-                        </div>
-
-                        {/* NUMERO DE NIVELES */}
-                        <div className='numero-niveles'>
-                            <h5>Número de niveles en planta</h5>
-                            <hr />
-                            <center>
-                                <p>Número</p>
-                                <input id="numero-niveles" size="2" type="number" min="0" name="NumNiveles" onChange={handleChange} />
-                            </center>
-                            <div className='botones'>
-                                <button onClick={peticionPost}>Crear Niveles </button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <br />
-
+                    
                     {/* ANÁLISIS POR ELEMENTO */}
                     <div className='analisis-elemento'>
                         <h5>Análisis por elemento</h5>

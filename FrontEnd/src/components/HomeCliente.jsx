@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
+//import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
 import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -20,6 +20,7 @@ import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
 import './HomeCliente.css';
+import { Diagrama } from './Diagrama/Diagrama';
 
 const token = {
     headers: {
@@ -27,6 +28,50 @@ const token = {
     }
 };
 
+const nodosElementos = [
+    {
+        id: 'A-1',
+        type: 'input',
+        data: { label: 'Caldera 1' },
+        position: { x: 10, y: 30 },
+        parentNode: 'A',
+        sourcePosition: 'right',
+        style: {
+          width: 130,
+          height: 40,
+        },
+        draggable: false,
+        extent: 'parent',
+    },
+    {
+        id: 'A-2',
+        type: 'input',
+        data: { label: 'Torre 1' },
+        position: { x: 10, y: 80 },
+        parentNode: 'A',
+        sourcePosition: 'right',
+        style: {
+          width: 130,
+          height: 40,
+        },
+        draggable: false,
+        extent: 'parent',
+    },
+    {
+        id: 'B-1',
+        data: { label: 'Torre 2' },
+        position: { x: 10, y: 30 },
+        parentNode: 'B',
+        sourcePosition: 'right',
+        targetPosition: 'left',
+        style: {
+            width: 130,
+            height: 40,
+        },
+        draggable: false,
+        extent: 'parent',
+    }
+]
 
 function HomeCliente() {
 
@@ -45,78 +90,78 @@ function HomeCliente() {
     }, [])
 
 
-    const CustomRender = ({ id, content, data, inputs, outputs }) => (
-        <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+ data.selector, borderRadius: '5px', color: data.color}}>
-            <div style={{display:'flex', justifyContent:'space-between'}}>
-                {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
-                <div role="button" style={{padding: '5px'}}>
-                {content}
-                </div>
-                {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
-            </div>
-        </div>    
-    );
+    // const CustomRender = ({ id, content, data, inputs, outputs }) => (
+    //     <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+ data.selector, borderRadius: '5px', color: data.color}}>
+    //         <div style={{display:'flex', justifyContent:'space-between'}}>
+    //             {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
+    //             <div role="button" style={{padding: '5px'}}>
+    //             {content}
+    //             </div>
+    //             {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
+    //         </div>
+    //     </div>    
+    // );
 
-    const initialSchema = createSchema({
-        nodes: [
-            {
-                id: 'node-1',
-                content: 'Osmosis 1',
-                coordinates: [20, 120],
-                render: CustomRender,
-                data: {background: '#d1c4e9', selector: '#b39ddb', color: '#4527a0'},
-                outputs: [ { id: 'port-1' } ],
-                onClick: mostrarElementos()
-            },
-            {
-                id: 'node-2',
-                content: 'Torre 1',
-                coordinates: [260, 50],
-                render: CustomRender,
-                data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-                inputs: [ { id: 'port-2' } ],
-                outputs: [ { id: 'port-3' } ]
-            },
-            {
-                id: 'node-3',
-                content: 'Torre 2',
-                coordinates: [260, 120],
-                render: CustomRender,
-                data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-                inputs: [ { id: 'port-4' } ],
-                outputs: [ { id: 'port-5' } ]
-            },
-            {
-                id: 'node-4',
-                content: 'Depósito 1',
-                coordinates: [260, 190],
-                render: CustomRender,
-                data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-                inputs: [ { id: 'port-6' } ],
-                outputs: [ { id: 'port-7' } ]
-            },
-            {
-                id: 'node-5',
-                content: 'Caldera 1',
-                coordinates: [480, 120],
-                render: CustomRender,
-                data: {background: '#bbdefb', selector: '#90caf9', color: '#1565c0'},
-                inputs: [ { id: 'port-8' } ],
-                outputs: [ { id: 'port-9' } ]
-            }
-        ],
-        links: [
-        { input: 'port-1', output: 'port-2' },
-        { input: 'port-1', output: 'port-4' },
-        { input: 'port-1', output: 'port-6' },
-        { input: 'port-3', output: 'port-8' },
-        { input: 'port-5', output: 'port-8' },
-        { input: 'port-7', output: 'port-8' },
+    // const initialSchema = createSchema({
+    //     nodes: [
+    //         {
+    //             id: 'node-1',
+    //             content: 'Osmosis 1',
+    //             coordinates: [20, 120],
+    //             render: CustomRender,
+    //             data: {background: '#d1c4e9', selector: '#b39ddb', color: '#4527a0'},
+    //             outputs: [ { id: 'port-1' } ],
+    //             onClick: mostrarElementos()
+    //         },
+    //         {
+    //             id: 'node-2',
+    //             content: 'Torre 1',
+    //             coordinates: [260, 50],
+    //             render: CustomRender,
+    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
+    //             inputs: [ { id: 'port-2' } ],
+    //             outputs: [ { id: 'port-3' } ]
+    //         },
+    //         {
+    //             id: 'node-3',
+    //             content: 'Torre 2',
+    //             coordinates: [260, 120],
+    //             render: CustomRender,
+    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
+    //             inputs: [ { id: 'port-4' } ],
+    //             outputs: [ { id: 'port-5' } ]
+    //         },
+    //         {
+    //             id: 'node-4',
+    //             content: 'Depósito 1',
+    //             coordinates: [260, 190],
+    //             render: CustomRender,
+    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
+    //             inputs: [ { id: 'port-6' } ],
+    //             outputs: [ { id: 'port-7' } ]
+    //         },
+    //         {
+    //             id: 'node-5',
+    //             content: 'Caldera 1',
+    //             coordinates: [480, 120],
+    //             render: CustomRender,
+    //             data: {background: '#bbdefb', selector: '#90caf9', color: '#1565c0'},
+    //             inputs: [ { id: 'port-8' } ],
+    //             outputs: [ { id: 'port-9' } ]
+    //         }
+    //     ],
+    //     links: [
+    //     { input: 'port-1', output: 'port-2' },
+    //     { input: 'port-1', output: 'port-4' },
+    //     { input: 'port-1', output: 'port-6' },
+    //     { input: 'port-3', output: 'port-8' },
+    //     { input: 'port-5', output: 'port-8' },
+    //     { input: 'port-7', output: 'port-8' },
         
-        ]
-    })
+    //     ]
+    // })
 
-    const [schema, { onChange, addNode, removeNode }] = useSchema(initialSchema);
+    // const [schema, { onChange, addNode, removeNode }] = useSchema(initialSchema);
 
     const categories = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul","Ago","Sep","Oct","Nov","Dic"];
 
@@ -148,14 +193,11 @@ function HomeCliente() {
 
             <Grid container spacing={ 2 }>
 
-                <Grid item xl={ 6 }>
+                <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, mb: 2 }}>
+                        <CardContent sx={{ p: 0, height: 400 }}>
 
-                            <Typography variant='h5'>Diagrama de planta</Typography>
-                            <div style={{ height: '22rem' }}>
-                                <Diagram schema={schema} onChange={onChange} />
-                            </div>
+                            <Diagrama />
 
                         </CardContent>
                     </Card>

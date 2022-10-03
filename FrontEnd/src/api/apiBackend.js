@@ -87,6 +87,22 @@ export const getOfertas = async () => {
 
 }
 
+/*** PLANTAS ***/
+
+export const getConfPlantaCliente = async () => {
+
+    const resp = await axios.get('/confplantascliente', token);
+
+}
+
+export const postConfPlantaCliente = async ( confPlantaCliente ) => {
+
+    const resp = await axios.post('confplantascliente', confPlantaCliente, token);
+    return resp.data.data;
+
+}
+
+
 /*** ELEMENTOS ***/
 
 export const getElementos = async () => {
