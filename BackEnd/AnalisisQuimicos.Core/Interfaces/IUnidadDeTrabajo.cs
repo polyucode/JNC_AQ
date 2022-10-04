@@ -27,8 +27,11 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Productos> ProductosRepository { get; }
         IRepository<OfertasProductos> OfertasProductosRepository { get; }
         IRepository<Consumos> ConsumosRepository { get; }
-        IRepository<ValorParametros> ValorParametrosRepository { get; }
+        IValorParametrosRepository ValorParametrosRepository { get; }
         IRepository<Entregas> EntregasRepository { get; }
+        IRepository<Proveedores> ProveedoresRepository { get; }
+        IRepository<ModoEnvio>ModoEnvioRepository { get; }
+        IRepository<Elementos> ElementosRepository { get; }
 
         void SaveChanges();
 

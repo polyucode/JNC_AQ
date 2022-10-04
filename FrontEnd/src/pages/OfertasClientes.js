@@ -11,8 +11,11 @@ import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { height } from "@mui/system";
 import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import { IconButton } from '@mui/material';
 
 import './OfertasClientes.css';
+import { formatDate } from "@fullcalendar/react";
 
 const token = {
     headers: {
@@ -67,7 +70,6 @@ const useStyles3 = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
         width: 800,
-        height: 120,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
@@ -81,6 +83,26 @@ const useStyles3 = makeStyles((theme) => ({
     },
     inputMaterial: {
         width: '30%'
+    }
+}));
+
+const useStylesConsumido = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 850,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '100%'
     }
 }));
 
@@ -148,6 +170,8 @@ function OfertasClientes() {
 
     const [modalEliminarProducto, setModalEliminarProducto] = useState(false);
 
+    const [modalInsertarConsumido, setModalInsertarConsumido] = useState(false);
+
     const [ofertaSeleccionada, setOfertaSeleccionada] = useState({
         id: 0,
         numeroOferta: 0,
@@ -155,10 +179,11 @@ function OfertasClientes() {
         codigoCliente: 0,
         nombreCliente: '',
         descripcion: '',
-        fechaInicio: '',
-        fechaFinalizacion: '',
+        fechaInicio: null,
+        fechaFinalizacion: null,
         contacto1: '',
         contacto2: '',
+        contacto3: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -175,13 +200,31 @@ function OfertasClientes() {
         producto: '',
         descripcionProducto: '',
         cantidad: 0,
-        precio: 0,
+        precio: '',
         stockMin: 0,
         stockMax: 0,
         consumidos: 0,
         entregar: 0,
         adr: '',
         portes: '',
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
+
+    const [consumoSeleccionado, setConsumoSeleccionado] = useState({
+        id: 0,
+        oferta: 0,
+        fecha: null,
+        producto: '',
+        cantidad: 0,
+        nombreProveedor: '',
+        modoEnvio: '',
+        numAlbaran: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -214,6 +257,8 @@ function OfertasClientes() {
     const [descripcionEditar, setDescripcionEditar] = useState([]);
 
     const [productos, setProductos] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
+    const [envios, setEnvios] = useState([]);
 
     const [contactos, setContactos] = useState([]);
 
@@ -225,6 +270,7 @@ function OfertasClientes() {
 
     const [contacto1Editar, setContacto1Editar] = useState([]);
     const [contacto2Editar, setContacto2Editar] = useState([]);
+    const [contacto3Editar, setContacto3Editar] = useState([]);
 
     const [nombreFiltrado, setNombreFiltrado] = useState({})
 
@@ -241,23 +287,34 @@ function OfertasClientes() {
     const styles = useStyles();
     const styles2 = useStyles2();
     const styles3 = useStyles3();
+    const stylesConsumido = useStylesConsumido();
 
     const [number, setNumber] = useState({ cantidad: 0, consumidos: 0 });
     const [resta, setResta] = useState();
     const [resta2, setResta2] = useState();
 
+    const [number2, setNumber2] = useState({ consumidos: 0, cantidad: 0 });
+    const [suma, setSuma] = useState();
+    const [suma2, setSuma2] = useState();
+
+    const formatterEuro = new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR'
+    })
+
     const columnas = [
 
         //Visibles
         { title: 'NumeroOferta', field: 'numeroOferta', filterPlaceholder: "Filtrar por numero oferta" },
-        { title: 'Pedido', field: 'pedido', filterPlaceholder: "Filtrar por pedido" },
-        { title: 'CodigoCliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
-        { title: 'NombreCliente', field: 'nombreCliente', filterPlaceholder: "Filtrar por nombre cliente" },
+        { title: 'Num Pedido', field: 'pedido', filterPlaceholder: "Filtrar por Num pedido" },
+        { title: 'Codigo Cliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
+        { title: 'Nombre Cliente', field: 'nombreCliente', filterPlaceholder: "Filtrar por nombre cliente" },
         { title: 'Descripcion', field: 'descripcion', filterPlaceholder: "Filtrar por Descripcion" },
-        { title: 'FechaInicio', field: 'fechaInicio', type: "date", filterPlaceholder: "Filtrar por FechaInicio" },
-        { title: 'FechaFinalizacion', field: 'fechaFinalizacion', type: "date", filterPlaceholder: "Filtrar por Fecha Finalizacion" },
+        { title: 'Fecha Inicio Pedido', field: 'fechaInicio', type: "date", filterPlaceholder: "Filtrar por FechaInicio" },
+        { title: 'Fecha Fin Pedido', field: 'fechaFinalizacion', type: "date", filterPlaceholder: "Filtrar por Fecha Finalizacion" },
         { title: 'Contacto1', field: 'contacto1', filterPlaceholder: "Filtrar por contacto1" },
         { title: 'Contacto2', field: 'contacto2', filterPlaceholder: "Filtrar por contacto2" },
+        { title: 'Contacto3', field: 'contacto3', filterPlaceholder: "Filtrar por contacto3" },
 
         //Ocultas
         { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder: "Filtrar por Id", hidden: true, },
@@ -270,10 +327,10 @@ function OfertasClientes() {
         { title: 'Descripcion', field: 'descripcionProducto', filterPlaceholder: "Filtrar por descripcion" },
         { title: 'Estimacion', field: 'cantidad', filterPlaceholder: "Filtrar por cantidad" },
         { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por Consumidos" },
-        { title: 'Entregar', field: 'entregar', filterPlaceholder: "Filtrar por Entregar" },
-        { title: 'Precio', field: 'precio', filterPlaceholder: "Filtrar por precio" },
-        { title: 'StockMin', field: 'stockMin', filterPlaceholder: "Filtrar por StockMin" },
-        { title: 'StockMax', field: 'stockMax', filterPlaceholder: "Filtrar por StockMax" },
+        { title: 'Pdt. Entregar', field: 'entregar', filterPlaceholder: "Filtrar por Pdt. Entregar" },
+        { title: 'Precio/u (€)', field: 'precio', type: 'money', render: rowData => formatterEuro.format(rowData.precio.toLocaleString('es')), filterPlaceholder: "Filtrar por precio" },
+        { title: 'Stock Min', field: 'stockMin', filterPlaceholder: "Filtrar por Stock Min" },
+        { title: 'Stock Max', field: 'stockMax', filterPlaceholder: "Filtrar por Stock Max" },
         { title: 'ADR', field: 'adr', filterPlaceholder: "Filtrar por ADR" },
         { title: 'Portes', field: 'portes', filterPlaceholder: "Filtrar por Portes" },
     ];
@@ -317,11 +374,31 @@ function OfertasClientes() {
         }, [])
     }
 
+    const getProveedores = async () => {
+        axios.get("/proveedores", token).then(response => {
+            const proveedor = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setProveedores(proveedor);
+        }, [])
+    }
+
+    const getEnvios = async () => {
+        axios.get("/modoenvio", token).then(response => {
+            const envio = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setEnvios(envio);
+        }, [])
+    }
+
     useEffect(() => {
         const { cantidad, consumidos } = number
         setResta(Number(cantidad) - Number(consumidos))
         setResta2(productoSeleccionado.cantidad - productoSeleccionado.consumidos)
     }, [number, productoSeleccionado.consumidos])
+
+    useEffect(() => {
+        const { consumidos, cantidad } = number2
+        setSuma(Number(consumidos) + Number(cantidad))
+        setSuma2(productoSeleccionado.consumidos + consumoSeleccionado.cantidad)
+    }, [number2, consumoSeleccionado.cantidad])
 
     useEffect(() => {
         getContactos();
@@ -330,6 +407,8 @@ function OfertasClientes() {
         getClientes();
         getOfertasProductos();
         getOfertasProductosDet();
+        getProveedores();
+        getEnvios();
     }, [])
 
     useEffect(() => {
@@ -342,6 +421,7 @@ function OfertasClientes() {
         ofertaSeleccionada.id = null;
         await axios.post("/ofertasclientes", ofertaSeleccionada, token)
             .then(response => {
+                console.log(ofertaSeleccionada)
                 abrirCerrarModalInsertar();
                 getOfertas();
                 setOfertaSeleccionada({
@@ -351,10 +431,11 @@ function OfertasClientes() {
                     codigoCliente: 0,
                     nombreCliente: '',
                     descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
+                    fechaInicio: null,
+                    fechaFinalizacion: null,
                     contacto1: '',
                     contacto2: '',
+                    contacto3: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -386,10 +467,11 @@ function OfertasClientes() {
                     codigoCliente: 0,
                     nombreCliente: '',
                     descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
+                    fechaInicio: null,
+                    fechaFinalizacion: null,
                     contacto1: '',
                     contacto2: '',
+                    contacto3: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -417,10 +499,11 @@ function OfertasClientes() {
                         codigoCliente: 0,
                         nombreCliente: '',
                         descripcion: '',
-                        fechaInicio: '',
-                        fechaFinalizacion: '',
+                        fechaInicio: null,
+                        fechaFinalizacion: null,
                         contacto1: '',
                         contacto2: '',
+                        contacto3: '',
                         addDate: null,
                         addIdUser: null,
                         modDate: null,
@@ -441,6 +524,7 @@ function OfertasClientes() {
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
         productoSeleccionado.entregar = resta
+        console.log(productoSeleccionado)
         await axios.post("/ofertasproductos", productoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertarProducto();
@@ -468,7 +552,7 @@ function OfertasClientes() {
                     delIdUser: null,
                     deleted: null,
                 })
-                setNumber({ cantidad: 0, consumidos: 0})
+                setNumber({ cantidad: 0, consumidos: 0 })
             }).catch(error => {
                 console.log(error);
             })
@@ -553,6 +637,40 @@ function OfertasClientes() {
         }
     }
 
+    const peticionPostConsumido = async () => {
+        consumoSeleccionado.id = 0;
+        consumoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
+        consumoSeleccionado.producto = productoSeleccionado.descripcionProducto;
+        productoSeleccionado.consumidos = suma2;
+        await axios.post("/consumos", consumoSeleccionado, token)
+            .then(response => {
+                peticionPutProducto();
+                getOfertasProductosDet();
+                getOfertasProductos();
+                abrirCerrarModalInsertarConsumido();
+                abrirCerrarModalEditarProducto();
+                setConsumoSeleccionado({
+                    id: 0,
+                    oferta: 0,
+                    fecha: null,
+                    producto: '',
+                    cantidad: 0,
+                    nombreProveedor: '',
+                    modoEnvio: '',
+                    numAlbaran: 0,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
     //Modales
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
@@ -576,6 +694,10 @@ function OfertasClientes() {
 
     const abrirCerrarModalEditarProducto = () => {
         setModalEditarProducto(!modalEditarProducto);
+    }
+
+    const abrirCerrarModalInsertarConsumido = () => {
+        setModalInsertarConsumido(!modalInsertarConsumido);
     }
 
     function FiltrarNombre() {
@@ -613,8 +735,24 @@ function OfertasClientes() {
         const { name, value } = e.target;
         setProductoSeleccionado(prevState => ({
             ...prevState,
-            [e.target.name]: e.target.name === 'precio' ? parseFloat(e.target.value) : e.target.value
+            [e.target.name]: e.target.type === 'number' ? parseFloat(e.target.value).toFixed(2) : e.target.value
         }));
+    }
+
+    const handleChangeConsumo = e => {
+        const { name, value } = e.target;
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+        }));
+    }
+
+    const handleChangeFecha2 = e => {
+        const { name, value } = e.target;
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
     }
 
     useEffect(() => {
@@ -634,9 +772,7 @@ function OfertasClientes() {
         const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
         (nombre.length > 0) && setOfertaSeleccionada({
             ...ofertaSeleccionada,
-            nombreCliente: nombre[0].razonSocial,
-            contacto1: '',
-            contacto2: ''
+            nombreCliente: nombre[0].razonSocial
         })
 
     }, [ofertaSeleccionada.codigoCliente])
@@ -655,7 +791,7 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} />
                 </div>
                 <div className="col-md-4">
-                    <h5> Pedido </h5>
+                    <h5> Num Pedido </h5>
                     <TextField className={styles.inputMaterial} type="number" name="pedido" onChange={handleChange} />
                 </div>
                 <div className="col-md-4">
@@ -670,7 +806,10 @@ function OfertasClientes() {
                         renderInput={(params) => <TextField {...params} type="number" name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
-                            codigoCliente: parseInt(value.codigo)
+                            codigoCliente: parseInt(value.codigo),
+                            contacto1: '',
+                            contacto2: '',
+                            contacto3: ''
                         }))}
                     />
                 </div>
@@ -692,7 +831,7 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
-                    <h5> Fecha Inicio </h5>
+                    <h5> Fecha Inicio Pedido </h5>
                     <TextField
                         id="fechainicio"
                         type="date"
@@ -705,7 +844,7 @@ function OfertasClientes() {
                     />
                 </div>
                 <div className="col-md-6">
-                    <h5> Fecha Finalizacion </h5>
+                    <h5> Fecha Fin Pedido </h5>
                     <TextField
                         id="fechafinalizacion"
                         type="date"
@@ -751,6 +890,23 @@ function OfertasClientes() {
                         }))}
                     />
                 </div>
+                <div className="col-md-6">
+                    <h5> Contacto 3 </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto3"
+                        inputValue={ofertaSeleccionada.contacto3}
+                        options={contactos}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto3" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto3: value.nombre
+                        }))}
+                    />
+                </div>
             </div>
             <br />
             <br />
@@ -760,6 +916,16 @@ function OfertasClientes() {
             </div>
         </div>
     )
+
+    function formateandofechas(fecha) {
+        const fecha1 = new Date(fecha)
+
+        const fecha2 = fecha1.getFullYear() +
+            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+            '-' + String(fecha1.getDate()).padStart(2, '0')
+
+        return fecha2
+    }
 
     const bodyEditar = (
         <div className={styles2.modal}>
@@ -775,7 +941,7 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} name="descripcion" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.descripcion} />
                 </div>
                 <div className="col-md-2">
-                    <h5> Pedido </h5>
+                    <h5> Num Pedido </h5>
                     <TextField className={styles.inputMaterial} type="number" name="pedido" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
                 </div>
                 <div className="col-md-2">
@@ -790,7 +956,10 @@ function OfertasClientes() {
                         renderInput={(params) => <TextField {...params} name="codigoCliente" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
-                            codigoCliente: parseInt(value.codigo)
+                            codigoCliente: parseInt(value.codigo),
+                            contacto1: '',
+                            contacto2: '',
+                            contacto3: ''
                         }))}
                     />
                 </div>
@@ -799,7 +968,7 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} name="nombreCliente" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.nombreCliente} />
                 </div>
                 <div className="col-md-2">
-                    <h5> Fecha Inicio </h5>
+                    <h5> Fecha Inicio Pedido </h5>
                     <TextField
                         id="fechainicio"
                         type="date"
@@ -809,11 +978,14 @@ function OfertasClientes() {
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        value={ofertaSeleccionada && ofertaSeleccionada.fechaInicio}
+
+                        value={ofertaSeleccionada && formateandofechas(ofertaSeleccionada.fechaInicio)}
+                    // value = {ofertaSeleccionada && (ofertaSeleccionada.fechaInicio)}                   
                     />
+
                 </div>
                 <div className="col-md-2">
-                    <h5> Fecha Finalizacion </h5>
+                    <h5> Fecha Fin Pedido </h5>
                     <TextField
                         id="fechafinalizacion"
                         type="date"
@@ -823,7 +995,8 @@ function OfertasClientes() {
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        value={ofertaSeleccionada && ofertaSeleccionada.fechaFinalizacion}
+                        value={ofertaSeleccionada && formateandofechas(ofertaSeleccionada.fechaFinalizacion)}
+                    // value={ofertaSeleccionada && ofertaSeleccionada.fechaFinalizacion}
                     />
                 </div>
                 <div className="col-md-4">
@@ -832,8 +1005,9 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto1"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto1}
                         defaultValue={contacto1Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2 && contacto.nombre !== ofertaSeleccionada.contacto3)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto1" />}
@@ -849,14 +1023,33 @@ function OfertasClientes() {
                         disableClearable={true}
                         id="contacto2"
                         options={contactos}
+                        inputValue={ofertaSeleccionada.contacto2}
                         defaultValue={contacto2Editar[0]}
-                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1 && contacto.nombre !== ofertaSeleccionada.contacto3)}
                         getOptionLabel={option => option.nombre}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} name="contacto2" />}
                         onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                             ...prevState,
                             contacto2: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <h5> Contacto 3 </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="contacto3"
+                        options={contactos}
+                        inputValue={ofertaSeleccionada.contacto3}
+                        defaultValue={contacto3Editar[0]}
+                        filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1 && contacto.nombre !== ofertaSeleccionada.contacto2)}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 250 }}
+                        renderInput={(params) => <TextField {...params} name="contacto3" />}
+                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                            ...prevState,
+                            contacto3: value.nombre
                         }))}
                     />
                 </div>
@@ -889,7 +1082,7 @@ function OfertasClientes() {
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
                     abrirCerrarModalEditarProducto();
                 })}
-                
+
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadasProducto(filas);
                     if (filas.length > 0) {
@@ -973,12 +1166,20 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" value={number.consumidos} onChange={handleChangeProducto} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Entregar </h5>
+                    <h5> Pdt. Entregar </h5>
                     <TextField className={styles.inputMaterial} type="number" name="entregar" value={resta} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Precio </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangePrecio} />
+                    <h5> Precio/u </h5>
+                    <TextField
+                        className={styles.inputMaterial}
+                        type="number"
+                        step="0,01"
+                        name="precio"
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                        }}
+                        onChange={handleChangePrecio} />
                 </div>
                 <div className="col-md-6">
                     <h5> Stock Min </h5>
@@ -1046,12 +1247,25 @@ function OfertasClientes() {
                     <TextField className={styles.inputMaterial} type="number" name="consumidos" onChange={handleChangeProducto} value={productoSeleccionado && productoSeleccionado.consumidos} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Entregar </h5>
+                    <Button onClick={abrirCerrarModalInsertarConsumido} variant="contained" size="small" href="#contained-buttons">
+                        +
+                    </Button>
+                </div>
+                <div className="col-md-3">
+                    <h5> Pdt. Entregar </h5>
                     <TextField className={styles.inputMaterial} type="number" name="entregar" onChange={handleChangeProducto} value={resta2} />
                 </div>
                 <div className="col-md-3">
-                    <h5> Precio </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="precio" onChange={handleChangePrecio} value={productoSeleccionado && productoSeleccionado.precio} />
+                    <h5> Precio/u </h5>
+                    <TextField
+                        className={styles.inputMaterial}
+                        type="number"
+                        name="precio"
+                        onChange={handleChangePrecio}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">€</InputAdornment>,
+                        }}
+                        value={productoSeleccionado && productoSeleccionado.precio} />
                 </div>
                 <div className="col-md-4">
                     <h5> Stock Min </h5>
@@ -1101,58 +1315,87 @@ function OfertasClientes() {
         </div>
     )
 
+    const bodyInsertarConsumido = (
+        <div className={stylesConsumido.modal}>
+            <h3>Agregar Nuevo Consumo</h3>
+            <br />
+            <div className="row g-3">
+                <div className="col-md-4">
+                    <h5> Oferta </h5>
+                    <TextField className={stylesConsumido.inputMaterial} disabled name="oferta" value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
+                </div>
+                <div className="col-md-2">
+                    {/* Fecha prevista */}
+                    <h5> Fecha </h5>
+                    <TextField
+                        className={styles.inputMaterial}
+                        id="fecha"
+                        type="date"
+                        name="fecha"
+                        sx={{ width: 200 }}
+                        onChange={handleChangeFecha2}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                </div>
+                <div className="col-md-4">
+                    <h5> Producto </h5>
+                    <TextField className={stylesConsumido.inputMaterial} disabled name="producto" value={productoSeleccionado && productoSeleccionado.descripcionProducto} />
+                </div>
+                <div className="col-md-3">
+                    <h5> Cantidad </h5>
+                    <TextField className={stylesConsumido.inputMaterial} type="number" name="cantidad" onChange={handleChangeConsumo} />
+                </div>
+                <div className="col-md-9">
+                    <h5> Nombre Proveedor </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="nombreProveedor"
+                        options={proveedores}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="nombreProveedor" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            nombreProveedor: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-5">
+                    <h5> Modo de Envio </h5>
+                    <Autocomplete
+                        disableClearable={true}
+                        id="modoEnvio"
+                        options={envios}
+                        getOptionLabel={option => option.nombre}
+                        sx={{ width: 200 }}
+                        renderInput={(params) => <TextField {...params} name="modoEnvio" />}
+                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                            ...prevState,
+                            modoEnvio: value.nombre
+                        }))}
+                    />
+                </div>
+                <div className="col-md-5">
+                    <h5> Numero Albaran </h5>
+                    <TextField className={styles2.inputMaterial} type="number" name="numAlbaran" onChange={handleChangeConsumo} />
+                </div>
+            </div>
+            <br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPostConsumido()}>Insertar</Button>
+                <Button onClick={() => abrirCerrarModalInsertarConsumido()}>Cancelar</Button>
+            </div>
+        </div>
+    )
+
 
 
     return (
         <div>
             <MaterialTable columns={columnas} data={data}
-                localization={{
-                    body: {
-                        emptyDataSourceMessage: 'No hay datos por mostrar',
-                        addTooltip: 'Añadir',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
-                        },
-                        editRow: {
-                            deleteText: '¿Segura(o) que quiere eliminar?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
-                        },
-                    },
-                    grouping: {
-                        placeholder: "Arrastre un encabezado aquí para agrupar",
-                        groupedBy: 'Agrupado por',
-                    },
-                    header: {
-                        actions: 'Acciones',
-                    },
-                    pagination: {
-                        firstAriaLabel: 'Primera página',
-                        firstTooltip: 'Primera página',
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsPerPage: 'Filas por página:',
-                        labelRowsSelect: 'filas',
-                        lastAriaLabel: 'Ultima página',
-                        lastTooltip: 'Ultima página',
-                        nextAriaLabel: 'Pagina siguiente',
-                        nextTooltip: 'Pagina siguiente',
-                        previousAriaLabel: 'Pagina anterior',
-                        previousTooltip: 'Pagina anterior',
-                    },
-                    toolbar: {
-                        addRemoveColumns: 'Agregar o eliminar columnas',
-                        exportAriaLabel: 'Exportar',
-                        exportName: 'Exportar a CSV',
-                        exportTitle: 'Exportar',
-                        nRowsSelected: '{0} filas seleccionadas',
-                        searchPlaceholder: 'Buscar',
-                        searchTooltip: 'Buscar',
-                        showColumnsAriaLabel: 'Mostrar columnas',
-                        showColumnsTitle: 'Mostrar columnas',
-                    },
-                }}
+                localization={localization}
                 actions={[
                     {
                         icon: () => <AddCircle style={{ fill: "green" }} />,
@@ -1172,8 +1415,6 @@ function OfertasClientes() {
                     },
                 ]}
                 onRowClick={(event, ofertaSeleccionada) => {
-                    // Copy row data and set checked state
-                    console.log(ofertaSeleccionada)
                     setOfertaSeleccionada(ofertaSeleccionada);
                     setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
                     getOfertasProductos();
@@ -1181,11 +1422,12 @@ function OfertasClientes() {
                     setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
                     setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))
                     setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto2))
+                    setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto3))
                     abrirCerrarModalEditar();
                 }}
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
-                    if(filas.length > 0){
+                    if (filas.length > 0) {
                         setOfertaSeleccionada(filas[0])
                     }
                 }}
@@ -1243,6 +1485,13 @@ function OfertasClientes() {
                 onClose={abrirCerrarModalEliminarProducto}>
                 {bodyEliminarProducto}
             </Modal>
+
+            <Modal
+                open={modalInsertarConsumido}
+                onClose={abrirCerrarModalInsertarConsumido}>
+                {bodyInsertarConsumido}
+            </Modal>
+
         </div>
     )
 }

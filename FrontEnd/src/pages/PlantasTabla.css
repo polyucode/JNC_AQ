@@ -11,11 +11,11 @@ p, td {
     font-weight: 500;
     margin: 0;
 }
-/* input[type=text] {
+input[type=text] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
     width: 100%;
-} */
+}
 select {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;

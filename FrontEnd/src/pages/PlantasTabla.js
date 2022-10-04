@@ -126,8 +126,6 @@ function PlantasTabla() {
     const [actualState, changeCheckState] = useState(false);
     const [actualState2, changeActualState] = useState(false);
 
-    const [datosParametros, setDatosParametros] = useState([]);
-
     const columnas = [
 
         //visibles
@@ -587,7 +585,6 @@ function PlantasTabla() {
             }
         }
     }
-    
     let listaElementos = planta.elementos;
 
     const [value, setValue] = React.useState('0');
@@ -657,6 +654,7 @@ function PlantasTabla() {
         parametrosBack.nombreCliente = valores.nombre;
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
+        parametrosBack.fecha = parametrosSeleccionado.fecha
 
         await axios.post("/parametroselementoplantacliente", parametrosBack, token)
             .then(response => {
@@ -841,7 +839,7 @@ function PlantasTabla() {
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={value}>
                     {
-                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setDatosParametros={setDatosParametros} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
+                        <TablaElementosTabla key="elemento" value={value} plantilla={listaElementos.plantilla} cambiarDatosPers={cambiarCampoPersonalizado} cambiarDatos={cambiarCampoFijo} setParametrosSeleccionado={setParametrosSeleccionado} parametrosSeleccionado={parametrosSeleccionado} parametros={parametrosFront} />
                     }
                 </TabContext>
             </Box>

@@ -161,7 +161,7 @@ function Clientes() {
     poblacion: '',
     provincia: '',
     cp: '',
-    pais: '',
+    //pais: '',
     comarca: '',
     idSector: 0,
     addDate: null,
@@ -250,7 +250,7 @@ function Clientes() {
     //Ocultas
     { title: 'Id', field: 'id', filterPlaceholder: "Filtrar por id", hidden: true },
     { title: 'IdSector', field: 'idSector', filterPlaceholder: "Filtrar por id sector", hidden: true },
-    { title: 'Pais', field: 'pais', filterPlaceholder: "Filtrar por país", hidden: true },
+    //{ title: 'Pais', field: 'pais', filterPlaceholder: "Filtrar por país", hidden: true },
     { title: 'CuentaContable', field: 'cuentaContable', filterPlaceholder: "Filtrar por cuenta contable", hidden: true },
   ];
 
@@ -376,7 +376,7 @@ function Clientes() {
           poblacion: '',
           provincia: '',
           cp: '',
-          pais: '',
+          //pais: '',
           comarca: '',
           idSector: 0,
           addDate: null,
@@ -415,7 +415,7 @@ function Clientes() {
           poblacion: '',
           provincia: '',
           cp: '',
-          pais: '',
+          //pais: '',
           comarca: '',
           idSector: 0,
           addDate: null,
@@ -450,7 +450,7 @@ function Clientes() {
             poblacion: '',
             provincia: '',
             cp: '',
-            pais: '',
+            //pais: '',
             comarca: '',
             idSector: 0,
             addDate: null,
@@ -631,10 +631,10 @@ function Clientes() {
           <h5> Codigo Postal </h5>
           <TextField className={styles.inputMaterial} name="cp" onChange={handleChange} />
         </div>
-        <div className="col-md-3">
+        {/*<div className="col-md-3">
           <h5> País </h5>
           <TextField className={styles.inputMaterial} name="pais" onChange={handleChange} />
-        </div>
+        </div>*/}
         <div className="col-md-4">
           <h5> Comarca </h5>
           {/* Desplegable de Comarca */}
@@ -712,10 +712,12 @@ function Clientes() {
           <h5> Código Postal </h5>
           <TextField className={stylesEditarDet.inputMaterial} name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
         </div>
+        {/*
         <div className="col-md-3">
           <h5> País </h5>
           <TextField className={styles.inputMaterial} name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
         </div>
+        */}
         <div className="col-md-3">
           <h5> Comarca </h5>
           {/* Desplegable de Comarca */}

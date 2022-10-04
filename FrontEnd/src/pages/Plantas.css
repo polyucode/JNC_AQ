@@ -3,10 +3,20 @@ h6 {
     font-weight: 500;
     margin: 0;
 }
+
+h5{
+    font-size: 17px;
+}
+
+h4{
+    font-size: 22px;
+}
+
 hr {
     margin: 8px 0;
     width: 100%;
 }
+
 p {
     font-size: 0.875rem;
     font-weight: 500;
@@ -15,12 +25,11 @@ button {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
 }
-/* input[type=text] {
+input[type=text] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
-    margin-top: 5px;
-} */
-/* input[type=checkbox] {
+}
+input[type=checkbox] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
 }
@@ -40,7 +49,7 @@ input[type=number] {
 
     -moz-appearance:textfield;
 
-} */
+}
 select {
     border: 1px solid #DBDBDB;
 }
