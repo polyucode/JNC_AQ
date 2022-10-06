@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "projectName": "AnalisisQuimicos.Core",
+        "projectPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "packagesPath": "C:\\Users\\34626\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\34626\\Documents\\GitHub\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\34626\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

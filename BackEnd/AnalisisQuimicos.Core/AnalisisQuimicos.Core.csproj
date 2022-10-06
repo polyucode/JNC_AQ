@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DTOs\ArticulosDTO.cs" />
+    <Compile Remove="Entities\Articulos.cs" />
+    <Compile Remove="Services\ArticulosService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enumeraciones\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+</Project>
