@@ -1,0 +1,149 @@
+h6 {
+    font-size: 1.062rem;
+    font-weight: 500;
+    margin: 0;
+}
+hr {
+    margin: 8px 0;
+    width: 100%;
+}
+p {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+button {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+}
+/* input[type=text] {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+    margin-top: 5px;
+} */
+/* input[type=checkbox] {
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+}
+input[type=number] {
+    width: 100%;
+    padding: 5px 15px;
+    border: 1px solid #DBDBDB;
+    margin-top: 5px;
+}
+input[type=number]::-webkit-outer-spin-button,
+
+input[type=number]::-webkit-inner-spin-button {
+
+    -webkit-appearance: none;
+}
+input[type=number] {
+
+    -moz-appearance:textfield;
+
+} */
+select {
+    border: 1px solid #DBDBDB;
+}
+
+div.main-container {
+    width: 100%;
+    background-color: #FFFFFF;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+div.main-container > h5 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    box-sizing: border-box;
+    margin: 12px 0;
+}
+
+.row1-1 {
+    width: 100%;
+    display: flex;
+}
+
+.col1-1 {
+    width: 40%;
+}
+.col2-1 {
+    width: 60%;
+}
+
+.row2-2{
+    flex-direction: column;
+}
+
+.cliente-niveles-container {
+    width: 100%;
+    display: flex;
+}
+
+.busqueda-clientes {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 0 12px;
+}
+.numero-niveles {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 0 12px;
+}
+.numero-niveles > .botones {
+    margin: 24px 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.analisis-elemento {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+}
+.analisis-elemento > .elementos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+.analisis-elemento > .elementos > select {
+    width: calc(50% - 12px);
+}
+.analisis-elemento > .elementos > .analisis-elemento-checks {
+    width: calc(50% - 12px);
+}
+.analisis-elemento > button {
+    margin: 24px 0;
+}
+
+.elementos-planta {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+}
+.elementos-planta-elements {
+    display: flex;
+    width: 100%;
+}
+.elementos-planta-elements > .planta {
+    width: 20%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+.lista-niveles {
+    width: 100%;
+}
+
+.botones {
+    padding:  0 12px;
+}
+.botones > button {
+    padding: 0;
+    border: 1px solid #DBDBDB;
+}
+.botones > button > a {
+    display: block;
+    text-decoration: none;
+    padding: 5px 15px;
+    color: #000000;
+}

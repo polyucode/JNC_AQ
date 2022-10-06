@@ -1,0 +1,11 @@
+span {
+    margin: 0;
+}
+
+.tabla-tecnico {
+    width: 25%;
+}
+
+tbody, td, th, thead, tr {
+    width: 650px;
+}
