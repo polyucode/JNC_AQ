@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityBorderIcon from '@mui/icons-material/Visibility';
+import SelectAllIcon from '@mui/icons-material/SelectAll';
 import Swal from 'sweetalert2';
 
 //import 'beautiful-react-diagrams/styles.css';
@@ -21,6 +22,7 @@ import Swal from 'sweetalert2';
 import { MainLayout } from "../layout/MainLayout";
 import { getClientes, getElementos, getOfertas, postConfPlantaCliente } from "../api/apiBackend";
 import { CheckBox } from "@mui/icons-material";
+import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 
 const token = {
     headers: {
@@ -45,11 +47,17 @@ export const PlantasPage = () => {
         delIdUser: null,
         deleted: null,
     });
+    const [plantaCreada, setPlantaCreada] = useState(false);
+    const [niveles, setNiveles] = useState([]);
 
     // Datos de los autocomplete
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
+
+    // Listado de elementos
     const [elementosPlanta, setElementosPlanta] = useState([]);
+    const [contadorElemento, setContadorElemento] = useState({});
+    const [indiceElemento, setIndiceElemento] = useState(0);
 
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
         id: 0,
@@ -369,8 +377,8 @@ export const PlantasPage = () => {
         getOfertas()
             .then( resp => { setOfertas(resp) });
 
-        getElementos()
-            .then( resp => { setElementosPlanta(resp) });
+        //getElementos()
+        //    .then( resp => { setElementosPlanta(resp) });
         
             //peticionGet();
     }, []);
@@ -387,10 +395,6 @@ export const PlantasPage = () => {
         }
 
     },[confPlantaCliente.CodigoCliente])
-
-    useEffect(() => {
-        console.log(elementosPlanta)
-    },[elementosPlanta]);
 
     const peticionPost = async () => {
 
@@ -417,12 +421,17 @@ export const PlantasPage = () => {
             return;
         }
         else {
+
+            setPlantaCreada(true);
+            
+            for( let i = 0; i < confPlantaCliente.NumNiveles; i++ ) {
+                setNiveles( prevState => [ ...prevState, i + 1 ]);
+            }
             
             // TODO: Obtener el nombre del cliente
 
             // Registramos todos los datos en la base de datos
-            const resp = await postConfPlantaCliente( confPlantaCliente );
-            console.log({ resp });
+            // const resp = await postConfPlantaCliente( confPlantaCliente );
 
             // TODO: Añadimos el ID de planta generado en el estado
 
@@ -607,12 +616,12 @@ export const PlantasPage = () => {
 
                             {/* Número de niveles */}
                             <Grid item xs={ 2 }>
-                                <TextField sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } />
+                                <TextField disabled={ plantaCreada } sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } />
                             </Grid>
 
                             {/* Botón para crear */}
                             <Grid item xs={ 2 }>
-                                <Button sx={{ width: '100%' }} color='success' variant='contained' startIcon={<AddIcon />} onClick={ peticionPost }>
+                                <Button disabled={ plantaCreada } sx={{ width: '100%' }} color='success' variant='contained' startIcon={<AddIcon />} onClick={ peticionPost }>
                                     Crear
                                 </Button>
                             </Grid>
@@ -624,85 +633,19 @@ export const PlantasPage = () => {
                 {/* APARTADO DE NIVELES */}
                 <Grid item xs={ 12 }>
                     <Grid container spacing={ 2 }>
-
-                        <Grid item xs={ 4 }>
-                            <Card sx={{ p: 2, display: 'flex' }}>
-                                <Grid container spacing={ 2 }>
-
-                                    <Grid item xs={ 12 }>
-                                        <Typography variant="h6">Nivel 1</Typography>
-                                    </Grid>
-
-                                    <Grid item xs={ 12 }>
-                                        <Autocomplete
-                                            disableClearable={ true }
-                                            id="Oferta"
-                                            options={ ofertas }
-                                            getOptionLabel={ option => option.numeroOferta.toString() }
-                                            renderInput={ params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
-                                            onChange={ handleConfPlantaClienteChange }
-                                        />
-                                    </Grid>
-
-                                    <Grid item xs={ 12 }>
-                                        <List dense>
-
-                                            <ListItem
-                                                secondaryAction={
-                                                    <>
-
-                                                        <Tooltip title="Eliminar elemento">
-                                                            <IconButton color="error" edge="end" aria-label="delete">
-                                                                <DeleteIcon />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    
-                                                    </>
-                                                  }
-                                            >
-                                                <ListItemText
-                                                    primary="Torre 1"
-                                                />
-                                            </ListItem>
-
-                                            <Divider />
-
-                                            <ListItem
-                                                secondaryAction={
-                                                    
-                                                    <IconButton color="error" edge="end" aria-label="delete">
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                  }
-                                            >
-                                                <ListItemText
-                                                    primary="Osmosis 1"
-                                                />
-                                            </ListItem>
-
-                                            <Divider />
-
-                                            <ListItem
-                                                secondaryAction={
-                                                    <IconButton color="error" edge="end" aria-label="delete">
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                  }
-                                            >
-                                                <ListItemText
-                                                    primary="Caldera 1"
-                                                />
-                                            </ListItem>
-
-                                        </List>
-                                    </Grid>
-
-                                </Grid>
-                            </Card>
-                        </Grid>
-
-                        
-
+                        {
+                            niveles.map( nivel => (
+                                <NivelPlanta
+                                    nivel={ nivel }
+                                    contadorElemento={ contadorElemento }
+                                    setContadorElemento={ setContadorElemento }
+                                    elementosPlanta={ elementosPlanta }
+                                    setElementosPlanta={ setElementosPlanta }
+                                    indiceElemento={ indiceElemento }
+                                    setIndiceElemento={ setIndiceElemento }
+                                /> 
+                            ))
+                        }
                     </Grid>
                 </Grid>
 

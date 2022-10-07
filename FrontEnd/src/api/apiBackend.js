@@ -34,6 +34,13 @@ export const getPoblaciones = async () => {
     
 }
 
+export const getListaElementos = async () => {
+
+    const resp = await axios.get('/elementos', token);
+    return resp.data.data;
+
+}
+
 //*** CLIENTES  ***/
 
 export const getClientes = async () => {

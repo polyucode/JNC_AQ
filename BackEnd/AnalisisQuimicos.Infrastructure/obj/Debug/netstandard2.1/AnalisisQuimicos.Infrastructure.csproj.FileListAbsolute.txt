@@ -68,7 +68,6 @@ C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructur
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.dll
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\bin\Debug\netstandard2.1\AnalisisQuimicos.Core.pdb
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csprojAssemblyReference.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.AssemblyInfo.cs
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CoreCompileInputs.cache
@@ -88,3 +87,5 @@ C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debu
 C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.CopyComplete
 C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.dll
 C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.pdb
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Infrastructure\obj\Debug\netstandard2.1\AnalisisQuimicos.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
