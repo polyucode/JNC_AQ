@@ -101,9 +101,8 @@ export const NivelPlanta = ({
                             {
                                 (elementosNivel.length > 0)
                                     ? elementosNivel.map( (elemento, index) => (
-                                        <>
+                                        <div key={ elemento.id }>
                                             <ListItem
-                                                key={ elemento.id }
                                                 sx={{ backgroundColor: 'none' }}
                                                 secondaryAction={
                                                     <Tooltip title="Eliminar elemento">
@@ -119,7 +118,7 @@ export const NivelPlanta = ({
                                             </ListItem>
 
                                             { (index + 1 != elementosNivel.length) && <Divider /> }
-                                        </>
+                                        </div>
                                     ))
                                     : (
                                         <Typography>Ningún elemento añadido</Typography>

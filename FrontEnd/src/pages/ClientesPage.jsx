@@ -633,6 +633,13 @@ export const ClientesPage = () => {
 
   return (
     <MainLayout title='Clientes'>
+
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+          {snackData.msg}
+        </Alert>
+      </Snackbar>
+      
       <Grid container spacing={2}>
 
         {/* Título y botones de opción */}
@@ -742,12 +749,6 @@ export const ClientesPage = () => {
         open={modalEliminar}
         onClose={abrirCerrarModalEliminar}
       />
-
-      <Snackbar open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-          {snackData.msg}
-        </Alert>
-      </Snackbar>
 
       {/* <Modal
           open={modalInsertar}

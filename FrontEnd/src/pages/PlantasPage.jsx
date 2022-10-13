@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Diagram, { createSchema, useSchema } from 'beautiful-react-diagrams';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Button, Card, Divider, Grid, IconButton, List, ListItem, ListItemText, Switch, Tooltip } from '@mui/material';
+import { Button, Card, Checkbox, Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemText, Switch, Tooltip, Snackbar, Slide, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -16,6 +16,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityBorderIcon from '@mui/icons-material/Visibility';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import Swal from 'sweetalert2';
+import SaveIcon from '@mui/icons-material/Save';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 
 //import 'beautiful-react-diagrams/styles.css';
 //mport './Plantas.css';
@@ -23,6 +25,8 @@ import { MainLayout } from "../layout/MainLayout";
 import { getClientes, getElementos, getOfertas, postConfPlantaCliente } from "../api/apiBackend";
 import { CheckBox } from "@mui/icons-material";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
+import { display } from "@mui/system";
+import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
 
 const token = {
     headers: {
@@ -58,6 +62,9 @@ export const PlantasPage = () => {
     const [elementosPlanta, setElementosPlanta] = useState([]);
     const [contadorElemento, setContadorElemento] = useState({});
     const [indiceElemento, setIndiceElemento] = useState(0);
+    const [elementoSeleccionado, setElementoSeleccionado] = useState(0);
+
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState({
         id: 0,
@@ -579,6 +586,49 @@ export const PlantasPage = () => {
 
     }
 
+    const handleAnalisis = ( event ) => {
+
+        setElementoSeleccionado({
+            ...elementoSeleccionado,
+            analisis: {
+                ...elementoSeleccionado.analisis,
+                [event.target.name]: event.target.checked
+            }
+        });
+
+    }
+
+    const handleSeleccionarElemento = ( elemento ) => {
+        setElementoSeleccionado( elemento );
+    }
+
+    const handleGuardarAnalisisElemento = () => {
+
+        const elementosActualizados = elementosPlanta.map( elemento => {
+
+            if( elemento.id === elementoSeleccionado.id ) {
+                return { ...elemento, analisis: { ...elementoSeleccionado.analisis } }
+            } else {
+                return elemento
+            }
+
+        });
+
+        setElementosPlanta(elementosActualizados);
+        setSnackData({ open: true, msg: 'Analisis del elemento guardado correctamente', severity: 'success' });
+    
+    }
+
+    const handleSnackClose = (event, reason) => {
+
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setSnackData({ open: false, msg: '', severity: 'info' });
+    
+      };
+
 
     return (
         <MainLayout title="Plantas">
@@ -593,6 +643,7 @@ export const PlantasPage = () => {
                             {/* Código de Cliente */}
                             <Grid item xs={ 4 }>
                                 <Autocomplete
+                                    disabled={ plantaCreada }
                                     disableClearable={ true }
                                     id="CodigoCliente"
                                     options={ clientes }
@@ -605,6 +656,7 @@ export const PlantasPage = () => {
                             {/* Número de Oferta */}
                             <Grid item xs={ 4 }>
                                 <Autocomplete
+                                    disabled={ plantaCreada }
                                     disableClearable={ true }
                                     id="Oferta"
                                     options={ ofertas }
@@ -636,6 +688,7 @@ export const PlantasPage = () => {
                         {
                             niveles.map( nivel => (
                                 <NivelPlanta
+                                    key={ nivel }
                                     nivel={ nivel }
                                     contadorElemento={ contadorElemento }
                                     setContadorElemento={ setContadorElemento }
@@ -649,71 +702,128 @@ export const PlantasPage = () => {
                     </Grid>
                 </Grid>
 
+                {/* APARTADO DE LISTADO DE ELEMENTOS */}
+                <Grid item xs={ 4 }>
+                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+
+                        <Typography variant="h6" sx={{ width: '100%' }}>Listado de elementos</Typography>
+                        {
+                            ( elementosPlanta.length > 0 )
+                            ? (
+                                <List>
+                                    {
+                                        elementosPlanta.map( elemento => (
+                                            <ListItemButton
+                                                key={ elemento.id }
+                                                selected={ elementoSeleccionado.id === elemento.id }
+                                                onClick={ () => handleSeleccionarElemento( elemento ) }
+                                            >
+                                                <ListItemText primary={ elemento.nombre+' '+elemento.numero } />
+                                            </ListItemButton>
+                                        ))
+                                    }
+                                </List>
+                            ) : (
+                                <Typography>Ningún elemento añadido</Typography>
+                            )
+                        }
+                        
+                    </Card>
+                </Grid>
+
+                {/* APARTADO DE ANALISIS POR ELEMENTO */}
+                <Grid item xs={ 8 }>
+                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+
+                        <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+
+                            <Grid item>
+                                <Typography variant="h6" sx={{ width: '100%' }}>Analisis por elemento</Typography>
+                            </Grid>
+
+                            <Grid item>
+                                <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
+                                    <IconButton color="primary" component="label" onClick={ handleGuardarAnalisisElemento }>
+                                        <SaveIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Grid>
+
+                        </Grid>
+
+                        {/* Mensaje de feedback al guardar tipos de analisis del elemento */}
+                        <Grid container>
+                            <Grid item xs={ 12 }>
+                                <Alert className="animate__animated animate__flipInX" onClose={handleSnackClose} severity={snackData.severity} sx={{
+                                    width: '100%',
+                                    display: snackData.open ? 'flex' : 'none'
+                                }}>
+                                    {snackData.msg}
+                                </Alert>
+                            </Grid>
+                        </Grid>
+                        
+                        {/* Listado de checkboxs para marcar los analisis */}
+                        <Grid container spacing={ 2 }>
+                            <Grid item xs={ 6 }>
+                                <FormGroup>
+                                    <CheckBoxAnalisis label="Físico-Químico" name="fisicoQuimico" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Aerobios" name="aerobios" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Legionela" name="legionela" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Agua Potable" name="aguaPotable" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Aguas Residuales" name="aguasResiduales" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Desinfecciones" name="desinfecciones" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Osmosis" name="osmosis" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                </FormGroup>
+                            </Grid>
+
+                            <Grid item xs={ 6 }>
+                                <FormGroup>
+                                    <CheckBoxAnalisis label="Agua Pozo" name="aguaPozo" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="ACS" name="acs" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Mantenimiento Maq Frio" name="mantenimientoMaqFrio" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Mediciones" name="mediciones" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Control fuga de gas" name="controlFugaGas" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                    <CheckBoxAnalisis label="Otros" name="otros" onChange={ handleAnalisis } elementoSeleccionado={ elementoSeleccionado } elementosPlanta={ elementosPlanta } />
+                                </FormGroup>
+                            </Grid>
+                        </Grid>
+
+                    </Card>
+                </Grid>
+
+                {/* BOTONES DE ACCIONES */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
+
+                        <Button disabled color='success' variant='contained' startIcon={ <SaveIcon /> } onClick={ peticionPost }>
+                            Guardar datos
+                        </Button>
+
+                        <Button sx={{ ml: 2 }} color='primary' variant='contained' startIcon={ <AccountTreeIcon /> } onClick={ () => {} }>
+                            Generar diagrama
+                        </Button>
+
+                    </Card>
+                </Grid>
+
+                {/* APARTADO DE DIAGRAMA */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+
+                        <Typography variant="h6">Diagrama (Pendiente de colocar)</Typography>
+                        <pre>
+                            <code>
+                                {
+                                    JSON.stringify( elementosPlanta, null, 3 )
+                                }
+                            </code>
+                        </pre>
+                    </Card>
+                </Grid>
+
             </Grid>
 
-
-        <div className="main-container">
-            <div className='row1-1'>
-                <div className='col1-1'>
-                    
-                    {/* ANÁLISIS POR ELEMENTO */}
-                    <div className='analisis-elemento'>
-                        <h5>Análisis por elemento</h5>
-                        <hr />
-                        <div className='elementos'>
-                            <select name="analisis-elemento" id="analisis-elemento-list" size="6" onChange={selAnalisisElemento}>
-                                {
-                                    // Recorremos la lista de elementos que tenemos para mostrarlos
-                                    listaElementos.map((d, index) => (<option key={index} value={index}>{d.nombre} {d.numero}</option>))
-                                }
-                            </select>
-                            <div className='analisis-elemento-checks'>
-                                <React.Fragment>
-                                    <label><input type="checkbox" id="ckb-fisico-quimico" onChange={changeAnalisisElemento} /> Físico-Químico</label><br />
-                                    <label><input type="checkbox" id="ckb-aerobios" onChange={changeAnalisisElemento} /> Aerobios</label><br />
-                                    <label><input type="checkbox" id="ckb-legionela" onChange={changeAnalisisElemento} /> Legionela</label><br />
-                                    <label><input type="checkbox" id="ckb-agua-potable" onChange={changeAnalisisElemento} /> Agua Potable</label><br />
-                                    <label><input type="checkbox" id="ckb-aguas-residuales" onChange={changeAnalisisElemento} /> Aguas Residuales</label><br />
-                                    <label><input type="checkbox" id="ckb-desinfecciones" onChange={changeAnalisisElemento} /> Desinfecciones</label><br />
-                                    <label><input type="checkbox" id="ckb-osmosis" onChange={changeAnalisisElemento} /> Osmosis </label><br />
-                                    <label><input type="checkbox" id="ckb-agua-pozo" onChange={changeAnalisisElemento} /> Agua Pozo</label><br />
-                                    <label><input type="checkbox" id="ckb-acs" onChange={changeAnalisisElemento} /> ACS</label><br />
-                                    <label><input type="checkbox" id="ckb-maquina-frio" onChange={changeAnalisisElemento} /> Mantenimiento Maq Frio </label><br />
-                                    <label><input type="checkbox" id="ckb-mediciones" onChange={changeAnalisisElemento} /> Mediciones</label><br />
-                                    <label><input type="checkbox" id="ckb-fuga-gas" onChange={changeAnalisisElemento} /> Control fuga de gas</label><br />
-                                    <label><input type="checkbox" id="ckb-otros" onChange={changeAnalisisElemento} /> Otros</label><br />
-                                </React.Fragment>
-                            </div>
-                        </div>
-                        <button>Guardar</button>
-                    </div>
-
-                </div>
-                <div className='col2-1'>
-
-                    {/* ELEMENTOS DE PLANTA */}
-                    <div className='elementos-planta'>
-                        <h5>Elementos de planta</h5>
-                        <hr />
-                        <div className='elementos-planta-elements' id='elementos-planta'></div>
-                        <button onClick={guardarNiveles}> Guardar Datos </button>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div className='row2-2'>
-                <h5>Diagrama</h5>
-                <hr />
-                <div style={{ height: '22.5rem' }}>
-                    <Diagram schema={schema} onChange={onChange} />
-                </div>
-            </div>
-            <div className='botones'>
-                <button><Link to='/plantasTabla'>Siguiente</Link></button>
-            </div>
-        </div>
         </MainLayout>
     )
 
