@@ -17,11 +17,11 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<Provincias> ProvinciaRepository { get; }
         IRepository<Poblaciones> PoblacionRepository { get; }
         IRepository<ElementosPlanta> ElementosPlantaRepository { get; }
-        IRepository<ConfNivelesPlantasCliente> ConfNivelesPlantasClienteRepository { get; }
-        IRepository<ConfPlantasCliente> ConfPlantasClienteRepository { get; }
+        IConfNivelesPlantasClienteRepository ConfNivelesPlantasClienteRepository { get; }
+        IConfPlantasClienteRepository ConfPlantasClienteRepository { get; }
         IParametrosElementoPlantaClienteRepository ParametrosElementoPlantaClienteRepository { get; }
         IRepository<ParametrosAnalisisPlanta> ParametrosAnalisisPlantaRepository { get; }
-        IRepository<AnalisisNivelesPlantasCliente> AnalisisNivelesPlantasClienteRepository { get; }
+        IAnalisisNivelesPlantasClienteRepository AnalisisNivelesPlantasClienteRepository { get; }
         IRepository<ClientesContactos> ClientesContactosRepository { get; }
         IRepository<OfertasClientes> OfertasClientesRepository { get; }
         IRepository<Productos> ProductosRepository { get; }

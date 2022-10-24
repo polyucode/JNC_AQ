@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnalisisQuimicos.Core.Entities
 {
-    public partial class ConfNivelesPlantasCliente : BaseEntity
+    public class PlantasAnalisis : BaseEntity
     {
         public int? CodigoCliente { get; set; }
         public int? Oferta { get; set; }
@@ -14,5 +14,6 @@ namespace AnalisisQuimicos.Core.Entities
         public bool? Visible { get; set; }
         public string Conecta { get; set; }
 
+        public int[] Analisis { get; set; }
     }
 }

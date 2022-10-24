@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,11 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class ConfPlantasClienteController : ControllerBase
     {
-        private readonly IRepository<ConfPlantasCliente> _confPlantasClienteService;
+        private readonly IConfPlantasClienteService _confPlantasClienteService;
         private readonly IMapper _mapper;
 
 
-        public ConfPlantasClienteController(IRepository<ConfPlantasCliente> confPlantasClienteService, IMapper mapper)
+        public ConfPlantasClienteController(IConfPlantasClienteService confPlantasClienteService, IMapper mapper)
         {
             _confPlantasClienteService = confPlantasClienteService;
             _mapper = mapper;
@@ -41,6 +42,15 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var cliente = await _confPlantasClienteService.GetById(id);
+            var clienteDto = _mapper.Map<ConfPlantasClienteDTO>(cliente);
+            var response = new ApiResponses<ConfPlantasClienteDTO>(clienteDto);
+            return Ok(response);
+        }
+
+        [HttpGet("planta")]
+        public IActionResult GetByClient([FromQuery] ConfPlantasClienteQueryFilter filtro)
+        {
+            var cliente = _confPlantasClienteService.GetByClient(filtro).Result;
             var clienteDto = _mapper.Map<ConfPlantasClienteDTO>(cliente);
             var response = new ApiResponses<ConfPlantasClienteDTO>(clienteDto);
             return Ok(response);
