@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,11 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class AnalisisNivelesPlantasClienteController : ControllerBase
     {
-        private readonly IRepository<AnalisisNivelesPlantasCliente> _analisisNivelesPlantasClienteService;
+        private readonly IAnalisisNivelesPlantasClienteService _analisisNivelesPlantasClienteService;
         private readonly IMapper _mapper;
 
 
-        public AnalisisNivelesPlantasClienteController(IRepository<AnalisisNivelesPlantasCliente> analisisNivelesPlantasClienteService, IMapper mapper)
+        public AnalisisNivelesPlantasClienteController(IAnalisisNivelesPlantasClienteService analisisNivelesPlantasClienteService, IMapper mapper)
         {
             _analisisNivelesPlantasClienteService = analisisNivelesPlantasClienteService;
             _mapper = mapper;
@@ -45,6 +46,15 @@ namespace AnalisisQuimicos.Api.Controllers
             var analisi = await _analisisNivelesPlantasClienteService.GetById(id);
             var analisiDto = _mapper.Map<AnalisisNivelesPlantasClienteDTO>(analisi);
             var response = new ApiResponses<AnalisisNivelesPlantasClienteDTO>(analisiDto);
+            return Ok(response);
+        }
+
+        [HttpGet("analisis")]
+        public IActionResult GetByNivelesPlanta([FromQuery] AnalisisNivelesPlantasClienteQueryFilter filtro)
+        {
+            var cliente = _analisisNivelesPlantasClienteService.GetByNivelesPlanta(filtro);
+            var clienteDto = _mapper.Map<IEnumerable<AnalisisNivelesPlantasClienteDTO>>(cliente);
+            var response = new ApiResponses<IEnumerable<AnalisisNivelesPlantasClienteDTO>>(clienteDto);
             return Ok(response);
         }
 
