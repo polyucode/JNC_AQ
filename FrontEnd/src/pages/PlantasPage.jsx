@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
@@ -27,6 +27,8 @@ import { CheckBox } from "@mui/icons-material";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { display } from "@mui/system";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
+import { generarDiagrama, useDiagrama } from "../helpers/generarDiagrama";
+import ReactFlow, { Background } from "react-flow-renderer";
 
 const token = {
     headers: {
@@ -629,6 +631,7 @@ export const PlantasPage = () => {
     
       };
 
+      const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
 
     return (
         <MainLayout title="Plantas">
@@ -735,7 +738,7 @@ export const PlantasPage = () => {
                 <Grid item xs={ 8 }>
                     <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
 
-                        <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
 
                             <Grid item>
                                 <Typography variant="h6" sx={{ width: '100%' }}>Analisis por elemento</Typography>
@@ -743,9 +746,9 @@ export const PlantasPage = () => {
 
                             <Grid item>
                                 <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
-                                    <IconButton color="primary" component="label" onClick={ handleGuardarAnalisisElemento }>
-                                        <SaveIcon />
-                                    </IconButton>
+                                    <Button color="primary" startIcon={ <SaveIcon /> } variant="outlined" onClick={ handleGuardarAnalisisElemento }>
+                                        Guardar
+                                    </Button>
                                 </Tooltip>
                             </Grid>
 
@@ -796,11 +799,17 @@ export const PlantasPage = () => {
                 <Grid item xs={ 12 }>
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
 
-                        <Button disabled color='success' variant='contained' startIcon={ <SaveIcon /> } onClick={ peticionPost }>
+                        <Button disabled={ diagramaGenerado } color='success' variant='contained' startIcon={ <SaveIcon /> } onClick={ peticionPost }>
                             Guardar datos
                         </Button>
 
-                        <Button sx={{ ml: 2 }} color='primary' variant='contained' startIcon={ <AccountTreeIcon /> } onClick={ () => {} }>
+                        <Button
+                            sx={{ ml: 2 }}
+                            color='primary'
+                            variant='contained'
+                            startIcon={ <AccountTreeIcon /> }
+                            disabled={ elementosPlanta.length === 0 }
+                            onClick={ () => generarDiagrama( confPlantaCliente.NumNiveles, elementosPlanta ) }>
                             Generar diagrama
                         </Button>
 
@@ -809,16 +818,29 @@ export const PlantasPage = () => {
 
                 {/* APARTADO DE DIAGRAMA */}
                 <Grid item xs={ 12 }>
-                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Card sx={{ p: 2, height: '400px', display: 'flex', flexDirection: 'column' }}>
 
-                        <Typography variant="h6">Diagrama (Pendiente de colocar)</Typography>
-                        <pre>
+                        <Typography variant="h6">Diagrama de la planta</Typography>
+                        {/* <pre>
                             <code>
                                 {
                                     JSON.stringify( elementosPlanta, null, 3 )
                                 }
                             </code>
-                        </pre>
+                        </pre> */}
+                        <ReactFlow
+                            nodes={nodos}
+                            edges={lados}
+                            // onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                            onConnect={onConnect}
+                            nodeTypes={ nodeTypes }
+                            fitView
+                            //style={rfStyle}
+                            //attributionPosition="top-right"
+                        >
+                            <Background />
+                        </ReactFlow>
                     </Card>
                 </Grid>
 

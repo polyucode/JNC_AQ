@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import ReactFlow, { addEdge, applyEdgeChanges, applyNodeChanges, Background } from 'react-flow-renderer';
+import { useDiagrama } from '../../helpers/generarDiagrama';
 import { NodoGrupo } from './NodoGrupo';
 
 
@@ -223,9 +224,11 @@ export const Diagrama = ({ nodeData = nodeDataMock }) => {
     //     [setEdges]
     // );
 
+    const { nodos } = useDiagrama();
+
     return (     
         <ReactFlow
-            nodes={nodes}
+            nodes={nodos}
             edges={edges}
             // onNodesChange={onNodesChange}
             // onEdgesChange={onEdgesChange}
