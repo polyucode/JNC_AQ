@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {}
+    "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+    "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "projectUniqueName": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
         "projectName": "AnalisisQuimicos.Core",
-        "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
-        "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\obj\\",
+        "projectPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Usuario\\Desktop\\Projectes\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.1"
@@ -60,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
         }
       }
     }
