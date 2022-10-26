@@ -450,12 +450,15 @@ C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Infrastructure.dll
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Core.pdb
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Infrastructure.pdb
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csprojAssemblyReference.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.AssemblyInfoInputs.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.AssemblyInfo.cs
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.CoreCompileInputs.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\staticwebassets\AnalisisQuimicos.Api.StaticWebAssets.Manifest.cache
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\staticwebassets\AnalisisQuimicos.Api.StaticWebAssets.xml
+C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\scopedcss\bundle\AnalisisQuimicos.Api.styles.css
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.RazorTargetAssemblyInfo.cache
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.CopyComplete
 C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.dll
@@ -545,7 +548,5 @@ C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreap
 C:\Users\Usuario\Desktop\JNC_OK\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.genruntimeconfig.cache
 C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Http.Features.dll
 C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\System.IO.Pipelines.dll
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Http.Features.dll
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\System.IO.Pipelines.dll
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.AssemblyReference.cache
-C:\Users\aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Http.Features.dll
+C:\Users\Usuario\Desktop\Projectes\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\System.IO.Pipelines.dll
