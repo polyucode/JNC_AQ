@@ -1,5 +1,6 @@
 ﻿using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class AnalisisNivelesPlantasClienteService : IRepository<AnalisisNivelesPlantasCliente>
+    public class AnalisisNivelesPlantasClienteService : IAnalisisNivelesPlantasClienteService
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
@@ -70,6 +71,11 @@ namespace AnalisisQuimicos.Core.Services
         {
             _unidadDeTrabajo.AnalisisNivelesPlantasClienteRepository.Update(analisisNivelesPlantasCliente);
             await _unidadDeTrabajo.SaveChangesAsync();
+        }
+
+        public IEnumerable<AnalisisNivelesPlantasCliente> GetByNivelesPlanta(AnalisisNivelesPlantasClienteQueryFilter filtro)
+        {
+            return _unidadDeTrabajo.AnalisisNivelesPlantasClienteRepository.GetByNivelesPlanta(filtro);
         }
     }
 }
