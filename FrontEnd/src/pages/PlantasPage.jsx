@@ -22,7 +22,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 //import 'beautiful-react-diagrams/styles.css';
 //mport './Plantas.css';
 import { MainLayout } from "../layout/MainLayout";
-import { getClientes, getElementos, getOfertas, postConfPlantaCliente } from "../api/apiBackend";
+import { getClientes, getConfPlantaClientePorClienteOferta, getElementos, getOfertas, postConfPlantaCliente, putConfPlantaCliente } from "../api/apiBackend";
 import { CheckBox } from "@mui/icons-material";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { display } from "@mui/system";
@@ -40,11 +40,12 @@ export const PlantasPage = () => {
 
     // Configuración planta del cliente
     const [confPlantaCliente, setConfPlantaCliente] = useState({
-        id: 0,
+        Id: 0,
         CodigoCliente: 0,
-        nombreCliente: '',
+        NombreCliente: '',
         Oferta: 0,
         NumNiveles: 0,
+        Diagrama: "",
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -240,54 +241,6 @@ export const PlantasPage = () => {
 
     }
 
-    function crearNiveles() {
-
-        console.log('Niveles')
-
-        // Obtenemos el valor de la cantidad de niveles a crear
-        // let numNiveles = document.getElementById('numero-niveles').value;
-        // let listadoNiveles = [];
-
-        // if (numNiveles > 5) {
-        //     alert('El número máximo de niveles que se pueden crear son 5');
-        //     return;
-        // }
-
-        // Generamos en el DOM la interfaz de los niveles
-        //for (let i = 0; i < numNiveles; i++) {
-
-            // Creamos el listado de elementos disponibles
-            // let listadoElementos = [
-            //     React.createElement('option', { value: 'Osmosis' }, 'Osmosis'),
-            //     React.createElement('option', { value: 'Depósito' }, 'Depósito'),
-            //     React.createElement('option', { value: 'Refrigeración' }, 'Refrigeración'),
-            //     React.createElement('option', { value: 'Torre' }, 'Torre'),
-            //     React.createElement('option', { value: 'Caldera' }, 'Caldera')
-            // ];
-
-            // Creamos todos los componentes de la interfaz del nivel
-            // let elementos = [
-            //     React.createElement('h6', null, 'Nivel ' + (i + 1)),
-            //     React.createElement('hr', null, null),
-            //     React.createElement('select', { id: 'lista-nivel-' + (i + 1) }, listadoElementos),
-            //     React.createElement('button', { onClick: () => crearElemento(i + 1) }, '+'),
-            //     React.createElement('button', { onClick: () => eliminarElemento(i + 1) }, '-'),
-            //     React.createElement('select', { className: 'lista-niveles', id: 'lista-elementos-nivel-' + (i + 1), size: 10 }, null),
-            //     React.createElement('input', { type: 'checkbox' }, null),
-            //     React.createElement('label', null, 'Ver inspector'),
-            //     React.createElement('button', { onClick: () => eliminarNivel() }, 'Eliminar')
-            // ]
-
-            // Creamos el contenedor de planta principal para añadir todos los demás componentes
-        //     let contenido = React.createElement('div', { className: 'planta' }, elementos);
-        //     listadoNiveles.push(contenido);
-        // }
-
-        // Finalmente renderizamos
-        //ReactDOM.render(listadoNiveles, document.getElementById('elementos-planta'));
-
-    }
-
     function eliminarNivel() {
         let listaElementosNivel = []
         listaElementosNivel.pop(ReactDOM.render(listaElementosNivel, document.getElementById('elementos-planta')))
@@ -366,8 +319,6 @@ export const PlantasPage = () => {
         listaElementos[elementoAnalisisId].propiedades = elementoAnalisisProps;
     }
 
-    
-
     const GetConfNivelesPlantaCliente = async () => {
         axios.get("/confnivelesplantascliente", token).then(response => {
             setConfNivelesPlantaCliente(response.data.data)
@@ -399,13 +350,13 @@ export const PlantasPage = () => {
             const clienteSeleccionado = clientes.filter( cliente => cliente.codigo === confPlantaCliente.CodigoCliente )[0];
             setConfPlantaCliente({
                 ...confPlantaCliente,
-                nombreCliente: clienteSeleccionado.razonSocial
+                NombreCliente: clienteSeleccionado.razonSocial
             });
         }
 
-    },[confPlantaCliente.CodigoCliente])
+    },[confPlantaCliente.CodigoCliente]);
 
-    const peticionPost = async () => {
+    const handleCrearCargarPlanta = async () => {
 
         //crearNiveles();
 
@@ -430,6 +381,12 @@ export const PlantasPage = () => {
             return;
         }
         else {
+
+            // Consultamos si ya existe una planta creada
+            const planta = await getConfPlantaClientePorClienteOferta( confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta );
+
+            console.log(planta);
+            //if( planta)
 
             setPlantaCreada(true);
             
@@ -633,6 +590,20 @@ export const PlantasPage = () => {
 
       const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
 
+      useEffect(() => {
+
+        const datosDiagrama = {
+            nodos,
+            lados
+        }
+
+        setConfPlantaCliente({
+            ...confPlantaCliente,
+            Diagrama: JSON.stringify(datosDiagrama)
+        });
+
+      },[ nodos, lados]);
+
     return (
         <MainLayout title="Plantas">
 
@@ -676,7 +647,14 @@ export const PlantasPage = () => {
 
                             {/* Botón para crear */}
                             <Grid item xs={ 2 }>
-                                <Button disabled={ plantaCreada } sx={{ width: '100%' }} color='success' variant='contained' startIcon={<AddIcon />} onClick={ peticionPost }>
+                                <Button
+                                    disabled={ plantaCreada }
+                                    sx={{ width: '100%' }}
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<AddIcon />}
+                                    onClick={ handleCrearCargarPlanta }
+                                >
                                     Crear
                                 </Button>
                             </Grid>
@@ -799,7 +777,13 @@ export const PlantasPage = () => {
                 <Grid item xs={ 12 }>
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
 
-                        <Button disabled={ diagramaGenerado } color='success' variant='contained' startIcon={ <SaveIcon /> } onClick={ peticionPost }>
+                        <Button
+                            disabled={ diagramaGenerado }
+                            color='success'
+                            variant='contained'
+                            startIcon={ <SaveIcon /> }
+                            onClick={ async () => await putConfPlantaCliente( confPlantaCliente ) }
+                        >
                             Guardar datos
                         </Button>
 

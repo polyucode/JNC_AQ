@@ -224,11 +224,9 @@ export const Diagrama = ({ nodeData = nodeDataMock }) => {
     //     [setEdges]
     // );
 
-    const { nodos } = useDiagrama();
-
     return (     
         <ReactFlow
-            nodes={nodos}
+            nodes={nodes}
             edges={edges}
             // onNodesChange={onNodesChange}
             // onEdgesChange={onEdgesChange}

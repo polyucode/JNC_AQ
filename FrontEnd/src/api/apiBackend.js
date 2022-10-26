@@ -102,10 +102,23 @@ export const getConfPlantaCliente = async () => {
 
 }
 
+export const getConfPlantaClientePorClienteOferta = async ( codigoCliente, codigoOferta) => {
+
+    const resp = await axios.get(`/confplantascliente/planta/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }`, token);
+    return resp.data.data;
+
+}
+
 export const postConfPlantaCliente = async ( confPlantaCliente ) => {
 
     const resp = await axios.post('confplantascliente', confPlantaCliente, token);
     return resp.data.data;
+
+}
+
+export const putConfPlantaCliente = async ( confPlantaCliente ) => {
+
+    const resp = await axios.put('https://localhost:44343/api/confplantascliente', confPlantaCliente);
 
 }
 
