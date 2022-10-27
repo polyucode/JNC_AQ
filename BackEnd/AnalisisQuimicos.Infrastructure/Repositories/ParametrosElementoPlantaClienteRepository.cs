@@ -14,13 +14,13 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
     public class ParametrosElementoPlantaClienteRepository : BaseRepository<ParametrosElementoPlantaCliente>, IParametrosElementoPlantaClienteRepository
     {
         public ParametrosElementoPlantaClienteRepository(YucodeDevelopmentJNC_AQContext context) : base(context) { }
-        public async Task<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro)
+        public IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro)
         {
             var list = _entities.AsEnumerable();
 
             var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento);
 
-            return sel.ToArray()[0];
+            return sel.ToArray();
         }
     }
 }

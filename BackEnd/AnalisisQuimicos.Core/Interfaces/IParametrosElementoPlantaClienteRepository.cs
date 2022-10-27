@@ -9,6 +9,6 @@ namespace AnalisisQuimicos.Core.Interfaces
 {
     public interface IParametrosElementoPlantaClienteRepository : IRepository<ParametrosElementoPlantaCliente>
     {
-        Task<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro);
+        IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro);
     }
 }
