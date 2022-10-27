@@ -29,8 +29,8 @@ namespace AnalisisQuimicos.Api.Controllers
         public IActionResult GetAll()
         {
             var analisis = _parametros.GetAll();
-            var analisisDto = _mapper.Map<IEnumerable<ParametrosDTO>>(analisis);
-            var response = new ApiResponses<IEnumerable<ParametrosDTO>>(analisisDto);
+            var analisisDto = _mapper.Map<IEnumerable<Parametros>>(analisis);
+            var response = new ApiResponses<IEnumerable<Parametros>>(analisisDto);
             return Ok(response);
         }
 

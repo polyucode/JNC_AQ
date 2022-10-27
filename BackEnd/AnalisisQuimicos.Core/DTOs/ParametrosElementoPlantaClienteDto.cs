@@ -7,11 +7,11 @@ namespace AnalisisQuimicos.Core.DTOs
     public class ParametrosElementoPlantaClienteDto
     {
         public int? Id { get; set; }
-        public int? Parametro { get; set; }
+        public string Parametro { get; set; }
         public int? CodigoCliente { get; set; }
         public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
-        public int? Id_Elemento { get; set; }
+        public string Elemento { get; set; }
         public bool? EsPlantilla { get; set; }
         public int? LimInf { get; set; }
         public int? LimSup { get; set; }

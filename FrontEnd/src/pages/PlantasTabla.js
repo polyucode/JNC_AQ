@@ -630,27 +630,6 @@ function PlantasTabla() {
         }, [])
     }
 
-    /*function handleObject() {
-
-        const prueba = [];
-
-        Object.entries(parametrosSeleccionado).map(([key , value] ) => {
-            if(value != 0 || value != false ){
-                console.log([key + ' = ' + value ])
-
-                prueba.push({
-                    [key]: value
-                });
-            
-            }
-        })
-
-        setDatos(prueba);
-        console.log({prueba});
-
-    }*/
-
-
     async function guardarElementos() {
 
         parametrosBack.codigoCliente = valores.codigo;

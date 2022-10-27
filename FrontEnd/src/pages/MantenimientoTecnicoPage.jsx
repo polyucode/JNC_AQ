@@ -20,13 +20,13 @@ import { useParserBack } from "../hooks/useParserBack";
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros } from "../api/apiBackend";
 
-// const token = {
-//     headers: {
-//         Authorization: 'Bearer ' + localStorage.getItem('token')
-//     }
-// };
+const token = {
+     headers: {
+         Authorization: 'Bearer ' + localStorage.getItem('token')
+     }
+};
 
 // const useStyles = makeStyles((theme) => ({
 //     modal: {
@@ -77,6 +77,8 @@ export const MantenimientoTecnicoPage = () => {
     const [parametros, setParametros] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
 
+    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
+
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
     const [open, setOpen] = React.useState(true);
@@ -104,6 +106,15 @@ export const MantenimientoTecnicoPage = () => {
         setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
     }
 
+    const GetConfAnalisisNivelesPlantasCliente = async () => {
+        axios.get("/analisisnivelesplantascliente", token).then(response => {
+            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfAnalisisNivelesPlantasCliente(analisisNiveles);
+        })
+    }
+    
+    console.log(parametrosSeleccionado)
+
     // Peticiones a la api
     useEffect(() => {
 
@@ -119,7 +130,7 @@ export const MantenimientoTecnicoPage = () => {
         getParametros()
             .then(( res ) => setParametros( res ));
 
-        // GetConfAnalisisNivelesPlantasCliente();
+        GetConfAnalisisNivelesPlantasCliente();
         // GetParametrosPlantaCliente();
         // Parametros();
     }, [])
@@ -209,6 +220,8 @@ export const MantenimientoTecnicoPage = () => {
             [name]: value.elemento
         }))
 
+        
+
     }
 
     
@@ -227,7 +240,7 @@ export const MantenimientoTecnicoPage = () => {
 
     const handleGetParametros = async () => {
 
-        const resp = await getParametrosElemento( '1', '1243', 'Torre 1' );
+        const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.elemento );
         console.log({ resp });
 
         setParametrosElemento( prevState => ([ ...prevState, resp]));
@@ -235,7 +248,7 @@ export const MantenimientoTecnicoPage = () => {
 
     return (
         <MainLayout title='Mantenimiento técnico'>
-            <Grid container spacing={ 2 }>
+            <Grid container spacing={ 3 }>
 
                 {/* Sección de búsqueda */}
                 <Grid item xs={ 12 }>
@@ -259,10 +272,10 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={ true }
                                         id="codigoOferta"
                                         options={ ofertas }
-                                        //filterOptions={ options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente) }
+                                        filterOptions={ options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente) }
                                         getOptionLabel={ option => option.numeroOferta.toString() }
-                                        renderInput={ params => <TextField {...params} label="Código de oferta" name="codigoOferta" /> }
-                                        onChange={ (event, value) => onChangeOferta(event, value, "codigoOferta") }
+                                        renderInput={ params => <TextField {...params} label="Código de oferta" name="oferta" /> }
+                                        onChange={ (event, value) => onChangeOferta(event, value, "oferta") }
                                     />
                                 </Grid>
 
@@ -271,8 +284,8 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={ true }
                                         id="elemento"
                                         options={ elementos }
-                                        //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                        getOptionLabel={ option => (option.nombre) }
+                                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                        getOptionLabel={ option => option.elemento }
                                         renderInput={ params => <TextField {...params} label="Elemento" name="elemento" /> }
                                         onChange={ (event, value) => onChangeElemento(event, value, "elemento") }
                                     />
@@ -316,6 +329,7 @@ export const MantenimientoTecnicoPage = () => {
                     </Card>
                 </Grid>
 
+                {console.log(parametrosElemento)}
                 {/* Sección tabla de parámetros */}
                 <Grid item xs={ 12 }>
                     <Card>
@@ -341,7 +355,7 @@ export const MantenimientoTecnicoPage = () => {
                                                             parametro.activo &&
                                                             <ParametroMantenimiento
                                                                 key={ parametro.id }
-                                                                nombre={ parametros.filter( param => param.id === parametro.parametro )[0].nombre }
+                                                                nombre={ parametros.filter( param => param.nombre === parametro.parametro )[0].nombre }
                                                                 unidades={ parametro.unidades }
                                                             />
                                                         )

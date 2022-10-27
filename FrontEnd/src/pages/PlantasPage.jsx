@@ -68,6 +68,7 @@ export const PlantasPage = () => {
         delIdUser: null,
         deleted: null,
     });
+    
     /*
        const [elementosPlanta, setElementosPlanta] = useState({
            id: 0,

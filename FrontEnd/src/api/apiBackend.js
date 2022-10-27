@@ -112,19 +112,18 @@ export const getElementos = async () => {
 
 }
 
-export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
-
-    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Elemento=${ elemento }`;
-    const resp = await axios.get(url, token);
-    return resp.data.data;
-
-}
-
 export const getParametros = async () => {
 
     const resp = await axios.get('/parametros', token);
     return resp.data.data;
     
+}
+
+export const getFilasParametros = async ( codigoCliente, codigoOferta, elemento) => {
+
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Elemento=${ elemento }`, token);
+    return resp.data.data;
+
 }
 
 ///peticiones API
