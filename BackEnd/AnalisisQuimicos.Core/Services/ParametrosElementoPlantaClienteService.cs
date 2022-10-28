@@ -73,9 +73,9 @@ namespace AnalisisQuimicos.Core.Services
             await _unidadDeTrabajo.SaveChangesAsync();
         }
 
-        public async Task<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro)
+        public IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro)
         {
-            return await _unidadDeTrabajo.ParametrosElementoPlantaClienteRepository.GetParameters(filtro);
+            return _unidadDeTrabajo.ParametrosElementoPlantaClienteRepository.GetParameters(filtro);
         }
     }
 }

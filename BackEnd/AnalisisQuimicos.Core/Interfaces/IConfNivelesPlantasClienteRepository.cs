@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Interfaces
 {
-    public interface IParametrosElementoPlantaClienteRepository : IRepository<ParametrosElementoPlantaCliente>
+    public interface IConfNivelesPlantasClienteRepository : IRepository<ConfNivelesPlantasCliente>
     {
-        IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro);
+        IEnumerable<ConfNivelesPlantasCliente> GetByPlanta(ConfNivelesPlantasClienteQueryFilter filtro);
     }
 }
