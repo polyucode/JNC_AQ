@@ -48,7 +48,7 @@ namespace AnalisisQuimicos.Api.Controllers
         }
 
         [HttpGet("parametros")]
-        public IActionResult GetParameters([FromQuery]ParametrosElementoQueryFilter filtro)
+        public IActionResult GetParameters([FromQuery] ParametrosElementoQueryFilter filtro)
         {
             var cliente = _parametrosElementoPlantaClienteService.GetParameters(filtro).Result;
             var clienteDto = _mapper.Map<IEnumerable<ParametrosElementoPlantaCliente>>(cliente);
