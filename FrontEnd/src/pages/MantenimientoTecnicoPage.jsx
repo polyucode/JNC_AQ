@@ -77,7 +77,7 @@ export const MantenimientoTecnicoPage = () => {
     const [parametros, setParametros] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
 
-    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
+    const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -90,9 +90,9 @@ export const MantenimientoTecnicoPage = () => {
         nombreCliente: '',
         referencia: '',
         oferta: 0,
-        elemento: '',
+        idElemento: 0,
         fecha: null,
-        parametro: '',
+        parametro: 0,
         unidad: '',
         valor: 0
     })
@@ -106,10 +106,10 @@ export const MantenimientoTecnicoPage = () => {
         setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
     }
 
-    const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfAnalisisNivelesPlantasCliente(analisisNiveles);
+    const GetConfNivelesPlantasCliente = async () => {
+        axios.get("/confnivelesplantascliente", token).then(response => {
+            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfNivelesPlantasCliente(niveles);
         })
     }
     
@@ -130,7 +130,7 @@ export const MantenimientoTecnicoPage = () => {
         getParametros()
             .then(( res ) => setParametros( res ));
 
-        GetConfAnalisisNivelesPlantasCliente();
+        GetConfNivelesPlantasCliente();
         // GetParametrosPlantaCliente();
         // Parametros();
     }, [])
@@ -186,7 +186,7 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parametrosSeleccionado.idElemento))
         }
 
         setParametrosSeleccionado((prevState) => ({
@@ -199,7 +199,7 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeOferta = (e, value, name) => {
 
         if(e.target.textContent !== ""){
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.elemento === parametrosSeleccionado.elemento))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.idElemento === parametrosSeleccionado.idElemento))
         }
 
         setParametrosSeleccionado((prevState) => ({
@@ -212,18 +212,16 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeElemento = (e, value, name) => {
 
         if(e.target.textContent !== ""){
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === e.target.textContent))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parseInt(e.target.textContent)))
         }
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.elemento
+            [name]: value.id
         }))
-
-        
-
     }
 
+    console.log(parametrosElemento)
     
 
     function createData(parametro, unidad, valor, valor1Mes, valor2Meses) {
@@ -240,8 +238,7 @@ export const MantenimientoTecnicoPage = () => {
 
     const handleGetParametros = async () => {
 
-        const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.elemento );
-        console.log({ resp });
+        const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
 
         setParametrosElemento( prevState => ([ ...prevState, resp]));
     }
@@ -284,10 +281,10 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={ true }
                                         id="elemento"
                                         options={ elementos }
-                                        filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                        getOptionLabel={ option => option.elemento }
-                                        renderInput={ params => <TextField {...params} label="Elemento" name="elemento" /> }
-                                        onChange={ (event, value) => onChangeElemento(event, value, "elemento") }
+                                        filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                        getOptionLabel={ option => option.id_Elemento }
+                                        renderInput={ params => <TextField {...params} label="Elemento" name="idElemento" /> }
+                                        onChange={ (event, value) => onChangeElemento(event, value, "idElemento") }
                                     />
                                 </Grid>
 
@@ -329,7 +326,6 @@ export const MantenimientoTecnicoPage = () => {
                     </Card>
                 </Grid>
 
-                {console.log(parametrosElemento)}
                 {/* Sección tabla de parámetros */}
                 <Grid item xs={ 12 }>
                     <Card>
@@ -350,12 +346,12 @@ export const MantenimientoTecnicoPage = () => {
 
                                             <TableBody>
                                                 {
-                                                    parametrosElemento.map( parametro => {
+                                                    parametrosElemento[0].map( (parametro) => {
                                                         return (
                                                             parametro.activo &&
                                                             <ParametroMantenimiento
                                                                 key={ parametro.id }
-                                                                nombre={ parametros.filter( param => param.nombre === parametro.parametro )[0].nombre }
+                                                                nombre={ parametros.filter( param => param.id === parametro.parametro)[0].nombre}
                                                                 unidades={ parametro.unidades }
                                                             />
                                                         )

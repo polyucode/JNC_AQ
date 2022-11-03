@@ -107,7 +107,7 @@ export const PlantasTablaPage = () => {
 
     const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
 
-    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
+    const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
 
     const [oferta, setOferta] = useState([]);
 
@@ -162,7 +162,7 @@ export const PlantasTablaPage = () => {
         codigoCliente: 0,
         nombreCliente: "",
         oferta: '',
-        elemento: "",
+        idElemento: 0,
         fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
@@ -346,7 +346,7 @@ export const PlantasTablaPage = () => {
         codigoCliente: 0,
         nombreCliente: '',
         oferta: '',
-        elemento: '',
+        idElemento: 0,
         esPlantilla: false,
         limInf: 0,
         limSup: 0,
@@ -356,11 +356,13 @@ export const PlantasTablaPage = () => {
 
     })
 
+    console.log(parametrosBack)
+    console.log(parametrosFront)
+
     const tipoParametros = [];
     parametros.map(parametro => tipoParametros.push({ id: parametro.id, nombre: parametro.nombre, liminf: "", limsup: "", unidades: parametro.unidad, activo: false, verinspector: false }))
-    console.log(tipoParametros)
-    console.log(parametros)
 
+    console.log(tipoParametros)
 
     const planta = {
         codigoCliente: 0,
@@ -646,10 +648,10 @@ export const PlantasTablaPage = () => {
         })
     }
 
-    const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfAnalisisNivelesPlantasCliente(analisisNiveles);
+    const GetConfNivelesPlantasCliente = async () => {
+        axios.get("/confnivelesplantascliente", token).then(response => {
+            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfNivelesPlantasCliente(niveles);
         })
     }
 
@@ -672,7 +674,7 @@ export const PlantasTablaPage = () => {
         GetOfertas();
         GetClientes();
         GetElementos();
-        GetConfAnalisisNivelesPlantasCliente();
+        GetConfNivelesPlantasCliente();
         GetParametros();
     }, [])
 
@@ -880,15 +882,15 @@ export const PlantasTablaPage = () => {
                                                 disableClearable={true}
                                                 className={styles.inputMaterial}
                                                 id="elemento"
-                                                inputValue={parametrosSeleccionado.elemento}
+                                                inputValue={parametrosSeleccionado.idElemento}
                                                 options={elementos}
-                                                filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                                getOptionLabel={option => option.elemento}
+                                                filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                                getOptionLabel={option => option.id_Elemento}
                                                 sx={{ width: 225 }}
                                                 renderInput={(params) => <TextField {...params} name="elemento" />}
                                                 onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                                     ...prevState,
-                                                    elemento: value.elemento
+                                                    idElemento: value.id
                                                 }))}
                                             />
                                         </td>

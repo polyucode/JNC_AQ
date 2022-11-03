@@ -119,9 +119,9 @@ export const getParametros = async () => {
     
 }
 
-export const getFilasParametros = async ( codigoCliente, codigoOferta, elemento) => {
+export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
 
-    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Elemento=${ elemento }`, token);
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
     return resp.data.data;
 
 }
