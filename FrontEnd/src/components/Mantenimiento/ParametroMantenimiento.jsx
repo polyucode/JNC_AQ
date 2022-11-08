@@ -1,8 +1,6 @@
 import { TableRow, TableCell, TextField, InputAdornment } from '@mui/material';
 
 export const ParametroMantenimiento = ({ nombre, unidades }) => {
-
-    console.log( nombre )
     return (
         <TableRow>
             <TableCell component="th" scope="row">
@@ -26,6 +24,7 @@ export const ParametroMantenimiento = ({ nombre, unidades }) => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
                     }}
+                    disabled
                 />
             </TableCell>
             <TableCell>
@@ -36,6 +35,7 @@ export const ParametroMantenimiento = ({ nombre, unidades }) => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
                     }}
+                    disabled
                 />
             </TableCell>
         </TableRow>

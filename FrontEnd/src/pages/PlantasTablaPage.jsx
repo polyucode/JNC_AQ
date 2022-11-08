@@ -20,6 +20,7 @@ import { MainLayout } from "../layout/MainLayout";
 
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
+import { ConnectedTv } from "@mui/icons-material";
 
 const token = {
     headers: {
@@ -146,6 +147,8 @@ export const PlantasTablaPage = () => {
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
+
+    const [ tipoParametros, setTipoParametros ] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -355,12 +358,6 @@ export const PlantasTablaPage = () => {
         verInspector: false
 
     })
-
-    console.log(parametrosBack)
-    console.log(parametrosFront)
-
-    const tipoParametros = [];
-    parametros.map(parametro => tipoParametros.push({ id: parametro.id, nombre: parametro.nombre, liminf: "", limsup: "", unidades: parametro.unidad, activo: false, verinspector: false }))
 
     console.log(tipoParametros)
 
@@ -669,6 +666,10 @@ export const PlantasTablaPage = () => {
     }
 
     useEffect(() => {
+        setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false })))
+    }, [parametros])
+
+    useEffect(() => {
         GetParametrosAnalisisPlanta();
         GetConfParametrosElementoPlantaCliente();
         GetOfertas();
@@ -709,7 +710,6 @@ export const PlantasTablaPage = () => {
 
     const handleActivo = (e) => {
         const { name, value, checked } = e.target
-        console.log(e.target)
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
         if (checked) {
             document.getElementById(name + 'limInf').removeAttribute('disabled');
@@ -717,54 +717,106 @@ export const PlantasTablaPage = () => {
             document.getElementById(name + 'unidades').removeAttribute('disabled');
             document.getElementById(name + 'activo').setAttribute('checked', 'checked');
             document.getElementById(name + 'verInspector').removeAttribute('disabled');
+            setTipoParametros(tipoParametros.map(parametro => {
+            
+                if(name === parametro.nombre){
+                    return {
+                        ...parametro,
+                        activo: checked
+                    }
+                } else {
+                    return parametro
+                }
+                
+            }))
         } else {
             document.getElementById(name + 'limInf').setAttribute('disabled', 'disabled');
             document.getElementById(name + 'limSup').setAttribute('disabled', 'disabled');
             document.getElementById(name + 'unidades').setAttribute('disabled', 'disabled');
             document.getElementById(name + 'activo').removeAttribute('checked');
             document.getElementById(name + 'verInspector').setAttribute('disabled', 'disabled');
+            setTipoParametros(tipoParametros.map(parametro => {
+            
+                if(name === parametro.nombre){
+                    return {
+                        ...parametro,
+                        activo: checked
+                    }
+                } else {
+                    return parametro
+                }
+                
+            }))
         }
 
     }
 
     const handleLimitInferior = (e) => {
         const { name, value } = e.target
-        console.log(e.target)
-        // Actualiza el valor en la variable
-        setParametros2Seleccionado(prevState => ({
-            ...prevState,
-            [name]: value
+
+        setTipoParametros(tipoParametros.map(parametro => {
+            
+            if(name === parametro.nombre){
+                return {
+                    ...parametro,
+                    limInf: parseInt(value)
+                }
+            } else {
+                return parametro
+            }
+            
         }))
         
     }
 
     const handleLimitSuperior = (e) => {
         const { name, value } = e.target
-        console.log(e.target)
         // Actualiza el valor en la variable
-        setParametros2Seleccionado(prevState => ({
-            ...prevState,
-            [name]: value
+        setTipoParametros(tipoParametros.map(parametro => {
+            
+            if(name === parametro.nombre){
+                return {
+                    ...parametro,
+                    limSup: parseInt(value)
+                }
+            } else {
+                return parametro
+            }
+            
         }))
     }
 
     const handleVerInspector = (e) => {
         const { name, value, checked } = e.target
-        console.log(e.target)
         // Actualiza el valor en la variable
-        setParametros2Seleccionado(prevState => ({
-            ...prevState,
-            [name]: checked
+        setTipoParametros(tipoParametros.map(parametro => {
+            
+            if(name === parametro.nombre){
+                return {
+                    ...parametro,
+                    verInspector: checked
+                }
+            } else {
+                return parametro
+            }
+            
         }))
     }
 
     const handleUnidad = (e) => {
         const { name, value } = e.target
-        console.log(e.target)
         // Actualiza el valor en la variable
-        setParametros2Seleccionado(prevState => ({
-            ...prevState,
-            [name]: value
+        setTipoParametros(tipoParametros.map(parametro => {
+            
+            if(name === parametro.nombre){
+                return {
+                    ...parametro,
+                    unidades: value
+                }
+            } else {
+                return parametro
+            }
+            
         }))
     }
 
@@ -783,30 +835,90 @@ export const PlantasTablaPage = () => {
             })
     }
 
+    console.log(parametrosSeleccionado)
+
     const GetParametros2 = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
+        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&IdElemento=" + parametrosSeleccionado.idElemento
         const response = await axios.get(url, token)
 
-        setDatosParametrosFront(response.data.data)
+        console.log(response)
 
+        setTipoParametros(response.data.data)
+
+    }
+
+    console.log(tipoParametros)
+
+    async function valorParametros(){
+
+        tipoParametros.map((parametro) => {
+            if(parametro.activo == true){
+                const param2 = {
+                    id: 0,
+                    CodigoCliente: parametrosSeleccionado.codigoCliente,
+                    Referencia: "",
+                    Oferta: parametrosSeleccionado.oferta,
+                    Id_Elemento: parametrosSeleccionado.idElemento,
+                    Parametro: parametro.id,
+                    Fecha: null,
+                    Valor: 0,
+                    Unidad: parametro.unidades,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+                axios.post("/valorparametros", param2, token)
+                    .then(response => {
+                        return response
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
+        })
     }
 
     async function guardarElementos() {
 
-        parametrosBack.codigoCliente = valores.codigo;
-        parametrosBack.nombreCliente = valores.nombre;
-        parametrosBack.oferta = valores.ofertas;
-        parametrosBack.elemento = valores.elemento;
+        valorParametros()
+        tipoParametros.map((parametro) => {
+            if(parametro.activo == true){
+                const param = {
+                    id: 0,
+                    Parametro: parametro.id,
+                    CodigoCliente: parametrosSeleccionado.codigoCliente,
+                    NombreCliente: parametrosSeleccionado.nombreCliente,
+                    Oferta: parametrosSeleccionado.oferta,
+                    Id_Elemento: parametrosSeleccionado.idElemento,
+                    EsPlantilla: true,
+                    LimInf: parametro.limInf,
+                    LimSup: parametro.limSup,
+                    Unidades: parametro.unidades,
+                    Activo: parametro.activo,
+                    VerInspector: parametro.verInspector,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+                axios.post("/parametroselementoplantacliente", param, token)
+                    .then(response => {
+                        return response
+                    }).catch(error => {
+                        console.log(error);
+                    })
+            }
+        })
 
-        await axios.post("/parametroselementoplantacliente", parametrosBack, token)
-            .then(response => {
-                return response
-            }).catch(error => {
-                console.log(error);
-            })
-
-        //handleObject()
+        alert("Los parametros se han guardado correctamente")
     }
 
     return (
@@ -920,7 +1032,7 @@ export const PlantasTablaPage = () => {
                         </div>
                         :
                         <div className='botones-menu'>
-                            <button className="plantilla" onClick={GetParametros}> Abrir Plantilla </button>
+                            <button className="plantilla" onClick={GetParametros2}> Abrir Plantilla </button>
                             <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
                             <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
                         </div>
@@ -945,7 +1057,7 @@ export const PlantasTablaPage = () => {
                                         
                                             <tr key={index}>
                                                 <td>{parametro.nombre}</td>
-                                                <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior} disabled /></td>
+                                                <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior}  disabled /></td>
                                                 <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} disabled /></td>
                                                 <td>
                                                     <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidad} onChange={handleUnidad} disabled />

@@ -240,7 +240,7 @@ export const MantenimientoTecnicoPage = () => {
 
         const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
 
-        setParametrosElemento( prevState => ([ ...prevState, resp]));
+        setParametrosElemento( resp );
     }
 
     return (
@@ -312,7 +312,6 @@ export const MantenimientoTecnicoPage = () => {
                                 <Grid item xs={ 4 }>
                                     <TextField
                                         sx={{ width: '100%' }}
-                                        label="Fecha"
                                         id="fecha"
                                         name="fecha"
                                         type="date"
@@ -346,7 +345,7 @@ export const MantenimientoTecnicoPage = () => {
 
                                             <TableBody>
                                                 {
-                                                    parametrosElemento[0].map( (parametro) => {
+                                                    parametrosElemento.map( (parametro) => {
                                                         return (
                                                             parametro.activo &&
                                                             <ParametroMantenimiento
