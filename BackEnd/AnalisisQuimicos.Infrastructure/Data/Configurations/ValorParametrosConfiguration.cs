@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.ToTable("GES_ValorParametros");
 
             builder.HasKey(e => e.Oferta);
-            builder.HasKey(e => e.Elemento);
+            builder.HasKey(e => e.Id_Elemento);
             builder.HasKey(e => e.Parametro);
             builder.HasKey(e => e.Fecha);
 
@@ -25,7 +25,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Oferta).HasColumnType("Oferta");
 
-            builder.Property(e => e.Elemento).HasColumnType("Elemento");
+            builder.Property(e => e.Id_Elemento).HasColumnType("Id_Elemento");
 
             builder.Property(e => e.Parametro).HasColumnType("Parametro");
 
