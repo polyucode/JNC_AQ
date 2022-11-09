@@ -839,7 +839,7 @@ export const PlantasTablaPage = () => {
 
     const GetParametros2 = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&IdElemento=" + parametrosSeleccionado.idElemento
+        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Id_Elemento=" + parametrosSeleccionado.idElemento
         const response = await axios.get(url, token)
 
         console.log(response)

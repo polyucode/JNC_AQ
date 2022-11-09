@@ -222,25 +222,17 @@ export const MantenimientoTecnicoPage = () => {
     }
 
     console.log(parametrosElemento)
-    
 
-    function createData(parametro, unidad, valor, valor1Mes, valor2Meses) {
-        return { parametro, unidad, valor, valor1Mes, valor2Meses };
-    }
-
-    const rows = [
-        createData('pH', 'pH'),
-        createData('Temperatura', 'ºC'),
-        createData('Conductividad a 25 ºC', 'uS/cm'),
-        createData('TDS', 'mg/l'),
-        createData('Dureza cálcica', 'mg/l CaCO3'),
-    ];
 
     const handleGetParametros = async () => {
 
         const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
 
         setParametrosElemento( resp );
+    }
+
+    async function guardarParametros(){
+
     }
 
     return (
@@ -379,6 +371,7 @@ export const MantenimientoTecnicoPage = () => {
                                         variant="contained"
                                         color="success"
                                         startIcon={ <SaveIcon /> }
+                                        onClick={ guardarParametros }
                                     >
                                         Guardar datos
                                     </Button>
