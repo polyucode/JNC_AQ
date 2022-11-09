@@ -11,5 +11,7 @@ namespace AnalisisQuimicos.Core.QueryFilters
         public int? Oferta { get; set; }
 
         public int? Id_Elemento { get; set; }
+
+        //public string Fecha { get; set; }
     }
 }
