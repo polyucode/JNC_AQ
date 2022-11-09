@@ -28,46 +28,6 @@ const token = {
      }
 };
 
-// const useStyles = makeStyles((theme) => ({
-//     modal: {
-//         position: 'absolute',
-//         width: 1050,
-//         height: 750,
-//         backgroundColor: theme.palette.background.paper,
-//         boxShadow: theme.shadows[5],
-//         padding: theme.spacing(2, 4, 3),
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)'
-//     },
-//     iconos: {
-//         cursor: 'pointer'
-//     },
-//     inputMaterial: {
-//         width: '100%'
-//     }
-// }));
-
-// const useStyles2 = makeStyles((theme) => ({
-//     modal: {
-//         position: 'absolute',
-//         width: 1150,
-//         height: 750,
-//         backgroundColor: theme.palette.background.paper,
-//         boxShadow: theme.shadows[5],
-//         padding: theme.spacing(2, 4, 3),
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)'
-//     },
-//     iconos: {
-//         cursor: 'pointer'
-//     },
-//     inputMaterial: {
-//         width: '45%'
-//     }
-// }));
-
 export const MantenimientoTecnicoPage = () => {
 
     // Declaración de variables
@@ -131,8 +91,6 @@ export const MantenimientoTecnicoPage = () => {
             .then(( res ) => setParametros( res ));
 
         GetConfNivelesPlantasCliente();
-        // GetParametrosPlantaCliente();
-        // Parametros();
     }, [])
 
     useEffect(() => {
@@ -154,21 +112,6 @@ export const MantenimientoTecnicoPage = () => {
 
     const handleClick = () => {
         setOpen(!open);
-    };
-
-    const handleContextMenu = (event) => {
-        event.preventDefault();
-        setContextMenu(
-            contextMenu === null
-                ? {
-                    mouseX: event.clientX - 2,
-                    mouseY: event.clientY - 4,
-                }
-                : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
-                // Other native context menus might behave different.
-                // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
-                null,
-        );
     };
 
     const handleChange = e => {
@@ -233,6 +176,28 @@ export const MantenimientoTecnicoPage = () => {
 
     async function guardarParametros(){
 
+        parametrosElemento.map(parametro => {
+            if(parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null){
+                parametro.referencia = parametrosSeleccionado.referencia
+                parametro.fecha = parametrosSeleccionado.fecha
+                axios.put("/valorparametros?id=" + parametro.id, parametro, token)
+                    .then(response => {
+                        var parametroModificado = data;
+                        parametroModificado.map(param => {
+                            if(param.id === parametro.id){
+                                param = parametro
+                            }
+                        })
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                alert("Los valores se han guardado correctamente")
+            }
+            else{
+                alert("Falta introducir algun dato")
+            }
+        })      
     }
 
     return (
@@ -307,7 +272,6 @@ export const MantenimientoTecnicoPage = () => {
                                         id="fecha"
                                         name="fecha"
                                         type="date"
-                                        placeholder="fuck"
                                         onChange={ handleChange }
                                     />
                                 </Grid>
@@ -337,13 +301,16 @@ export const MantenimientoTecnicoPage = () => {
 
                                             <TableBody>
                                                 {
-                                                    parametrosElemento.map( (parametro) => {
+                                                    parametrosElemento.map( (parametro, index) => {
                                                         return (
-                                                            parametro.activo &&
                                                             <ParametroMantenimiento
                                                                 key={ parametro.id }
+                                                                index={ parametro.id }
                                                                 nombre={ parametros.filter( param => param.id === parametro.parametro)[0].nombre}
-                                                                unidades={ parametro.unidades }
+                                                                unidades={ parametro.unidad }
+                                                                valor = { parametro.valor }
+                                                                parametrosElemento = { setParametrosElemento }
+                                                                parametros = { parametrosElemento }
                                                             />
                                                         )
                                                     })

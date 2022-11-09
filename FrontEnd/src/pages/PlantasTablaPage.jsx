@@ -691,23 +691,6 @@ export const PlantasTablaPage = () => {
 
     }, [parametrosSeleccionado.codigoCliente])
 
-    /* useEffect(() => {
-
-        // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
-        if ("Activo") {
-            document.getElementById('LimInf').removeAttribute('disabled');
-            document.getElementById('LimSup').removeAttribute('disabled');
-            document.getElementById('Unidades').removeAttribute('disabled');
-            document.getElementById('VerInspector').removeAttribute('disabled');
-        } else {
-            document.getElementById('LimInf').setAttribute('disabled', 'disabled');
-            document.getElementById('LimSup').setAttribute('disabled', 'disabled');
-            document.getElementById('Unidades').setAttribute('disabled', 'disabled');
-            document.getElementById('VerInspector').setAttribute('disabled', 'disabled');
-        }
-
-    }, []); */
-
     const handleActivo = (e) => {
         const { name, value, checked } = e.target
         // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
@@ -835,16 +818,14 @@ export const PlantasTablaPage = () => {
             })
     }
 
-    console.log(parametrosSeleccionado)
-
     const GetParametros2 = async () => {
 
         const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Id_Elemento=" + parametrosSeleccionado.idElemento
         const response = await axios.get(url, token)
 
-        console.log(response)
+        console.log(response.data.data)
 
-        setTipoParametros(response.data.data)
+        //setTipoParametros(response.data.data)
 
     }
 
