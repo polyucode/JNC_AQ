@@ -312,7 +312,6 @@ C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.Ap
 C:\Users\aitor\Documents\Proyectos\J Negre SL\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.genruntimeconfig.cache
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\appsettings.json
-C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.StaticWebAssets.xml
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.exe
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.deps.json
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.runtimeconfig.json
