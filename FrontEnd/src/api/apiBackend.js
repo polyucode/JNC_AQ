@@ -126,6 +126,13 @@ export const getFilasParametros = async ( codigoCliente, codigoOferta, idElement
 
 }
 
+export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento) => {
+
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    return resp.data.data;
+
+}
+
 ///peticiones API
 //   const peticionGetContacto = async () => {
     //     console.log("MEtodo Get Ejecutandose")

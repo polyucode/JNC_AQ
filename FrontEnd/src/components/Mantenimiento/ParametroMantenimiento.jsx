@@ -8,7 +8,6 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
     console.log(parametros)
     const cambiarValor = (e) => {
         const { name, value } = e.target
-        console.log(e.target)
         parametrosElemento(parametros.map((param) => {
             if(index == param.id){
                 return{

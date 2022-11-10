@@ -22,6 +22,8 @@ import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 import { ConnectedTv } from "@mui/icons-material";
 
+import { getParametrosPlanta } from "../api/apiBackend";
+
 const token = {
     headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -148,7 +150,7 @@ export const PlantasTablaPage = () => {
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
 
-    const [ tipoParametros, setTipoParametros ] = useState([]);
+    const [tipoParametros, setTipoParametros] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -701,8 +703,8 @@ export const PlantasTablaPage = () => {
             document.getElementById(name + 'activo').setAttribute('checked', 'checked');
             document.getElementById(name + 'verInspector').removeAttribute('disabled');
             setTipoParametros(tipoParametros.map(parametro => {
-            
-                if(name === parametro.nombre){
+
+                if (name === parametro.nombre) {
                     return {
                         ...parametro,
                         activo: checked
@@ -710,7 +712,7 @@ export const PlantasTablaPage = () => {
                 } else {
                     return parametro
                 }
-                
+
             }))
         } else {
             document.getElementById(name + 'limInf').setAttribute('disabled', 'disabled');
@@ -719,8 +721,8 @@ export const PlantasTablaPage = () => {
             document.getElementById(name + 'activo').removeAttribute('checked');
             document.getElementById(name + 'verInspector').setAttribute('disabled', 'disabled');
             setTipoParametros(tipoParametros.map(parametro => {
-            
-                if(name === parametro.nombre){
+
+                if (name === parametro.nombre) {
                     return {
                         ...parametro,
                         activo: checked
@@ -728,7 +730,7 @@ export const PlantasTablaPage = () => {
                 } else {
                     return parametro
                 }
-                
+
             }))
         }
 
@@ -738,8 +740,8 @@ export const PlantasTablaPage = () => {
         const { name, value } = e.target
 
         setTipoParametros(tipoParametros.map(parametro => {
-            
-            if(name === parametro.nombre){
+
+            if (name === parametro.nombre) {
                 return {
                     ...parametro,
                     limInf: parseInt(value)
@@ -747,17 +749,17 @@ export const PlantasTablaPage = () => {
             } else {
                 return parametro
             }
-            
+
         }))
-        
+
     }
 
     const handleLimitSuperior = (e) => {
         const { name, value } = e.target
         // Actualiza el valor en la variable
         setTipoParametros(tipoParametros.map(parametro => {
-            
-            if(name === parametro.nombre){
+
+            if (name === parametro.nombre) {
                 return {
                     ...parametro,
                     limSup: parseInt(value)
@@ -765,7 +767,7 @@ export const PlantasTablaPage = () => {
             } else {
                 return parametro
             }
-            
+
         }))
     }
 
@@ -773,8 +775,8 @@ export const PlantasTablaPage = () => {
         const { name, value, checked } = e.target
         // Actualiza el valor en la variable
         setTipoParametros(tipoParametros.map(parametro => {
-            
-            if(name === parametro.nombre){
+
+            if (name === parametro.nombre) {
                 return {
                     ...parametro,
                     verInspector: checked
@@ -782,7 +784,7 @@ export const PlantasTablaPage = () => {
             } else {
                 return parametro
             }
-            
+
         }))
     }
 
@@ -790,8 +792,8 @@ export const PlantasTablaPage = () => {
         const { name, value } = e.target
         // Actualiza el valor en la variable
         setTipoParametros(tipoParametros.map(parametro => {
-            
-            if(name === parametro.nombre){
+
+            if (name === parametro.nombre) {
                 return {
                     ...parametro,
                     unidades: value
@@ -799,42 +801,64 @@ export const PlantasTablaPage = () => {
             } else {
                 return parametro
             }
-            
+
         }))
     }
 
     const editarPlantilla = async () => {
-        await axios.put("/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
-            .then(response => {
-                var parametrosModificado = data2;
-                parametrosModificado.map(parametro => {
-                    if (parametro.id === parametrosBack.id) {
-                        parametro = parametrosBack
-                    }
-                });
-                GetConfParametrosElementoPlantaCliente();
-            }).catch(error => {
-                console.log(error);
-            })
+        tipoParametros.map(parametro => {
+            if (parametro.activo == true) {
+                axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, token)
+                    .then(response => {
+                        var parametrosModificado = data2;
+                        parametrosModificado.map(param => {
+                            if (param.id === parametro.id) {
+                                param = parametro
+                            }
+                        });
+                        GetConfParametrosElementoPlantaCliente();
+                    }).catch(error => {
+                        console.log(error);
+                    })
+            }
+        })
+
     }
 
     const GetParametros2 = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Id_Elemento=" + parametrosSeleccionado.idElemento
-        const response = await axios.get(url, token)
+        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento);
 
-        console.log(response.data.data)
+        let tipoParametrosActualizados = tipoParametros;
 
-        //setTipoParametros(response.data.data)
+        resp.map(datos => {
+
+            const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
+
+            tipoParametrosActualizados[indiceElemento] = {
+                id: datos.parametro,
+                nombre: tipoParametros[indiceElemento].nombre,
+                limInf: datos.limInf,
+                limSup: datos.limSup,
+                unidades: datos.unidades,
+                activo: datos.activo,
+                verInspector: datos.verInspector
+            };
+
+        })
+
+        console.log(tipoParametrosActualizados);
+
+        setTipoParametros(tipoParametrosActualizados)
 
     }
 
     console.log(tipoParametros)
 
-    async function valorParametros(){
+    async function valorParametros() {
 
         tipoParametros.map((parametro) => {
-            if(parametro.activo == true){
+            if (parametro.activo == true) {
                 const param2 = {
                     id: 0,
                     CodigoCliente: parametrosSeleccionado.codigoCliente,
@@ -868,7 +892,6 @@ export const PlantasTablaPage = () => {
 
         valorParametros()
         tipoParametros.map((parametro) => {
-            if(parametro.activo == true){
                 const param = {
                     id: 0,
                     Parametro: parametro.id,
@@ -897,7 +920,7 @@ export const PlantasTablaPage = () => {
                         console.log(error);
                     })
             }
-        })
+        )
 
         alert("Los parametros se han guardado correctamente")
     }
@@ -1034,19 +1057,18 @@ export const PlantasTablaPage = () => {
                                     <th><center>Ver Insp.</center></th>
                                 </tr>
                                 {
-                                    parametros.map((parametro, index) =>
-                                        
-                                            <tr key={index}>
-                                                <td>{parametro.nombre}</td>
-                                                <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior}  disabled /></td>
-                                                <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} disabled /></td>
-                                                <td>
-                                                    <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidad} onChange={handleUnidad} disabled />
-                                                </td>
-                                                <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "activo"} onChange={handleActivo} /></center></td>
-                                                <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "verInspector"} onChange={handleVerInspector} disabled /></center></td>
-                                            </tr>
-                                        
+                                    tipoParametros.map((parametro, index) =>
+                                        <tr key={index}>
+                                            <td>{parametro.nombre}</td>
+                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior} value={parametro.limInf} disabled /></td>
+                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} value={parametro.limSup} disabled /></td>
+                                            <td>
+                                                <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidades} onChange={handleUnidad} disabled />
+                                            </td>
+                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "activo"} onChange={handleActivo} checked={parametro.activo} value={parametro.activo} /></center></td>
+                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "verInspector"} onChange={handleVerInspector} checked={parametro.verInspector} value={parametro.verInspector} disabled /></center></td>
+                                        </tr>
+
                                     )
                                 }
                             </tbody>
