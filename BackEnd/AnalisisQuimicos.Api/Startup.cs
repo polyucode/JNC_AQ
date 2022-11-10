@@ -67,6 +67,7 @@ namespace AnalisisQuimicos.Api
             services.AddTransient<IConfPlantasClienteService, ConfPlantasClienteService>();
             services.AddTransient<IConfNivelesPlantasClienteService, ConfNivelesPlantasClienteService>();
             services.AddTransient<IAnalisisNivelesPlantasClienteService, AnalisisNivelesPlantasClienteService>();
+            services.AddTransient<IValorParametrosService, ValorParametrosService>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             //services.AddScoped(typeof(IRepository<>), typeof(BaseRepositoryJNegre<>));
             services.AddTransient<IUnidadDeTrabajo, UnidadDeTrabajo>();

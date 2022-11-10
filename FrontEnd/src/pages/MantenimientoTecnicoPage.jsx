@@ -20,53 +20,13 @@ import { useParserBack } from "../hooks/useParserBack";
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros } from "../api/apiBackend";
 
-// const token = {
-//     headers: {
-//         Authorization: 'Bearer ' + localStorage.getItem('token')
-//     }
-// };
-
-// const useStyles = makeStyles((theme) => ({
-//     modal: {
-//         position: 'absolute',
-//         width: 1050,
-//         height: 750,
-//         backgroundColor: theme.palette.background.paper,
-//         boxShadow: theme.shadows[5],
-//         padding: theme.spacing(2, 4, 3),
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)'
-//     },
-//     iconos: {
-//         cursor: 'pointer'
-//     },
-//     inputMaterial: {
-//         width: '100%'
-//     }
-// }));
-
-// const useStyles2 = makeStyles((theme) => ({
-//     modal: {
-//         position: 'absolute',
-//         width: 1150,
-//         height: 750,
-//         backgroundColor: theme.palette.background.paper,
-//         boxShadow: theme.shadows[5],
-//         padding: theme.spacing(2, 4, 3),
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)'
-//     },
-//     iconos: {
-//         cursor: 'pointer'
-//     },
-//     inputMaterial: {
-//         width: '45%'
-//     }
-// }));
+const token = {
+     headers: {
+         Authorization: 'Bearer ' + localStorage.getItem('token')
+     }
+};
 
 export const MantenimientoTecnicoPage = () => {
 
@@ -76,6 +36,8 @@ export const MantenimientoTecnicoPage = () => {
     const [elementos, setElementos] = useState([]);
     const [parametros, setParametros] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
+
+    const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
 
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
@@ -88,9 +50,9 @@ export const MantenimientoTecnicoPage = () => {
         nombreCliente: '',
         referencia: '',
         oferta: 0,
-        elemento: '',
+        idElemento: 0,
         fecha: null,
-        parametro: '',
+        parametro: 0,
         unidad: '',
         valor: 0
     })
@@ -103,6 +65,15 @@ export const MantenimientoTecnicoPage = () => {
     function Parametros() {
         setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
     }
+
+    const GetConfNivelesPlantasCliente = async () => {
+        axios.get("/confnivelesplantascliente", token).then(response => {
+            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            setConfNivelesPlantasCliente(niveles);
+        })
+    }
+    
+    console.log(parametrosSeleccionado)
 
     // Peticiones a la api
     useEffect(() => {
@@ -119,9 +90,7 @@ export const MantenimientoTecnicoPage = () => {
         getParametros()
             .then(( res ) => setParametros( res ));
 
-        // GetConfAnalisisNivelesPlantasCliente();
-        // GetParametrosPlantaCliente();
-        // Parametros();
+        GetConfNivelesPlantasCliente();
     }, [])
 
     useEffect(() => {
@@ -145,21 +114,6 @@ export const MantenimientoTecnicoPage = () => {
         setOpen(!open);
     };
 
-    const handleContextMenu = (event) => {
-        event.preventDefault();
-        setContextMenu(
-            contextMenu === null
-                ? {
-                    mouseX: event.clientX - 2,
-                    mouseY: event.clientY - 4,
-                }
-                : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
-                // Other native context menus might behave different.
-                // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
-                null,
-        );
-    };
-
     const handleChange = e => {
         const { name, value } = e.target;
         setParametrosSeleccionado(prevState => ({
@@ -175,7 +129,7 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parametrosSeleccionado.idElemento))
         }
 
         setParametrosSeleccionado((prevState) => ({
@@ -188,7 +142,7 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeOferta = (e, value, name) => {
 
         if(e.target.textContent !== ""){
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.elemento === parametrosSeleccionado.elemento))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.idElemento === parametrosSeleccionado.idElemento))
         }
 
         setParametrosSeleccionado((prevState) => ({
@@ -201,41 +155,54 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeElemento = (e, value, name) => {
 
         if(e.target.textContent !== ""){
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === e.target.textContent))
+            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parseInt(e.target.textContent)))
         }
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.elemento
+            [name]: value.id
         }))
-
     }
 
-    
+    console.log(parametrosElemento)
 
-    function createData(parametro, unidad, valor, valor1Mes, valor2Meses) {
-        return { parametro, unidad, valor, valor1Mes, valor2Meses };
-    }
-
-    const rows = [
-        createData('pH', 'pH'),
-        createData('Temperatura', 'ºC'),
-        createData('Conductividad a 25 ºC', 'uS/cm'),
-        createData('TDS', 'mg/l'),
-        createData('Dureza cálcica', 'mg/l CaCO3'),
-    ];
 
     const handleGetParametros = async () => {
 
-        const resp = await getParametrosElemento( '1', '1243', 'Torre 1' );
-        console.log({ resp });
+        const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
 
-        setParametrosElemento( prevState => ([ ...prevState, resp]));
+        setParametrosElemento( resp );
+    }
+
+    async function guardarParametros(){
+
+        parametrosElemento.map(parametro => {
+            if(parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null){
+                parametro.referencia = parametrosSeleccionado.referencia
+                parametro.fecha = parametrosSeleccionado.fecha
+                axios.put("/valorparametros?id=" + parametro.id, parametro, token)
+                    .then(response => {
+                        var parametroModificado = data;
+                        parametroModificado.map(param => {
+                            if(param.id === parametro.id){
+                                param = parametro
+                            }
+                        })
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                alert("Los valores se han guardado correctamente")
+            }
+            else{
+                alert("Falta introducir algun dato")
+            }
+        })      
     }
 
     return (
         <MainLayout title='Mantenimiento técnico'>
-            <Grid container spacing={ 2 }>
+            <Grid container spacing={ 3 }>
 
                 {/* Sección de búsqueda */}
                 <Grid item xs={ 12 }>
@@ -259,10 +226,10 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={ true }
                                         id="codigoOferta"
                                         options={ ofertas }
-                                        //filterOptions={ options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente) }
+                                        filterOptions={ options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente) }
                                         getOptionLabel={ option => option.numeroOferta.toString() }
-                                        renderInput={ params => <TextField {...params} label="Código de oferta" name="codigoOferta" /> }
-                                        onChange={ (event, value) => onChangeOferta(event, value, "codigoOferta") }
+                                        renderInput={ params => <TextField {...params} label="Código de oferta" name="oferta" /> }
+                                        onChange={ (event, value) => onChangeOferta(event, value, "oferta") }
                                     />
                                 </Grid>
 
@@ -271,10 +238,10 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={ true }
                                         id="elemento"
                                         options={ elementos }
-                                        //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                        getOptionLabel={ option => (option.nombre) }
-                                        renderInput={ params => <TextField {...params} label="Elemento" name="elemento" /> }
-                                        onChange={ (event, value) => onChangeElemento(event, value, "elemento") }
+                                        filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
+                                        getOptionLabel={ option => option.id_Elemento }
+                                        renderInput={ params => <TextField {...params} label="Elemento" name="idElemento" /> }
+                                        onChange={ (event, value) => onChangeElemento(event, value, "idElemento") }
                                     />
                                 </Grid>
 
@@ -302,11 +269,9 @@ export const MantenimientoTecnicoPage = () => {
                                 <Grid item xs={ 4 }>
                                     <TextField
                                         sx={{ width: '100%' }}
-                                        label="Fecha"
                                         id="fecha"
                                         name="fecha"
                                         type="date"
-                                        placeholder="fuck"
                                         onChange={ handleChange }
                                     />
                                 </Grid>
@@ -336,13 +301,16 @@ export const MantenimientoTecnicoPage = () => {
 
                                             <TableBody>
                                                 {
-                                                    parametrosElemento.map( parametro => {
+                                                    parametrosElemento.map( (parametro, index) => {
                                                         return (
-                                                            parametro.activo &&
                                                             <ParametroMantenimiento
                                                                 key={ parametro.id }
-                                                                nombre={ parametros.filter( param => param.id === parametro.parametro )[0].nombre }
-                                                                unidades={ parametro.unidades }
+                                                                index={ parametro.id }
+                                                                nombre={ parametros.filter( param => param.id === parametro.parametro)[0].nombre}
+                                                                unidades={ parametro.unidad }
+                                                                valor = { parametro.valor }
+                                                                parametrosElemento = { setParametrosElemento }
+                                                                parametros = { parametrosElemento }
                                                             />
                                                         )
                                                     })
@@ -370,6 +338,7 @@ export const MantenimientoTecnicoPage = () => {
                                         variant="contained"
                                         color="success"
                                         startIcon={ <SaveIcon /> }
+                                        onClick={ guardarParametros }
                                     >
                                         Guardar datos
                                     </Button>

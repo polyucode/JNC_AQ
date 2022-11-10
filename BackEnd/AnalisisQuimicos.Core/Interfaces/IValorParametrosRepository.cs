@@ -9,6 +9,6 @@ namespace AnalisisQuimicos.Core.Interfaces
 {
     public interface IValorParametrosRepository : IRepository<ValorParametros>
     {
-        Task<ValorParametros> GetParameters(ValorParametrosQueryFilter filtro);
+        IEnumerable<ValorParametros> GetParameters(ValorParametrosQueryFilter filtro);
     }
 }

@@ -23,13 +23,13 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.NombreCliente).HasColumnName("NombreCliente");
 
-            builder.Property(e => e.Diagrama).HasColumnName("Diagrama");
-
             builder.Property(e => e.Oferta).HasColumnName("Oferta");
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
 
             builder.Property(e => e.NumNiveles).HasColumnName("NumNiveles");
+
+            builder.Property(e => e.Diagrama).HasColumnName("Diagrama");
         }
     }
 }

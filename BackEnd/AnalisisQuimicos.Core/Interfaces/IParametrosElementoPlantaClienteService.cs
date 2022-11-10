@@ -19,6 +19,6 @@ namespace AnalisisQuimicos.Core.Interfaces
 
         Task Delete(int id);
 
-        Task<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro);
+        IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro);
     }
 }

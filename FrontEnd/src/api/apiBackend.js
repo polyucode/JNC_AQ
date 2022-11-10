@@ -199,6 +199,20 @@ export const getParametros = async () => {
     
 }
 
+export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
+
+    const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    return resp.data.data;
+
+}
+
+export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento) => {
+
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    return resp.data.data;
+
+}
+
 /*** ANÁLISIS  ***/
 
 export const getAnalisisNivelesPlantasCliente = async () => {
@@ -208,12 +222,14 @@ export const getAnalisisNivelesPlantasCliente = async () => {
 
 }
 
+
 export const getAnalisisNivelesPlantasClientePorIdNivel = async ( idNivel ) => {
 
     const resp = await axios.get(`/AnalisisNivelesPlantasCliente/analisis?Id_NivelesPlanta=${ idNivel }`, token);
     return resp.data.data;
 
 }
+
 
 export const postAnalisisNivelesPlantasCliente = async ( analisis ) => {
 
@@ -228,7 +244,6 @@ export const putAnalisisNivelesPlantasCliente = async ( analisis ) => {
     return resp.data.data;
 
 }
-
 
 
 ///peticiones API

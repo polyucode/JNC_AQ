@@ -1,5 +1,6 @@
 ﻿using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class ValorParametrosService : IRepository<ValorParametros>
+    public class ValorParametrosService : IValorParametrosService //IRepository<ValorParametros>
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
@@ -45,6 +46,11 @@ namespace AnalisisQuimicos.Core.Services
         {
             _unidadDeTrabajo.ValorParametrosRepository.Update(valor);
             await _unidadDeTrabajo.SaveChangesAsync();
+        }
+
+        public IEnumerable<ValorParametros> GetParameters(ValorParametrosQueryFilter filtro)
+        {
+            return _unidadDeTrabajo.ValorParametrosRepository.GetParameters(filtro);
         }
     }
 }
