@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
 //import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
-import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
-import FullCalendar from '@fullcalendar/react'
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
+import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle, Autocomplete } from '@mui/material';
 
 import {
     Chart,
@@ -19,8 +14,11 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import './HomeCliente.css';
 import { Diagrama } from './Diagrama/Diagrama';
+import { getConfPlantaClientePorClienteOferta, getOfertas } from '../api/apiBackend';
+import { AuthContext } from '../context/AuthContext';
+import { useDiagrama } from '../helpers/generarDiagrama';
+import ReactFlow, { Background } from 'react-flow-renderer';
 
 const token = {
     headers: {
@@ -28,54 +26,19 @@ const token = {
     }
 };
 
-const nodosElementos = [
-    {
-        id: 'A-1',
-        type: 'input',
-        data: { label: 'Caldera 1' },
-        position: { x: 10, y: 30 },
-        parentNode: 'A',
-        sourcePosition: 'right',
-        style: {
-          width: 130,
-          height: 40,
-        },
-        draggable: false,
-        extent: 'parent',
-    },
-    {
-        id: 'A-2',
-        type: 'input',
-        data: { label: 'Torre 1' },
-        position: { x: 10, y: 80 },
-        parentNode: 'A',
-        sourcePosition: 'right',
-        style: {
-          width: 130,
-          height: 40,
-        },
-        draggable: false,
-        extent: 'parent',
-    },
-    {
-        id: 'B-1',
-        data: { label: 'Torre 2' },
-        position: { x: 10, y: 30 },
-        parentNode: 'B',
-        sourcePosition: 'right',
-        targetPosition: 'left',
-        style: {
-            width: 130,
-            height: 40,
-        },
-        draggable: false,
-        extent: 'parent',
-    }
-]
 
-function HomeCliente() {
+
+const HomeCliente = () => {
 
     const [ valores, setValores ] = useState([]);
+    const [ ofertas, setOfertas ] = useState([]);
+    const [ plantaActiva, setPlantaActiva ] = useState({});
+    const [ nodos, setNodos ] = useState([]);
+    const [ lados, setLados ] = useState([]);
+
+    const { user } = useContext( AuthContext );
+    const { nodeTypesDashboard } = useDiagrama();
+
 
 
     const getValorParametros = async () => {
@@ -86,83 +49,35 @@ function HomeCliente() {
     }
 
     useEffect(() => {
+
         getValorParametros();
+
+        getOfertas()
+            .then( resp => setOfertas( resp ));
+
     }, [])
 
+    // Efecto que carga el diagrama cada vez que se cambi de planta
+    useEffect(() => {
 
-    // const CustomRender = ({ id, content, data, inputs, outputs }) => (
-    //     <div onClick={prueba(data.id)} style={{background: data.background, border: '1px solid '+ data.selector, borderRadius: '5px', color: data.color}}>
-    //         <div style={{display:'flex', justifyContent:'space-between'}}>
-    //             {inputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
-    //             <div role="button" style={{padding: '5px'}}>
-    //             {content}
-    //             </div>
-    //             {outputs.map((port) => React.cloneElement(port, {style: { width: '10px', height: '34px', background: data.selector }}))}
-    //         </div>
-    //     </div>    
-    // );
+        if( plantaActiva.diagrama ) {
 
-    // const initialSchema = createSchema({
-    //     nodes: [
-    //         {
-    //             id: 'node-1',
-    //             content: 'Osmosis 1',
-    //             coordinates: [20, 120],
-    //             render: CustomRender,
-    //             data: {background: '#d1c4e9', selector: '#b39ddb', color: '#4527a0'},
-    //             outputs: [ { id: 'port-1' } ],
-    //             onClick: mostrarElementos()
-    //         },
-    //         {
-    //             id: 'node-2',
-    //             content: 'Torre 1',
-    //             coordinates: [260, 50],
-    //             render: CustomRender,
-    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-    //             inputs: [ { id: 'port-2' } ],
-    //             outputs: [ { id: 'port-3' } ]
-    //         },
-    //         {
-    //             id: 'node-3',
-    //             content: 'Torre 2',
-    //             coordinates: [260, 120],
-    //             render: CustomRender,
-    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-    //             inputs: [ { id: 'port-4' } ],
-    //             outputs: [ { id: 'port-5' } ]
-    //         },
-    //         {
-    //             id: 'node-4',
-    //             content: 'Depósito 1',
-    //             coordinates: [260, 190],
-    //             render: CustomRender,
-    //             data: {background: '#c5cae9', selector: '#9fa8da', color: '#283593'},
-    //             inputs: [ { id: 'port-6' } ],
-    //             outputs: [ { id: 'port-7' } ]
-    //         },
-    //         {
-    //             id: 'node-5',
-    //             content: 'Caldera 1',
-    //             coordinates: [480, 120],
-    //             render: CustomRender,
-    //             data: {background: '#bbdefb', selector: '#90caf9', color: '#1565c0'},
-    //             inputs: [ { id: 'port-8' } ],
-    //             outputs: [ { id: 'port-9' } ]
-    //         }
-    //     ],
-    //     links: [
-    //     { input: 'port-1', output: 'port-2' },
-    //     { input: 'port-1', output: 'port-4' },
-    //     { input: 'port-1', output: 'port-6' },
-    //     { input: 'port-3', output: 'port-8' },
-    //     { input: 'port-5', output: 'port-8' },
-    //     { input: 'port-7', output: 'port-8' },
-        
-    //     ]
-    // })
+            const datosDiagrama = JSON.parse( plantaActiva.diagrama );
+            console.log( datosDiagrama );
 
-    // const [schema, { onChange, addNode, removeNode }] = useSchema(initialSchema);
+            setNodos( datosDiagrama.nodos );
+            setLados( datosDiagrama.lados );
 
+        } else {
+
+            setNodos([]);
+            setLados([]);
+
+        }
+
+    }, [ plantaActiva ])
+
+    
     const categories = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul","Ago","Sep","Oct","Nov","Dic"];
 
     const ChartContainer = () => (
@@ -182,95 +97,84 @@ function HomeCliente() {
         </Chart>
       );
 
-      function prueba(id) {
-      }
+    // Con esta función, al seleccionar una oferta seteamos la planta activa
+    const handleSeleccionOferta = (e) => {
 
-      function mostrarElementos () {
-      }
+        const ofertaSeleccionada = parseInt(e.target.textContent);
+
+        getConfPlantaClientePorClienteOferta( user.idCliente, ofertaSeleccionada )
+            .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
+
+    }
 
     return (
         <>
-
             <Grid container spacing={ 2 }>
 
+                {/* APARTADO INICIAL, SELECCIÓN DE PLANTA */}
                 <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, height: 400 }}>
+                        <CardContent>
+                            <Grid container sx={{ alignItems: 'center' }}>
 
-                            <Diagrama />
+                                <Grid item xs={ 6 }>
+                                    <Typography variant="h6">
+                                        {
+                                            plantaActiva.nombreCliente
+                                             ? plantaActiva.nombreCliente
+                                             : 'Selecciona un código de oferta'
+                                        }
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={ 4 }> 
+                                    {
+                                        plantaActiva.descripcion && (
+                                            <Typography>{ plantaActiva.descripcion }</Typography>
+                                        ) 
+                                    }
+                                </Grid>
+                                <Grid item xs={ 2 }>
+                                    <Autocomplete
+                                        disableClearable={ true }
+                                        id="ofertas"
+                                        options={ ofertas }
+                                        getOptionLabel={ option => option.numeroOferta.toString() }
+                                        renderInput={ params => <TextField {...params} label="Código oferta" name="codigoOferta" /> }
+                                        onChange={ handleSeleccionOferta }
+                                    />
+                                </Grid>
 
+                            </Grid>
                         </CardContent>
                     </Card>
                 </Grid>
 
-                <Grid item xl={ 6 }>
+                {/* APARTADO DEL DIAGRAMA */}
+                <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, mb: 2 }}>
-
-                            <Typography variant='h5'>Calendario de mantenimientos</Typography>
-                            <FullCalendar
-                                plugins={[ resourceTimelinePlugin, dayGridPlugin, timeGridPlugin, listPlugin ]}
-                                headerToolbar={{
-                                left: 'today prev,next',
-                                center: 'title',
-                                right: 'resourceTimelineYear,resourceTimelineMonth',
-                                }}
-                                locale= 'esLocale'
-                                timeZone= 'UTC'
-                                initialView= 'resourceTimelineYear'
-                                scrollTime= '08:00'
-                                aspectRatio= {1.5}
-                                weekends={false}
-                                height= {350}
-                                resourceAreaHeaderContent= 'Elementos'
-                                resources= {[
-                                {    
-                                    id: 1,
-                                    title: 'Elemento 1'
-                                },
-                                {    
-                                    id: 2,
-                                    title: 'Elemento 2'
-                                },
-                                {    
-                                    id: 3,
-                                    title: 'Elemento 3'
-                                },
-                                ]}
-                                events={ [
-                                {
-                                    id: 1,
-                                    title: 'Mantenimiento 1',
-                                    start: '2022-03-01',
-                                    end: '2022-03-06',
-                                    resourceId: 1,
-                                    color: 'red'
-                                },
-                                {
-                                    id: 2,
-                                    title: 'Mantenimiento 2',
-                                    start: '2022-03-05',
-                                    end: '2022-03-11',
-                                    resourceId: 3,
-                                    color: 'green'
-                                },
-                                {
-                                    id: 3,
-                                    title: 'Mantenimiento 3',
-                                    start: '2022-03-15',
-                                    end: '2022-03-23',
-                                    resourceId: 2,
-                                    color: 'orange'
-                                }
-                                ]}
-                                //events= 'https://fullcalendar.io/api/demo-feeds/events.json?single-day&for-resource-timeline'
-                            />
-
+                        <CardContent sx={{ p: 0 }}>
+                            <Grid container>
+                                <Grid item xs={ 12 }>
+                                    <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
+                                </Grid>
+                                <Grid item xs={ 12 } sx={{ height: 400 }}>
+                                    <ReactFlow
+                                        nodes={ nodos }
+                                        edges={ lados }
+                                        //onEdgesChange={onEdgesChange}
+                                        //onConnect={onConnect}
+                                        nodeTypes={ nodeTypesDashboard }
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Card>
                 </Grid>
 
-                <Grid item xl={ 6 }>
+                <Grid item xs={ 6 }>
                     <Card>
                         <CardContent sx={{ p: 0, mb: 2 }}>
 
@@ -332,7 +236,7 @@ function HomeCliente() {
                     </Card>
                 </Grid>
 
-                <Grid item xl={ 6 }>
+                <Grid item xs={ 6 }>
                     <Card>
                         <CardContent sx={{ p: 0, mb: 2 }}>
 

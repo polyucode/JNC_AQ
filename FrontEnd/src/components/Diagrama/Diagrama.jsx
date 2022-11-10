@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import ReactFlow, { addEdge, applyEdgeChanges, applyNodeChanges, Background } from 'react-flow-renderer';
+import { useDiagrama } from '../../helpers/generarDiagrama';
 import { NodoGrupo } from './NodoGrupo';
 
 
