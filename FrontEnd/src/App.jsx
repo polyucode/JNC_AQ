@@ -2,6 +2,7 @@
 import { AppTheme } from './theme';
 import { AppRouter } from './router/AppRouter';
 import { AuthProvider } from './context/AuthContext';
+import { DashboardProvider } from './context/DashboardContext';
 
 export default function App() {
 
@@ -9,7 +10,9 @@ export default function App() {
     <>
     <AppTheme>
       <AuthProvider>
-        <AppRouter />
+        <DashboardProvider>
+          <AppRouter />
+        </DashboardProvider>
       </AuthProvider>
     </AppTheme>
     </>

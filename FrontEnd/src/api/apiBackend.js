@@ -6,6 +6,7 @@ const token = {
     headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }
 }
 
+//*** TABLAS "ESTÁTICAS" ***//
 export const getPerfiles = async () => {
 
     const resp = await axios.get(`/perfil`, token);
@@ -37,6 +38,13 @@ export const getPoblaciones = async () => {
 export const getListaElementos = async () => {
 
     const resp = await axios.get('/elementos', token);
+    return resp.data.data;
+
+}
+
+export const getListaAnalisis = async () => {
+
+    const resp = await axios.get('/analisis', token);
     return resp.data.data;
 
 }
@@ -111,7 +119,7 @@ export const getConfPlantaClientePorClienteOferta = async ( codigoCliente, codig
 
 export const postConfPlantaCliente = async ( confPlantaCliente ) => {
 
-    const resp = await axios.post('confplantascliente', confPlantaCliente, token);
+    const resp = await axios.post('/confplantascliente/', confPlantaCliente, token);
     return resp.data.data;
 
 }
@@ -122,6 +130,28 @@ export const putConfPlantaCliente = async ( confPlantaCliente ) => {
 
 }
 
+/*** NIVELES ***/
+
+export const postConfNivelesPlantasCliente = async ( nivel ) => {
+
+    const resp = await axios.post('/confNivelesPlantasCliente', nivel, token);
+    return resp.data.data;
+
+}
+
+export const putConfNivelesPlantasCliente = async ( nivel ) => {
+
+    const resp = await axios.put('/confNivelesPlantasCliente', nivel, token);
+    return resp.data.data;
+
+}
+
+export const getConfNivelesPlantasClientePorPlanta = async ( idPlanta ) => {
+
+    const resp = await axios.get(`/confNivelesPlantasCliente/nivel?Id_Planta=${ idPlanta }`, token);
+    return resp.data.data;
+
+}
 
 /*** ELEMENTOS ***/
 
@@ -132,6 +162,28 @@ export const getElementos = async () => {
 
 }
 
+export const getElementoPorId = async ( id ) => {
+
+    const resp = await axios.get(`/elementosplanta/${ id }`);
+    return resp.data.data;
+    
+}
+
+export const postElementos = async ( elemento ) => {
+
+    const resp = await axios.post('/elementosplanta', elemento, token);
+    return resp.data.data;
+
+}
+
+export const putElementos = async ( elemento ) => {
+
+    const resp = await axios.put('/elementosplanta', elemento, token);
+    return resp.data.data;
+
+}
+
+/*** PARÁMETROS ***/
 export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
 
     const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Elemento=${ elemento }`;
@@ -146,6 +198,38 @@ export const getParametros = async () => {
     return resp.data.data;
     
 }
+
+/*** ANÁLISIS  ***/
+
+export const getAnalisisNivelesPlantasCliente = async () => {
+
+    const resp = await axios.get('/AnalisisNivelesPlantasCliente', token);
+    return resp.data.data;
+
+}
+
+export const getAnalisisNivelesPlantasClientePorIdNivel = async ( idNivel ) => {
+
+    const resp = await axios.get(`/AnalisisNivelesPlantasCliente/analisis?Id_NivelesPlanta=${ idNivel }`, token);
+    return resp.data.data;
+
+}
+
+export const postAnalisisNivelesPlantasCliente = async ( analisis ) => {
+
+    const resp = await axios.post('/AnalisisNivelesPlantasCliente', analisis, token);
+    return resp.data.data;
+
+}
+
+export const putAnalisisNivelesPlantasCliente = async ( analisis ) => {
+
+    const resp = await axios.put('/AnalisisNivelesPlantasCliente', analisis, token);
+    return resp.data.data;
+
+}
+
+
 
 ///peticiones API
 //   const peticionGetContacto = async () => {

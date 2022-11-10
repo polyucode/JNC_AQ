@@ -33,11 +33,11 @@ const HomeCliente = () => {
     const [ valores, setValores ] = useState([]);
     const [ ofertas, setOfertas ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
-    const [ nodos, setNodos ] = useState();
-    const [ lados, setLados ] = useState();
+    const [ nodos, setNodos ] = useState([]);
+    const [ lados, setLados ] = useState([]);
 
     const { user } = useContext( AuthContext );
-    const { nodeTypes } = useDiagrama();
+    const { nodeTypesDashboard } = useDiagrama();
 
 
 
@@ -67,6 +67,12 @@ const HomeCliente = () => {
 
             setNodos( datosDiagrama.nodos );
             setLados( datosDiagrama.lados );
+
+        } else {
+
+            setNodos([]);
+            setLados([]);
+
         }
 
     }, [ plantaActiva ])
@@ -97,7 +103,7 @@ const HomeCliente = () => {
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
         getConfPlantaClientePorClienteOferta( user.idCliente, ofertaSeleccionada )
-            .then( res => setPlantaActiva( res ) );
+            .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
 
     }
 
@@ -146,17 +152,24 @@ const HomeCliente = () => {
                 {/* APARTADO DEL DIAGRAMA */}
                 <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, height: 400 }}>
-                            <ReactFlow
-                                nodes={ nodos }
-                                edges={ lados }
-                                //onEdgesChange={onEdgesChange}
-                                //onConnect={onConnect}
-                                nodeTypes={ nodeTypes }
-                                fitView
-                            >
-                                <Background />
-                            </ReactFlow>
+                        <CardContent sx={{ p: 0 }}>
+                            <Grid container>
+                                <Grid item xs={ 12 }>
+                                    <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
+                                </Grid>
+                                <Grid item xs={ 12 } sx={{ height: 400 }}>
+                                    <ReactFlow
+                                        nodes={ nodos }
+                                        edges={ lados }
+                                        //onEdgesChange={onEdgesChange}
+                                        //onConnect={onConnect}
+                                        nodeTypes={ nodeTypesDashboard }
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Card>
                 </Grid>

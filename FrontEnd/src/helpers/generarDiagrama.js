@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
 import { addEdge, applyEdgeChanges } from 'react-flow-renderer';
 import { NodoElemento } from '../components/Diagrama/NodoElemento';
+import { NodoElementoDashboard } from '../components/Diagrama/NodoElementoDashboard';
 import { NodoGrupo } from '../components/Diagrama/NodoGrupo';
 
 const nodeTypes = { nodoGrupo: NodoGrupo, nodoElemento: NodoElemento };
+const nodeTypesDashboard = { nodoGrupo: NodoGrupo, nodoElemento: NodoElementoDashboard };
 
 export const useDiagrama = () => {
 
@@ -76,6 +78,7 @@ export const useDiagrama = () => {
                     id: `${ elemento.nombre }-${ elemento.numero }`,
                     type: 'nodoElemento',
                     data: {
+                        id: elemento.id,
                         label: `${ elemento.nombre } ${ elemento.numero }`,
                         edges: posNivel
                     },
@@ -114,6 +117,7 @@ export const useDiagrama = () => {
         nodos,
         lados,
         nodeTypes,
+        nodeTypesDashboard,
         diagramaGenerado,
         generarDiagrama,
         onEdgesChange,

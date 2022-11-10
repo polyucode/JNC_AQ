@@ -67,7 +67,7 @@ export const NivelPlanta = ({
 
         // Añadimos el elemento al listado
         setElementosPlanta([ ...elementosPlanta, elemento ]);
-        setIndiceElemento(indiceElemento + 1);
+        setIndiceElemento(indiceElemento - 1);
 
     }
 
