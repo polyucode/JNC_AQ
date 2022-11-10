@@ -13,6 +13,7 @@ import { height } from "@mui/system";
 import MenuItem from '@mui/material/MenuItem';
 
 import './OfertasClientes.css';
+import { MainLayout } from "../layout/MainLayout";
 
 const token = {
     headers: {
@@ -468,7 +469,7 @@ function OfertasClientes() {
                     delIdUser: null,
                     deleted: null,
                 })
-                setNumber({ cantidad: 0, consumidos: 0})
+                setNumber({ cantidad: 0, consumidos: 0 })
             }).catch(error => {
                 console.log(error);
             })
@@ -889,7 +890,7 @@ function OfertasClientes() {
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
                     abrirCerrarModalEditarProducto();
                 })}
-                
+
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadasProducto(filas);
                     if (filas.length > 0) {
@@ -1104,146 +1105,148 @@ function OfertasClientes() {
 
 
     return (
-        <div>
-            <MaterialTable columns={columnas} data={data}
-                localization={{
-                    body: {
-                        emptyDataSourceMessage: 'No hay datos por mostrar',
-                        addTooltip: 'Añadir',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
+        <MainLayout title="Ofertas">
+            <div>
+                <MaterialTable columns={columnas} data={data}
+                    localization={{
+                        body: {
+                            emptyDataSourceMessage: 'No hay datos por mostrar',
+                            addTooltip: 'Añadir',
+                            deleteTooltip: 'Eliminar',
+                            editTooltip: 'Editar',
+                            filterRow: {
+                                filterTooltip: 'Filtrar',
+                            },
+                            editRow: {
+                                deleteText: '¿Segura(o) que quiere eliminar?',
+                                cancelTooltip: 'Cancelar',
+                                saveTooltip: 'Guardar',
+                            },
                         },
-                        editRow: {
-                            deleteText: '¿Segura(o) que quiere eliminar?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
+                        grouping: {
+                            placeholder: "Arrastre un encabezado aquí para agrupar",
+                            groupedBy: 'Agrupado por',
                         },
-                    },
-                    grouping: {
-                        placeholder: "Arrastre un encabezado aquí para agrupar",
-                        groupedBy: 'Agrupado por',
-                    },
-                    header: {
-                        actions: 'Acciones',
-                    },
-                    pagination: {
-                        firstAriaLabel: 'Primera página',
-                        firstTooltip: 'Primera página',
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsPerPage: 'Filas por página:',
-                        labelRowsSelect: 'filas',
-                        lastAriaLabel: 'Ultima página',
-                        lastTooltip: 'Ultima página',
-                        nextAriaLabel: 'Pagina siguiente',
-                        nextTooltip: 'Pagina siguiente',
-                        previousAriaLabel: 'Pagina anterior',
-                        previousTooltip: 'Pagina anterior',
-                    },
-                    toolbar: {
-                        addRemoveColumns: 'Agregar o eliminar columnas',
-                        exportAriaLabel: 'Exportar',
-                        exportName: 'Exportar a CSV',
-                        exportTitle: 'Exportar',
-                        nRowsSelected: '{0} filas seleccionadas',
-                        searchPlaceholder: 'Buscar',
-                        searchTooltip: 'Buscar',
-                        showColumnsAriaLabel: 'Mostrar columnas',
-                        showColumnsTitle: 'Mostrar columnas',
-                    },
-                }}
-                actions={[
-                    {
-                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                        tooltip: "Añadir Oferta",
-                        isFreeAction: true,
-                        onClick: (e, data) => {
-                            abrirCerrarModalInsertar()
+                        header: {
+                            actions: 'Acciones',
                         },
-                    },
-                    {
-                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                        tooltip: "Eliminar Oferta",
-                        onClick: (event, rowData) => {
-                            setOfertaEliminar(FilasSeleccionadas);
-                            abrirCerrarModalEliminar()
+                        pagination: {
+                            firstAriaLabel: 'Primera página',
+                            firstTooltip: 'Primera página',
+                            labelDisplayedRows: '{from}-{to} de {count}',
+                            labelRowsPerPage: 'Filas por página:',
+                            labelRowsSelect: 'filas',
+                            lastAriaLabel: 'Ultima página',
+                            lastTooltip: 'Ultima página',
+                            nextAriaLabel: 'Pagina siguiente',
+                            nextTooltip: 'Pagina siguiente',
+                            previousAriaLabel: 'Pagina anterior',
+                            previousTooltip: 'Pagina anterior',
                         },
-                    },
-                ]}
-                onRowClick={(event, ofertaSeleccionada) => {
-                    // Copy row data and set checked state
-                    console.log(ofertaSeleccionada)
-                    setOfertaSeleccionada(ofertaSeleccionada);
-                    setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-                    getOfertasProductos();
-                    setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
-                    setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
-                    setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))
-                    setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto2))
-                    abrirCerrarModalEditar();
-                }}
-                onSelectionChange={(filas) => {
-                    setFilasSeleccionadas(filas);
-                    if(filas.length > 0){
-                        setOfertaSeleccionada(filas[0])
-                    }
-                }}
+                        toolbar: {
+                            addRemoveColumns: 'Agregar o eliminar columnas',
+                            exportAriaLabel: 'Exportar',
+                            exportName: 'Exportar a CSV',
+                            exportTitle: 'Exportar',
+                            nRowsSelected: '{0} filas seleccionadas',
+                            searchPlaceholder: 'Buscar',
+                            searchTooltip: 'Buscar',
+                            showColumnsAriaLabel: 'Mostrar columnas',
+                            showColumnsTitle: 'Mostrar columnas',
+                        },
+                    }}
+                    actions={[
+                        {
+                            icon: () => <AddCircle style={{ fill: "green" }} />,
+                            tooltip: "Añadir Oferta",
+                            isFreeAction: true,
+                            onClick: (e, data) => {
+                                abrirCerrarModalInsertar()
+                            },
+                        },
+                        {
+                            icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                            tooltip: "Eliminar Oferta",
+                            onClick: (event, rowData) => {
+                                setOfertaEliminar(FilasSeleccionadas);
+                                abrirCerrarModalEliminar()
+                            },
+                        },
+                    ]}
+                    onRowClick={(event, ofertaSeleccionada) => {
+                        // Copy row data and set checked state
+                        console.log(ofertaSeleccionada)
+                        setOfertaSeleccionada(ofertaSeleccionada);
+                        setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
+                        getOfertasProductos();
+                        setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
+                        setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
+                        setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))
+                        setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto2))
+                        abrirCerrarModalEditar();
+                    }}
+                    onSelectionChange={(filas) => {
+                        setFilasSeleccionadas(filas);
+                        if (filas.length > 0) {
+                            setOfertaSeleccionada(filas[0])
+                        }
+                    }}
 
-                options={{
-                    sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-                    columnsButton: true, showSelectAllCheckbox: false,
-                    rowStyle: rowData => ({
-                        backgroundColor: (ofertaSeleccionada === rowData.tableData.id) ? '#EEE' : '#FFF',
-                        whiteSpace: "nowrap"
-                    }),
-                    exportMenu: [{
-                        label: 'Export PDF',
-                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Ofertas')
-                    }, {
-                        label: 'Export CSV',
-                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Ofertas')
-                    }]
-                }}
+                    options={{
+                        sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
+                        columnsButton: true, showSelectAllCheckbox: false,
+                        rowStyle: rowData => ({
+                            backgroundColor: (ofertaSeleccionada === rowData.tableData.id) ? '#EEE' : '#FFF',
+                            whiteSpace: "nowrap"
+                        }),
+                        exportMenu: [{
+                            label: 'Export PDF',
+                            exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Ofertas')
+                        }, {
+                            label: 'Export CSV',
+                            exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Ofertas')
+                        }]
+                    }}
 
-                title="Listado de Ofertas"
-            />
-            <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
+                    title="Listado de Ofertas"
+                />
+                <Modal
+                    open={modalInsertar}
+                    onClose={abrirCerrarModalInsertar}>
+                    {bodyInsertar}
+                </Modal>
 
-            <Modal
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
+                <Modal
+                    open={modalEditar}
+                    onClose={abrirCerrarModalEditar}>
+                    {bodyEditar}
+                </Modal>
 
-            <Modal
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
+                <Modal
+                    open={modalEliminar}
+                    onClose={abrirCerrarModalEliminar}>
+                    {bodyEliminar}
+                </Modal>
 
-            <Modal
-                open={modalInsertarProducto}
-                onClose={abrirCerrarModalInsertarProducto}>
-                {bodyInsertarProducto}
-            </Modal>
+                <Modal
+                    open={modalInsertarProducto}
+                    onClose={abrirCerrarModalInsertarProducto}>
+                    {bodyInsertarProducto}
+                </Modal>
 
-            <Modal
-                open={modalEditarProducto}
-                onClose={abrirCerrarModalEditarProducto}>
-                {bodyEditarProducto}
-            </Modal>
+                <Modal
+                    open={modalEditarProducto}
+                    onClose={abrirCerrarModalEditarProducto}>
+                    {bodyEditarProducto}
+                </Modal>
 
-            <Modal
-                open={modalEliminarProducto}
-                onClose={abrirCerrarModalEliminarProducto}>
-                {bodyEliminarProducto}
-            </Modal>
-        </div>
+                <Modal
+                    open={modalEliminarProducto}
+                    onClose={abrirCerrarModalEliminarProducto}>
+                    {bodyEliminarProducto}
+                </Modal>
+            </div>
+        </MainLayout>
     )
 }
 

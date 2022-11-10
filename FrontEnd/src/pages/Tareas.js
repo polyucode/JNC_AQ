@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import { ThemeContext } from "../App";
+import { ThemeContext } from "../router/AppRouter";
 
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -22,6 +22,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
 import { FamilyRestroomRounded } from "@mui/icons-material";
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -1871,6 +1872,7 @@ function Tareas() {
   )
 
   return (
+    <MainLayout title="Tareas">
     <div>
       <MaterialTable columns={columnas} data={data}
         localization={localization}
@@ -2004,6 +2006,7 @@ function Tareas() {
       </Modal>
 
     </div>
+    </MainLayout>
   );
 
 }

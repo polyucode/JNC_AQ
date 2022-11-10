@@ -56,6 +56,7 @@ export const UsuariosPage = () => {
     const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
     const [data, setData] = useState([]);
     
+    const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
     const styles= useStyles();
@@ -115,6 +116,12 @@ export const UsuariosPage = () => {
       },[])
     }
 
+    const GetPerfiles = async () => {
+      axios.get("/perfil", token).then(response => {
+        const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
+        setPerfiles(perfil);
+      }, [])
+    }
     
 
     // Recoger Usuarios
@@ -134,6 +141,7 @@ export const UsuariosPage = () => {
     useEffect(() => {
       peticionGet();
       GetClientes();
+      GetPerfiles();
     }, [])
 
     useEffect(() => {
@@ -436,11 +444,18 @@ export const UsuariosPage = () => {
                 },
               ]}
 
-            onRowClick={((evt, usuarioSeleccionado) => setUsuarioSeleccionado(usuarioSeleccionado.tableData.id))}  
-            onSelectionChange={(filas)=>{
-              setFilasSeleccionadas(filas);
-              setUsuarioSeleccionado(filas[0]);}
-            }
+              onRowClick={((evt, usuarioSeleccionado) => {
+                setUsuarioSeleccionado(usuarioSeleccionado)
+                setperfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.idPerfil));
+                setclienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.idCliente))
+                abrirCerrarModalEditar();
+              })}
+              onSelectionChange={(filas) => {
+                setFilasSeleccionadas(filas);
+                if (filas.length > 0)
+                  setUsuarioSeleccionado(filas[0]);
+              }
+              }
             options={{sorting:true,paging:true,pageSizeOptions:[5,10,20,50,100,200],pageSize:10,filtering:true,search: false,selection:true,
                 columnsButton:true,
                 rowStyle: rowData => ({

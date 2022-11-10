@@ -11,7 +11,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+
 import './Clientes.css';
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -25,7 +28,8 @@ const token = {
 const useStylesEditarDet = makeStyles((theme) => ({
   modal: {
     position: 'absolute',
-    width: 1500,
+    width: 1000,
+    height: 750,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -38,7 +42,7 @@ const useStylesEditarDet = makeStyles((theme) => ({
     cursor: 'pointer'
   },
   inputMaterial: {
-    width: '70%'
+    width: '50%'
   }
 }));
 
@@ -599,7 +603,7 @@ function Clientes() {
       <h3>Agregar Nuevo Cliente</h3>
       <br />
       <div className="row g-4">
-        <div className="col-md-3">
+        <div className="col-md-2">
           <h5> Codigo </h5>
           <TextField className={styles.inputMaterial} type="number" name="codigo" onChange={handleChange} />
         </div>
@@ -679,7 +683,7 @@ function Clientes() {
     <div className={stylesEditarDet.modal}>
       <h3> Cliente </h3>
       <br />
-      <div className="row g-3">
+      <div className="row g-4">
         <div className="col-md-2">
           <h5> Codigo </h5>
           <TextField className={stylesEditarDet.inputMaterial} type="number" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
@@ -929,147 +933,149 @@ function Clientes() {
 
 
   return (
-    <div>
-      <MaterialTable columns={columnas} data={data}
-        localization={{
-          body: {
-            emptyDataSourceMessage: 'No hay datos por mostrar',
-            addTooltip: 'Añadir',
-            deleteTooltip: 'Eliminar',
-            editTooltip: 'Editar',
-            filterRow: {
-              filterTooltip: 'Filtrar',
+    <MainLayout title="Clientes">
+      <div>
+        <MaterialTable columns={columnas} data={data}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'No hay datos por mostrar',
+              addTooltip: 'Añadir',
+              deleteTooltip: 'Eliminar',
+              editTooltip: 'Editar',
+              filterRow: {
+                filterTooltip: 'Filtrar',
+              },
+              editRow: {
+                deleteText: '¿Segura(o) que quiere eliminar?',
+                cancelTooltip: 'Cancelar',
+                saveTooltip: 'Guardar',
+              },
             },
-            editRow: {
-              deleteText: '¿Segura(o) que quiere eliminar?',
-              cancelTooltip: 'Cancelar',
-              saveTooltip: 'Guardar',
+            grouping: {
+              placeholder: "Arrastre un encabezado aquí para agrupar",
+              groupedBy: 'Agrupado por',
             },
-          },
-          grouping: {
-            placeholder: "Arrastre un encabezado aquí para agrupar",
-            groupedBy: 'Agrupado por',
-          },
-          header: {
-            actions: 'Acciones',
-          },
-          pagination: {
-            firstAriaLabel: 'Primera página',
-            firstTooltip: 'Primera página',
-            labelDisplayedRows: '{from}-{to} de {count}',
-            labelRowsPerPage: 'Filas por página:',
-            labelRowsSelect: 'filas',
-            lastAriaLabel: 'Ultima página',
-            lastTooltip: 'Ultima página',
-            nextAriaLabel: 'Pagina siguiente',
-            nextTooltip: 'Pagina siguiente',
-            previousAriaLabel: 'Pagina anterior',
-            previousTooltip: 'Pagina anterior',
-          },
-          toolbar: {
-            addRemoveColumns: 'Agregar o eliminar columnas',
-            exportAriaLabel: 'Exportar',
-            exportName: 'Exportar a CSV',
-            exportTitle: 'Exportar',
-            nRowsSelected: '{0} filas seleccionadas',
-            searchPlaceholder: 'Buscar',
-            searchTooltip: 'Buscar',
-            showColumnsAriaLabel: 'Mostrar columnas',
-            showColumnsTitle: 'Mostrar columnas',
-          },
-        }}
-        actions={[
-          {
-            icon: () => <AddCircle style={{ fill: "green" }} />,
-            tooltip: "Añadir Cliente",
-            isFreeAction: true,
-            onClick: (e, data) => {
-              abrirCerrarModalInsertar()
+            header: {
+              actions: 'Acciones',
             },
-          },
-          {
-            icon: () => <RemoveCircle style={{ fill: "red" }} />,
-            tooltip: "Eliminar Cliente",
-            onClick: (event, rowData) => {
-              setClienteEliminar(FilasSeleccionadas);
-              abrirCerrarModalEliminar()
+            pagination: {
+              firstAriaLabel: 'Primera página',
+              firstTooltip: 'Primera página',
+              labelDisplayedRows: '{from}-{to} de {count}',
+              labelRowsPerPage: 'Filas por página:',
+              labelRowsSelect: 'filas',
+              lastAriaLabel: 'Ultima página',
+              lastTooltip: 'Ultima página',
+              nextAriaLabel: 'Pagina siguiente',
+              nextTooltip: 'Pagina siguiente',
+              previousAriaLabel: 'Pagina anterior',
+              previousTooltip: 'Pagina anterior',
             },
-          },
-        ]}
+            toolbar: {
+              addRemoveColumns: 'Agregar o eliminar columnas',
+              exportAriaLabel: 'Exportar',
+              exportName: 'Exportar a CSV',
+              exportTitle: 'Exportar',
+              nRowsSelected: '{0} filas seleccionadas',
+              searchPlaceholder: 'Buscar',
+              searchTooltip: 'Buscar',
+              showColumnsAriaLabel: 'Mostrar columnas',
+              showColumnsTitle: 'Mostrar columnas',
+            },
+          }}
+          actions={[
+            {
+              icon: () => <AddCircle style={{ fill: "green" }} />,
+              tooltip: "Añadir Cliente",
+              isFreeAction: true,
+              onClick: (e, data) => {
+                abrirCerrarModalInsertar()
+              },
+            },
+            {
+              icon: () => <RemoveCircle style={{ fill: "red" }} />,
+              tooltip: "Eliminar Cliente",
+              onClick: (event, rowData) => {
+                setClienteEliminar(FilasSeleccionadas);
+                abrirCerrarModalEliminar()
+              },
+            },
+          ]}
 
-        onRowClick={((evt, clienteSeleccionado) => {
-          setClienteSeleccionado(clienteSeleccionado)
-          setDataContacto(dataDet.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
-          peticionGetContacto();
-          setComarcaClienteEditar(comarca.filter(comarca => comarca.descripcion === clienteSeleccionado.comarca));
-          setProvinciaClienteEditar(provincia.filter(provincia => provincia.descripcion === clienteSeleccionado.provincia));
-          setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.poblacion === clienteSeleccionado.poblacion));
-          abrirCerrarModalEditar();
-        })}
-        onSelectionChange={(filas) => {
-          setFilasSeleccionadas(filas);
-          if (filas.length > 0) {
-            setClienteSeleccionado(filas[0]);
-          }
-        }}
+          onRowClick={((evt, clienteSeleccionado) => {
+            setClienteSeleccionado(clienteSeleccionado)
+            setDataContacto(dataDet.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+            peticionGetContacto();
+            setComarcaClienteEditar(comarca.filter(comarca => comarca.descripcion === clienteSeleccionado.comarca));
+            setProvinciaClienteEditar(provincia.filter(provincia => provincia.descripcion === clienteSeleccionado.provincia));
+            setPoblacionClienteEditar(poblacion.filter(poblacion => poblacion.poblacion === clienteSeleccionado.poblacion));
+            abrirCerrarModalEditar();
+          })}
+          onSelectionChange={(filas) => {
+            setFilasSeleccionadas(filas);
+            if (filas.length > 0) {
+              setClienteSeleccionado(filas[0]);
+            }
+          }}
 
-        options={{
-          sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-          columnsButton: true, showSelectAllCheckbox: false,
-          rowStyle: rowData => ({
-            backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-            whiteSpace: "nowrap"
-          }),
+          options={{
+            sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
+            columnsButton: true, showSelectAllCheckbox: false,
+            rowStyle: rowData => ({
+              backgroundColor: (clienteSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+              whiteSpace: "nowrap"
+            }),
 
-          exportMenu: [{
-            label: 'Export PDF',
-            exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Clientes')
-          }, {
-            label: 'Export CSV',
-            exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Clientes')
-          }]
-        }}
+            exportMenu: [{
+              label: 'Export PDF',
+              exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Clientes')
+            }, {
+              label: 'Export CSV',
+              exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Clientes')
+            }]
+          }}
 
-        title="Listado de clientes"
-      />
+          title="Listado de clientes"
+        />
 
-      <Modal
-        open={modalInsertar}
-        onClose={abrirCerrarModalInsertar}>
-        {bodyInsertar}
-      </Modal>
+        <Modal
+          open={modalInsertar}
+          onClose={abrirCerrarModalInsertar}>
+          {bodyInsertar}
+        </Modal>
 
-      <Modal
-        open={modalEditar}
-        onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
-      </Modal>
+        <Modal
+          open={modalEditar}
+          onClose={abrirCerrarModalEditar}>
+          {bodyEditar}
+        </Modal>
 
-      <Modal
-        open={modalEliminar}
-        onClose={abrirCerrarModalEliminar}>
-        {bodyEliminar}
+        <Modal
+          open={modalEliminar}
+          onClose={abrirCerrarModalEliminar}>
+          {bodyEliminar}
 
-      </Modal>
+        </Modal>
 
-      <Modal
-        open={modalInsertarContacto}
-        onClose={abrirCerrarModalInsertarContacto}>
-        {bodyInsertarContacto}
-      </Modal>
+        <Modal
+          open={modalInsertarContacto}
+          onClose={abrirCerrarModalInsertarContacto}>
+          {bodyInsertarContacto}
+        </Modal>
 
-      <Modal
-        open={modalEliminarContacto}
-        onClose={abrirCerrarModalEliminarContacto}>
-        {bodyEliminarContacto}
-      </Modal>
+        <Modal
+          open={modalEliminarContacto}
+          onClose={abrirCerrarModalEliminarContacto}>
+          {bodyEliminarContacto}
+        </Modal>
 
-      <Modal
-        open={modalEditarContacto}
-        onClose={abrirCerrarModalEditarContacto}>
-        {bodyEditarContacto}
-      </Modal>
-    </div>
+        <Modal
+          open={modalEditarContacto}
+          onClose={abrirCerrarModalEditarContacto}>
+          {bodyEditarContacto}
+        </Modal>
+      </div>
+    </MainLayout>
   );
 
 }

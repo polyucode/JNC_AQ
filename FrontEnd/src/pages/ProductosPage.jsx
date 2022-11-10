@@ -328,13 +328,20 @@ export const ProductosPage = () => {
                     },
                 ]}
 
-                onRowClick={((evt, productoSeleccionado) => setProductoSeleccionado(productoSeleccionado.tableData.id))}
+                onRowClick={((evt, productoSeleccionado) => {
+                    setProductoSeleccionado(productoSeleccionado)
+                    getProductos();
+                    abrirCerrarModalEditar();
+                })}
+                
                 onSelectionChange={(filas) => {
                     setFilasSeleccionadas(filas);
 
-                    setProductoSeleccionado(filas[0]);
-                }
-                }
+                    if (filas.length > 0) {
+                        setProductoSeleccionado(filas[0]);
+                    }
+                }}
+                
                 options={{
                     sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
                     columnsButton: true,
