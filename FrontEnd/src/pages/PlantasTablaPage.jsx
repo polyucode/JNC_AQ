@@ -1,27 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import axios from "axios";
-import { Tab, Box } from '@mui/material';
-import { TabContext } from '@mui/lab';
-import { Modal, TextField, Button } from '@material-ui/core';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
+import { Box } from '@mui/material';
+// import { TabContext } from '@mui/lab';
+import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { ThemeContext } from '../router/AppRouter';
-
-import './PlantasTabla.css';
-import TablaElementosTabla from '../components/TablaElementosTabla';
-import MaterialTable from "@material-table/core";
 import { MainLayout } from "../layout/MainLayout";
-
+import './PlantasTabla.css';
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
-import { ConnectedTv } from "@mui/icons-material";
-
 import { getParametrosPlanta } from "../api/apiBackend";
 
 const token = {
