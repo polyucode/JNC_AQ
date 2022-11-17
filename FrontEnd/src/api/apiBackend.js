@@ -199,6 +199,13 @@ export const getParametros = async () => {
     
 }
 
+export const getValorParametros = async () => {
+
+    const resp = await axios.get('/valorparametros', token);
+    return resp.data.data; // Object.entries(response.data.data).map(([key, value]) => (key, value))
+
+}
+
 export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
 
     const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);

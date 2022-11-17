@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Box } from '@mui/material';
+import { Autocomplete, Box, Card, Grid, TextField } from '@mui/material';
 // import { TabContext } from '@mui/lab';
-import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from '@mui/material/Autocomplete';
 import { ThemeContext } from '../router/AppRouter';
 import { MainLayout } from "../layout/MainLayout";
-import './PlantasTabla.css';
+//import './PlantasTabla.css';
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 import { getParametrosPlanta } from "../api/apiBackend";
@@ -90,14 +88,6 @@ export const PlantasTablaPage = () => {
 
     const { valores } = useContext(ThemeContext);
 
-    const [modalInsertar, setModalInsertar] = useState(false);
-
-    const [modalEditar, setModalEditar] = useState(false);
-
-    const [modalEliminar, setModalEliminar] = useState(false);
-
-    const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
-
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
 
     const [oferta, setOferta] = useState([]);
@@ -108,17 +98,7 @@ export const PlantasTablaPage = () => {
 
     const [parametros, setParametros] = useState([]);
 
-    const [analisis, setAnalisis] = useState([]);
     const [analisisTable, setAnalisisTable] = useState({});
-
-    const [periodo, setPeriodo] = useState("");
-    const [fecha, setFecha] = useState("");
-
-
-    const [actualState, changeCheckState] = useState(false);
-    const [actualState2, changeActualState] = useState(false);
-
-    const [datosParametros, setDatosParametros] = useState([]);
 
     const columnas = [
 
@@ -132,8 +112,6 @@ export const PlantasTablaPage = () => {
         { title: 'Observaciones', field: 'observaciones' },
         { title: 'Facturado', field: 'facturado', type: 'boolean' }
     ];
-
-    const [datos, setDatos] = useState([]);
 
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
@@ -156,6 +134,7 @@ export const PlantasTablaPage = () => {
         nombreCliente: "",
         oferta: '',
         idElemento: 0,
+        nombreElemento: "",
         fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
@@ -349,7 +328,7 @@ export const PlantasTablaPage = () => {
 
     })
 
-    console.log(tipoParametros)
+    //console.log(tipoParametros)
 
     const planta = {
         codigoCliente: 0,
@@ -600,8 +579,6 @@ export const PlantasTablaPage = () => {
         }
     }
 
-    let listaElementos = planta.elementos;
-
     const [value, setValue] = React.useState('0');
 
     const handleChange = (event, newValue) => {
@@ -651,6 +628,7 @@ export const PlantasTablaPage = () => {
     const GetElementos = async () => {
         axios.get("/elementosplanta", token).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
+            console.log({ elemento })
             setElementos(elemento);
         }, [])
     }
@@ -680,6 +658,25 @@ export const PlantasTablaPage = () => {
         })
 
     }, [parametrosSeleccionado.codigoCliente])
+
+    useEffect(() => {
+        console.log({ parametrosSeleccionado });
+    },[parametrosSeleccionado]);
+
+    let opcionesFiltradas = [];
+
+    useEffect(() => {
+
+        opcionesFiltradas = [];
+
+        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta);
+        lista.map( elemento => {
+            console.log(elemento)
+            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        })
+        console.log(opcionesFiltradas);
+
+    },[parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta ]);
 
     const handleActivo = (e) => {
         const { name, value, checked } = e.target
@@ -841,7 +838,7 @@ export const PlantasTablaPage = () => {
 
     }
 
-    console.log(tipoParametros)
+    //console.log(tipoParametros)
 
     async function valorParametros() {
 
@@ -915,109 +912,94 @@ export const PlantasTablaPage = () => {
 
     return (
         <MainLayout title="Plantas (Tabla)">
+
+            <Grid container spacing={2}>
+
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex' }}>
+                        <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="codigoCliente"
+                                    options={clientes}
+                                    getOptionLabel={ option => option.codigo.toString() }
+                                    renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        codigoCliente: parseInt(value.codigo)
+                                    }))}
+                                />
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="CboClientes"
+                                    inputValue={parametrosSeleccionado.nombreCliente.toString()}
+                                    options={clientes}
+                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
+                                    getOptionLabel={ option => option.razonSocial }
+                                    renderInput={ (params) => <TextField {...params} name="nombreCliente" label="Nombre" /> }
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        nombreCliente: value.razonSocial
+                                    }))}
+                                />    
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="Oferta"
+                                    inputValue={parametrosSeleccionado.oferta.toString()}
+                                    options={oferta}
+                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
+                                    getOptionLabel={ option => option.numeroOferta.toString() }
+                                    renderInput={(params) => <TextField {...params} name="oferta" label="Código oferta" />}
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        oferta: parseInt(value.numeroOferta),
+                                        elemento: ''
+                                    }))}
+                                />   
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="elemento"
+                                    //inputValue={}
+                                    options={opcionesFiltradas}
+                                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                                    renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
+                                    onChange={(event, value) => {
+                                        console.log( event );
+
+                                        setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            idElemento: value.id,
+                                            nombreElemento: ''
+                                        }))
+                                    }}
+                                />
+                            </Grid>
+
+                        </Grid>
+                    </Card>
+                </Grid>
+
+            </Grid>
+
+
+
+
+
+
             <div className="contenedor">
                 <div className="contenedor2">
-                    <div className='cliente'>
-                        <h6>Cliente</h6>
-                        <hr />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th> Código </th>
-                                    <th> Nombre </th>
-                                    <th> Oferta </th>
-                                    <th> Elemento </th>
-                                </tr>
-                                {!valores.codigo ?
-                                    <tr>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="codigoCliente"
-                                                options={clientes}
-                                                getOptionLabel={option => option.codigo}
-                                                sx={{ width: 150 }}
-                                                renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    codigoCliente: parseInt(value.codigo)
-                                                }))}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                id="CboClientes"
-                                                className={styles.inputMaterial}
-                                                inputValue={parametrosSeleccionado.nombreCliente}
-                                                options={clientes}
-                                                filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
-                                                getOptionLabel={option => option.razonSocial}
-                                                sx={{ width: 230 }}
-                                                renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    nombreCliente: value.razonSocial
-                                                }))}
-
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="Oferta"
-                                                inputValue={parametrosSeleccionado.oferta}
-                                                options={oferta}
-                                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
-                                                getOptionLabel={option => option.numeroOferta}
-                                                sx={{ width: 150 }}
-                                                renderInput={(params) => <TextField {...params} name="oferta" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    oferta: parseInt(value.numeroOferta),
-                                                    elemento: ''
-                                                }))}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="elemento"
-                                                inputValue={parametrosSeleccionado.idElemento}
-                                                options={elementos}
-                                                filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                                getOptionLabel={option => option.id_Elemento}
-                                                sx={{ width: 225 }}
-                                                renderInput={(params) => <TextField {...params} name="elemento" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    idElemento: value.id
-                                                }))}
-                                            />
-                                        </td>
-                                    </tr>
-                                    :
-                                    <tr>
-                                        <td>
-                                            <TextField disabled className="cogidoCliente" value={valores.codigo} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="nombreCliente" value={valores.nombre} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="oferta" value={valores.ofertas} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="elemento" value={valores.elemento} />
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                    
                     {valores.codigo ?
                         <div className='botones-menu'>
                             <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
