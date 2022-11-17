@@ -39,7 +39,7 @@ const HomeCliente = () => {
     const { user } = useContext( AuthContext );
     const { nodeTypesDashboard } = useDiagrama();
 
-
+    console.log(plantaActiva)
 
     const getValorParametros = async () => {
         axios.get("/valorparametros", token).then(response => {
@@ -96,13 +96,14 @@ const HomeCliente = () => {
           </ChartSeries>
         </Chart>
       );
+      
 
     // Con esta función, al seleccionar una oferta seteamos la planta activa
     const handleSeleccionOferta = (e) => {
 
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
-        getConfPlantaClientePorClienteOferta( user.idCliente, ofertaSeleccionada )
+        getConfPlantaClientePorClienteOferta( user.idCliente , ofertaSeleccionada )
             .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
 
     }
@@ -138,7 +139,7 @@ const HomeCliente = () => {
                                         disableClearable={ true }
                                         id="ofertas"
                                         options={ ofertas }
-                                        getOptionLabel={ option => option.numeroOferta.toString() }
+                                        getOptionLabel={ option => option.numeroOferta }
                                         renderInput={ params => <TextField {...params} label="Código oferta" name="codigoOferta" /> }
                                         onChange={ handleSeleccionOferta }
                                     />

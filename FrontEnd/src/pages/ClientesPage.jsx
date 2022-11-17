@@ -31,6 +31,7 @@ import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { addCliente, deleteCliente, getClientes, getComarcas } from '../api/apiBackend';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
+import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { useForm } from '../hooks/useForm';
 
@@ -40,30 +41,6 @@ const token = {
     Authorization: 'Bearer ' + localStorage.getItem('token')
   }
 };
-
-const clienteSeleccionadoInicial = {
-  id: 0,
-  codigo: 0,
-  cif: '',
-  razonSocial: '',
-  telefono: '',
-  movil: '',
-  email: '',
-  direccion: '',
-  poblacion: '',
-  provincia: '',
-  cp: '',
-  pais: '',
-  comarca: '',
-  idSector: 0,
-  addDate: null,
-  addIdUser: null,
-  modDate: null,
-  modIdUser: null,
-  delDate: null,
-  delIdUser: null,
-  deleted: null,
-}
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -139,7 +116,28 @@ export const ClientesPage = () => {
   const [modalEliminarContacto, setModalEliminarContacto] = useState(false);
 
 
-  const [clienteSeleccionado, setClienteSeleccionado] = useState(clienteSeleccionadoInicial);
+  const [clienteSeleccionado, setClienteSeleccionado] = useState({
+    id: 0,
+    codigo: 0,
+    cif: '',
+    razonSocial: '',
+    telefono: '',
+    movil: '',
+    email: '',
+    direccion: '',
+    poblacion: '',
+    provincia: '',
+    cp: '',
+    comarca: '',
+    idSector: 0,
+    addDate: null,
+    addIdUser: null,
+    modDate: null,
+    modIdUser: null,
+    delDate: null,
+    delIdUser: null,
+    deleted: null,
+  });
 
   const [contactoSeleccionado, setContactoSeleccionado] = useState({
 
@@ -149,7 +147,7 @@ export const ClientesPage = () => {
     email: '',
     cargo: '',
     comentarios: '',
-    idCliente: clienteSeleccionado.id,
+    idCliente: "",
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -173,7 +171,7 @@ export const ClientesPage = () => {
   const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
 
-  const [dataDet, setDataDet] = useState([]);
+  const [data, setData] = useState([]);
 
   const [rows, setRows] = useState([]);
 
@@ -191,32 +189,31 @@ export const ClientesPage = () => {
   const columns = [
     { field: 'codigo', headerName: 'Código', width: 100 },
     { field: 'cif', headerName: 'CIF', width: 100 },
-    { field: 'razonSocial', headerName: 'Razón social', width: 180 },
+    { field: 'razonSocial', headerName: 'Razón social', width: 250 },
     { field: 'cuentaContable', headerName: 'Cuenta contable', width: 130 },
-    { field: 'direccion', headerName: 'Dirección', width: 250 },
+    { field: 'direccion', headerName: 'Dirección', width: 300 },
     { field: 'cp', headerName: 'CP', width: 70 },
     { field: 'poblacion', headerName: 'Población', width: 100 },
     { field: 'provincia', headerName: 'Provincia', width: 120 },
     { field: 'comarca', headerName: 'Comarca', width: 140 },
-    { field: 'pais', headerName: 'País', width: 100 },
     { field: 'email', headerName: 'Email', width: 240 },
     { field: 'movil', headerName: 'Movil', width: 100 },
-    { field: 'telefono', headerName: 'Teléfono', width: 100 },
-    { field: 'id', headerName: 'id', width: 20, hidden: true }
+    { field: 'telefono', headerName: 'Teléfono', width: 100 }
   ]
 
   // Efectos de React
   // Llamadas a las APIs
   useEffect(() => {
 
-    getClientes()
+    /*getClientes()
       .then(clientes => {
         setClientes(clientes);
       });
     getComarcas()
       .then(comarcas => {
         setComarcas(comarcas);
-      });
+      });*/
+    peticionGet();
 
     // peticionGetContacto();
     // GetPerfiles();
@@ -227,11 +224,11 @@ export const ClientesPage = () => {
   // Obtener la lista de clientes
   useEffect(() => {
 
-    if (clientes.length > 0) {
-      setRows(clientes);
+    if (data.length > 0) {
+      setRows(data);
     }
 
-  }, [clientes]);
+  }, [data]);
 
   // Obtener la lista de comarcas
   useEffect(() => {
@@ -242,26 +239,118 @@ export const ClientesPage = () => {
 
   }, [comarcas]);
 
+  const peticionGet = async () => {
+    axios.get("/cliente", token).then(response => {
+      setData(response.data.data)
+    })
+  }
 
-
-
-
+  const peticionPost = async () => {
+    clienteSeleccionado.id = null;
+    await axios.post("/cliente", clienteSeleccionado, token)
+      .then(response => {
+        abrirCerrarModalInsertar();
+        peticionGet();
+        setClienteSeleccionado({
+          id: 0,
+          codigo: 0,
+          cif: '',
+          razonSocial: '',
+          telefono: '',
+          movil: '',
+          email: '',
+          direccion: '',
+          poblacion: '',
+          provincia: '',
+          cp: '',
+          comarca: '',
+          idSector: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
+      }).catch(error => {
+        console.log(error);
+      })
+  }
 
   const peticionPut = async () => {
-    console.log(clienteSeleccionado)
     await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
       .then(response => {
-        var clienteModificado = clientes;
+        var clienteModificado = data;
         clienteModificado.map(cliente => {
           if (cliente.id === clienteSeleccionado.id) {
             cliente = clienteSeleccionado
           }
         });
         //peticionGet();
+        getClientes();
         abrirCerrarModalEditar();
+        setClienteSeleccionado({
+          id: 0,
+          codigo: 0,
+          cif: '',
+          razonSocial: '',
+          telefono: '',
+          movil: '',
+          email: '',
+          direccion: '',
+          poblacion: '',
+          provincia: '',
+          cp: '',
+          comarca: '',
+          idSector: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
       }).catch(error => {
         console.log(error);
       })
+  }
+
+  const peticionDelete = async () => {
+    var i = 0;
+    while (i < ClienteEliminar.length) {
+      await axios.delete("/cliente/" + ClienteEliminar[i], token)
+        .then(response => {
+          peticionGet();
+          abrirCerrarModalEliminar();
+          setClienteSeleccionado({
+            id: 0,
+            codigo: 0,
+            cif: '',
+            razonSocial: '',
+            telefono: '',
+            movil: '',
+            email: '',
+            direccion: '',
+            poblacion: '',
+            provincia: '',
+            cp: '',
+            comarca: '',
+            idSector: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+          })
+        }).catch(error => {
+          console.log(error);
+        })
+      i++;
+    }
   }
 
   const peticionPostContacto = async () => {
@@ -318,7 +407,7 @@ export const ClientesPage = () => {
     const { name, value } = e.target;
     setClienteSeleccionado(prevState => ({
       ...prevState,
-      [name]: value
+      [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
     }));
 
   }
@@ -334,178 +423,99 @@ export const ClientesPage = () => {
 
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
-    setModalInsertar(!modalInsertar);
+    if (modalInsertar) {
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        pais: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+      setModalInsertar(!modalInsertar);
+    } else {
+      setModalInsertar(!modalInsertar);
+    }
   }
 
   //modal editar cliente
   const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
+    if (modalEditar) {
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        pais: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+      setModalEditar(!modalEditar);
+    } else {
+      setModalEditar(!modalEditar);
+    }
   }
-
-  // const bodyEditar = (
-  //   <div className={stylesEditarDet.modal}>
-  //     <h3>Editar Cliente</h3>
-  //     <div className="row g-3">
-  //       <div className="col-md-2">
-  //         <TextField className={styles.inputMaterial} label="Codigo" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
-  //       </div>
-  //       <div className="col-md-2">
-  //         <TextField className={styles.inputMaterial} label="Cif" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
-  //       </div>
-  //       <div className="col-md-2">
-  //         <TextField className={styles.inputMaterial} label="RazonSocial" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
-  //       </div>
-  //       <div className="col-md-2">
-  //         <TextField className={styles.inputMaterial} label="Teléfono1" name="telefono1" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono1} />
-  //       </div>
-  //       <div className="col-md-2">
-  //         <TextField className={styles.inputMaterial} label="Teléfono2" name="telefono2" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono2} />
-  //       </div>
-  //       <div className="col-md-3">
-  //         <TextField className={styles.inputMaterial} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
-  //       </div>
-  //       <div className="col-md-3">
-  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
-  //       </div>
-  //       <div className="col-md-3">
-  //         <TextField className={styles.inputMaterial} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
-  //       </div>
-  //       <div className="col-md-3">
-  //         <TextField className={styles.inputMaterial} label="Código postal" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
-  //       </div>
-  //       {/* <div className="col-md-3">
-  //         <TextField className={styles.inputMaterial} label="País" name="pais" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.pais} />
-  //       </div> */}
-  //       <div className="col-md-3">
-  //         {/* Desplegable de Comarca */}
-  //         <Autocomplete
-  //           disableClearable={true}
-  //           id="CboCamarca"
-  //           options={comarca}
-  //           getOptionLabel={option => option.descripcion}
-  //           defaultValue={comarcaClienteEditar[0]}
-  //           sx={{ width: 300 }}
-  //           renderInput={(params) => <TextField {...params} label="Comarca" name="comarca" />}
-  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
-  //             ...prevState,
-  //             comarca: value.id
-  //           }))}
-  //         />
-  //       </div>
-  //       <div className="col-md-3">
-  //         {/* Desplegable de Provincia */}
-  //         <Autocomplete
-  //           disableClearable={true}
-  //           id="CboProvincia"
-  //           options={provincia}
-  //           getOptionLabel={option => option.descripcion}
-  //           defaultValue={provinciaClienteEditar[0]}
-  //           sx={{ width: 300 }}
-  //           renderInput={(params) => <TextField {...params} label="Provincia" name="provincia" />}
-  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
-  //             ...prevState,
-  //             provincia: value.id
-  //           }))}
-  //         />
-  //       </div>
-  //       <div className="col-md-3">
-  //         {/* Desplegable de Población */}
-  //         <Autocomplete
-  //           disableClearable={true}
-  //           id="CboPoblacion"
-  //           options={poblacion}
-  //           getOptionLabel={option => option.poblacion}
-  //           defaultValue={poblacionClienteEditar[0]}
-  //           sx={{ width: 300 }}
-  //           renderInput={(params) => <TextField {...params} label="Población" name="poblacion" />}
-  //           onChange={(event, value) => setClienteSeleccionado(prevState => ({
-  //             ...prevState,
-  //             poblacion: value.id
-  //           }))}
-  //         />
-  //       </div>
-  //     </div>
-  //     <br />
-  //     <MaterialTable columns={columnasDet} data={dataDet}
-  //       localization={localization}
-  //       actions={[
-  //         {
-  //           icon: () => <AddCircle style={{ fill: "green" }} />,
-  //           tooltip: "Añadir contacto cliente",
-  //           isFreeAction: true,
-  //           onClick: (e, data) => {
-  //             //setContactoClienteEditar();
-  //             abrirCerrarModalInsertarContacto();
-  //             console.log(dataDet)
-  //           },
-  //         },
-  //         {
-  //           icon: () => <RemoveCircle style={{ fill: "red" }} />,
-  //           tooltip: "Eliminar contacto cliente",
-  //           onClick: (event, rowData) => {
-  //             setContactoClienteEliminar(FilasSeleccionadasDet);
-  //             abrirCerrarModalEliminarContacto();
-  //           },
-  //         },
-  //         {
-  //           icon: () => <Edit />,
-  //           tooltip: "Editar detalle contacto",
-  //           onClick: (e, data) => {
-  //             setContactoClienteEditar(contactoSeleccionado[0]);
-  //             // setClienteMantenimientoCabEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-  //             // setElementoMantenimientoCabEditar(elementosplanta.filter(elemento => elemento.id === FilasSeleccionadas[0].idElementoPlanta));
-  //             // setTipoMantenimientoCabEditar(tipos.filter(tipo => tipo.id === FilasSeleccionadas[0].tipo));
-  //             // setTecnicoMantenimientoCabEditar(tecnicos.filter(tecnico => tecnico.id === FilasSeleccionadas[0].idTecnicoAsignado));
-  //             // if(FilasSeleccionadas[0].idPerfil === 2){
-  //             //   setclienteUsuarioEditar(clientes.filter(cliente=>cliente.id===FilasSeleccionadas[0].idCliente));
-  //             //   setestadoCboCliente(false);
-  //             // }else{
-  //             //   setclienteUsuarioEditar(false);
-  //             //   setestadoCboCliente(true);
-  //             // }
-  //             abrirCerrarModalEditarContacto();
-  //           },
-  //         },
-  //       ]}
-
-  //       onRowClick={((evt, contactoSeleccionado) => setContactoSeleccionado(contactoSeleccionado.tableData.id))}
-  //       onSelectionChange={(filas) => {
-  //         setFilasSeleccionadasDet(filas);
-  //         if (filas.length > 0)
-  //           setContactoSeleccionado(filas[0]);
-  //       }
-  //       }
-  //       options={{
-  //         sorting: true, paging: true, pageSizeOptions: [1, 2, 3, 4, 5], pageSize: 4, filtering: false, search: false, selection: true,
-  //         columnsButton: true,
-  //         rowStyle: rowData => ({
-  //           backgroundColor: (contactoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-  //           whiteSpace: "nowrap"
-  //         }),
-  //         exportMenu: [{
-  //           label: 'Export PDF',
-  //           exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de contactos de cliente')
-  //         }, {
-  //           label: 'Export CSV',
-  //           exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de contactos de cliente')
-  //         }]
-  //       }}
-
-  //       title="Lista contactos del cliente"
-  //     />
-  //     <br /><br />
-  //     <div align="right">
-  //       <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
-  //       <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-  //     </div>
-  //   </div>
-  // )
-
 
   //modal eliminar cliente
 
   const abrirCerrarModalEliminar = () => {
-    setModalEliminar(!modalEliminar);
+    if (modalEliminar) {
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        pais: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+      setModalEliminar(!modalEliminar);
+    } else {
+      setModalEliminar(!modalEliminar);
+    }
   }
 
   //modal insertar contacto cliente
@@ -537,82 +547,12 @@ export const ClientesPage = () => {
 
   }
 
-
-  // const bodyInsertarContacto = (
-  //   <div className={styles.modal}>
-  //     <h3>Agregar Nuevo Contacto</h3>
-  //     <div className="row g-3">
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Teléfono" name="telefono" onChange={handleChangeContacto} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} />
-  //       </div>
-  //       <div align="right">
-  //         <Button color="primary" onClick={() => peticionPostContacto()}>Insertar</Button>
-  //         <Button onClick={() => abrirCerrarModalInsertarContacto()}>Cancelar</Button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
-
-  // const bodyEditarContacto = (
-  //   <div className={styles.modal}>
-  //     <h3>Editar Contacto </h3>
-  //     <div className="row g-3">
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.nombre} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.telefono} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Email" name="email" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.email} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Cargo" name="cargo" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.cargo} />
-  //       </div>
-  //       <div className="col-md-12">
-  //         <TextField className={styles.inputMaterial} label="Comentarios" name="comentarios" onChange={handleChangeContacto} value={contactoSeleccionado && contactoSeleccionado.comentarios} />
-  //       </div>
-  //       <div align="right">
-  //         <Button color="primary" onClick={() => peticionPutContacto()}>Editar</Button>
-  //         <Button onClick={() => abrirCerrarModalEditarContacto()}>Cancelar</Button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
-
-  // const bodyEliminarContacto = (
-  //   <div className={styles.modal}>
-  //     <p>Estás seguro que deseas eliminar el contacto ? </p>
-  //     <div align="right">
-  //       <Button color="secondary" onClick={() => peticionDeleteContacto()}>Sí</Button>
-  //       <Button onClick={() => abrirCerrarModalEliminarContacto()}>No</Button>
-
-  //     </div>
-  //   </div>
-  // )
-
-  const handleRowClick = (params) => {
-    console.log(params)
-  }
-
   const handleSelectRow = (ids) => {
 
     if (ids.length > 0) {
       setClienteSeleccionado(clientes.filter(cliente => cliente.id === ids[0])[0]);
     } else {
-      setClienteSeleccionado(clienteSeleccionadoInicial);
+      setClienteSeleccionado(clienteSeleccionado);
     }
 
     setRowsIds(ids);
@@ -634,12 +574,12 @@ export const ClientesPage = () => {
   return (
     <MainLayout title='Clientes'>
 
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+      <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
         <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
           {snackData.msg}
         </Alert>
       </Snackbar>
-      
+
       <Grid container spacing={2}>
 
         {/* Título y botones de opción */}
@@ -652,9 +592,6 @@ export const ClientesPage = () => {
                   <Grid item>
                     <Button sx={{ mr: 2 }} color='error' variant='contained' startIcon={<DeleteIcon />} onClick={abrirCerrarModalEliminar} >
                       Eliminar
-                    </Button>
-                    <Button color='primary' variant='contained' startIcon={<EditIcon />} onClick={abrirCerrarModalEditar}>
-                      Editar
                     </Button>
                   </Grid>
                 ) : (
@@ -685,7 +622,12 @@ export const ClientesPage = () => {
               pageSize={9}
               rowsPerPageOptions={[9]}
               checkboxSelection
+              disableSelectionOnClick
               onSelectionModelChange={(ids) => handleSelectRow(ids)}
+              onRowClick={(clienteSeleccionado, evt) => {
+                setClienteSeleccionado(clienteSeleccionado.row)
+                abrirCerrarModalEditar();
+              }}
             />
           </Card>
         </Grid>
@@ -700,11 +642,9 @@ export const ClientesPage = () => {
           }
           botones={[
             insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-
-              const result = await addCliente(clienteSeleccionado);
               abrirCerrarModalInsertar();
 
-              if (result) {
+              if (peticionPost()) {
                 setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
               } else {
                 setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
@@ -717,6 +657,30 @@ export const ClientesPage = () => {
         />
 
       </Grid>
+
+      {/* Modal Editar Cliente*/}
+
+      <ModalLayout
+        titulo="Editar cliente"
+        contenido={
+          <EditarClienteModal
+            clienteSeleccionado={clienteSeleccionado}
+            change={handleChange}
+            autocompleteChange={handleAutocompleteChange}
+          />}
+        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+          abrirCerrarModalEditar()
+
+          if (peticionPut()) {
+            setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
+          } else {
+            setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
+          }
+        })
+        ]}
+        open={modalEditar}
+        onClose={abrirCerrarModalEditar}
+      />
 
       {/* Eliminar cliente */}
       <ModalLayout
@@ -733,11 +697,9 @@ export const ClientesPage = () => {
         }
         botones={[
           insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-
-            const result = await deleteCliente(clienteSeleccionado.id);
             abrirCerrarModalEliminar();
 
-            if (result) {
+            if (peticionDelete()) {
               setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${clienteSeleccionado.razonSocial}`, severity: 'success' });
             } else {
               setSnackData({ open: true, msg: 'Ha habido un error al eliminar el cliente', severity: 'error' })

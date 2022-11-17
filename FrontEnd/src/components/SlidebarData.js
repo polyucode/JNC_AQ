@@ -26,8 +26,8 @@ export const SlidebarData = [
         key: 3
     },
     {
-        title: 'Mantenimientos',
-        path: '/mantenimientos',
+        title: 'Tareas',
+        path: '/tareas',
         icon: <MdOutlineConstruction/>,
         cName: 'nav-text',
         key: 4

@@ -374,6 +374,8 @@ function Tareas() {
 
   const [ofertas, setOfertas] = useState([]);
 
+  const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
+
   const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
   const [elementosplantaTable, setElementosPlantaTable] = useState({});
@@ -471,14 +473,12 @@ function Tareas() {
     }, [])
   }
 
-  const GetConfAnalisisNivelesPlantasCliente = async () => {
-    axios.get("/analisisnivelesplantascliente", token).then(response => {
-      const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setConfAnalisisNivelesPlantasCliente(niveles);
-    }, [])
-  }
-
-  console.log(confAnalisisNivelesPlantasCliente)
+  const GetConfNivelesPlantasCliente = async () => {
+    axios.get("/confnivelesplantascliente", token).then(response => {
+        const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+        setConfNivelesPlantasCliente(niveles);
+    })
+}
 
   const peticionGet = async () => {
     axios.get("/tareas", token).then(response => {
@@ -511,7 +511,7 @@ function Tareas() {
     GetOperarios();
     GetAnalisis();
     GetOfertas();
-    GetConfAnalisisNivelesPlantasCliente();
+    GetConfNivelesPlantasCliente();
     peticionGetAnalisis();
     peticionGetVis();
     peticionGetEntregas();
@@ -1155,13 +1155,13 @@ function Tareas() {
             id="CboElementosPlanta"
             inputValue={tareaSeleccionada.elementoPlanta}
             options={elementosplanta}
-            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
-            getOptionLabel={option => option.elemento}
+            filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+            getOptionLabel={option => option.id_Elemento}
             sx={{ width: 225 }}
             renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              elementoPlanta: value.elemento
+              elementoPlanta: value.nombre + value.numero
             }))}
           />
         </div>

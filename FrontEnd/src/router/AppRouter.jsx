@@ -43,7 +43,7 @@ export const AppRouter = () => {
                             <Route path='/' exact element={<HomePage />} />
                             <Route path='/login' element={<Navigate to="/" replace={true} />} />
                             <Route path='/usuarios' element={<UsuariosPage />} />
-                            <Route path='/clientes' element={<Clientes />} />
+                            <Route path='/clientes' element={<ClientesPage />} />
                             <Route path='/tareas' element={<Tareas />} />
                             <Route path='/perfil' element={<Perfil />} />
                             <Route path='/plantas' element={<PlantasPage />} />

@@ -59,10 +59,8 @@ export const getClientes = async () => {
 }
 
 export const addCliente = async ( clienteSeleccionado ) => {
-
     // Como no existe, seteamos el ID en Null (La BD se encargará de asignarlo)
-    clienteSeleccionado.id = null;
-
+    clienteSeleccionado.id = 0;
     try {
 
         await axios.post('/cliente', clienteSeleccionado, token);
