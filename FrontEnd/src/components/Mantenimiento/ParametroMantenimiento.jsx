@@ -6,8 +6,11 @@ import { getParametros } from '../../api/apiBackend';
 export const ParametroMantenimiento = ({ index, nombre, unidades, valor, parametrosElemento, parametros }) => {
 
     console.log(parametros)
+
     const cambiarValor = (e) => {
+
         const { name, value } = e.target
+        
         parametrosElemento(parametros.map((param) => {
             if(index == param.id){
                 return{
@@ -26,10 +29,32 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
 
     return (
         <TableRow>
+
             <TableCell component="th" scope="row">
                 { nombre }
             </TableCell>
-            <TableCell>
+            {
+                valor.map( (row, index) => (
+                    <TableCell key={ index }>
+                        <TextField
+                            id={ index.toString() }
+                            name="valor"
+                            type="number"
+                            size="small"
+                            defaultValue = { row }
+                            disabled={ index === 0 ? false : true }
+                            onChange= { cambiarValor }
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
+                            }}
+                        />
+                    </TableCell>
+                ))
+
+            }
+
+
+            {/* <TableCell>
                 <TextField
                     id={ index }
                     name="valor"
@@ -42,6 +67,7 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
                     }}
                 />
             </TableCell>
+
             <TableCell>
                 <TextField
                     name="valor"
@@ -53,6 +79,7 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
                     disabled
                 />
             </TableCell>
+
             <TableCell>
                 <TextField
                     name="valor"
@@ -63,7 +90,8 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
                     }}
                     disabled
                 />
-            </TableCell>
+            </TableCell> */}
+
         </TableRow>
     )
 }

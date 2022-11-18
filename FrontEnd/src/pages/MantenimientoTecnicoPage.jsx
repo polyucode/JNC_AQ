@@ -44,6 +44,8 @@ export const MantenimientoTecnicoPage = () => {
     const [open, setOpen] = React.useState(true);
     const [contextMenu, setContextMenu] = React.useState(null);
 
+    const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
+
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
         id: 0,
         codigoCliente: 0,
@@ -59,12 +61,6 @@ export const MantenimientoTecnicoPage = () => {
 
     const [data, setData] = useState([]);
     const [dataParametros, setDataParametros] = useState([]);
-    // const styles = useStyles();
-    // const styles2 = useStyles2(); 
-
-    function Parametros() {
-        setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.elemento === parametrosSeleccionado.elemento (parametro.parametrosFijos + 'Activo') === true))
-    }
 
     const GetConfNivelesPlantasCliente = async () => {
         axios.get("/confnivelesplantascliente", token).then(response => {
@@ -73,7 +69,7 @@ export const MantenimientoTecnicoPage = () => {
         })
     }
     
-    console.log(parametrosSeleccionado)
+    /*** EFECTOS ***/
 
     // Peticiones a la api
     useEffect(() => {
@@ -92,6 +88,33 @@ export const MantenimientoTecnicoPage = () => {
 
         GetConfNivelesPlantasCliente();
     }, [])
+
+    useEffect(() => {
+        console.log({ parametros });
+    },[ parametros ]);
+
+    useEffect(() => {
+        console.log({ elementos });
+    },[ elementos ]);
+
+    useEffect(() => {
+        console.log({ confNivelesPlantasCliente });
+    },[ confNivelesPlantasCliente ]);
+
+    // Filtramos elementos para el desplegable
+    useEffect(() => {
+
+        let elementosLista = [];
+
+        confNivelesPlantasCliente.filter( planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta ).map( elem => {
+            elementosLista.push(elementos.filter( elementoLista => elementoLista.id === elem.id_Elemento )[0]);
+        })
+
+        setElementosAutocomplete( elementosLista );
+
+    },[ parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta ]);
+
+
 
     useEffect(() => {
         setDatosParametrosBack(parametrosFront)
@@ -164,9 +187,6 @@ export const MantenimientoTecnicoPage = () => {
         }))
     }
 
-    console.log(parametrosElemento)
-
-
     const handleGetParametros = async () => {
 
         const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
@@ -237,9 +257,8 @@ export const MantenimientoTecnicoPage = () => {
                                     <Autocomplete
                                         disableClearable={ true }
                                         id="elemento"
-                                        options={ elementos }
-                                        filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                        getOptionLabel={ option => option.id_Elemento }
+                                        options={ elementosAutocomplete }
+                                        getOptionLabel={ option => option.nombre+' '+option.numero }
                                         renderInput={ params => <TextField {...params} label="Elemento" name="idElemento" /> }
                                         onChange={ (event, value) => onChangeElemento(event, value, "idElemento") }
                                     />
@@ -300,7 +319,7 @@ export const MantenimientoTecnicoPage = () => {
                                             </TableHead>
 
                                             <TableBody>
-                                                {
+                                                {/* {
                                                     parametrosElemento.map( (parametro, index) => {
                                                         return (
                                                             <ParametroMantenimiento
@@ -312,6 +331,54 @@ export const MantenimientoTecnicoPage = () => {
                                                                 parametrosElemento = { setParametrosElemento }
                                                                 parametros = { parametrosElemento }
                                                             />
+                                                        )
+                                                    })
+                                                } */}
+                                                {
+                                                    parametros.map( row => {
+
+                                                        //console.log(row)
+
+                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                        const valoresPorParametro = parametrosElemento.filter( param => param.parametro === row.id );
+                                                        
+                                                        // Preparamos el valor del mes actual y el arreglo de meses
+                                                        let mesActual = new Date().getMonth();
+                                                        let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                                                        // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                                                        valoresPorParametro.map( val => {
+
+                                                            const fecha = new Date(val.fecha);
+                                                            
+                                                            for(let i = 0; i < 12; i++) {
+                                                                if(fecha.getMonth() === i) {
+                                                                    fechas[i] = val.valor;
+                                                                }
+                                                            }
+
+                                                        });
+
+                                                        // Obtenemos los tres últimos meses y si no hay registros, seteamos un 0
+                                                        let valoresMeses = fechas.slice(mesActual, mesActual + 3);
+                                                        if( valoresMeses.length < 2 ) {
+                                                            valoresMeses.push(0, 0);
+                                                        } else if ( valoresMeses.length < 3 ) {
+                                                            valoresMeses.push(0);
+                                                        }
+
+                                                        return (
+                                                            valoresPorParametro.length > 0 && (
+                                                                <ParametroMantenimiento
+                                                                    key={ row.id }
+                                                                    index={ row.id }
+                                                                    nombre={ row.nombre }
+                                                                    unidades={ row.unidad }
+                                                                    valor = { valoresMeses }
+                                                                    parametrosElemento = { setParametrosElemento }
+                                                                    parametros = { parametrosElemento }
+                                                                />
+                                                            )
                                                         )
                                                     })
                                                 }

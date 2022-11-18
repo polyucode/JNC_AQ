@@ -1,83 +1,91 @@
 import React from 'react'
-import * as AiIcons from 'react-icons/ai';
-import { HiOutlineBriefcase } from 'react-icons/hi';
-import { MdOutlineConstruction } from 'react-icons/md';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import BusinessIcon from '@mui/icons-material/Business';
+import SettingsIcon from '@mui/icons-material/Settings';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import CategoryIcon from '@mui/icons-material/Category';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const SlidebarData = [
     {
         title: 'Inicio',
         path: '/',
-        icon: <AiIcons.AiFillHome />,
+        icon: <HomeIcon />,
         cName: 'nav-text',
         key: 1
     },
     {
         title: 'Usuarios',
         path: '/usuarios',
-        icon: <AiIcons.AiOutlineUser/>,
+        icon: <PersonIcon />,
         cName: 'nav-text',
         key: 2
     },
     {
         title: 'Clientes',
         path: '/clientes',
-        icon: <HiOutlineBriefcase />,
+        icon: <BusinessCenterIcon />,
         cName: 'nav-text',
         key: 3
     },
     {
-        title: 'Mantenimientos',
-        path: '/mantenimientos',
-        icon: <MdOutlineConstruction/>,
+        title: 'Tareas',
+        path: '/tareas',
+        icon: <FormatListBulletedIcon />,
         cName: 'nav-text',
         key: 4
     },
     {
         title: 'Plantas',
         path: '/plantas',
-        icon: <MdOutlineConstruction/>,
+        icon: <BusinessIcon />,
         cName: 'nav-text',
         key: 5
     },
     {
-        title: 'Plantas (Tabla)',
+        title: 'Parametrización de planta',
         path: '/plantasTabla',
-        icon: <MdOutlineConstruction/>,
+        icon: <SettingsIcon/>,
         cName: 'nav-text',
         key: 6
     },
     {
         title: 'Mantenimiento (Tecnico)',
         path: '/mantenimientoTecnico',
-        icon: <AiIcons.AiOutlineDatabase />,
+        icon: <EngineeringIcon />,
         cName: 'nav-text',
         key: 7
     },
     {
         title: 'Ofertas',
         path: '/ofertas',
-        icon: <AiIcons.AiOutlineDatabase />,
+        icon: <LocalOfferIcon />,
         cName: 'nav-text',
         key: 8
     },
     {
         title: 'Productos',
         path: '/productos',
-        icon: <AiIcons.AiOutlineDatabase />,
+        icon: <InventoryIcon />,
         cName: 'nav-text',
         key: 9
     },
     {
         title: 'Consumos de Articulos',
         path: '/consumoarticulos',
-        icon: <AiIcons.AiOutlineDatabase />,
+        icon: <CategoryIcon />,
         cName: 'nav-text',
         key: 10
     },
     {
         title: 'Visualizacion',
         path: '/visualizacion',
-        icon: <AiIcons.AiOutlineDatabase />,
+        icon: <VisibilityIcon />,
         cName: 'nav-text',
         key: 11
     }

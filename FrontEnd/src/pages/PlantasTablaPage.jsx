@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Autocomplete, Box, Card, Grid, TextField } from '@mui/material';
+import { Autocomplete, Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
 // import { TabContext } from '@mui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { ThemeContext } from '../router/AppRouter';
@@ -9,6 +9,10 @@ import { MainLayout } from "../layout/MainLayout";
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 import { getParametrosPlanta } from "../api/apiBackend";
+import TaskIcon from '@mui/icons-material/Task';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import CreateIcon from '@mui/icons-material/Create';
+import { useLocation } from "react-router-dom";
 
 const token = {
     headers: {
@@ -91,14 +95,13 @@ export const PlantasTablaPage = () => {
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
 
     const [oferta, setOferta] = useState([]);
-
     const [clientes, setClientes] = useState([]);
-
     const [elementos, setElementos] = useState([]);
-
     const [parametros, setParametros] = useState([]);
 
     const [analisisTable, setAnalisisTable] = useState({});
+
+    const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
 
     const columnas = [
 
@@ -118,8 +121,17 @@ export const PlantasTablaPage = () => {
 
     const [tipoParametros, setTipoParametros] = useState([]);
 
+    /*** HOOKS ***/
+    const { state } = useLocation();
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
+
+    // Estado que comprueba si se reciben parametros de la página anterior y los setea
+    useEffect(() => {
+        if( state != null ) {
+            console.log({state});
+        }
+    },[]);
 
     useEffect(() => {
         setDatosParametrosBack(parametrosFront)
@@ -665,6 +677,7 @@ export const PlantasTablaPage = () => {
 
     let opcionesFiltradas = [];
 
+    // Efecto para preparar el listado de elementos en el autocompletado
     useEffect(() => {
 
         opcionesFiltradas = [];
@@ -674,7 +687,9 @@ export const PlantasTablaPage = () => {
             console.log(elemento)
             opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
         })
-        console.log(opcionesFiltradas);
+        console.log({opcionesFiltradas});
+
+        setElementosAutocomplete( opcionesFiltradas );
 
     },[parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta ]);
 
@@ -915,6 +930,7 @@ export const PlantasTablaPage = () => {
 
             <Grid container spacing={2}>
 
+                {/* SELECCIÓN DE CLIENTE Y OFERTA */}
                 <Grid item xs={ 12 }>
                     <Card sx={{ p: 2, display: 'flex' }}>
                         <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
@@ -970,17 +986,18 @@ export const PlantasTablaPage = () => {
                                 <Autocomplete
                                     disableClearable={true}
                                     id="elemento"
-                                    //inputValue={}
-                                    options={opcionesFiltradas}
-                                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                                    inputValue={ parametrosSeleccionado.nombreElemento }
+                                    options={ elementosAutocomplete }
+                                    getOptionLabel={option => ( option.nombre+' '+option.numero )}
                                     renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
                                     onChange={(event, value) => {
+
                                         console.log( event );
 
                                         setParametrosSeleccionado(prevState => ({
                                             ...prevState,
                                             idElemento: value.id,
-                                            nombreElemento: ''
+                                            nombreElemento: event.target.innerText
                                         }))
                                     }}
                                 />
@@ -990,62 +1007,110 @@ export const PlantasTablaPage = () => {
                     </Card>
                 </Grid>
 
-            </Grid>
+                {/* BOTONES DE ACCIONES */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Grid container spacing={ 2 } sx={{ justifyContent: 'flex-end' }}>
+                            {
+                                valores.codigo ? (
+                                    <Grid item>
+                                        <Button
+                                            color='success'
+                                            variant='contained'
+                                            startIcon={ <NoteAddIcon /> }
+                                            onClick={ guardarElementos }
+                                        >
+                                            Guardar plantilla
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <>
+                                        <Grid item>
+                                            <Button
+                                                color='primary'
+                                                variant='contained'
+                                                startIcon={ <TaskIcon /> }
+                                                onClick={ GetParametros2 }
+                                            >
+                                                Abrir plantilla
+                                            </Button>
+                                        </Grid>
 
+                                        <Grid item>
+                                            <Button
+                                                //sx={{ ml: 2 }}
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={ <NoteAddIcon /> }
+                                                onClick={ guardarElementos }
+                                            >
+                                                Guardar plantilla
+                                            </Button>
+                                        </Grid>
 
+                                        <Grid item>
+                                            <Button
+                                                //sx={{ ml: 2 }}
+                                                color='warning'
+                                                variant='contained'
+                                                startIcon={ <CreateIcon /> }
+                                                onClick={ editarPlantilla }
+                                            >
+                                                Editar plantilla
+                                            </Button>
+                                        </Grid>
+                                    </>
+                                )
+                            }
+                        </Grid>
+                    </Card>
+                </Grid>
 
+                {/* TABLA DE PARAMETRIZACIÓN */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2 }}>
+                        <Grid container spacing={ 2 } sx={{ flexDirection: 'column' }}>
 
+                            <Grid item>
+                                <Typography variant="h6">Parametrización</Typography>
+                            </Grid>
 
-
-            <div className="contenedor">
-                <div className="contenedor2">
-                    
-                    {valores.codigo ?
-                        <div className='botones-menu'>
-                            <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                        </div>
-                        :
-                        <div className='botones-menu'>
-                            <button className="plantilla" onClick={GetParametros2}> Abrir Plantilla </button>
-                            <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                            <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
-                        </div>
-                    }
-                </div>
-                <Box sx={{ width: '100%', typography: 'body1' }}>
-                    <div className="col-1">
-                        <h6>Parametrizacion</h6>
-                        <hr />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Lim. Min.</th>
-                                    <th>Lim. Max.</th>
-                                    <th>Unidades</th>
-                                    <th><center>Activar</center></th>
-                                    <th><center>Ver Insp.</center></th>
-                                </tr>
-                                {
-                                    tipoParametros.map((parametro, index) =>
-                                        <tr key={index}>
-                                            <td>{parametro.nombre}</td>
-                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior} value={parametro.limInf} disabled /></td>
-                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} value={parametro.limSup} disabled /></td>
-                                            <td>
-                                                <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidades} onChange={handleUnidad} disabled />
-                                            </td>
-                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "activo"} onChange={handleActivo} checked={parametro.activo} value={parametro.activo} /></center></td>
-                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "verInspector"} onChange={handleVerInspector} checked={parametro.verInspector} value={parametro.verInspector} disabled /></center></td>
+                            <Grid item>
+                                <hr />
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Lim. Min.</th>
+                                            <th>Lim. Max.</th>
+                                            <th>Unidades</th>
+                                            <th><center>Activar</center></th>
+                                            <th><center>Ver Insp.</center></th>
                                         </tr>
+                                        {
+                                            tipoParametros.map((parametro, index) =>
+                                                <tr key={index}>
+                                                    <td>{parametro.nombre}</td>
+                                                    <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior} value={parametro.limInf} disabled /></td>
+                                                    <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} value={parametro.limSup} disabled /></td>
+                                                    <td>
+                                                        <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidades} onChange={handleUnidad} disabled />
+                                                    </td>
+                                                    <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "activo"} onChange={handleActivo} checked={parametro.activo} value={parametro.activo} /></center></td>
+                                                    <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "verInspector"} onChange={handleVerInspector} checked={parametro.verInspector} value={parametro.verInspector} disabled /></center></td>
+                                                </tr>
 
-                                    )
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </Box>
-            </div>
+                                            )
+                                        }
+                                    </tbody>
+                                </table>
+                            </Grid>
+
+                        </Grid>
+                    </Card>
+                </Grid>
+
+            </Grid>
         </MainLayout>
     );
 }
