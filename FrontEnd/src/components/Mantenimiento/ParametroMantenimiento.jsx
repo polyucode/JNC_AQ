@@ -3,38 +3,30 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { getParametros } from '../../api/apiBackend';
 
-export const ParametroMantenimiento = ({ index, nombre, unidades, valor, parametrosElemento, parametros }) => {
-
-    console.log(parametros)
-
-    const cambiarValor = (e) => {
-
-        const { name, value } = e.target
-        
-        parametrosElemento(parametros.map((param) => {
-            if(index == param.id){
-                return{
-                    ...param,
-                    [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
-                }
-            }else{
-                return param
-            }
-        }))
-
-    }
-
-
-
+export const ParametroMantenimiento = ({ indice, parametros, onChange }) => {
 
     return (
         <TableRow>
 
             <TableCell component="th" scope="row">
-                { nombre }
+                { parametros[indice].parametro }
             </TableCell>
+
+            <TableCell>
+                <TextField
+                    id={ indice.toString() }
+                    name="valor"
+                    size="small"
+                    defaultValue={ parametros[indice].valor }
+                    onChange={ (e, id) => onChange( e, parametros[indice].parametro ) }
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">{ parametros[indice].unidad }</InputAdornment>
+                    }}
+                />
+            </TableCell>
+
             {
-                valor.map( (row, index) => (
+                parametros[indice].dosMeses.map( (row, index) => (
                     <TableCell key={ index }>
                         <TextField
                             id={ index.toString() }
@@ -42,55 +34,14 @@ export const ParametroMantenimiento = ({ index, nombre, unidades, valor, paramet
                             type="number"
                             size="small"
                             defaultValue = { row }
-                            disabled={ index === 0 ? false : true }
-                            onChange= { cambiarValor }
+                            disabled
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
+                                endAdornment: <InputAdornment position="end">{ parametros[indice].unidad }</InputAdornment>
                             }}
                         />
                     </TableCell>
                 ))
-
             }
-
-
-            {/* <TableCell>
-                <TextField
-                    id={ index }
-                    name="valor"
-                    type="number"
-                    size="small"
-                    defaultValue = { valor }
-                    onChange= { cambiarValor }
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
-                    }}
-                />
-            </TableCell>
-
-            <TableCell>
-                <TextField
-                    name="valor"
-                    type="number"
-                    size="small"
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
-                    }}
-                    disabled
-                />
-            </TableCell>
-
-            <TableCell>
-                <TextField
-                    name="valor"
-                    type="number"
-                    size="small"
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">{ unidades }</InputAdornment>
-                    }}
-                    disabled
-                />
-            </TableCell> */}
 
         </TableRow>
     )

@@ -3,24 +3,21 @@ import axios from "axios";
 import { Grid, Card, CardContent, Autocomplete, Typography } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
-
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
-
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros } from "../api/apiBackend";
+import Swal from "sweetalert2";
 
 const token = {
      headers: {
@@ -30,22 +27,19 @@ const token = {
 
 export const MantenimientoTecnicoPage = () => {
 
+    /*** ESTADOS ***/
+
     // Declaración de variables
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [elementos, setElementos] = useState([]);
     const [parametros, setParametros] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
-
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
-
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
-    const [open, setOpen] = React.useState(true);
-    const [contextMenu, setContextMenu] = React.useState(null);
-
+    const { parametrosFront } = useParserFront(setDatosParametrosBack);
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
-
+    const [valoresParametros, setValoresParametros] = useState([]);
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
         id: 0,
         codigoCliente: 0,
@@ -89,18 +83,6 @@ export const MantenimientoTecnicoPage = () => {
         GetConfNivelesPlantasCliente();
     }, [])
 
-    useEffect(() => {
-        console.log({ parametros });
-    },[ parametros ]);
-
-    useEffect(() => {
-        console.log({ elementos });
-    },[ elementos ]);
-
-    useEffect(() => {
-        console.log({ confNivelesPlantasCliente });
-    },[ confNivelesPlantasCliente ]);
-
     // Filtramos elementos para el desplegable
     useEffect(() => {
 
@@ -115,12 +97,12 @@ export const MantenimientoTecnicoPage = () => {
     },[ parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta ]);
 
 
-
     useEffect(() => {
         setDatosParametrosBack(parametrosFront)
 
     }, [parametrosFront])
 
+    // Obtenemos el nombre del cliente al cambiar su código
     useEffect(() => {
 
         const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
@@ -133,9 +115,7 @@ export const MantenimientoTecnicoPage = () => {
 
     }, [parametrosSeleccionado.codigoCliente])
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
+    /*** FUNCIONES ***/
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -144,10 +124,6 @@ export const MantenimientoTecnicoPage = () => {
             [name]: value
         }));
     }
-
-    const handleClose = () => {
-        setContextMenu(null);
-    };
 
     const onChangeCliente = (e, value, name) => {
 
@@ -190,34 +166,146 @@ export const MantenimientoTecnicoPage = () => {
     const handleGetParametros = async () => {
 
         const resp = await getFilasParametros( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
-
         setParametrosElemento( resp );
+
+        // Preparamos la variable que almacenará los valores de los parametros
+        let parametrosMostrar = [];
+        const datos = await getParametrosElemento( parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta , parametrosSeleccionado.idElemento );
+
+        // Recorremos los registros para ver que valores podemos guardar (activo)
+        datos.map( registro => {
+
+            // Si está activo, seteamos los valores
+            if( registro.activo ) {
+
+                // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                const valoresPorParametro = resp.filter( param => param.parametro === registro.parametro );
+
+                // Preparamos el valor del mes actual y el arreglo de meses
+                let mesActual = new Date().getMonth();
+                let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                valoresPorParametro.map( val => {
+
+                    const fecha = new Date(val.fecha);
+                    
+                    for(let i = 0; i < 12; i++) {
+                        if(fecha.getMonth() === i) {
+                            fechas[i] = val.valor;
+                        }
+                    }
+
+                });
+
+                // Volteamos las fechas para obtener los meses anteriores
+                fechas = fechas.reverse();
+
+                // Obtenemos los dos últimos meses y si no hay registros, seteamos un 0
+                let valoresMeses = fechas.slice(12 - mesActual, (12 - mesActual) + 2);
+                if( valoresMeses.length < 2 ) {
+                    valoresMeses.push(0);
+                }
+
+                // Creamos el objeto
+                parametrosMostrar.push({
+                    codigoCliente: parametrosSeleccionado.codigoCliente,
+                    fecha: parametrosSeleccionado.fecha,
+                    id_Elemento: parametrosSeleccionado.idElemento,
+                    oferta: parametrosSeleccionado.oferta,
+                    parametro: registro.parametro,
+                    referencia: parametrosSeleccionado.referencia,
+                    unidad: registro.unidades,
+                    valor: '',
+                    dosMeses: valoresMeses
+                });
+
+            }
+
+        });
+
+        // Finalmente, añadimos los datos al estado
+        setValoresParametros( parametrosMostrar );
+
     }
 
-    async function guardarParametros(){
+    const handleEditarParametro = ( e, id ) => {
 
-        parametrosElemento.map(parametro => {
+        // Recorremos el array del estado para encontrar el objeto que hemos modificado
+        setValoresParametros( prev => (prev.map( row => {
+            if( row.parametro === id ) {
+                return { ...row, valor: e.target.value };
+            } else {
+                return row;
+            }
+        })));
+
+    }
+
+    const guardarParametros = async () => {
+
+        // Recorremos parametro por parametro para hacer una petición POST
+        await valoresParametros.map( async (parametro) => {
+
+            let parametroPost = {
+                CodigoCliente: parametro.codigoCliente,
+                Referencia: parametro.referencia,
+                Oferta: parametro.oferta,
+                Id_Elemento: parametro.id_Elemento,
+                Parametro: parametro.parametro,
+                Fecha: parametro.fecha,
+                Valor: parseInt(parametro.valor, 10),
+                Unidad: parametro.unidad
+            }
+
+            // Nos aseguramos de que tengamos código de referencia y fecha
             if(parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null){
-                parametro.referencia = parametrosSeleccionado.referencia
-                parametro.fecha = parametrosSeleccionado.fecha
-                axios.put("/valorparametros?id=" + parametro.id, parametro, token)
-                    .then(response => {
-                        var parametroModificado = data;
-                        parametroModificado.map(param => {
-                            if(param.id === parametro.id){
-                                param = parametro
-                            }
-                        })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                alert("Los valores se han guardado correctamente")
+
+                parametroPost.referencia = parametrosSeleccionado.referencia
+                parametroPost.fecha = parametrosSeleccionado.fecha
+
+                console.log({parametroPost});
+
+                const resp = await postValorParametros( parametroPost );
+
+            } else {
+
+                // Avisamos al usuario
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error al guardar',
+                    text: `Faltan introducir algunos datos!`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
+
             }
-            else{
-                alert("Falta introducir algun dato")
+
+        });
+
+        // Avisamos al usuario si ha ido bien
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Datos guardados',
+            text: `Los parametros han sido guardados`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
             }
-        })      
+        });
+        
     }
 
     return (
@@ -319,66 +407,15 @@ export const MantenimientoTecnicoPage = () => {
                                             </TableHead>
 
                                             <TableBody>
-                                                {/* {
-                                                    parametrosElemento.map( (parametro, index) => {
+                                                {
+                                                    valoresParametros.map( (parametro, index) => {
                                                         return (
                                                             <ParametroMantenimiento
-                                                                key={ parametro.id }
-                                                                index={ parametro.id }
-                                                                nombre={ parametros.filter( param => param.id === parametro.parametro)[0].nombre}
-                                                                unidades={ parametro.unidad }
-                                                                valor = { parametro.valor }
-                                                                parametrosElemento = { setParametrosElemento }
-                                                                parametros = { parametrosElemento }
+                                                                key={ index }
+                                                                indice={ index }
+                                                                parametros={ valoresParametros }
+                                                                onChange={ handleEditarParametro }
                                                             />
-                                                        )
-                                                    })
-                                                } */}
-                                                {
-                                                    parametros.map( row => {
-
-                                                        //console.log(row)
-
-                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorParametro = parametrosElemento.filter( param => param.parametro === row.id );
-                                                        
-                                                        // Preparamos el valor del mes actual y el arreglo de meses
-                                                        let mesActual = new Date().getMonth();
-                                                        let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-                                                        // Mapeamos los valores en un array, y si no hay datos seteamos un 0
-                                                        valoresPorParametro.map( val => {
-
-                                                            const fecha = new Date(val.fecha);
-                                                            
-                                                            for(let i = 0; i < 12; i++) {
-                                                                if(fecha.getMonth() === i) {
-                                                                    fechas[i] = val.valor;
-                                                                }
-                                                            }
-
-                                                        });
-
-                                                        // Obtenemos los tres últimos meses y si no hay registros, seteamos un 0
-                                                        let valoresMeses = fechas.slice(mesActual, mesActual + 3);
-                                                        if( valoresMeses.length < 2 ) {
-                                                            valoresMeses.push(0, 0);
-                                                        } else if ( valoresMeses.length < 3 ) {
-                                                            valoresMeses.push(0);
-                                                        }
-
-                                                        return (
-                                                            valoresPorParametro.length > 0 && (
-                                                                <ParametroMantenimiento
-                                                                    key={ row.id }
-                                                                    index={ row.id }
-                                                                    nombre={ row.nombre }
-                                                                    unidades={ row.unidad }
-                                                                    valor = { valoresMeses }
-                                                                    parametrosElemento = { setParametrosElemento }
-                                                                    parametros = { parametrosElemento }
-                                                                />
-                                                            )
                                                         )
                                                     })
                                                 }

@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { camelCase } from 'lodash';
 import ReactFlow, { Background } from "react-flow-renderer";
 import { MainLayout } from "../layout/MainLayout";
-import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, getConfPlantaClientePorClienteOferta, getElementoPorId, getListaAnalisis, getOfertas, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, postConfPlantaCliente, postElementos, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos } from "../api/apiBackend";
+import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, getConfPlantaClientePorClienteOferta, getElementoPorId, getListaAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos } from "../api/apiBackend";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
 import { useDiagrama } from "../helpers/generarDiagrama";
@@ -37,6 +37,7 @@ export const PlantasPage = () => {
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [analisis, setAnalisis] = useState([]);
+    const [parametros, setParametros] = useState([]);
 
     // Listado de elementos
     const [elementosPlanta, setElementosPlanta] = useState([]);
@@ -67,10 +68,9 @@ export const PlantasPage = () => {
         getListaAnalisis()
             .then( resp => { setAnalisis(resp) });
 
-        //getElementos()
-        //    .then( resp => { setElementosPlanta(resp) });
-        
-            //peticionGet();
+        getParametros()
+            .then( resp => { setParametros(resp) });
+
     }, []);
 
     // Setea el nombre del cliente cada vez que se selecciona un código de cliente
@@ -462,6 +462,37 @@ export const PlantasPage = () => {
                     id_Elemento: respElemento.id,
                 }
 
+                // Recorremos los parámetros para crear sus registros corespondientes
+            await parametros.map( async (parametro, index) => {
+
+                // Preparamos el cuerpo de la petición
+                const postParametro = {
+                    Activo: false,
+                    CodigoCliente: confPlantaCliente.CodigoCliente,
+                    EsPlantilla: true,
+                    Id_Elemento: respElemento.id,
+                    LimInf: 0,
+                    LimSup: 0,
+                    NombreCliente: confPlantaCliente.NombreCliente,
+                    Oferta: confPlantaCliente.Oferta,
+                    Parametro: parametro.id,
+                    Unidades: parametro.unidad,
+                    VerInspector: false,
+                    addDate: null,
+                    addIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                    modDate: null,
+                    modIdUser: null
+                }
+
+                // Realizamos la petición POST para crear el registro
+                const resp = await postParametrosElementoPlantaCliente( postParametro );
+
+
+            });
+
             }
 
             // Filtramos la lista de niveles para comprobar si existe un registro
@@ -552,8 +583,6 @@ export const PlantasPage = () => {
             }
 
         }));
-
-        console.log({ elementos: elementosActualizados });
 
         // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
         setElementosPlanta( elementosActualizados );
@@ -820,7 +849,7 @@ export const PlantasPage = () => {
                             variant='contained'
                             endIcon={ <NavigateNextIcon /> }
                             disabled={ !diagramaGuardado }
-                            onClick={ () => { navigate('/plantasTabla', { state: { id: 7, color: 'green' } }); } }>
+                            onClick={ () => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); } }>
                             Siguiente
                         </Button>
 
