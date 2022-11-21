@@ -22,7 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
 
 
 // Table MUI
@@ -45,55 +44,6 @@ const token = {
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-// tablas español
-const localization = {
-  body: {
-    emptyDataSourceMessage: 'No hay datos por mostrar',
-    addTooltip: 'Añadir',
-    deleteTooltip: 'Eliminar',
-    editTooltip: 'Editar',
-    filterRow: {
-      filterTooltip: 'Filtrar',
-    },
-    editRow: {
-      deleteText: '¿Segura(o) que quiere eliminar?',
-      cancelTooltip: 'Cancelar',
-      saveTooltip: 'Guardar',
-    },
-  },
-  grouping: {
-    placeholder: "Arrastre un encabezado aquí para agrupar",
-    groupedBy: 'Agrupado por',
-  },
-  header: {
-    actions: 'Acciones',
-  },
-  pagination: {
-    firstAriaLabel: 'Primera página',
-    firstTooltip: 'Primera página',
-    labelDisplayedRows: '{from}-{to} de {count}',
-    labelRowsPerPage: 'Filas por página:',
-    labelRowsSelect: 'filas',
-    lastAriaLabel: 'Ultima página',
-    lastTooltip: 'Ultima página',
-    nextAriaLabel: 'Pagina siguiente',
-    nextTooltip: 'Pagina siguiente',
-    previousAriaLabel: 'Pagina anterior',
-    previousTooltip: 'Pagina anterior',
-  },
-  toolbar: {
-    addRemoveColumns: 'Agregar o eliminar columnas',
-    exportAriaLabel: 'Exportar',
-    exportName: 'Exportar a CSV',
-    exportTitle: 'Exportar',
-    nRowsSelected: '{0} filas seleccionadas',
-    searchPlaceholder: 'Buscar',
-    searchTooltip: 'Buscar',
-    showColumnsAriaLabel: 'Mostrar columnas',
-    showColumnsTitle: 'Mostrar columnas',
-  },
-}
 
 export const ClientesPage = () => {
 
@@ -130,24 +80,6 @@ export const ClientesPage = () => {
     cp: '',
     comarca: '',
     idSector: 0,
-    addDate: null,
-    addIdUser: null,
-    modDate: null,
-    modIdUser: null,
-    delDate: null,
-    delIdUser: null,
-    deleted: null,
-  });
-
-  const [contactoSeleccionado, setContactoSeleccionado] = useState({
-
-    id: 0,
-    nombre: '',
-    telefono: '',
-    email: '',
-    cargo: '',
-    comentarios: '',
-    idCliente: "",
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -204,15 +136,6 @@ export const ClientesPage = () => {
   // Efectos de React
   // Llamadas a las APIs
   useEffect(() => {
-
-    /*getClientes()
-      .then(clientes => {
-        setClientes(clientes);
-      });
-    getComarcas()
-      .then(comarcas => {
-        setComarcas(comarcas);
-      });*/
     peticionGet();
 
     // peticionGetContacto();
@@ -287,8 +210,7 @@ export const ClientesPage = () => {
             cliente = clienteSeleccionado
           }
         });
-        //peticionGet();
-        getClientes();
+        peticionGet();
         abrirCerrarModalEditar();
         setClienteSeleccionado({
           id: 0,
@@ -319,6 +241,7 @@ export const ClientesPage = () => {
 
   const peticionDelete = async () => {
     var i = 0;
+    console.log(ClienteEliminar[i])
     while (i < ClienteEliminar.length) {
       await axios.delete("/cliente/" + ClienteEliminar[i], token)
         .then(response => {
@@ -353,55 +276,6 @@ export const ClientesPage = () => {
     }
   }
 
-  const peticionPostContacto = async () => {
-    console.log("Peticion Post ejecutandose");
-    contactoSeleccionado.id = null;
-    console.log(clienteSeleccionado)
-    await axios.post("/clientescontactos", contactoSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertarContacto();
-        //peticionGetContacto();
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    console.log(contactoSeleccionado)
-  }
-
-  const peticionDeleteContacto = async () => {
-    console.log("Peticion Delete ejecutandose")
-    var i = 0;
-    while (i < ContactoClienteEliminar.length) {
-      await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
-        .then(response => {
-          //peticionGetContacto();
-          abrirCerrarModalEliminarContacto();
-        }).catch(error => {
-          console.log(error);
-        })
-      i++;
-    }
-  }
-
-  const peticionPutContacto = async () => {
-    console.log(contactoSeleccionado)
-    await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
-      .then(response => {
-        var contactoModificado = clientes;
-        contactoModificado.map(contacto => {
-          if (contacto.id === contactoSeleccionado.id) {
-            contacto = contactoSeleccionado
-          }
-        });
-        //peticionGetContacto();
-        abrirCerrarModalEditarContacto();
-      }).catch(error => {
-        console.log(error);
-      })
-  }
-
-
-
   const handleChange = e => {
 
     const { name, value } = e.target;
@@ -411,15 +285,6 @@ export const ClientesPage = () => {
     }));
 
   }
-
-  const handleChangeContacto = e => {
-    const { name, value } = e.target;
-    setContactoSeleccionado(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  }
-
 
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
@@ -550,7 +415,7 @@ export const ClientesPage = () => {
   const handleSelectRow = (ids) => {
 
     if (ids.length > 0) {
-      setClienteSeleccionado(clientes.filter(cliente => cliente.id === ids[0])[0]);
+      setClienteSeleccionado(data.filter(cliente => cliente.id === ids[0])[0]);
     } else {
       setClienteSeleccionado(clienteSeleccionado);
     }
@@ -590,7 +455,16 @@ export const ClientesPage = () => {
               (rowsIds.length > 0) ?
                 (
                   <Grid item>
-                    <Button sx={{ mr: 2 }} color='error' variant='contained' startIcon={<DeleteIcon />} onClick={abrirCerrarModalEliminar} >
+                    <Button 
+                      sx={{ mr: 2 }} 
+                      color='error' 
+                      variant='contained' 
+                      startIcon={<DeleteIcon />} 
+                      onClick={(event, rowData) => {
+                        setClienteEliminar(rowsIds)
+                        abrirCerrarModalEliminar()
+                      }}
+                    >
                       Eliminar
                     </Button>
                   </Grid>
@@ -711,43 +585,6 @@ export const ClientesPage = () => {
         open={modalEliminar}
         onClose={abrirCerrarModalEliminar}
       />
-
-      {/* <Modal
-          open={modalInsertar}
-          onClose={abrirCerrarModalInsertar}>
-          {bodyInsertar}
-        </Modal>
-
-        <Modal
-          open={modalEditar}
-          onClose={abrirCerrarModalEditar}>
-          {bodyEditar}
-        </Modal>
-
-        <Modal
-          open={modalEliminar}
-          onClose={abrirCerrarModalEliminar}>
-          {bodyEliminar}
-
-        </Modal>
-
-        <Modal
-          open={modalInsertarContacto}
-          onClose={abrirCerrarModalInsertarContacto}>
-          {bodyInsertarContacto}
-        </Modal>
-
-        <Modal
-          open={modalEliminarContacto}
-          onClose={abrirCerrarModalEliminarContacto}>
-          {bodyEliminarContacto}
-        </Modal>
-
-        <Modal
-          open={modalEditarContacto}
-          onClose={abrirCerrarModalEditarContacto}>
-          {bodyEditarContacto}
-        </Modal> */}
     </MainLayout>
   );
 

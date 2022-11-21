@@ -174,7 +174,6 @@ export const UsuariosPage = () => {
     usuarioSeleccionado.id = null;
     await axios.post("/usuario", usuarioSeleccionado, token)
       .then(response => {
-        //setData(data.concat(response.data));
         abrirCerrarModalInsertar();
         peticionGet();
         setUsuarioSeleccionado({
