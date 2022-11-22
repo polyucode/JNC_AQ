@@ -20,7 +20,7 @@ export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
 {/* ()=>peticionPost() */}
 
     return (
-      <Modal open={ open } onClose={ onClose }>
+      <Modal open={ open } onClose={ onClose } >
         <Fade in={open}>
           <Grid container sx={style}>
 

@@ -14,6 +14,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string Protocolo { get; set; }
         public string ElementoPlanta { get; set; }
         public string Analisis { get; set; }
+        public DateTime? Fecha { get; set; }
         public string Final { get; set; }
         public string Valor { get; set; }
         public string NombreValor { get; set; }
