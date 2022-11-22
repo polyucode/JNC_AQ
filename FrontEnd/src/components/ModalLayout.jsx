@@ -40,7 +40,7 @@ export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
               </IconButton>
             </Grid>
 
-            <Grid container spacing={ 3 } sx={{ alignItems: 'center', maxHeight: 700, overflow: 'auto' }}>
+            <Grid container spacing={ 3 } sx={{ alignItems: 'center' }}>
               { contenido }
             </Grid>
 
