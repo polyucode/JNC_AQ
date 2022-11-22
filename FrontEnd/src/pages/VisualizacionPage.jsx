@@ -2088,7 +2088,6 @@ export const VisualizacionPage = () => {
                         id="Elemento"
                         options={elementosAutocomplete }
                         inputValue={analisisSeleccionado.elemento}
-                        filterOptions={options => confNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta)}
                         getOptionLabel={option => ( option.nombre+' '+option.numero )}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
