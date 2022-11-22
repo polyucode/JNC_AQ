@@ -144,6 +144,13 @@ export const putConfNivelesPlantasCliente = async ( nivel ) => {
 
 }
 
+export const getConfNivelesPlantasCliente = async () => {
+
+    const resp = await axios.get('/confnivelesplantascliente', token);
+    return Object.entries(resp.data.data).map(([key, value]) => (key, value));
+
+}
+
 export const getConfNivelesPlantasClientePorPlanta = async ( idPlanta ) => {
 
     const resp = await axios.get(`/confNivelesPlantasCliente/nivel?Id_Planta=${ idPlanta }`, token);
@@ -182,31 +189,74 @@ export const putElementos = async ( elemento ) => {
 }
 
 /*** PARÁMETROS ***/
-export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
-
-    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Elemento=${ elemento }`;
-    const resp = await axios.get(url, token);
-    return resp.data.data;
-
-}
 
 export const getParametros = async () => {
-
+    
     const resp = await axios.get('/parametros', token);
     return resp.data.data;
     
 }
 
-export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
+export const getValorParametros = async () => {
+    
+    const resp = await axios.get('/valorparametros', token);
+    return resp.data.data; // Object.entries(response.data.data).map(([key, value]) => (key, value))
+    
+}
 
+export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
+    
     const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    return resp.data.data;
+    
+}
+
+export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento) => {
+    
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    return resp.data.data;
+    
+}
+
+export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
+
+    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }`;
+    const resp = await axios.get(url, token);
     return resp.data.data;
 
 }
 
-export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento) => {
+export const getConfParametrosElementoPlantaCliente = async () => {
 
-    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    const resp = await axios.get('/parametroselementoplantacliente', token);
+    return resp.data.data;
+
+}
+
+export const getParametrosAnalisisPlanta = async () => {
+
+    const resp = await axios.get('/parametrosanalisisplanta', token);
+    return resp.data.data;
+
+}
+
+export const putParametrosElementoPlantaCliente = async ( parametro ) => {
+
+    const resp = await axios.put('/parametroselementoplantacliente', parametro, token);
+    return resp.data.data;
+
+}
+
+export const postParametrosElementoPlantaCliente = async ( parametro ) => {
+
+    const resp = await axios.post('/parametroselementoplantacliente', parametro, token);
+    return resp.data.data;
+
+}
+
+export const postValorParametros = async ( parametro ) => {
+
+    const resp = await axios.post('/valorparametros', parametro, token);
     return resp.data.data;
 
 }
@@ -220,14 +270,12 @@ export const getAnalisisNivelesPlantasCliente = async () => {
 
 }
 
-
 export const getAnalisisNivelesPlantasClientePorIdNivel = async ( idNivel ) => {
 
     const resp = await axios.get(`/AnalisisNivelesPlantasCliente/analisis?Id_NivelesPlanta=${ idNivel }`, token);
     return resp.data.data;
 
 }
-
 
 export const postAnalisisNivelesPlantasCliente = async ( analisis ) => {
 
@@ -242,27 +290,3 @@ export const putAnalisisNivelesPlantasCliente = async ( analisis ) => {
     return resp.data.data;
 
 }
-
-
-///peticiones API
-//   const peticionGetContacto = async () => {
-    //     console.log("MEtodo Get Ejecutandose")
-    //     axios.get("/clientescontactos", token).then(response => {
-        //       setDataDet(response.data.data)
-//     })
-//   }
-
-
-
-// const GetConfAnalisisNivelesPlantasCliente = async () => {
-//     axios.get("/analisisnivelesplantascliente", token).then(response => {
-//         const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-//         setConfAnalisisNivelesPlantasCliente(niveles);
-//     }, [])
-// }
-
-// const GetParametrosPlantaCliente = async () => {
-//     axios.get("/parametroselementoplantacliente", token).then(response => {
-//         setData(response.data.data)
-//     })
-// }

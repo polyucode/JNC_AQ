@@ -16,8 +16,13 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         {
             var list = _entities.AsEnumerable();
             var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta);
-            if (sel.Count() == 0) return null;
-            return sel.ToArray()[0];
+
+            if( sel.ToArray().Length != 0 )
+            {
+                return sel.ToArray()[0];
+            } else {
+                return null;
+            }
         }
     }
 }

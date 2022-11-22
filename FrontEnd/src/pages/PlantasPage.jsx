@@ -9,10 +9,12 @@ import Swal from 'sweetalert2';
 import { camelCase } from 'lodash';
 import ReactFlow, { Background } from "react-flow-renderer";
 import { MainLayout } from "../layout/MainLayout";
-import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, getConfPlantaClientePorClienteOferta, getElementoPorId, getListaAnalisis, getOfertas, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, postConfPlantaCliente, postElementos, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos } from "../api/apiBackend";
+import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, getConfPlantaClientePorClienteOferta, getElementoPorId, getListaAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos } from "../api/apiBackend";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
 import { useDiagrama } from "../helpers/generarDiagrama";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useNavigate } from 'react-router-dom';
 
 export const PlantasPage = () => {
 
@@ -35,6 +37,7 @@ export const PlantasPage = () => {
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [analisis, setAnalisis] = useState([]);
+    const [parametros, setParametros] = useState([]);
 
     // Listado de elementos
     const [elementosPlanta, setElementosPlanta] = useState([]);
@@ -44,8 +47,11 @@ export const PlantasPage = () => {
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+    const [datosGuardados, setDatosGuardados] = useState(false);
+    const [diagramaGuardado, setDiagramaGuardado] = useState(false);
 
     /** HOOKS **/
+    const navigate = useNavigate();
     const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
 
     /** EFECTOS **/
@@ -62,10 +68,9 @@ export const PlantasPage = () => {
         getListaAnalisis()
             .then( resp => { setAnalisis(resp) });
 
-        //getElementos()
-        //    .then( resp => { setElementosPlanta(resp) });
-        
-            //peticionGet();
+        getParametros()
+            .then( resp => { setParametros(resp) });
+
     }, []);
 
     // Setea el nombre del cliente cada vez que se selecciona un código de cliente
@@ -120,10 +125,13 @@ export const PlantasPage = () => {
         getConfPlantaClientePorClienteOferta( confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta )
             .then( res => {
 
+                console.log(res)
+
                 if( res == null ) {
                     setCrearPlanta(true);
                 } else {
                     setCrearPlanta(false);
+                    setConfPlantaCliente( prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }))
                 }
 
             });
@@ -178,21 +186,41 @@ export const PlantasPage = () => {
         // Comprobamos para que no hayan errores
         if ( numNivelesInt > 5 ) {
 
+            // Avisamos al usuario
             Swal.fire({
+                position: 'center',
+                icon: 'error',
                 title: 'Error',
                 text: 'El número máximo de niveles que se pueden crear son 5',
-                icon: 'error',
-                confirmButtonText: 'Cerrar'
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
             });
             return;
 
+            
+
         } else if (confPlantaCliente.CodigoCliente == null || confPlantaCliente.Oferta == null || numNivelesInt <= 0 || numNivelesInt == null) {
             
+            // Avisamos al usuario
             Swal.fire({
+                position: 'center',
+                icon: 'error',
                 title: 'Error',
                 text: 'Faltan introducir datos correctos para crear los niveles',
-                icon: 'error',
-                confirmButtonText: 'Cerrar'
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
             });
             return;
 
@@ -373,7 +401,7 @@ export const PlantasPage = () => {
         // Guardamos los registros de los elementos de la planta para obtener sus IDs
         let elementosActualizados = [];
 
-        elementosPlanta.map( async (elemento) => {
+        await Promise.all(elementosPlanta.map( async (elemento) => {
 
             let idElementoActualizado = 0;
 
@@ -410,6 +438,8 @@ export const PlantasPage = () => {
                 elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel });
                 idElementoActualizado = elemento.id;
 
+                console.log( elementosActualizados );
+
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
                     ...postNivelesPlanta,
@@ -424,12 +454,44 @@ export const PlantasPage = () => {
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
                 idElementoActualizado = respElemento.id;
+                console.log( elementosActualizados );
 
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
                     ...postNivelesPlanta,
                     id_Elemento: respElemento.id,
                 }
+
+                // Recorremos los parámetros para crear sus registros corespondientes
+            await parametros.map( async (parametro, index) => {
+
+                // Preparamos el cuerpo de la petición
+                const postParametro = {
+                    Activo: false,
+                    CodigoCliente: confPlantaCliente.CodigoCliente,
+                    EsPlantilla: true,
+                    Id_Elemento: respElemento.id,
+                    LimInf: 0,
+                    LimSup: 0,
+                    NombreCliente: confPlantaCliente.NombreCliente,
+                    Oferta: confPlantaCliente.Oferta,
+                    Parametro: parametro.id,
+                    Unidades: parametro.unidad,
+                    VerInspector: false,
+                    addDate: null,
+                    addIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                    modDate: null,
+                    modIdUser: null
+                }
+
+                // Realizamos la petición POST para crear el registro
+                const resp = await postParametrosElementoPlantaCliente( postParametro );
+
+
+            });
 
             }
 
@@ -519,8 +581,54 @@ export const PlantasPage = () => {
                     }
                 }
             }
+
+        }));
+
+        // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
+        setElementosPlanta( elementosActualizados );
+        setDatosGuardados( true );
+
+        // Avisamos al usuario
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Planta guardada',
+            text: `Los datos de la planta ${ confPlantaCliente.NombreCliente } han sido guardados`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
         });
-    }
+
+    };
+
+    const handleGuardarDiagrama = async () => {
+
+        // Guardamos los datos de la planta
+        await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt( confPlantaCliente.NumNiveles, 10 ) });
+        setDiagramaGuardado( true );
+
+        // Avisamos al usuario
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Diagrama guardado',
+            text: `Los datos del diagrama de la planta ${ confPlantaCliente.NombreCliente } han sido guardados`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
+
+    };
 
     return (
         <MainLayout title="Plantas">
@@ -560,7 +668,7 @@ export const PlantasPage = () => {
 
                             {/* Número de niveles */}
                             <Grid item xs={ 2 }>
-                                <TextField disabled={ plantaCreada } sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } value={ confPlantaCliente.NumNiveles } />
+                                <TextField disabled={ !crearPlanta || plantaCreada } sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } value={ confPlantaCliente.NumNiveles } />
                             </Grid>
 
                             {/* Botón para crear */}
@@ -706,7 +814,7 @@ export const PlantasPage = () => {
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
 
                         <Button
-                            disabled={ diagramaGenerado }
+                            disabled={ !plantaCreada }
                             color='success'
                             variant='contained'
                             startIcon={ <SaveIcon /> }
@@ -720,9 +828,29 @@ export const PlantasPage = () => {
                             color='primary'
                             variant='contained'
                             startIcon={ <AccountTreeIcon /> }
-                            disabled={ elementosPlanta.length === 0 }
+                            disabled={ !datosGuardados || diagramaGenerado }
                             onClick={ () => generarDiagrama( confPlantaCliente.NumNiveles, elementosPlanta ) }>
                             Generar diagrama
+                        </Button>
+
+                        <Button
+                            sx={{ ml: 2 }}
+                            color='success'
+                            variant='contained'
+                            startIcon={ <AccountTreeIcon /> }
+                            disabled={ !datosGuardados || !diagramaGenerado }
+                            onClick={ handleGuardarDiagrama }>
+                            Guardar diagrama
+                        </Button>
+
+                        <Button
+                            sx={{ ml: 2 }}
+                            color='primary'
+                            variant='contained'
+                            endIcon={ <NavigateNextIcon /> }
+                            disabled={ !diagramaGuardado }
+                            onClick={ () => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); } }>
+                            Siguiente
                         </Button>
 
                     </Card>
@@ -736,13 +864,10 @@ export const PlantasPage = () => {
                         <ReactFlow
                             nodes={nodos}
                             edges={lados}
-                            // onNodesChange={onNodesChange}
                             onEdgesChange={onEdgesChange}
                             onConnect={onConnect}
                             nodeTypes={ nodeTypes }
                             fitView
-                            //style={rfStyle}
-                            //attributionPosition="top-right"
                         >
                             <Background />
                         </ReactFlow>

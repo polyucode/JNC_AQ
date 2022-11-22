@@ -1,19 +1,12 @@
 import { Card, CardContent, Grid, IconButton, Tooltip, Typography } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import InfoIcon from '@mui/icons-material/Info';
+import { DashboardContext } from '../../context/DashboardContext';
 
 export const NodoElementoDashboard = ({ data }) => {
 
-    const onChange = useCallback((evt) => {
-        console.log(evt.target.value);
-    }, []);
-
-    const handleSeleccionarElemento = ( id ) => {
-
-        console.log('Elemento del diagrama seleccionado: ' + id );
-
-    }
+    const { handleSeleccionarElemento } = useContext( DashboardContext );
 
     return (
         <Card sx={{ height: '100%', backgroundColor: '#ffffff' }} variant='outlined'>

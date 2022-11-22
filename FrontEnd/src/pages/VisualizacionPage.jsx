@@ -4,14 +4,12 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@mui/material/MenuItem';
-
 import './Visualizacion.css';
 import { MainLayout } from "../layout/MainLayout";
 
@@ -112,27 +110,22 @@ const useStylesParagraph = makeStyles((theme) => ({
 
 export const VisualizacionPage = () => {
 
+    /*** VARIABLES ***/
     let opcionesFiltradas = [];
 
+    /*** EFECTOS ***/
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalInsertar1, setModalInsertar1] = useState(false);
     const [modalInsertarOperario, setModalInsertarOperario] = useState(false);
     const [modalInsertarAerobio, setModalInsertarAerobio] = useState(false);
     const [modalInsertarLegionela, setModalInsertarLegionela] = useState(false);
-
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEditar1, setModalEditar1] = useState(false);
     const [modalEditarOperario, setModalEditarOperario] = useState(false);
     const [modalEditarAerobio, setModalEditarAerobio] = useState(false);
     const [modalEditarLegionela, setModalEditarLegionela] = useState(false);
-
     const [modalEliminar, setModalEliminar] = useState(false);
-
-    const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
-
-    const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
-
     const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
         id: 0,
         codigoCliente: 0,
@@ -205,9 +198,6 @@ export const VisualizacionPage = () => {
             label: 'Desinfeccion AFCH (cloracion)'
         }
     ]
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-
     const [FilasSeleccionadas1, setFilasSeleccionadas1] = useState([]);
     const [FilasSeleccionadas2, setFilasSeleccionadas2] = useState([]);
     const [FilasSeleccionadas3, setFilasSeleccionadas3] = useState([]);
@@ -232,27 +222,16 @@ export const VisualizacionPage = () => {
 
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
-
     const [operarioEditar, setOperarioEditar] = useState([]);
-
     const [oferta, setOferta] = useState([]);
-
     const [clientes, setClientes] = useState([]);
-
     const [elementos, setElementos] = useState([]);
     const [operarios, setOperarios] = useState([]);
-
     const [analisis, setAnalisis] = useState([]);
-    const [analisisTable, setAnalisisTable] = useState({});
-
-    const [periodo, setPeriodo] = useState("");
-    const [fecha, setFecha] = useState("");
-
-    const [dataCliente, setDataCliente] = useState([])
-
     const [actualState, changeCheckState] = useState(false);
     const [actualState2, changeActualState] = useState(false);
 
+    /*** COLUMNAS ***/
     const columnas = [
         //visibles
         { title: 'Periodo', field: 'periodo' },
@@ -364,28 +343,83 @@ export const VisualizacionPage = () => {
     const [dataTablas, setDataTablas] = useState([]);
     const [dataEntregas, setDataEntregas] = useState([]);
     const [dataOtros, setDataOtros] = useState([]);
-
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
 
+    /*** HOOKS ***/
     const styles = useStyles();
     const stylesParagraph = useStylesParagraph();
+
+    /*** EFECTOS ***/
+
+    useEffect(() => {
+        GetOperarios();
+        GetParametrosAnalisisPlanta();
+        FiltrarData();
+        GetOfertas();
+        GetClientes();
+        GetAnalisis();
+        GetElementos();
+        GetConfNivelesPlantasCliente();
+        Tablas();
+        FisicoQuimicoTorre();
+        FisicoQuimicoAporte();
+        FisicoQuimicoAlimentacion();
+        FisicoQuimicoRechazo();
+        FisicoQuimicoCondensados();
+        FisicoQuimicoCaldera();
+        Aerobios();
+        Legionela();
+        AguasResiduales();
+        Desinfecciones();
+        Osmosis();
+        AguaPozo();
+        DesinfeccionACS();
+        MantMaqFrio();
+        Mediciones();
+        ControlFugaGas();
+        AguaPotable();
+        RevisionBandeja();
+        peticionGetEntregas();
+    }, [])
 
     useEffect(() => {
 
         opcionesFiltradas = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta);
-        lista.map(elemento => {
-            opcionesFiltradas.push(elementos.filter(elem => elem.id === elemento.id_Elemento)[0]);
+        lista.map( elemento => {
+            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
         })
 
         console.log(lista)
         console.log(opcionesFiltradas)
 
-        setElementosAutocomplete(opcionesFiltradas);
+        setElementosAutocomplete( opcionesFiltradas );
 
-    }, [analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta]);
+    },[analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta ]);
 
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente);
+        (nombre.length > 0) && setAnalisisSeleccionado({
+            ...analisisSeleccionado,
+            nombreCliente: nombre[0].razonSocial,
+            pedido: ''
+        })
+
+    }, [analisisSeleccionado.codigoCliente])
+
+    useEffect(() => {
+
+        const pedido = oferta.filter(pedido => pedido.numeroOferta === analisisSeleccionado.oferta);
+        (pedido.length > 0) && setAnalisisSeleccionado({
+            ...analisisSeleccionado,
+            pedido: pedido[0].pedido
+        })
+
+    }, [analisisSeleccionado.oferta])
+
+    /*** FUNCIONES ***/
     const handleChangeInput = e => {
         const { name, value } = e.target;
         setAnalisisSeleccionado(prevState => ({
@@ -396,11 +430,6 @@ export const VisualizacionPage = () => {
 
     const handleChangeCheckbox = e => {
         changeCheckState(e.target.checked)
-        console.log(e.target.checked)
-    }
-
-    const handleChangeCheckbox2 = e => {
-        changeActualState(e.target.checked)
         console.log(e.target.checked)
     }
 
@@ -1207,6 +1236,8 @@ export const VisualizacionPage = () => {
         setModalEliminar(!modalEliminar);
     }
 
+    /*** PETICIONES BACKEND ***/
+
     const GetOperarios = async () => {
         axios.get("/usuario", token).then(response => {
             const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -1396,37 +1427,6 @@ export const VisualizacionPage = () => {
         setData18(data.filter(analisis => analisis.analisis === "Revision de Bandeja"))
         setDataOtros(data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja"))
     }
-
-    useEffect(() => {
-        GetOperarios();
-        GetParametrosAnalisisPlanta();
-        FiltrarData();
-        GetOfertas();
-        GetClientes();
-        GetAnalisis();
-        GetElementos();
-        GetConfNivelesPlantasCliente();
-        Tablas();
-        FisicoQuimicoTorre();
-        FisicoQuimicoAporte();
-        FisicoQuimicoAlimentacion();
-        FisicoQuimicoRechazo();
-        FisicoQuimicoCondensados();
-        FisicoQuimicoCaldera();
-        Aerobios();
-        Legionela();
-        AguasResiduales();
-        Desinfecciones();
-        Osmosis();
-        AguaPozo();
-        DesinfeccionACS();
-        MantMaqFrio();
-        Mediciones();
-        ControlFugaGas();
-        AguaPotable();
-        RevisionBandeja();
-        peticionGetEntregas();
-    }, [])
 
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
@@ -2034,27 +2034,6 @@ export const VisualizacionPage = () => {
         setDataTablas(confNivelesPlantasCliente.filter((analisisPlanta) => analisisPlanta.codigoCliente === analisisSeleccionado.codigoCliente && analisisPlanta.oferta === analisisSeleccionado.oferta && analisisPlanta.elemento === analisisSeleccionado.elemento))
     }
 
-    useEffect(() => {
-
-        const nombre = clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente);
-        (nombre.length > 0) && setAnalisisSeleccionado({
-            ...analisisSeleccionado,
-            nombreCliente: nombre[0].razonSocial,
-            pedido: ''
-        })
-
-    }, [analisisSeleccionado.codigoCliente])
-
-    useEffect(() => {
-
-        const pedido = oferta.filter(pedido => pedido.numeroOferta === analisisSeleccionado.oferta);
-        (pedido.length > 0) && setAnalisisSeleccionado({
-            ...analisisSeleccionado,
-            pedido: pedido[0].pedido
-        })
-
-    }, [analisisSeleccionado.oferta])
-
     console.log(analisisSeleccionado)
 
     return (
@@ -2083,16 +2062,24 @@ export const VisualizacionPage = () => {
                         renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                         onChange={(event, value) => onChangeOferta(event, value, "oferta")}
                     />
+
+
+                    {
+                        console.log({ dataTablas })
+                    }
                     <Autocomplete
                         disableClearable={true}
                         id="Elemento"
-                        options={elementosAutocomplete}
+                        options={elementosAutocomplete }
                         inputValue={analisisSeleccionado.elemento}
-                        getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                        getOptionLabel={option => ( option.nombre+' '+option.numero )}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                         onChange={(event, value) => onChangeElemento(event, value, "elemento")}
                     />
+
+
+                    
                 </div>
                 <div className="datos2">
                     <Autocomplete
@@ -3391,30 +3378,6 @@ export const VisualizacionPage = () => {
                 </Modal>
 
                 <Modal
-                    open={modalInsertar1}
-                    onClose={abrirCerrarModalInsertar1}>
-                    {bodyInsertar1}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarOperario}
-                    onClose={abrirCerrarModalInsertarOperario}>
-                    {bodyInsertarOperario}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarAerobio}
-                    onClose={abrirCerrarModalInsertarAerobio}>
-                    {bodyInsertarAerobio}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarLegionela}
-                    onClose={abrirCerrarModalInsertarLegionela}>
-                    {bodyInsertarLegionela}
-                </Modal>
-
-                <Modal
                     open={modalEliminar}
                     onClose={abrirCerrarModalEliminar}>
                     {bodyEliminar}
@@ -3426,29 +3389,18 @@ export const VisualizacionPage = () => {
                     {bodyEditar}
                 </Modal>
 
-                <Modal
-                    open={modalEditar1}
-                    onClose={abrirCerrarModalEditar1}>
-                    {bodyEditar1}
-                </Modal>
+                {/* <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}> {bodyInsertar}</Modal>
+                <Modal open={modalInsertar1} onClose={abrirCerrarModalInsertar1}>{bodyInsertar1}</Modal>
+                <Modal open={modalInsertarOperario} onClose={abrirCerrarModalInsertarOperario}>{bodyInsertarOperario}</Modal>
+                <Modal open={modalInsertarAerobio} onClose={abrirCerrarModalInsertarAerobio}>{bodyInsertarAerobio}</Modal>
+                <Modal open={modalInsertarLegionela} onClose={abrirCerrarModalInsertarLegionela}>{bodyInsertarLegionela}</Modal>
+                <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>{bodyEliminar}</Modal>
+                <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>{bodyEditar}</Modal>
+                <Modal open={modalEditar1} onClose={abrirCerrarModalEditar1}>{bodyEditar1}</Modal>
+                <Modal open={modalEditarOperario} onClose={abrirCerrarModalEditarOperario}>{bodyEditarOperario}</Modal>
+                <Modal open={modalEditarAerobio} onClose={abrirCerrarModalEditarAerobio}>{bodyEditarAerobio}</Modal>
+                <Modal open={modalEditarLegionela} onClose={abrirCerrarModalEditarLegionela}>{bodyEditarLegionela}</Modal> */}
 
-                <Modal
-                    open={modalEditarOperario}
-                    onClose={abrirCerrarModalEditarOperario}>
-                    {bodyEditarOperario}
-                </Modal>
-
-                <Modal
-                    open={modalEditarAerobio}
-                    onClose={abrirCerrarModalEditarAerobio}>
-                    {bodyEditarAerobio}
-                </Modal>
-
-                <Modal
-                    open={modalEditarLegionela}
-                    onClose={abrirCerrarModalEditarLegionela}>
-                    {bodyEditarLegionela}
-                </Modal>
             </div>
         </MainLayout>
     );

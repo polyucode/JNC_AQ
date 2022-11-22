@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from "axios";
 //import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
-import { FormControl, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, Typography, Alert, AlertTitle, Autocomplete } from '@mui/material';
+import { Grid, Card, CardContent, TextField, Typography, Autocomplete, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Tooltip } from '@mui/material';
 
 import {
     Chart,
-    ChartTitle,
     ChartSeries,
     ChartSeriesItem,
     ChartCategoryAxis,
@@ -14,50 +12,42 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { Diagrama } from './Diagrama/Diagrama';
-import { getConfPlantaClientePorClienteOferta, getOfertas } from '../api/apiBackend';
+import { getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getValorParametros } from '../api/apiBackend';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
-
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
-
+import { DashboardContext } from '../context/DashboardContext';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 
 const HomeCliente = () => {
 
-    const [ valores, setValores ] = useState([]);
+    // Guardado de datos
     const [ ofertas, setOfertas ] = useState([]);
+    const [ parametros, setParametros ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
+
+    // Variables para el diagrama
     const [ nodos, setNodos ] = useState([]);
     const [ lados, setLados ] = useState([]);
-
-    const { user } = useContext( AuthContext );
     const { nodeTypesDashboard } = useDiagrama();
 
-    console.log(plantaActiva)
+    // Variables de contexto
+    const { user } = useContext( AuthContext );
+    const { elementoActivo, parametroActivo, valoresParametros, handleSeleccionarParametro } = useContext( DashboardContext );
 
-    const getValorParametros = async () => {
-        axios.get("/valorparametros", token).then(response => {
-            const valor = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setValores(valor);
-        }, [])
-    }
-
+    // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
-
-        getValorParametros();
 
         getOfertas()
             .then( resp => setOfertas( resp ));
 
-    }, [])
+        getParametros()
+            .then( resp => setParametros( resp ));
 
-    // Efecto que carga el diagrama cada vez que se cambi de planta
+    }, []);
+
+    // Efecto que carga el diagrama cada vez que se cambia de planta
     useEffect(() => {
 
         if( plantaActiva.diagrama ) {
@@ -77,23 +67,19 @@ const HomeCliente = () => {
 
     }, [ plantaActiva ])
 
-    
-    const categories = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul","Ago","Sep","Oct","Nov","Dic"];
-
     const ChartContainer = () => (
         <Chart>
-          <ChartCategoryAxis>
-            <ChartCategoryAxisItem
-              title={{
-                text: "Meses",
-              }}
-              categories={categories}
-            />
-          </ChartCategoryAxis>
-          <ChartSeries>
-            <ChartSeriesItem type="line" data={[4.5, 4.4, 4.4, 4.3, 0, 0, 0, 0, 0, 0, 0, 0]} />
-            <ChartSeriesItem type="line" data={[25, 32, 26, 37, 0, 0, 0, 0, 0, 0, 0, 0]} />
-          </ChartSeries>
+            <ChartCategoryAxis>
+                <ChartCategoryAxisItem
+                    title={{
+                        text: "Meses",
+                    }}
+                    categories={["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul","Ago","Sep","Oct","Nov","Dic"]}
+                />
+            </ChartCategoryAxis>
+            <ChartSeries>
+                <ChartSeriesItem type="line" data={parametroActivo.datos} />
+            </ChartSeries>
         </Chart>
       );
       
@@ -162,8 +148,6 @@ const HomeCliente = () => {
                                     <ReactFlow
                                         nodes={ nodos }
                                         edges={ lados }
-                                        //onEdgesChange={onEdgesChange}
-                                        //onConnect={onConnect}
                                         nodeTypes={ nodeTypesDashboard }
                                         fitView
                                     >
@@ -175,73 +159,132 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
-                <Grid item xs={ 6 }>
+                {/* APARTADO TABLA DE PARAMETROS */}
+                <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, mb: 2 }}>
+                        <CardContent>
 
-                            <Typography variant='h5'>Parámetros del elemento: <b>Torre 1</b></Typography>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th>Parámetro</th>
-                                        <th>Un.</th>
-                                        <th>Ene</th>
-                                        <th>Feb</th>
-                                        <th>Mar</th>
-                                        <th>Abr</th>
-                                        <th>May</th>
-                                        <th>Jun</th>
-                                        <th>Jul</th>
-                                        <th>Ago</th>
-                                        <th>Sep</th>
-                                        <th>Oct</th>
-                                        <th>Nov</th>
-                                        <th>Dic</th>
-                                    </tr>
-                                    <tr>
-                                        <td>pH</td>
-                                        <td>pH</td>
-                                        <td>4,5</td>
-                                        <td>4,4</td>
-                                        <td>4,4</td>
-                                        <td>4,3</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Temperatura</td>
-                                        <td>ºC</td>
-                                        <td>25</td>
-                                        <td>32</td>
-                                        <td>26</td>
-                                        <td>37</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <Grid container spacing={ 3 } sx={{ mb: 2, justifyContent: 'space-between' }}>
+                                {
+                                    elementoActivo.nombre ? (
+                                        <>
+                                            <Grid item>
+                                                <Typography variant='h6'>Parámetros del elemento</Typography>
+                                            </Grid>
+                                            <Grid item>
+                                                <Chip label={ elementoActivo.nombre } color="primary" />
+                                            </Grid>
+                                        </>
+                                    ) : (
+                                        <Grid item>
+                                            <Typography variant='h6'>Selecciona un elemento del diagrama</Typography>
+                                        </Grid>
+                                    )
+                                }
+                            </Grid>
+                            {
+                                elementoActivo.nombre && (
+                                    <TableContainer component={ Paper }>
+                                        <Table sx={{ minWidth: 650 }}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell></TableCell>
+                                                    <TableCell align="left">Parámetro</TableCell>
+                                                    <TableCell>Ene</TableCell>
+                                                    <TableCell>Feb</TableCell>
+                                                    <TableCell>Mar</TableCell>
+                                                    <TableCell>Abr</TableCell>
+                                                    <TableCell>May</TableCell>
+                                                    <TableCell>Jun</TableCell>
+                                                    <TableCell>Jul</TableCell>
+                                                    <TableCell>Ago</TableCell>
+                                                    <TableCell>Sep</TableCell>
+                                                    <TableCell>Oct</TableCell>
+                                                    <TableCell>Nov</TableCell>
+                                                    <TableCell>Dic</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {
+                                                    // Mapeamos todos los parametros
+                                                    parametros.map( row => {
+
+                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                        const valoresPorParametro = valoresParametros.filter( param => param.parametro === row.id );
+                                                        let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                                                        // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                                                        valoresPorParametro.map( val => {
+
+                                                            const fecha = new Date(val.fecha);
+                                                            
+                                                            for(let i = 0; i < 12; i++) {
+                                                                if(fecha.getMonth() === i) {
+                                                                    fechas[i] = val.valor;
+                                                                }
+                                                            }
+
+                                                        });
+
+                                                        // Devolvemos los valores
+                                                        return (
+                                                            valoresPorParametro.length > 0 && (
+                                                                <TableRow
+                                                                    key={ row.id }
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell>
+                                                                        <Tooltip title="Ver en la gráfica" placement="right">
+                                                                            <IconButton onClick={ () => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas }) }>
+                                                                                <TimelineIcon />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                    </TableCell>
+                                                                    <TableCell aligh="left" component="th" scope="row">
+                                                                        { row.nombre }
+                                                                    </TableCell>
+                                                                    {
+                                                                        fechas.map( (fecha, index) => <TableCell key={ index }>{ fecha }</TableCell> )
+                                                                    }
+                                                                </TableRow>
+                                                            )
+                                                        )
+                                                    })
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                )
+                            }
 
                         </CardContent>
                     </Card>
                 </Grid>
 
-                <Grid item xs={ 6 }>
+                {/* APARTADO GRÁFICO */}
+                <Grid item xs={ 12 }>
                     <Card>
-                        <CardContent sx={{ p: 0, mb: 2 }}>
+                        <CardContent sx={{ p: 2 }}>
 
-                            <Typography variant='h5'>Parámetros del elemento (gráfico): <b>Torre 1</b></Typography>
+                            <Grid container spacing={ 3 } sx={{ mb: 2, justifyContent: 'space-between' }}>
+                                {
+                                    parametroActivo.nombre ? (
+                                        <>
+                                            <Grid item>
+                                            <Typography variant='h6'>Vista gráfica del parámetro</Typography>
+                                            </Grid>
+                                            <Grid item>
+                                                <Chip label={ parametroActivo.nombre } color="primary" />
+                                            </Grid>
+                                        </>
+                                    ) : (
+                                        <Grid item>
+                                            <Typography variant='h6'>Selecciona un parámetro de la tabla</Typography>
+                                        </Grid>
+                                    )
+                                }
+                            </Grid>
+                            
                             <ChartContainer />
 
                         </CardContent>

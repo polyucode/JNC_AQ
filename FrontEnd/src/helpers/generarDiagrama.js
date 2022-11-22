@@ -11,7 +11,7 @@ export const useDiagrama = () => {
 
     const [nodos, setNodos] = useState([]);
     const [lados, setLados] = useState([]);
-    const [diagramaGenerado, setDiagramaGenerado] = useState(true);
+    const [diagramaGenerado, setDiagramaGenerado] = useState(false);
 
     const onEdgesChange = useCallback( cambios => {
         setLados( (eds) => applyEdgeChanges(cambios, eds) )
@@ -109,7 +109,7 @@ export const useDiagrama = () => {
 
         // Seteamos todos los nodos en el estado principal
         setNodos([ ...nodosNiveles, ...nodosElementos ]);
-        setDiagramaGenerado(false);
+        setDiagramaGenerado(true);
 
     }
 

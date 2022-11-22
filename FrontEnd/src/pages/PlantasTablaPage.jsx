@@ -1,16 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import axios from "axios";
-import { Box } from '@mui/material';
-// import { TabContext } from '@mui/lab';
-import { TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from '@mui/material/Autocomplete';
+import { Autocomplete, Button, Card, Grid, TableContainer, TextField, Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import { ThemeContext } from '../router/AppRouter';
 import { MainLayout } from "../layout/MainLayout";
-import './PlantasTabla.css';
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
-import { getParametrosPlanta } from "../api/apiBackend";
+import TaskIcon from '@mui/icons-material/Task';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+//import CreateIcon from '@mui/icons-material/Create';
+import { useLocation } from "react-router-dom";
+import { getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
+import {
+    getConfNivelesPlantasCliente,
+    getConfParametrosElementoPlantaCliente,
+    getElementos, getOfertas, getParametros,
+    getParametrosAnalisisPlanta,
+    getParametrosPlanta
+} from '../api/apiBackend';
+import { LineaParametro } from '../components/LineaParametro';
+import Swal from 'sweetalert2';
 
 const token = {
     headers: {
@@ -18,144 +26,28 @@ const token = {
     }
 };
 
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 1000,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
-
 export const PlantasTablaPage = () => {
 
-    const { valores } = useContext(ThemeContext);
+    /*** VARIABLES ***/
+    let opcionesFiltradas = [];
 
-    const [modalInsertar, setModalInsertar] = useState(false);
-
-    const [modalEditar, setModalEditar] = useState(false);
-
-    const [modalEliminar, setModalEliminar] = useState(false);
-
-    const [confParametrosElementoPlantaCliente, setConfParametrosElementoPlantaCliente] = useState([]);
-
+    /*** ESTADOS ***/
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
-
     const [oferta, setOferta] = useState([]);
-
     const [clientes, setClientes] = useState([]);
-
     const [elementos, setElementos] = useState([]);
-
     const [parametros, setParametros] = useState([]);
-
-    const [analisis, setAnalisis] = useState([]);
-    const [analisisTable, setAnalisisTable] = useState({});
-
-    const [periodo, setPeriodo] = useState("");
-    const [fecha, setFecha] = useState("");
-
-
-    const [actualState, changeCheckState] = useState(false);
-    const [actualState2, changeActualState] = useState(false);
-
-    const [datosParametros, setDatosParametros] = useState([]);
-
-    const columnas = [
-
-        //visibles
-        { title: 'Periodo', field: 'periodo', type: 'date', filterPlaceholder: "Filtrar por periodo" },
-        { title: 'Analisis', field: 'idAnalisis', lookup: analisisTable, filterPlaceholder: "Filtrar por analisis" },
-        { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por operario" },
-        { title: 'Protocolo', field: 'protocolo' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' }
-    ];
-
-    const [datos, setDatos] = useState([]);
-
-    const [data, setData] = useState([]);
-    const [data2, setData2] = useState([]);
-
+    const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
+    const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
+    const [parametrosElementoPlanta, setParametrosElementoPlanta] = useState([]);
     const [tipoParametros, setTipoParametros] = useState([]);
-
-    const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
-
-    useEffect(() => {
-        setDatosParametrosBack(parametrosFront)
-    }, [parametrosFront])
-
-    const styles = useStyles();
-
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
-
         id: 0,
-        codigoCliente: 0,
+        codigoCliente: '',
         nombreCliente: "",
         oferta: '',
         idElemento: 0,
+        nombreElemento: "",
         fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
@@ -331,344 +223,50 @@ export const PlantasTablaPage = () => {
         Campo8Unidades: "",
         Campo8Activo: false,
         Campo8VerInspector: false,
-    })
+    });
+    
+    /*** HOOKS ***/
+    const { state } = useLocation();
+    const { valores } = useContext(ThemeContext);
+    const { parametrosBack, setDatosParametrosBack } = useParserBack();
+    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
 
-    const [parametros2Seleccionado, setParametros2Seleccionado] = useState({
+    /*** EFECTOS ***/
 
-        id: 0,
-        codigoCliente: 0,
-        nombreCliente: '',
-        oferta: '',
-        idElemento: 0,
-        esPlantilla: false,
-        limInf: 0,
-        limSup: 0,
-        unidades: '',
-        activo: false,
-        verInspector: false
-
-    })
-
-    console.log(tipoParametros)
-
-    const planta = {
-        codigoCliente: 0,
-        oferta: 0,
-        elementos: {
-            plantilla: {
-                esPlantilla: false,
-                Comptador: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                PH: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Temperatura: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Conductivitat: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                TDS: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatM: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AlcalinitatP: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaCalcica: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                DuresaTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Terbolesa: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Fe: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Clorurs: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Silicats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorLliure: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                ClorTotal: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Brom: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Sulfits: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Ortofosfats: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Mo: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Isotiazolona: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                AquaproxAB5310: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                BiopolLB5: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                MefacideLG: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                BiopolIB200: {
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo1: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false
-                },
-                Campo2: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo3: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo4: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo5: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo6: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo7: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                },
-                Campo8: {
-                    Nombre: '',
-                    LimInf: '',
-                    LimSup: '',
-                    Unidades: '',
-                    Activo: false,
-                    VerInspector: false,
-                }
-            }
+    // Efecto que comprueba si se reciben parametros de la página anterior y los setea
+    useEffect(() => {
+        if( state != null ) {
+            setParametrosSeleccionado( prevParam => ({ ...prevParam, codigoCliente: state.codigoCliente, oferta: state.codigoOferta }) );
         }
-    }
+    },[]);
 
-    let listaElementos = planta.elementos;
-
-    const [value, setValue] = React.useState('0');
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
-    }
-
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOferta(oferta);
-        }, [])
-    }
-
-    const GetParametros = async () => {
-        axios.get("/parametros", token).then(response => {
-            const parametro = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setParametros(parametro);
-        }, [])
-    }
-
-    const GetConfParametrosElementoPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
-            setData2(response.data.data)
-        })
-    }
-
-    const GetConfNivelesPlantasCliente = async () => {
-        axios.get("/confnivelesplantascliente", token).then(response => {
-            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfNivelesPlantasCliente(niveles);
-        })
-    }
-
-    const GetParametrosAnalisisPlanta = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData(response.data.data)
-        })
-    }
-
-    const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setElementos(elemento);
-        }, [])
-    }
-
+    // Peticiones al backend
     useEffect(() => {
-        setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false })))
-    }, [parametros])
+        
+        getClientes()
+            .then( resp => setClientes(resp) );
+        
+        getOfertas()
+            .then( resp => setOferta(resp) );
+        
+        getElementos()
+            .then( resp => setElementos(resp) );
+        
+        getParametros()
+            .then( resp => setParametros(resp) );
 
-    useEffect(() => {
-        GetParametrosAnalisisPlanta();
-        GetConfParametrosElementoPlantaCliente();
-        GetOfertas();
-        GetClientes();
-        GetElementos();
-        GetConfNivelesPlantasCliente();
-        GetParametros();
-    }, [])
+        getParametrosAnalisisPlanta()
+            .then( resp => setParametrosAnalisisPlanta(resp) );
+        
+        getConfParametrosElementoPlantaCliente()
+            .then( resp => setParametrosElementoPlanta(resp) );
 
+        getConfNivelesPlantasCliente()
+            .then( resp => setConfNivelesPlantasCliente(resp) );
+
+    }, []);
+
+    // Efecto que selecciona el nombre del cliente cuando cambia el código
     useEffect(() => {
 
         const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
@@ -679,169 +277,144 @@ export const PlantasTablaPage = () => {
             elemento: ''
         })
 
-    }, [parametrosSeleccionado.codigoCliente])
+    }, [parametrosSeleccionado.codigoCliente, clientes]);
 
-    const handleActivo = (e) => {
-        const { name, value, checked } = e.target
-        // Comprobamos si la casilla está marcada. Si lo está deshabilitamos los inputs
-        if (checked) {
-            document.getElementById(name + 'limInf').removeAttribute('disabled');
-            document.getElementById(name + 'limSup').removeAttribute('disabled');
-            document.getElementById(name + 'unidades').removeAttribute('disabled');
-            document.getElementById(name + 'activo').setAttribute('checked', 'checked');
-            document.getElementById(name + 'verInspector').removeAttribute('disabled');
-            setTipoParametros(tipoParametros.map(parametro => {
+    // Efecto para preparar el listado de elementos en el autocompletado
+    useEffect(() => {
 
-                if (name === parametro.nombre) {
-                    return {
-                        ...parametro,
-                        activo: checked
-                    }
-                } else {
-                    return parametro
-                }
+        opcionesFiltradas = [];
 
-            }))
-        } else {
-            document.getElementById(name + 'limInf').setAttribute('disabled', 'disabled');
-            document.getElementById(name + 'limSup').setAttribute('disabled', 'disabled');
-            document.getElementById(name + 'unidades').setAttribute('disabled', 'disabled');
-            document.getElementById(name + 'activo').removeAttribute('checked');
-            document.getElementById(name + 'verInspector').setAttribute('disabled', 'disabled');
-            setTipoParametros(tipoParametros.map(parametro => {
+        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta);
+        lista.map( elemento => {
+            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        });
 
-                if (name === parametro.nombre) {
-                    return {
-                        ...parametro,
-                        activo: checked
-                    }
-                } else {
-                    return parametro
-                }
+        setElementosAutocomplete( opcionesFiltradas );
 
-            }))
-        }
+    },[parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, confNivelesPlantasCliente ]);
 
-    }
+    // Revisar si sirve o no
+    useEffect(() => {
+        setDatosParametrosBack(parametrosFront)
+    }, [parametrosFront]);
+
+    useEffect(() => {
+        setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false })))
+    }, [parametros]);
+
+    /*** FUNCIONES ***/
 
     const handleLimitInferior = (e) => {
-        const { name, value } = e.target
 
-        setTipoParametros(tipoParametros.map(parametro => {
+        // Extraemos los datos necesarios
+        const { name, value } = e.target;
+
+        // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
+        setTipoParametros( prev => (prev.map( parametro => {
 
             if (name === parametro.nombre) {
-                return {
-                    ...parametro,
-                    limInf: parseInt(value)
-                }
+                return { ...parametro, limInf: value };
             } else {
-                return parametro
+                return parametro;
             }
 
-        }))
+        })));
 
     }
 
     const handleLimitSuperior = (e) => {
-        const { name, value } = e.target
-        // Actualiza el valor en la variable
-        setTipoParametros(tipoParametros.map(parametro => {
+        
+        // Extraemos los datos necesarios
+        const { name, value } = e.target;
+
+        // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
+        setTipoParametros( prev => (prev.map( parametro => {
 
             if (name === parametro.nombre) {
-                return {
-                    ...parametro,
-                    limSup: parseInt(value)
-                }
+                return { ...parametro, limSup: value };
             } else {
-                return parametro
+                return parametro;
             }
 
-        }))
-    }
+        })));
 
-    const handleVerInspector = (e) => {
-        const { name, value, checked } = e.target
-        // Actualiza el valor en la variable
-        setTipoParametros(tipoParametros.map(parametro => {
-
-            if (name === parametro.nombre) {
-                return {
-                    ...parametro,
-                    verInspector: checked
-                }
-            } else {
-                return parametro
-            }
-
-        }))
     }
 
     const handleUnidad = (e) => {
-        const { name, value } = e.target
-        // Actualiza el valor en la variable
-        setTipoParametros(tipoParametros.map(parametro => {
+
+        // Extraemos los datos necesarios
+        const { name, value } = e.target;
+
+        // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
+        setTipoParametros( prev => (prev.map( parametro => {
 
             if (name === parametro.nombre) {
-                return {
-                    ...parametro,
-                    unidades: value
-                }
+                return { ...parametro, unidades: value };
             } else {
-                return parametro
+                return parametro;
             }
 
-        }))
+        })));
+
     }
 
-    const editarPlantilla = async () => {
-        tipoParametros.map(parametro => {
-            if (parametro.activo == true) {
-                axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, token)
-                    .then(response => {
-                        var parametrosModificado = data2;
-                        parametrosModificado.map(param => {
-                            if (param.id === parametro.id) {
-                                param = parametro
-                            }
-                        });
-                        GetConfParametrosElementoPlantaCliente();
-                    }).catch(error => {
-                        console.log(error);
-                    })
+    const handleActivo = (e) => {
+
+        // Extraemos los datos necesarios
+        const { name, checked } = e.target;
+
+        // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
+        setTipoParametros( prev => (prev.map( parametro => {
+
+            if (name === parametro.nombre) {
+                return { ...parametro, activo: checked };
+            } else {
+                return parametro;
             }
-        })
+
+        })));
 
     }
 
-    const GetParametros2 = async () => {
+    const handleVerInspector = (e) => {
 
-        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento);
+        // Extraemos los datos necesarios
+        const { name, checked } = e.target;
 
-        let tipoParametrosActualizados = tipoParametros;
+        // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
+        setTipoParametros( prev => (prev.map( parametro => {
 
-        resp.map(datos => {
+            if (name === parametro.nombre) {
+                return { ...parametro, verInspector: checked };
+            } else {
+                return parametro;
+            }
 
-            const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
-
-            tipoParametrosActualizados[indiceElemento] = {
-                id: datos.parametro,
-                nombre: tipoParametros[indiceElemento].nombre,
-                limInf: datos.limInf,
-                limSup: datos.limSup,
-                unidades: datos.unidades,
-                activo: datos.activo,
-                verInspector: datos.verInspector
-            };
-
-        })
-
-        console.log(tipoParametrosActualizados);
-
-        setTipoParametros(tipoParametrosActualizados)
+        })));
 
     }
 
-    console.log(tipoParametros)
+    // const editarPlantilla = async () => {
+
+    //     tipoParametros.map(parametro => {
+
+    //         if (parametro.activo == true) {
+    //             axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, token)
+    //                 .then(response => {
+    //                     var parametrosModificado = parametrosElementoPlanta;
+    //                     parametrosModificado.map(param => {
+    //                         if (param.id === parametro.id) {
+    //                             param = parametro
+    //                         }
+    //                     });
+    //                     getConfParametrosElementoPlantaCliente();
+    //                 }).catch(error => {
+    //                     console.log(error);
+    //                 })
+    //         }
+    //     })
+
+    // }
 
     async function valorParametros() {
 
@@ -876,194 +449,276 @@ export const PlantasTablaPage = () => {
         })
     }
 
-    async function guardarElementos() {
+    const abrirPlantilla = async () => {
+
+        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento);
+
+        //let tipoParametrosActualizados = tipoParametros;
+
+        const datosMapeados = resp.map( datos => {
+
+            // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
+            const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
+
+            // Devolvemos la linea mapeada
+            return {
+                dbId: datos.id,
+                id: datos.parametro,
+                nombre: tipoParametros[indiceElemento].nombre,
+                limInf: datos.limInf,
+                limSup: datos.limSup,
+                unidades: datos.unidades,
+                activo: datos.activo,
+                verInspector: datos.verInspector
+            }
+
+        });
+
+        // Una vez mapeado, seteamos los datos en el estado
+        setTipoParametros([ ...datosMapeados ]);
+
+    }
+
+    const guardarPlantilla = async () => {
 
         valorParametros()
-        tipoParametros.map((parametro) => {
-                const param = {
-                    id: 0,
-                    Parametro: parametro.id,
-                    CodigoCliente: parametrosSeleccionado.codigoCliente,
-                    NombreCliente: parametrosSeleccionado.nombreCliente,
-                    Oferta: parametrosSeleccionado.oferta,
-                    Id_Elemento: parametrosSeleccionado.idElemento,
-                    EsPlantilla: true,
-                    LimInf: parametro.limInf,
-                    LimSup: parametro.limSup,
-                    Unidades: parametro.unidades,
-                    Activo: parametro.activo,
-                    VerInspector: parametro.verInspector,
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null
-                }
-                axios.post("/parametroselementoplantacliente", param, token)
-                    .then(response => {
-                        return response
-                    }).catch(error => {
-                        console.log(error);
-                    })
-            }
-        )
 
-        alert("Los parametros se han guardado correctamente")
+        await tipoParametros.map( async (parametro) => {
+
+            // Mapeamos el registro a actualizar en la base de datos
+            const param = {
+                id: parametro.dbId,
+                Parametro: parametro.id,
+                CodigoCliente: parametrosSeleccionado.codigoCliente,
+                NombreCliente: parametrosSeleccionado.nombreCliente,
+                Oferta: parametrosSeleccionado.oferta,
+                Id_Elemento: parametrosSeleccionado.idElemento,
+                EsPlantilla: true,
+                LimInf: parseInt(parametro.limInf, 10),
+                LimSup: parseInt(parametro.limSup, 10),
+                Unidades: parametro.unidades,
+                Activo: parametro.activo,
+                VerInspector: parametro.verInspector,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            }
+
+            // TODO: PUT
+            const resp = await putParametrosElementoPlantaCliente( param );
+
+        });
+
+        // Avisamos al usuario
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Parámetros guardados',
+            text: `Los parámetros del elemento han sido guardados`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
+
     }
 
     return (
-        <MainLayout title="Plantas (Tabla)">
-            <div className="contenedor">
-                <div className="contenedor2">
-                    <div className='cliente'>
-                        <h6>Cliente</h6>
-                        <hr />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th> Código </th>
-                                    <th> Nombre </th>
-                                    <th> Oferta </th>
-                                    <th> Elemento </th>
-                                </tr>
-                                {!valores.codigo ?
-                                    <tr>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="codigoCliente"
-                                                options={clientes}
-                                                getOptionLabel={option => option.codigo}
-                                                sx={{ width: 150 }}
-                                                renderInput={(params) => <TextField {...params} name="codigoCliente" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    codigoCliente: parseInt(value.codigo)
-                                                }))}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                id="CboClientes"
-                                                className={styles.inputMaterial}
-                                                inputValue={parametrosSeleccionado.nombreCliente}
-                                                options={clientes}
-                                                filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
-                                                getOptionLabel={option => option.razonSocial}
-                                                sx={{ width: 230 }}
-                                                renderInput={(params) => <TextField {...params} name="nombreCliente" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    nombreCliente: value.razonSocial
-                                                }))}
+        <MainLayout title="Parametrización de planta">
 
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="Oferta"
-                                                inputValue={parametrosSeleccionado.oferta}
-                                                options={oferta}
-                                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
-                                                getOptionLabel={option => option.numeroOferta}
-                                                sx={{ width: 150 }}
-                                                renderInput={(params) => <TextField {...params} name="oferta" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    oferta: parseInt(value.numeroOferta),
-                                                    elemento: ''
-                                                }))}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Autocomplete
-                                                disableClearable={true}
-                                                className={styles.inputMaterial}
-                                                id="elemento"
-                                                inputValue={parametrosSeleccionado.idElemento}
-                                                options={elementos}
-                                                filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta)}
-                                                getOptionLabel={option => option.id_Elemento}
-                                                sx={{ width: 225 }}
-                                                renderInput={(params) => <TextField {...params} name="elemento" />}
-                                                onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                                    ...prevState,
-                                                    idElemento: value.id
-                                                }))}
-                                            />
-                                        </td>
-                                    </tr>
-                                    :
-                                    <tr>
-                                        <td>
-                                            <TextField disabled className="cogidoCliente" value={valores.codigo} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="nombreCliente" value={valores.nombre} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="oferta" value={valores.ofertas} />
-                                        </td>
-                                        <td>
-                                            <TextField disabled className="elemento" value={valores.elemento} />
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    {valores.codigo ?
-                        <div className='botones-menu'>
-                            <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                        </div>
-                        :
-                        <div className='botones-menu'>
-                            <button className="plantilla" onClick={GetParametros2}> Abrir Plantilla </button>
-                            <button className="plantilla" onClick={guardarElementos}> Guardar Plantilla </button>
-                            <button className="plantilla" onClick={editarPlantilla}> Editar Plantilla </button>
-                        </div>
-                    }
-                </div>
-                <Box sx={{ width: '100%', typography: 'body1' }}>
-                    <div className="col-1">
-                        <h6>Parametrizacion</h6>
-                        <hr />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Lim. Min.</th>
-                                    <th>Lim. Max.</th>
-                                    <th>Unidades</th>
-                                    <th><center>Activar</center></th>
-                                    <th><center>Ver Insp.</center></th>
-                                </tr>
-                                {
-                                    tipoParametros.map((parametro, index) =>
-                                        <tr key={index}>
-                                            <td>{parametro.nombre}</td>
-                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limInf"} onChange={handleLimitInferior} value={parametro.limInf} disabled /></td>
-                                            <td><input type="number" name={parametro.nombre} id={parametro.nombre + "limSup"} onChange={handleLimitSuperior} value={parametro.limSup} disabled /></td>
-                                            <td>
-                                                <input type="text" name={parametro.nombre} id={parametro.nombre + "unidades"} value={parametro.unidades} onChange={handleUnidad} disabled />
-                                            </td>
-                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "activo"} onChange={handleActivo} checked={parametro.activo} value={parametro.activo} /></center></td>
-                                            <td><center><input type="checkbox" name={parametro.nombre} id={parametro.nombre + "verInspector"} onChange={handleVerInspector} checked={parametro.verInspector} value={parametro.verInspector} disabled /></center></td>
-                                        </tr>
+            <Grid container spacing={2}>
 
-                                    )
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </Box>
-            </div>
+                {/* SELECCIÓN DE CLIENTE Y OFERTA */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex' }}>
+                        <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="codigoCliente"
+                                    inputValue={parametrosSeleccionado.codigoCliente.toString()}
+                                    options={clientes}
+                                    getOptionLabel={ option => option.codigo.toString() }
+                                    renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        codigoCliente: parseInt(value.codigo)
+                                    }))}
+                                />
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="CboClientes"
+                                    inputValue={parametrosSeleccionado.nombreCliente.toString()}
+                                    options={clientes}
+                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
+                                    getOptionLabel={ option => option.razonSocial }
+                                    renderInput={ (params) => <TextField {...params} name="nombreCliente" label="Nombre" /> }
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        nombreCliente: value.razonSocial
+                                    }))}
+                                />    
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="Oferta"
+                                    inputValue={parametrosSeleccionado.oferta.toString()}
+                                    options={oferta}
+                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
+                                    getOptionLabel={ option => option.numeroOferta.toString() }
+                                    renderInput={(params) => <TextField {...params} name="oferta" label="Código oferta" />}
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        oferta: parseInt(value.numeroOferta),
+                                        elemento: ''
+                                    }))}
+                                />   
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="elemento"
+                                    inputValue={ parametrosSeleccionado.nombreElemento }
+                                    options={ elementosAutocomplete }
+                                    getOptionLabel={option => ( option.nombre+' '+option.numero )}
+                                    renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
+                                    onChange={(event, value) => {
+                                        setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            idElemento: value.id,
+                                            nombreElemento: event.target.innerText
+                                        }))
+                                    }}
+                                />
+                            </Grid>
+
+                        </Grid>
+                    </Card>
+                </Grid>
+
+                {/* BOTONES DE ACCIONES */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                        <Grid container spacing={ 2 } sx={{ justifyContent: 'flex-end' }}>
+                            {
+                                valores.codigo ? (
+                                    <Grid item>
+                                        <Button
+                                            color='success'
+                                            variant='contained'
+                                            startIcon={ <NoteAddIcon /> }
+                                            onClick={ guardarPlantilla }
+                                        >
+                                            Guardar plantilla
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <>
+                                        <Grid item>
+                                            <Button
+                                                color='primary'
+                                                variant='contained'
+                                                startIcon={ <TaskIcon /> }
+                                                onClick={ abrirPlantilla }
+                                            >
+                                                Abrir plantilla
+                                            </Button>
+                                        </Grid>
+
+                                        <Grid item>
+                                            <Button
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={ <NoteAddIcon /> }
+                                                onClick={ guardarPlantilla }
+                                            >
+                                                Guardar plantilla
+                                            </Button>
+                                        </Grid>
+
+                                        {/* <Grid item>
+                                            <Button
+                                                //sx={{ ml: 2 }}
+                                                color='warning'
+                                                variant='contained'
+                                                startIcon={ <CreateIcon /> }
+                                                onClick={ editarPlantilla }
+                                            >
+                                                Editar plantilla
+                                            </Button>
+                                        </Grid> */}
+                                    </>
+                                )
+                            }
+                        </Grid>
+                    </Card>
+                </Grid>
+
+                {/* TABLA DE PARAMETRIZACIÓN */}
+                <Grid item xs={ 12 }>
+                    <Card sx={{ p: 2 }}>
+                        <Grid container spacing={ 2 } sx={{ flexDirection: 'column' }}>
+
+                            <Grid item>
+                                <Typography variant="h6">Parámetros</Typography>
+                            </Grid>
+
+                            <Grid item>
+                                <TableContainer component={Paper}>
+                                    <Table sx={{ minWidth: 650 }}>
+
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Nombre</TableCell>
+                                                <TableCell>Lim. Mín.</TableCell>
+                                                <TableCell>Lim. Máx.</TableCell>
+                                                <TableCell>Unidades</TableCell>
+                                                <TableCell>Activar</TableCell>
+                                                <TableCell>Ver Insp.</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+
+                                        <TableBody>
+                                            {
+                                                tipoParametros.map( (parametro, index) => (
+                                                    <LineaParametro
+                                                        key={ index }
+                                                        parametros={ tipoParametros }
+                                                        indice={ index }
+                                                        limInf={ handleLimitInferior }
+                                                        limSup={ handleLimitSuperior }
+                                                        unidades={ handleUnidad }
+                                                        activar={ handleActivo }
+                                                        verInsp={ handleVerInspector }
+                                                    />
+                                                ))
+                                            }
+                                        </TableBody>
+
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
+
+                        </Grid>
+                    </Card>
+                </Grid>
+
+            </Grid>
         </MainLayout>
     );
 }
