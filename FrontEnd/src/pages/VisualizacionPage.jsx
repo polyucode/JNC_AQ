@@ -375,16 +375,16 @@ export const VisualizacionPage = () => {
         opcionesFiltradas = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta);
-        lista.map( elemento => {
-            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        lista.map(elemento => {
+            opcionesFiltradas.push(elementos.filter(elem => elem.id === elemento.id_Elemento)[0]);
         })
 
         console.log(lista)
         console.log(opcionesFiltradas)
 
-        setElementosAutocomplete( opcionesFiltradas );
+        setElementosAutocomplete(opcionesFiltradas);
 
-    },[analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta ]);
+    }, [analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta]);
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -2086,10 +2086,9 @@ export const VisualizacionPage = () => {
                     <Autocomplete
                         disableClearable={true}
                         id="Elemento"
-                        options={elementosAutocomplete }
+                        options={elementosAutocomplete}
                         inputValue={analisisSeleccionado.elemento}
-                        filterOptions={options => confNivelesPlantasCliente.filter(analisis => analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta)}
-                        getOptionLabel={option => ( option.nombre+' '+option.numero )}
+                        getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                         onChange={(event, value) => onChangeElemento(event, value, "elemento")}
@@ -3392,6 +3391,30 @@ export const VisualizacionPage = () => {
                 </Modal>
 
                 <Modal
+                    open={modalInsertar1}
+                    onClose={abrirCerrarModalInsertar1}>
+                    {bodyInsertar1}
+                </Modal>
+
+                <Modal
+                    open={modalInsertarOperario}
+                    onClose={abrirCerrarModalInsertarOperario}>
+                    {bodyInsertarOperario}
+                </Modal>
+
+                <Modal
+                    open={modalInsertarAerobio}
+                    onClose={abrirCerrarModalInsertarAerobio}>
+                    {bodyInsertarAerobio}
+                </Modal>
+
+                <Modal
+                    open={modalInsertarLegionela}
+                    onClose={abrirCerrarModalInsertarLegionela}>
+                    {bodyInsertarLegionela}
+                </Modal>
+
+                <Modal
                     open={modalEliminar}
                     onClose={abrirCerrarModalEliminar}>
                     {bodyEliminar}
@@ -3401,6 +3424,30 @@ export const VisualizacionPage = () => {
                     open={modalEditar}
                     onClose={abrirCerrarModalEditar}>
                     {bodyEditar}
+                </Modal>
+
+                <Modal
+                    open={modalEditar1}
+                    onClose={abrirCerrarModalEditar1}>
+                    {bodyEditar1}
+                </Modal>
+
+                <Modal
+                    open={modalEditarOperario}
+                    onClose={abrirCerrarModalEditarOperario}>
+                    {bodyEditarOperario}
+                </Modal>
+
+                <Modal
+                    open={modalEditarAerobio}
+                    onClose={abrirCerrarModalEditarAerobio}>
+                    {bodyEditarAerobio}
+                </Modal>
+
+                <Modal
+                    open={modalEditarLegionela}
+                    onClose={abrirCerrarModalEditarLegionela}>
+                    {bodyEditarLegionela}
                 </Modal>
             </div>
         </MainLayout>
