@@ -350,43 +350,24 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                     id="comarca"
                     options={comarcas}
                     getOptionLabel={option => option.descripcion}
+                    inputValue={ clienteSeleccionado.comarca }
                     renderInput={params => <TextField {...params} label="Comarca" name="comarca" />}
                     onChange={autocompleteChange}
                 />
             </Grid>
 
             {/* Desplegable de Provincias */}
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="provincia"
-                    options={provincias}
-                    getOptionLabel={option => option.descripcion}
-                    renderInput={params => <TextField {...params} label="Provincia" name="provincia" />}
-                    onChange={autocompleteChange}
-                />
-            </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="País" name="pais" onChange={handleChange} />
+            <Grid item xs={ 6 } md={ 4 }>
+                <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
             </Grid>
 
             {/* Deplegable de Poblaciones */}
-            <Grid item xs={12} md={8}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="poblacion"
-                    options={poblaciones}
-                    getOptionLabel={option => option.poblacion}
-                    renderOption={(props, option) => {
-                        return (<li {...props} key={option.id}>{option.poblacion}</li>)
-                    }}
-                    renderInput={params => {
-                        return (<TextField {...params} label="Población" name="poblacion" />)
-                    }}
-                    onChange={autocompleteChange}
-                />
+
+            <Grid item xs={ 12 } md={ 8 }>
+                <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
+
             {/*<Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
                     <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
                         {snackData.msg}

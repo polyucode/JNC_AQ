@@ -107,14 +107,14 @@ export const UsuariosPage = () => {
 
   const columns = [
     //visibles
-    { title: 'Nombre', field: 'nombre', filterPlaceholder: "Filtrar por nombre" },
-    { title: 'Apellidos', field: 'apellidos', filterPlaceholder: "Filtrar por apellidos" },
-    { title: 'Telefono', field: 'telefono', filterPlaceholder: "Filtrar por Telefono" },
-    { title: 'Usuario', field: 'usuario', filterPlaceholder: "Filtrar por usuario" },
-    { title: 'Activo', field: 'activo', type: 'boolean', filterPlaceholder: "Filtrar por activo" },
-    { title: 'Firma', field: 'firma', filtering: false },
-    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, filterPlaceholder: "Filtrar por perfil" },
-    { title: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, filterPlaceholder: "Filtrar por cliente" },
+    { title: 'Nombre', field: 'nombre', width: 200 },
+    { title: 'Apellidos', field: 'apellidos', width: 250 },
+    { title: 'Telefono', field: 'telefono', width: 200 },
+    { title: 'Usuario', field: 'usuario', width: 200 },
+    { title: 'Activo', field: 'activo', width: 180 },
+    { title: 'Firma', field: 'firma', width: 200 },
+    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, width: 200 },
+    { title: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, width: 200 },
 
   ];
 
@@ -167,6 +167,7 @@ export const UsuariosPage = () => {
     const lookupClientes = {};
     clientes.map(fila => lookupClientes[fila.id] = fila.nombreComercial);
     setClientesTable(lookupClientes);
+
   }, [clientes])
 
   //Insertar usuario

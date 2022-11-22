@@ -120,18 +120,31 @@ export const ClientesPage = () => {
   // Columnas de la tabla
   const columns = [
     { field: 'codigo', headerName: 'Código', width: 100 },
-    { field: 'cif', headerName: 'CIF', width: 100 },
+    { field: 'cif', headerName: 'CIF', width: 120 },
     { field: 'razonSocial', headerName: 'Razón social', width: 250 },
-    { field: 'cuentaContable', headerName: 'Cuenta contable', width: 130 },
-    { field: 'direccion', headerName: 'Dirección', width: 300 },
+    { field: 'direccion', headerName: 'Dirección', width: 320 },
     { field: 'cp', headerName: 'CP', width: 70 },
     { field: 'poblacion', headerName: 'Población', width: 100 },
     { field: 'provincia', headerName: 'Provincia', width: 120 },
     { field: 'comarca', headerName: 'Comarca', width: 140 },
-    { field: 'email', headerName: 'Email', width: 240 },
+    { field: 'email', headerName: 'Email', width: 260 },
     { field: 'movil', headerName: 'Movil', width: 100 },
     { field: 'telefono', headerName: 'Teléfono', width: 100 }
   ]
+
+  const GetPoblacion = async () => {
+    axios.get("/poblacion", token).then(response => {
+      const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setPoblacion(poblacion);
+    }, [])
+  }
+
+  const GetProvincia = async () => {
+    axios.get("/provincia", token).then(response => {
+      const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setProvincia(provincia);
+    }, [])
+  }
 
   // Efectos de React
   // Llamadas a las APIs
@@ -139,9 +152,9 @@ export const ClientesPage = () => {
     peticionGet();
 
     // peticionGetContacto();
-    // GetPerfiles();
-    // GetPoblacion();
-    // GetProvincia();
+    //GetPerfiles();
+    GetPoblacion();
+    GetProvincia();
   }, []);
 
   // Obtener la lista de clientes
@@ -161,6 +174,29 @@ export const ClientesPage = () => {
     }
 
   }, [comarcas]);
+
+  useEffect(() => {
+
+    if (clienteSeleccionado.cp.length > 1 && clienteSeleccionado.cp.length < 5) {
+      const prov = provincia.filter(prov => prov.codigo === clienteSeleccionado.cp.slice(0, 2));
+      (prov.length > 0) && setClienteSeleccionado({
+        ...clienteSeleccionado,
+        provincia: prov[0].descripcion,
+        poblacion: ''
+      })
+    } else if (clienteSeleccionado.cp.length == 0 || clienteSeleccionado.cp.length == 1) {
+      setClienteSeleccionado({
+        ...clienteSeleccionado,
+        provincia: ''
+      })
+    } else {
+      const pueblo = poblacion.filter(pobl => pobl.cp === clienteSeleccionado.cp);
+      (pueblo.length > 0) && setClienteSeleccionado({
+        ...clienteSeleccionado,
+        poblacion: pueblo[0].poblacion
+      })
+    }
+  }, [clienteSeleccionado.cp])
 
   const peticionGet = async () => {
     axios.get("/cliente", token).then(response => {
@@ -512,7 +548,7 @@ export const ClientesPage = () => {
         <ModalLayout
           titulo="Agregar nuevo cliente"
           contenido={
-            <InsertarClienteModal change={handleChange} autocompleteChange={handleAutocompleteChange} />
+            <InsertarClienteModal clienteSeleccionado={clienteSeleccionado} change={handleChange} autocompleteChange={handleAutocompleteChange} />
           }
           botones={[
             insertarBotonesModal(<AddIcon />, 'Añadir', async () => {

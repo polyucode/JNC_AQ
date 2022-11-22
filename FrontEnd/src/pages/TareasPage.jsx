@@ -128,6 +128,7 @@ export const TareasPage = () => {
     protocolo: "",
     elementoPlanta: "",
     analisis: "",
+    fecha: null,
     final: "",
     valor: "",
     nombreValor: "",
@@ -210,13 +211,14 @@ export const TareasPage = () => {
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
   const columns = [
-    { title: 'Cliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por cliente" },
-    { title: 'Nombre Cliente', field: 'nombreCliente', filterPlaceholder: "Filtrar por cliente" },
-    { title: 'Operario', field: 'operario', filterPlaceholder: "Filtrar por técnico" },
-    { title: 'Elemento de planta', field: 'elementoPlanta', filterPlaceholder: "Filtrar por elemento" },
-    { title: 'Analisis', field: 'analisis', filterPlaceholder: "Filtrar por Analisis" },
-    { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por oferta" },
-    { title: 'Tipo', field: 'tipo', lookup: tiposTable, filterPlaceholder: "Filtrar por tipo" }
+    { title: 'Cliente', field: 'codigoCliente', width: 120 },
+    { title: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
+    { title: 'Operario', field: 'operario', width: 200 },
+    { title: 'Elemento', field: 'elementoPlanta', width: 200 },
+    { title: 'Analisis', field: 'analisis', width: 200 },
+    { title: 'Oferta', field: 'oferta', width: 100 },
+    { title: 'Tipo', field: 'tipo', lookup: tiposTable , width: 100 },
+    { title: 'Fecha', field: 'fecha', type: 'date' , width: 220 }
   ]
 
   //peticiones API
@@ -551,6 +553,7 @@ export const TareasPage = () => {
         console.log(error);
       })
   }
+
   const handleChange = e => {
     const { name, value } = e.target;
     setTareaSeleccionada(prevState => ({
@@ -558,6 +561,14 @@ export const TareasPage = () => {
       [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
     }));
   }
+
+  const handleChangeFecha = e => {
+    const { name, value } = e.target;
+    setTareaSeleccionada(prevState => ({
+        ...prevState,
+        [name]: value
+    }))
+}
 
   const handleAutocompleteChange = (e) => {
 
@@ -585,6 +596,7 @@ export const TareasPage = () => {
         protocolo: "",
         elementoPlanta: "",
         analisis: "",
+        fecha: null,
         final: "",
         valor: "",
         nombreValor: "",
@@ -620,6 +632,7 @@ export const TareasPage = () => {
         protocolo: "",
         elementoPlanta: "",
         analisis: "",
+        fecha: null,
         final: "",
         valor: "",
         nombreValor: "",
@@ -654,6 +667,7 @@ export const TareasPage = () => {
         protocolo: "",
         elementoPlanta: "",
         analisis: "",
+        fecha: null,
         final: "",
         valor: "",
         nombreValor: "",
@@ -686,6 +700,8 @@ export const TareasPage = () => {
     setRowsIds(ids);
 
   }
+
+  console.log(tareaSeleccionada)
 
   return (
     <MainLayout title="Tareas">
@@ -765,7 +781,10 @@ export const TareasPage = () => {
         contenido={
           <InsertarTareaModal
           change={handleChange} 
-          autocompleteChange={handleAutocompleteChange} />
+          autocompleteChange={handleAutocompleteChange} 
+          setFechaPrevista={setfechaprevista}
+          handleChangeFecha={handleChangeFecha}
+          />
         }
         botones={[
           insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
@@ -792,6 +811,7 @@ export const TareasPage = () => {
             tareaSeleccionada={tareaSeleccionada}
             change={handleChange}
             autocompleteChange={handleAutocompleteChange}
+            handleChangeFecha={handleChangeFecha}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()

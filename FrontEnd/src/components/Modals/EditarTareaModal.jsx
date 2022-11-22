@@ -4,6 +4,18 @@ import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend
 
 export const EditarTareaModal = ({ change:handleChange, autocompleteChange, tareaSeleccionada }) =>{
 
+    
+
+    function formateandofechas(fecha) {
+        const fecha1 = new Date(fecha)
+
+        const fecha2 = fecha1.getFullYear() +
+            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+            '-' + String(fecha1.getDate()).padStart(2, '0')
+
+        return fecha2
+    }
+
     return (
         <>
             <Grid item xs={ 3 } md={ 4 }>
@@ -36,6 +48,10 @@ export const EditarTareaModal = ({ change:handleChange, autocompleteChange, tare
 
             <Grid item xs={ 4 } md={ 3 }>
                 <TextField sx={{ width: '100%' }} label="Analisis" name="analisis" onChange={ handleChange } value={tareaSeleccionada && tareaSeleccionada.analisis} />
+            </Grid>
+
+            <Grid item xs={ 4 } md={ 3 }>
+                <TextField sx={{ width: '100%' }} type="date" label="Fecha" name="fecha" onChange={ handleChange } value={tareaSeleccionada && formateandofechas(tareaSeleccionada.fecha)} />
             </Grid>
 
             <Grid item xs={ 4 } md={ 3 }>

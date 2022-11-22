@@ -112,6 +112,8 @@ const useStylesParagraph = makeStyles((theme) => ({
 
 export const VisualizacionPage = () => {
 
+    let opcionesFiltradas = [];
+
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalInsertar1, setModalInsertar1] = useState(false);
     const [modalInsertarOperario, setModalInsertarOperario] = useState(false);
@@ -137,6 +139,7 @@ export const VisualizacionPage = () => {
         nombreCliente: '',
         oferta: '',
         pedido: '',
+        idElemento: 0,
         elemento: '',
         periodo: '',
         analisis: '',
@@ -366,6 +369,22 @@ export const VisualizacionPage = () => {
 
     const styles = useStyles();
     const stylesParagraph = useStylesParagraph();
+
+    useEffect(() => {
+
+        opcionesFiltradas = [];
+
+        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta);
+        lista.map( elemento => {
+            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        })
+
+        console.log(lista)
+        console.log(opcionesFiltradas)
+
+        setElementosAutocomplete( opcionesFiltradas );
+
+    },[analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta ]);
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -2002,30 +2021,18 @@ export const VisualizacionPage = () => {
             setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
         }
 
+        console.log(e)
+        console.log(value)
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
-            [name]: e.target.textContent
+            [name]: e.target.textContent,
+            idElemento: value.id_Elemento
         }))
     }
 
     function Tablas() {
         setDataTablas(confNivelesPlantasCliente.filter((analisisPlanta) => analisisPlanta.codigoCliente === analisisSeleccionado.codigoCliente && analisisPlanta.oferta === analisisSeleccionado.oferta && analisisPlanta.elemento === analisisSeleccionado.elemento))
     }
-
-    let opcionesFiltradas = [];
-
-    useEffect(() => {
-
-        opcionesFiltradas = [];
-
-        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta);
-        lista.map( elemento => {
-            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
-        })
-
-        setElementosAutocomplete( opcionesFiltradas );
-
-    },[analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta ]);
 
     useEffect(() => {
 
@@ -2047,6 +2054,8 @@ export const VisualizacionPage = () => {
         })
 
     }, [analisisSeleccionado.oferta])
+
+    console.log(analisisSeleccionado)
 
     return (
         <MainLayout title="Visualización">
