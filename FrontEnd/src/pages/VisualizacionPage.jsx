@@ -343,9 +343,9 @@ export const VisualizacionPage = () => {
     const [dataTablas, setDataTablas] = useState([]);
     const [dataEntregas, setDataEntregas] = useState([]);
     const [dataOtros, setDataOtros] = useState([]);
+
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
 
-    /*** HOOKS ***/
     const styles = useStyles();
     const stylesParagraph = useStylesParagraph();
 
