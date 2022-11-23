@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
-import { getPerfiles } from '../../api/apiBackend';
+import { getClientes, getPerfiles } from '../../api/apiBackend';
 
-export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }) =>{
+export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, estadoCliente, setUsuarioSeleccionado }) =>{
 
     const [perfiles, setPerfiles] = useState([]);
+    const [clientes, setClientes] = useState([]);
 
     useEffect(() => {
 
@@ -13,6 +14,11 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }
                 setPerfiles(perfil);
             })
             .catch( err => console.log('Ha habido un error:', err));
+        
+        getClientes()
+            .then(clientes => {
+                setClientes(clientes);
+            })
 
     }, []);
 
@@ -67,15 +73,15 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil }
             <Grid item xs={ 4 }>
                 <Autocomplete
                     disableClearable={ true }
-                    //disabled={ estadoCboCliente }
+                    disabled={ estadoCliente }
                     id="CboClientes"
-                    //options={ clientes }
-                    getOptionLabel={ option => option.nombreComercial }
+                    options={ clientes }
+                    getOptionLabel={ option => option.razonSocial }
                     renderInput={ params => <TextField {...params} label="Clientes" name="idCliente"/> }
-                    // onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
-                    //   ...prevState,
-                    //   idCliente:value.id
-                    // }))}
+                    onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
+                       ...prevState,
+                       idCliente: value.id
+                    }))}
                 />
             </Grid>
         </>

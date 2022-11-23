@@ -11,7 +11,25 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+import { Grid, Card, Typography } from '@mui/material';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { InsertarOfertaModal } from '../components/Modals/InsertarOfertaModal';
+import { EditarOfertaModal } from '../components/Modals/EditarOfertaModal';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import { getContactos } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -19,76 +37,9 @@ const token = {
     }
 };
 
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 700,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
-
-
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const OfertasClientesPage = () => {
 
@@ -98,21 +49,21 @@ export const OfertasClientesPage = () => {
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-
+    const [rows, setRows] = useState([]);
+    const [rowsIds, setRowsIds] = useState([]);
 
     const [ofertaSeleccionada, setOfertaSeleccionada] = useState({
         id: 0,
         numeroOferta: 0,
         pedido: 0,
         codigoCliente: 0,
-        articulo: '',
-        cantidad: 0,
-        precio: 0,
-        stockMin: 0,
-        stockMax: 0,
-        consumidos: 0,
-        faltaEntregar: 0,
-        idCliente: 0,
+        nombreCliente: '',
+        descripcion: '',
+        fechaInicio: null,
+        fechaFinalizacion: null,
+        contacto1: '',
+        contacto2: '',
+        contacto3: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -127,8 +78,15 @@ export const OfertasClientesPage = () => {
     const [ofertaEditar, setOfertaEditar] = useState([]);
     const [OfertaEliminar, setOfertaEliminar] = useState([]);
 
+    const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
+
+    const [contacto1Editar, setContacto1Editar] = useState([]);
+    const [contacto2Editar, setContacto2Editar] = useState([]);
+    const [contacto3Editar, setContacto3Editar] = useState([]);
+
+    const [clienteCodigoEditar, setClientesCodigoEditar] = useState([]);
 
     const [articulos, setArticulos] = useState([]);
 
@@ -137,26 +95,21 @@ export const OfertasClientesPage = () => {
 
     const [data, setData] = useState([]);
 
-    const styles = useStyles();
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
-    const columnas = [
+    const columns = [
 
         //Visibles
-        { title: 'NumeroOferta', field: 'numeroOferta', filterPlaceholder: "Filtrar por numero oferta" },
-        { title: 'Pedido', field: 'pedido', filterPlaceholder: "Filtrar por pedido" },
-        { title: 'CodigoCliente', field: 'codigoCliente', filterPlaceholder: "Filtrar por codigo cliente" },
-        { title: 'Descripcion', field: 'descripcion', filterPlaceholder: "Filtrar por Descripcion" },
-        { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" },
-        { title: 'Precio', field: 'precio', filterPlaceholder: "Filtrar por Precio" },
-        { title: 'StockMin', field: 'stockMin', filterPlaceholder: "Filtrar por teléfono" },
-        { title: 'StockMax', field: 'stockMax', filterPlaceholder: "Filtrar por movil" },
-        { title: 'Consumidos', field: 'consumidos', filterPlaceholder: "Filtrar por email" },
-        { title: 'FaltaEntregar', field: 'faltaEntregar', filterPlaceholder: "Filtrar por email" },
-
-
-        //Ocultas
-        { title: 'Id', field: 'id', type: 'numeric', filterPlaceholder: "Filtrar por Id", hidden: true, },
-
+        { title: 'NumeroOferta', field: 'numeroOferta', width: 120 },
+        { title: 'Pedido', field: 'pedido', width: 100 },
+        { title: 'CodigoCliente', field: 'codigoCliente', width: 120 },
+        { title: 'NombreCliente', field: 'nombreCliente', width: 250 },
+        { title: 'Descripcion', field: 'descripcion', width: 150 },
+        { title: 'FechaInicio', field: 'fechaInicio', type: "date", width: 120 },
+        { title: 'FechaFinalizacion', field: 'fechaFinalizacion', type: "date", width: 140 },
+        { title: 'Contacto1', field: 'contacto1', width: 100 },
+        { title: 'Contacto2', field: 'contacto2', width: 100 },
+        { title: 'Contacto3', field: 'contacto3', width: 100 }
     ];
     const getOfertas = async () => {
         axios.get("/ofertasclientes", token).then(response => {
@@ -171,29 +124,61 @@ export const OfertasClientesPage = () => {
         }, [])
     }
 
+    console.log(ofertaSeleccionada)
+
     useEffect(() => {
         getOfertas();
         getClientes();
+        getContactos()
+            .then(contactos => {
+                setContactos(contactos);
+            })
+        
     }, [])
 
     useEffect(() => {
+        if (data.length > 0) {
+            setRows(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
+
         const lookupClientes = {};
         clientes.map(fila => lookupClientes[fila.id] = fila.codigo);
         setClientesTable(lookupClientes);
-        console.log("clientesTable " + JSON.stringify(clientesTable))
+
     }, [clientes])
 
     const peticionPost = async () => {
         ofertaSeleccionada.id = null;
         await axios.post("/ofertasclientes", ofertaSeleccionada, token)
             .then(response => {
-                //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
                 getOfertas();
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: '',
+                    fechaFinalizacion: '',
+                    contacto1: '',
+                    contacto2: '',
+                    contacto3: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
-        console.log(ofertaSeleccionada)
     }
 
     const peticionPut = async () => {
@@ -208,6 +193,26 @@ export const OfertasClientesPage = () => {
                 });
                 getOfertas();
                 abrirCerrarModalEditar();
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: '',
+                    fechaFinalizacion: '',
+                    contacto1: '',
+                    contacto2: '',
+                    contacto3: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
             }).catch(error => {
                 console.log(error);
             })
@@ -216,10 +221,30 @@ export const OfertasClientesPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("/ofertasclientes/" + OfertaEliminar[i].id, token)
+            await axios.delete("/ofertasclientes/" + OfertaEliminar[i], token)
                 .then(response => {
                     getOfertas();
                     abrirCerrarModalEliminar();
+                    setOfertaSeleccionada({
+                        id: 0,
+                        numeroOferta: 0,
+                        pedido: 0,
+                        codigoCliente: 0,
+                        nombreCliente: '',
+                        descripcion: '',
+                        fechaInicio: '',
+                        fechaFinalizacion: '',
+                        contacto1: '',
+                        contacto2: '',
+                        contacto3: '',
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
                 }).catch(error => {
                     console.log(error);
                 })
@@ -229,15 +254,87 @@ export const OfertasClientesPage = () => {
 
     //Modales
     const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
+        if (modalInsertar) {
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: '',
+                fechaFinalizacion: '',
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar(!modalInsertar);
+        } else {
+            setModalInsertar(!modalInsertar);
+        }
     }
 
     const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
+        if (modalEliminar) {
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: '',
+                fechaFinalizacion: '',
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEliminar(!modalEliminar);
+        } else {
+            setModalEliminar(!modalEliminar);
+        }
     }
 
     const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
+        if (modalEditar) {
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: '',
+                fechaFinalizacion: '',
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar(!modalEditar);
+        } else {
+            setModalEditar(!modalEditar);
+        }
     }
 
 
@@ -251,6 +348,14 @@ export const OfertasClientesPage = () => {
         console.log(e.target.type)
     }
 
+    const handleChangeFecha = e => {
+        const { name, value } = e.target;
+        setOfertaSeleccionada(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     const handleChangePrecio = e => {
         const { name, value } = e.target;
         setOfertaSeleccionada(prevState => ({
@@ -260,276 +365,185 @@ export const OfertasClientesPage = () => {
         }));
     }
 
-    const bodyInsertar = (
-        <div className={styles.modal}>
-            <h3>Agregar Nueva Oferta</h3>
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <Autocomplete
-                        disableClearable={true}
-                        id="CodigoCliente"
-                        options={clientes}
-                        getOptionLabel={option => option.codigo}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
-                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                            ...prevState,
-                            codigoCliente: parseInt(value.codigo)
-                        }))}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" step="0.01" min="0" label="Precio" name="precio" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField
-                        id="fechainicio"
-                        label="Fecha Inicio"
-                        type="date"
-                        name="fechaInicio"
-                        sx={{ width: 220 }}
-                        onChange={(e) => setFechaInicio(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-6">
-                    {/* Fecha prevista */}
-                    <TextField
-                        id="fechafinalizacion"
-                        label="Fecha finalizacion"
-                        type="date"
-                        name="fechaFinalizacion"
-                        sx={{ width: 220 }}
-                        onChange={(e) => setFechaFinalizacion(e.target.value)}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+    const handleSelectRow = (ids) => {
 
-    const bodyEditar = (
-        <div className={styles.modal}>
-            <h3>Editar Oferta</h3>
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="NumeroOferta" name="numeroOferta" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Pedido" name="pedido" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
-                </div>
-                <div className="col-md-6">
-                    <Autocomplete
-                        disableClearable={true}
-                        id="CodigoCliente"
-                        options={clientes}
-                        getOptionLabel={option => option.codigo}
-                        defaultValue={ofertaEditar[0]}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
-                        onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                            ...prevState,
-                            idCliente: value.id
-                        }))}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Articulo" name="articulo" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.articulo} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Cantidad" name="cantidad" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.cantidad} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" step="0.01" min="0" label="Precio" name="precio" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.precio} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMin" name="stockMin" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.stockMin} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="StockMax" name="stockMax" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.stockMax} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="Consumidos" name="consumidos" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.consumidos} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="number" label="FaltaEntregar" name="faltaEntregar" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.faltaEntregar} />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+        if (ids.length > 0) {
+            setOfertaSeleccionada(data.filter(oferta => oferta.id === ids[0])[0]);
+        } else {
+            setOfertaSeleccionada(ofertaSeleccionada);
+        }
+        setRowsIds(ids);
+    }
 
-    const bodyEliminar = (
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar la oferta ? </p>
-            <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-
-            </div>
-        </div>
-    )
+    const handleSnackClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackData({ open: false, msg: '', severity: 'info' });
+    };
 
 
 
     return (
         <MainLayout title="Ofertas">
-        <div>
-            <MaterialTable columns={columnas} data={data}
-                localization={{
-                    body: {
-                        emptyDataSourceMessage: 'No hay datos por mostrar',
-                        addTooltip: 'Añadir',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
-                        },
-                        editRow: {
-                            deleteText: '¿Segura(o) que quiere eliminar?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
-                        },
-                    },
-                    grouping: {
-                        placeholder: "Arrastre un encabezado aquí para agrupar",
-                        groupedBy: 'Agrupado por',
-                    },
-                    header: {
-                        actions: 'Acciones',
-                    },
-                    pagination: {
-                        firstAriaLabel: 'Primera página',
-                        firstTooltip: 'Primera página',
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsPerPage: 'Filas por página:',
-                        labelRowsSelect: 'filas',
-                        lastAriaLabel: 'Ultima página',
-                        lastTooltip: 'Ultima página',
-                        nextAriaLabel: 'Pagina siguiente',
-                        nextTooltip: 'Pagina siguiente',
-                        previousAriaLabel: 'Pagina anterior',
-                        previousTooltip: 'Pagina anterior',
-                    },
-                    toolbar: {
-                        addRemoveColumns: 'Agregar o eliminar columnas',
-                        exportAriaLabel: 'Exportar',
-                        exportName: 'Exportar a CSV',
-                        exportTitle: 'Exportar',
-                        nRowsSelected: '{0} filas seleccionadas',
-                        searchPlaceholder: 'Buscar',
-                        searchTooltip: 'Buscar',
-                        showColumnsAriaLabel: 'Mostrar columnas',
-                        showColumnsTitle: 'Mostrar columnas',
-                    },
-                }}
-                actions={[
-                    {
-                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                        tooltip: "Añadir Oferta",
-                        isFreeAction: true,
-                        onClick: (e, data) => {
-                            abrirCerrarModalInsertar()
-                        },
-                    },
-                    {
-                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                        tooltip: "Eliminar Oferta",
-                        onClick: (event, rowData) => {
-                            setOfertaEliminar(FilasSeleccionadas);
-                            abrirCerrarModalEliminar()
-                        },
-                    },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Oferta",
-                        onClick: (e, data) => {
-                            getClientes();
-                            setOfertaEditar(clientes.filter(cliente => cliente.id === FilasSeleccionadas[0].idCliente));
-                            abrirCerrarModalEditar();
-                        },
-                    },
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                    {snackData.msg}
+                </Alert>
+            </Snackbar>
+
+            <Grid container spacing={2}>
+
+                {/* Título y botones de opción */}
+                <Grid item xs={12}>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6'>Listado de ofertas</Typography>
+                        {
+                            (rowsIds.length > 0) ?
+                                (
+                                    <Grid item>
+                                        <Button
+                                            sx={{ mr: 2 }}
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteIcon />}
+                                            onClick={(event, rowData) => {
+                                                setOfertaEliminar(rowsIds)
+                                                abrirCerrarModalEliminar()
+                                            }}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <Button
+                                        color='success'
+                                        variant='contained'
+                                        startIcon={<AddIcon />}
+                                        onClick={abrirCerrarModalInsertar}
+                                    >Añadir</Button>
+                                )
+                        }
+                    </Card>
+                </Grid>
+
+                {/* Tabla donde se muestran los registros de los clientes */}
+                <Grid item xs={12}>
+                    <Card>
+                        <DataGrid
+                            components={{ Toolbar: GridToolbar }}
+                            localeText={DATAGRID_LOCALE_TEXT}
+                            sx={{
+                                width: '100%',
+                                height: 700,
+                                backgroundColor: '#FFFFFF'
+                            }}
+                            rows={rows}
+                            columns={columns}
+                            pageSize={9}
+                            rowsPerPageOptions={[9]}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                            onRowClick={(ofertaSeleccionada, evt) => {
+                                setOfertaSeleccionada(ofertaSeleccionada.row)
+                                setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
+                                setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
+                                setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
+                                setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
+                                abrirCerrarModalEditar();
+                            }}
+                        />
+                    </Card>
+                </Grid>
+
+                {/* LISTA DE MODALS */}
+
+                {/* Agregar Oferta */}
+                <ModalLayout
+                    titulo="Agregar nueva oferta"
+                    contenido={
+                        <InsertarOfertaModal
+                            ofertaSeleccionada={ofertaSeleccionada}
+                            change={handleChange}
+                            handleChangeFecha={handleChangeFecha}
+                            setOfertaSeleccionada={setOfertaSeleccionada}
+                        />
+                    }
+                    botones={[
+                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                            abrirCerrarModalInsertar();
+
+                            if (peticionPost()) {
+                                setSnackData({ open: true, msg: 'Oferta añadida correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la oferta', severity: 'error' })
+                            }
+
+                        }, 'success')
+                    ]}
+                    open={modalInsertar}
+                    onClose={abrirCerrarModalInsertar}
+                />
+
+            </Grid>
+
+            {/* Modal Editar Oferta*/}
+
+            <ModalLayout
+                titulo="Editar Oferta"
+                contenido={
+                    <EditarOfertaModal
+                        ofertaSeleccionada={ofertaSeleccionada}
+                        change={handleChange}
+                        codigoClienteEditar={clienteCodigoEditar}
+                        contacto1Editar={contacto1Editar}
+                        contacto2Editar={contacto2Editar}
+                        contacto3Editar={contacto3Editar}
+                    />}
+                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                    abrirCerrarModalEditar()
+
+                    if (peticionPut()) {
+                        setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
+                    } else {
+                        setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
+                    }
+                })
                 ]}
-
-                onRowClick={((evt, ofertaSeleccionada) => setOfertaSeleccionada(ofertaSeleccionada.tableData.id))}
-                onSelectionChange={(filas) => {
-                    setFilasSeleccionadas(filas);
-
-                    setOfertaSeleccionada(filas[0]);
-                }
-                }
-                options={{
-                    sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-                    columnsButton: true,
-                    rowStyle: rowData => ({
-                        backgroundColor: (ofertaSeleccionada === rowData.tableData.id) ? '#EEE' : '#FFF',
-                        whiteSpace: "nowrap"
-                    }),
-
-                    exportMenu: [{
-                        label: 'Export PDF',
-                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Ofertas')
-                    }, {
-                        label: 'Export CSV',
-                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Ofertas')
-                    }]
-                }}
-
-                title="Listado de Ofertas"
-            />
-            <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
-
-            <Modal
                 open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
+                onClose={abrirCerrarModalEditar}
+            />
 
-            <Modal
+            {/* Eliminar oferta */}
+            <ModalLayout
+                titulo="Eliminar oferta"
+                contenido={
+                    <>
+                        <Grid item xs={12}>
+                            <Typography>Estás seguro que deseas eliminar la oferta?</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography><b>{ofertaSeleccionada.numeroOferta}</b></Typography>
+                        </Grid>
+                    </>
+                }
+                botones={[
+                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                        abrirCerrarModalEliminar();
+
+                        if (peticionDelete()) {
+                            setSnackData({ open: true, msg: `Oferta eliminada correctamente: ${ofertaSeleccionada.numeroOferta}`, severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar la oferta', severity: 'error' })
+                        }
+
+                    }, 'error'),
+                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                ]}
                 open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
-        </div>
+                onClose={abrirCerrarModalEliminar}
+            />
         </MainLayout>
     )
 }

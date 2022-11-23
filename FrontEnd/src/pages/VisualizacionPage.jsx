@@ -375,16 +375,16 @@ export const VisualizacionPage = () => {
         opcionesFiltradas = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta);
-        lista.map( elemento => {
-            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        lista.map(elemento => {
+            opcionesFiltradas.push(elementos.filter(elem => elem.id === elemento.id_Elemento)[0]);
         })
 
         console.log(lista)
         console.log(opcionesFiltradas)
 
-        setElementosAutocomplete( opcionesFiltradas );
+        setElementosAutocomplete(opcionesFiltradas);
 
-    },[analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta ]);
+    }, [analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta]);
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -2086,9 +2086,9 @@ export const VisualizacionPage = () => {
                     <Autocomplete
                         disableClearable={true}
                         id="Elemento"
-                        options={elementosAutocomplete }
+                        options={elementosAutocomplete}
                         inputValue={analisisSeleccionado.elemento}
-                        getOptionLabel={option => ( option.nombre+' '+option.numero )}
+                        getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                         onChange={(event, value) => onChangeElemento(event, value, "elemento")}
@@ -2128,7 +2128,7 @@ export const VisualizacionPage = () => {
                 <br />
                 <div className='home-container-elements'>
                     <div className="visualizacion">
-                        <div className="visualizacion-tablas">
+                        {/*<div className="visualizacion-tablas">
                             {dataTablas.map((analisi, index) => {
                                 switch (analisi.analisis) {
                                     case "Físico-Químico Torre":
@@ -3381,26 +3381,243 @@ export const VisualizacionPage = () => {
                                 }
                             })
                             }
-                        </div>
+                        </div>*/}
+                        <MaterialTable columns={columnas1} data={data1}
+                            localization={localization}
+                            actions={[
+                                {
+                                    icon: () => <AddCircle style={{ fill: "green" }} />,
+                                    tooltip: "Añadir analisis",
+                                    isFreeAction: true,
+                                    onClick: (e, data) => {
+                                        setAnalisisSeleccionado({
+                                            ...analisisSeleccionado,
+                                            analisis: "Físico-Químico Torre"
+                                        })
+                                        abrirCerrarModalInsertar1();
+                                    },
+                                },
+                                {
+                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                    tooltip: "Eliminar analisis",
+                                    onClick: (event, rowData) => {
+                                        setAnalisisEliminar(FilasSeleccionadas1);
+                                        abrirCerrarModalEliminar();
+                                    },
+                                },
+                            ]}
+
+                            onRowClick={((evt, analisisSeleccionado) => {
+                                setAnalisisSeleccionado(analisisSeleccionado)
+                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                abrirCerrarModalEditar1();
+                            })}
+
+                            onSelectionChange={(filas) => {
+                                setFilasSeleccionadas1(filas);
+
+                                if (filas.length > 0) {
+                                    setAnalisisSeleccionado(filas[0]);
+                                }
+                            }}
+
+                            options={{
+                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                columnsButton: false, showSelectAllCheckbox: false,
+                                rowStyle: rowData => ({
+                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                    whiteSpace: "nowrap"
+                                }),
+                                exportMenu: [{
+                                    label: 'Export PDF',
+                                    exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
+                                }, {
+                                    label: 'Export CSV',
+                                    exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
+                                }]
+                            }}
+
+                            title="Fisico Quimico Torre"
+                        />
+                        <MaterialTable columns={columnasLegionela} data={data}
+                            localization={localization}
+                            actions={[
+                                {
+                                    icon: () => <AddCircle style={{ fill: "green" }} />,
+                                    tooltip: "Añadir analisis",
+                                    isFreeAction: true,
+                                    onClick: (e, data) => {
+                                        setAnalisisSeleccionado({
+                                            ...analisisSeleccionado,
+                                            analisis: "Legionela"
+                                        })
+                                        abrirCerrarModalInsertarLegionela();
+                                    },
+                                },
+                                {
+                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                    tooltip: "Eliminar analisis",
+                                    onClick: (event, rowData) => {
+                                        setAnalisisEliminar(FilasSeleccionadas8);
+                                        abrirCerrarModalEliminar();
+                                    },
+                                },
+                            ]}
+
+                            onRowClick={((evt, analisisSeleccionado) => {
+                                setAnalisisSeleccionado(analisisSeleccionado)
+                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                abrirCerrarModalEditarLegionela();
+                            })}
+
+                            onSelectionChange={(filas) => {
+                                setFilasSeleccionadas8(filas);
+                                if (filas.length > 0) {
+                                    setAnalisisSeleccionado(filas[0]);
+                                }
+                            }}
+
+                            options={{
+                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                columnsButton: false, showSelectAllCheckbox: false,
+                                rowStyle: rowData => ({
+                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                    whiteSpace: "nowrap"
+                                }),
+                                exportMenu: [{
+                                    label: 'Export PDF',
+                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Legionela')
+                                }, {
+                                    label: 'Export CSV',
+                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Legionela')
+                                }]
+                            }}
+
+                            title="Legionela"
+                        />
+                        <MaterialTable columns={columnasAerobios} data={data7}
+                            localization={localization}
+                            actions={[
+                                {
+                                    icon: () => <AddCircle style={{ fill: "green" }} />,
+                                    tooltip: "Añadir analisis",
+                                    isFreeAction: true,
+                                    onClick: (e, data) => {
+                                        setAnalisisSeleccionado({
+                                            ...analisisSeleccionado,
+                                            analisis: "Aerobios"
+                                        })
+                                        abrirCerrarModalInsertarAerobio();
+                                    },
+                                },
+                                {
+                                    icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                    tooltip: "Eliminar analisis",
+                                    onClick: (event, rowData) => {
+                                        setAnalisisEliminar(FilasSeleccionadas7);
+                                        abrirCerrarModalEliminar();
+                                    },
+                                },
+                            ]}
+
+                            onRowClick={((evt, analisisSeleccionado) => {
+                                setAnalisisSeleccionado(analisisSeleccionado)
+                                setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                abrirCerrarModalEditarAerobio();
+                            })}
+
+                            onSelectionChange={(filas) => {
+                                setFilasSeleccionadas7(filas);
+                                if (filas.length > 0) {
+                                    setAnalisisSeleccionado(filas[0]);
+                                }
+                            }}
+
+                            options={{
+                                sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                columnsButton: false, showSelectAllCheckbox: false,
+                                rowStyle: rowData => ({
+                                    backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                    whiteSpace: "nowrap"
+                                }),
+                                exportMenu: [{
+                                    label: 'Export PDF',
+                                    exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Aerobios')
+                                }, {
+                                    label: 'Export CSV',
+                                    exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Aerobios')
+                                }]
+                            }}
+
+                            title="Aerobios"
+                        />
                     </div>
                 </div>
                 <Modal
-                    open={modalInsertar}
-                    onClose={abrirCerrarModalInsertar}>
-                    {bodyInsertar}
-                </Modal>
+                open={modalInsertar}
+                onClose={abrirCerrarModalInsertar}>
+                {bodyInsertar}
+            </Modal>
 
-                <Modal
-                    open={modalEliminar}
-                    onClose={abrirCerrarModalEliminar}>
-                    {bodyEliminar}
-                </Modal>
+            <Modal
+                open={modalInsertar1}
+                onClose={abrirCerrarModalInsertar1}>
+                {bodyInsertar1}
+            </Modal>
 
-                <Modal
-                    open={modalEditar}
-                    onClose={abrirCerrarModalEditar}>
-                    {bodyEditar}
-                </Modal>
+            <Modal
+                open={modalInsertarOperario}
+                onClose={abrirCerrarModalInsertarOperario}>
+                {bodyInsertarOperario}
+            </Modal>
+
+            <Modal
+                open={modalInsertarAerobio}
+                onClose={abrirCerrarModalInsertarAerobio}>
+                {bodyInsertarAerobio}
+            </Modal>
+
+            <Modal
+                open={modalInsertarLegionela}
+                onClose={abrirCerrarModalInsertarLegionela}>
+                {bodyInsertarLegionela}
+            </Modal>
+
+            <Modal
+                open={modalEliminar}
+                onClose={abrirCerrarModalEliminar}>
+                {bodyEliminar}
+            </Modal>
+
+            <Modal
+                open={modalEditar}
+                onClose={abrirCerrarModalEditar}>
+                {bodyEditar}
+            </Modal>
+
+            <Modal
+                open={modalEditar1}
+                onClose={abrirCerrarModalEditar1}>
+                {bodyEditar1}
+            </Modal>
+
+            <Modal
+                open={modalEditarOperario}
+                onClose={abrirCerrarModalEditarOperario}>
+                {bodyEditarOperario}
+            </Modal>
+
+            <Modal
+                open={modalEditarAerobio}
+                onClose={abrirCerrarModalEditarAerobio}>
+                {bodyEditarAerobio}
+            </Modal>
+
+            <Modal
+                open={modalEditarLegionela}
+                onClose={abrirCerrarModalEditarLegionela}>
+                {bodyEditarLegionela}
+            </Modal>
             </div>
         </MainLayout>
     );
