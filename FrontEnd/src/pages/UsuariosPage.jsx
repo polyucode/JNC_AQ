@@ -111,7 +111,7 @@ export const UsuariosPage = () => {
     { title: 'Apellidos', field: 'apellidos', width: 250 },
     { title: 'Telefono', field: 'telefono', width: 200 },
     { title: 'Usuario', field: 'usuario', width: 200 },
-    { title: 'Activo', field: 'activo', width: 180 },
+    { title: 'Activo', field: 'activo', type: 'boolean', width: 180 },
     { title: 'Firma', field: 'firma', width: 200 },
     { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, width: 200 },
     { title: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, width: 200 },
@@ -384,7 +384,6 @@ export const UsuariosPage = () => {
       setestadoCboCliente(true)
     }
 
-
   }
 
   const handleSelectRow = (ids) => {
@@ -486,6 +485,8 @@ export const UsuariosPage = () => {
             <InsertarUsuarioModal
               change={handleChange}
               handleChangePerfil={handleChangePerfil}
+              estadoCliente={estadoCboCliente}
+              setUsuarioSeleccionado={setUsuarioSeleccionado}
             />
           }
           botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {

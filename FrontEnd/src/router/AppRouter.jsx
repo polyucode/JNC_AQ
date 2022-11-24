@@ -47,7 +47,7 @@ export const AppRouter = () => {
                             <Route path='/plantasTabla' element={<PlantasTablaPage />} />
                             <Route path='/mantenimientoTecnico' element={<MantenimientoTecnicoPage />} />
                             <Route path="/tareas" element={<TareasPage />} />
-                            <Route path="/ofertas" element={<OfertasClientes />} />
+                            <Route path="/ofertas" element={<OfertasClientesPage />} />
                             <Route path='/productos' element={<ProductosPage />} />
                             <Route path='/consumoarticulos' element={<ConsumoArticulosPage />} />
                             <Route path='/visualizacion' element={<VisualizacionPage />} />

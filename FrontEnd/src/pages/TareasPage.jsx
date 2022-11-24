@@ -15,12 +15,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { ThemeContext } from "../router/AppRouter";
 
-import FullCalendar from '@fullcalendar/react'
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
 
 import { MainLayout } from "../layout/MainLayout";
 
@@ -36,12 +33,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import { getOfertas, getOperarios } from "../api/apiBackend";
 
 const token = {
   headers: {
     Authorization: 'Bearer ' + localStorage.getItem('token')
   }
 };
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 //Tipos Mantenimiento
 const tipos = [
@@ -50,49 +52,6 @@ const tipos = [
   { id: 3, nombre: "Trimestral" },
   { id: 4, nombre: "Semestral" }
 ]
-
-//estilos modal
-const useStylesEditarDet = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 1500,
-    height: 850,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos: {
-    cursor: 'pointer'
-  },
-  inputMaterial: {
-    width: '100%'
-  }
-}));
-
-//estilos modal
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 700,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos: {
-    cursor: 'pointer'
-  },
-  inputMaterial: {
-    width: '100%'
-  }
-}));
 
 export const TareasPage = () => {
 
@@ -126,16 +85,10 @@ export const TareasPage = () => {
     pedido: 0,
     operario: "",
     protocolo: "",
-    elementoPlanta: "",
+    elemento: "",
     analisis: "",
     fecha: null,
-    final: "",
-    valor: "",
-    nombreValor: "",
-    unidades: "",
     tipo: 0,
-    cancelado: false,
-    comentarios: "",
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -173,14 +126,18 @@ export const TareasPage = () => {
     deleted: null,
   });
 
+  const [nombreClienteEditar, setNombreClienteEditar] = useState([]);
+  const [clienteTareaEditar, setClienteTareaEditar] = useState([]);
+  const [elementoTareaEditar, setElementoTareaEditar] = useState([]);
+  const [tipoTareaEditar, setTipoTareaEditar] = useState([]);
+  const [tecnicoTareaEditar, setTecnicoTareaEditar] = useState([]);
+  const [ofertaEditar, setOfertaEditar] = useState([]);
+  const [analisisEditar, setAnalisisEditar] = useState([]);
+
   const [TareaEliminar, setTareaEliminar] = useState([]);
 
-  const [clienteMantenimientoCabEditar, setClienteMantenimientoCabEditar] = useState([]);
-  const [elementoMantenimientoCabEditar, setElementoMantenimientoCabEditar] = useState([]);
-  const [tipoMantenimientoCabEditar, setTipoMantenimientoCabEditar] = useState([]);
-  const [tecnicoMantenimientoCabEditar, setTecnicoMantenimientoCabEditar] = useState([]);
-
-  const [clienteMantenimientoDetEditar, setClienteMantenimientoDetEditar] = useState([]);
+  const [estadoOperario, setEstadoOperario] = useState(true);
+  const [estadoProtocolo, setEstadoProtocolo] = useState(true);
 
   const [data, setData] = useState([]);
   const [dataDet, setDataDet] = useState([]);
@@ -190,6 +147,8 @@ export const TareasPage = () => {
   const [elementosplanta, setElementosPlanta] = useState([]);
 
   const [clientes, setClientes] = useState([]);
+  const [ofertas, setOfertas] = useState([]);
+  const [operarios, setOperarios] = useState([]);
 
   const [clientesTable, setClientesTable] = useState({});
 
@@ -198,13 +157,6 @@ export const TareasPage = () => {
   const [tecnicosTable, setTecnicosTable] = useState({});
 
   const [tiposTable, setTiposTable] = useState({});
-
-  const [fechaprevista, setfechaprevista] = useState("");
-  const [fechaRealizacion, setFechaRealizacion] = useState("");
-
-  const styles = useStyles();
-
-  const stylesEditarDet = useStylesEditarDet();
 
   let navigate = useNavigate();
 
@@ -218,7 +170,7 @@ export const TareasPage = () => {
     { title: 'Analisis', field: 'analisis', width: 200 },
     { title: 'Oferta', field: 'oferta', width: 100 },
     { title: 'Tipo', field: 'tipo', lookup: tiposTable , width: 100 },
-    { title: 'Fecha', field: 'fecha', type: 'date' , width: 220 }
+    { title: 'Fecha', field: 'fecha', type: 'date', width: 220 }
   ]
 
   //peticiones API
@@ -254,6 +206,17 @@ export const TareasPage = () => {
     GetElementosPlanta();
     GetClientes();
     GetTecnicos();
+
+    getOfertas()
+      .then(ofertas => {
+        setOfertas(ofertas);
+      })
+    
+    getOperarios()
+      .then(operarios => {
+        setOperarios(operarios);
+      })
+
   }, [])
 
   useEffect(() => {
@@ -264,12 +227,41 @@ export const TareasPage = () => {
 
   }, [data]);
 
+  useEffect(() => {
+
+    const nombre = clientes.filter(cliente => cliente.codigo === tareaSeleccionada.codigoCliente);
+    (nombre.length > 0) && setTareaSeleccionada({
+      ...tareaSeleccionada,
+      nombreCliente: nombre[0].razonSocial
+    })
+
+  }, [tareaSeleccionada.codigoCliente])
+
+  useEffect(() => {
+
+    const pedido = ofertas.filter(pedido => pedido.numeroOferta === tareaSeleccionada.oferta);
+    (pedido.length > 0) && setTareaSeleccionada({
+      ...tareaSeleccionada,
+      pedido: pedido[0].pedido
+    })
+
+  }, [tareaSeleccionada.oferta])
+
+  useEffect(() => {
+
+    let lookupTipos = {};
+    tipos.map(fila => lookupTipos = { ...lookupTipos, [fila.id]: fila.nombre }); // lookupTipos[fila.id] = fila.nombre
+    console.log(lookupTipos)
+    setTiposTable(lookupTipos);
+
+  }, [tipos])
+
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
     await axios.post("/tareas", tareaSeleccionada, token)
       .then(response => {
         //Creamos los detalles
-        var date = new Date(fechaprevista);
+        var date = new Date(tareaSeleccionada.fecha);
 
         if (tareaSeleccionada.tipo === 1) {
           for (let i = 0; i < 12; i++) {
@@ -565,10 +557,10 @@ export const TareasPage = () => {
   const handleChangeFecha = e => {
     const { name, value } = e.target;
     setTareaSeleccionada(prevState => ({
-        ...prevState,
-        [name]: value
+      ...prevState,
+      [name]: value
     }))
-}
+  }
 
   const handleAutocompleteChange = (e) => {
 
@@ -581,6 +573,25 @@ export const TareasPage = () => {
       [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
     }));
 
+  }
+
+  const handleChangeAnalisis = (event, value) => {
+    setTareaSeleccionada(prevState => ({
+      ...prevState,
+      analisis: value.analisis
+    }))
+
+    if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo") {
+      setEstadoOperario(false)
+    } else {
+      setEstadoOperario(true)
+    }
+
+    if (value.analisis === "Desinfecciones") {
+      setEstadoProtocolo(false)
+    } else {
+      setEstadoProtocolo(true)
+    }
   }
 
   //modal insertar mantenimientocab
@@ -701,16 +712,26 @@ export const TareasPage = () => {
 
   }
 
+  const handleSnackClose = (event, reason) => {
+
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackData({ open: false, msg: '', severity: 'info' });
+
+  };
+
   console.log(tareaSeleccionada)
 
   return (
     <MainLayout title="Tareas">
 
-      {/*<Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+      <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
         <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
           {snackData.msg}
         </Alert>
-      </Snackbar>*/}
+      </Snackbar>
 
       <Grid container spacing={2}>
         {/* Título y botones de opción */}
@@ -736,7 +757,7 @@ export const TareasPage = () => {
                   </Grid>
                 ) : (
                   <Button
-                    color='success'
+                    color='primary'
                     variant='contained'
                     startIcon={<AddIcon />}
                     onClick={abrirCerrarModalInsertar}
@@ -766,6 +787,12 @@ export const TareasPage = () => {
               onSelectionModelChange={(ids) => handleSelectRow(ids)}
               onRowClick={(tareaSeleccionada, evt) => {
                 setTareaSeleccionada(tareaSeleccionada.row)
+                setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
+                setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
+                //setElementoTareaEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
+                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
+                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
+                //setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
                 abrirCerrarModalEditar();
               }}
             />
@@ -780,10 +807,14 @@ export const TareasPage = () => {
         titulo="Agregar nueva tarea"
         contenido={
           <InsertarTareaModal
-          change={handleChange} 
-          autocompleteChange={handleAutocompleteChange} 
-          setFechaPrevista={setfechaprevista}
-          handleChangeFecha={handleChangeFecha}
+            change={handleChange}
+            autocompleteChange={handleAutocompleteChange}
+            tareaSeleccionada={tareaSeleccionada}
+            handleChangeFecha={handleChangeFecha}
+            setTareaSeleccionada={setTareaSeleccionada}
+            handleChangeAnalisis={handleChangeAnalisis}
+            estadoProtocolo={estadoProtocolo}
+            estadoOperario={estadoOperario}
           />
         }
         botones={[
@@ -812,6 +843,13 @@ export const TareasPage = () => {
             change={handleChange}
             autocompleteChange={handleAutocompleteChange}
             handleChangeFecha={handleChangeFecha}
+            setTareaSeleccionada={setTareaSeleccionada}
+            handleChangeAnalisis={handleChangeAnalisis}
+            estadoProtocolo={estadoProtocolo}
+            estadoOperario={estadoOperario}
+            codigoClienteEditar={clienteTareaEditar}
+            tipoTareaEditar={tipoTareaEditar}
+            tecnicoTareaEditar={tecnicoTareaEditar}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()

@@ -35,6 +35,27 @@ export const getPoblaciones = async () => {
     
 }
 
+export const getAnalisis = async () => {
+
+    const resp = await axios.get(`/analisis`, token);
+    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+
+}
+
+export const getOperarios = async () => {
+
+    const resp = await axios.get(`/usuario`, token);
+    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+
+}
+
+export const getContactos = async () => {
+
+    const resp = await axios.get(`/clientescontactos`, token);
+    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+
+}
+
 export const getListaElementos = async () => {
 
     const resp = await axios.get('/elementos', token);
