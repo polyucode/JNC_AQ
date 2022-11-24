@@ -1,37 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import MaterialTable from '@material-table/core';
-import { Grid, Card, Typography } from '@mui/material';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { ThemeContext } from "../router/AppRouter";
 
-import Snackbar from '@mui/material/Snackbar';
+import { Grid, Card, Typography, Button, Snackbar, Slide } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
-
-import { MainLayout } from "../layout/MainLayout";
-
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
-import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
-import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
-import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import { ThemeContext } from "../router/AppRouter";
+import { MainLayout } from "../layout/MainLayout";
+import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
+import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { getOfertas, getOperarios } from "../api/apiBackend";
 
@@ -169,7 +153,7 @@ export const TareasPage = () => {
     { title: 'Elemento', field: 'elementoPlanta', width: 200 },
     { title: 'Analisis', field: 'analisis', width: 200 },
     { title: 'Oferta', field: 'oferta', width: 100 },
-    { title: 'Tipo', field: 'tipo', lookup: tiposTable , width: 100 },
+    { title: 'Tipo', field: 'tipo', lookup: tiposTable, width: 100 },
     { title: 'Fecha', field: 'fecha', type: 'date', width: 220 }
   ]
 
@@ -757,7 +741,7 @@ export const TareasPage = () => {
                   </Grid>
                 ) : (
                   <Button
-                    color='primary'
+                    color='success'
                     variant='contained'
                     startIcon={<AddIcon />}
                     onClick={abrirCerrarModalInsertar}

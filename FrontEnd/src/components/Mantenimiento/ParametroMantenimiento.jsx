@@ -1,15 +1,12 @@
 import { TableRow, TableCell, TextField, InputAdornment } from '@mui/material';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { getParametros } from '../../api/apiBackend';
 
-export const ParametroMantenimiento = ({ indice, parametros, onChange }) => {
+export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre }) => {
 
     return (
         <TableRow>
 
             <TableCell component="th" scope="row">
-                { parametros[indice].parametro }
+                { nombre }
             </TableCell>
 
             <TableCell>
