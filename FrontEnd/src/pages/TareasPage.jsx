@@ -249,8 +249,9 @@ export const TareasPage = () => {
 
   useEffect(() => {
 
-    const lookupTipos = {};
-    tipos.map(fila => lookupTipos[fila.id] = fila.nombre);
+    let lookupTipos = {};
+    tipos.map(fila => lookupTipos = { ...lookupTipos, [fila.id]: fila.nombre }); // lookupTipos[fila.id] = fila.nombre
+    console.log(lookupTipos)
     setTiposTable(lookupTipos);
 
   }, [tipos])
@@ -756,7 +757,7 @@ export const TareasPage = () => {
                   </Grid>
                 ) : (
                   <Button
-                    color='success'
+                    color='primary'
                     variant='contained'
                     startIcon={<AddIcon />}
                     onClick={abrirCerrarModalInsertar}
