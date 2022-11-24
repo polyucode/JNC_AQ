@@ -12,7 +12,8 @@ import {
     ProductosPage,
     ConsumoArticulosPage,
     VisualizacionPage,
-    LoginPage
+    LoginPage,
+    MantenimientoTecnicoPage
 } from '../pages';
 import OfertasClientes from '../pages/OfertasClientes';
 import { PublicRoute } from './PublicRoute';
@@ -44,6 +45,7 @@ export const AppRouter = () => {
                             <Route path='/perfil' element={<Perfil />} />
                             <Route path='/plantas' element={<PlantasPage />} />
                             <Route path='/plantasTabla' element={<PlantasTablaPage />} />
+                            <Route path='/mantenimientoTecnico' element={<MantenimientoTecnicoPage />} />
                             <Route path="/tareas" element={<TareasPage />} />
                             <Route path="/ofertas" element={<OfertasClientesPage />} />
                             <Route path='/productos' element={<ProductosPage />} />
