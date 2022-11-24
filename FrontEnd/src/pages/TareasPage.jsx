@@ -1,18 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import MaterialTable from '@material-table/core';
-import { Grid, Card, Typography } from '@mui/material';
+import { Grid, Card, Typography, Button } from '@mui/material';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { ThemeContext } from "../router/AppRouter";
 
 import Snackbar from '@mui/material/Snackbar';
@@ -50,7 +39,8 @@ const tipos = [
   { id: 1, nombre: "Mensual" },
   { id: 2, nombre: "Bimensual" },
   { id: 3, nombre: "Trimestral" },
-  { id: 4, nombre: "Semestral" }
+  { id: 4, nombre: "Semestral" },
+  { id: 5, nombre: "Anual" }
 ]
 
 export const TareasPage = () => {
@@ -757,7 +747,7 @@ export const TareasPage = () => {
                   </Grid>
                 ) : (
                   <Button
-                    color='primary'
+                    color='success'
                     variant='contained'
                     startIcon={<AddIcon />}
                     onClick={abrirCerrarModalInsertar}
