@@ -11,7 +11,7 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getValorParametros } from '../api/apiBackend';
+import { getAnalisis, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getTareas, getValorParametros } from '../api/apiBackend';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
@@ -27,6 +27,9 @@ const HomeCliente = () => {
     // Guardado de datos
     const [ ofertas, setOfertas ] = useState([]);
     const [ parametros, setParametros ] = useState([]);
+    const [ tareas, setTareas ] = useState([]);
+    const [ analisis, setAnalisis ] = useState([]);
+    const [ tareasFiltradas, setTareasFiltradas ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
 
     // Variables para el diagrama
@@ -46,6 +49,12 @@ const HomeCliente = () => {
 
         getParametros()
             .then( resp => setParametros( resp ));
+
+        getTareas()
+            .then( resp => setTareas( resp ));
+
+        getAnalisis()
+         .then( resp => setAnalisis( resp ));
 
     }, []);
 
@@ -67,7 +76,14 @@ const HomeCliente = () => {
 
         }
 
-    }, [ plantaActiva ])
+    }, [ plantaActiva ]);
+    
+    // Efecto que filtra las tareas al cambiar los datos de planta activa
+    useEffect(() => {
+        if( plantaActiva.codigoCliente ) {
+            setTareasFiltradas(tareas.filter( tarea => tarea.codigoCliente === plantaActiva.codigoCliente && tarea.oferta === plantaActiva.oferta && parseInt(tarea.elemento, 10) === elementoActivo.id ));
+        }
+    }, [ plantaActiva, elementoActivo ]);
 
     const ChartContainer = () => (
         <Chart>
@@ -83,8 +99,7 @@ const HomeCliente = () => {
                 <ChartSeriesItem type="line" data={parametroActivo.datos} />
             </ChartSeries>
         </Chart>
-      );
-      
+      );      
 
     // Con esta función, al seleccionar una oferta seteamos la planta activa
     const handleSeleccionOferta = (e) => {
@@ -95,6 +110,7 @@ const HomeCliente = () => {
             .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
 
     }
+
 
     return (
         <>
@@ -309,7 +325,7 @@ const HomeCliente = () => {
                                         <Table sx={{ minWidth: 650 }}>
                                             <TableHead>
                                                 <TableRow>
-                                                    <TableCell align="left">Parámetro</TableCell>
+                                                    <TableCell align="left">Tipo de análisis</TableCell>
                                                     <TableCell>Ene</TableCell>
                                                     <TableCell>Feb</TableCell>
                                                     <TableCell>Mar</TableCell>
@@ -327,42 +343,63 @@ const HomeCliente = () => {
                                             <TableBody>
                                                 {
                                                     // Mapeamos todos los parametros
-                                                    parametros.map( row => {
+                                                    analisis.map( row => {
+
+                                                        // row -> id, nombre
+                                                        // tareasFiltradas -> analisis, elemento
+
 
                                                         // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorParametro = valoresParametros.filter( param => param.parametro === row.id );
-                                                        let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                                                        const valoresPorTarea = tareasFiltradas.filter( tarea => parseInt(tarea.analisis, 10) === row.id );
+                                                        let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
 
-                                                        // Mapeamos los valores en un array, y si no hay datos seteamos un 0
-                                                        valoresPorParametro.map( val => {
+                                                        if( valoresPorTarea.length > 0 ) {
 
-                                                            const fecha = new Date(val.fecha);
-                                                            
-                                                            for(let i = 0; i < 12; i++) {
-                                                                if(fecha.getMonth() === i) {
-                                                                    fechas[i] = val.valor;
+                                                            console.log({ valoresPorTarea });
+
+                                                            // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                                                            valoresPorTarea.map( val => {
+    
+                                                                console.log({ val })
+                                                                const fecha = new Date(val.fecha);
+                                                                
+                                                                for(let i = 0; i < 12; i++) {
+                                                                    if(fecha.getMonth() === i) {
+                                                                        fechas[i] = 0;
+                                                                    }
                                                                 }
-                                                            }
 
-                                                        });
+                                                                console.log({ fechas })
+    
+                                                            });
+
+                                                        }
 
                                                         // Devolvemos los valores
                                                         return (
-                                                            valoresPorParametro.length > 0 && (
+                                                            valoresPorTarea.length > 0 && (
                                                                 <TableRow
                                                                     key={ row.id }
                                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                                 >
                                                                     <TableCell aligh="left" component="th" scope="row">
-                                                                        { row.nombre }
+                                                                        { row.nombre } - { row.id }
                                                                     </TableCell>
                                                                     {
                                                                         fechas.map( (fecha, index) => (
                                                                             <TableCell key={ index }>
-                                                                                <IconButton onClick={ () => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas }) } color="error">
-                                                                                    {/* <CheckIcon /> */}
-                                                                                    <ClearIcon />
-                                                                                    {/* <RemoveIcon /> */}
+                                                                                <IconButton
+                                                                                    onClick={ () => {} }
+                                                                                    color={ fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success' }
+                                                                                    disabled={ fecha === -1 ? true : false }
+                                                                                >
+                                                                                    {
+                                                                                        fecha === -1
+                                                                                            ? <RemoveIcon />
+                                                                                            : fecha === 0
+                                                                                                ? <ClearIcon />
+                                                                                                : <CheckIcon />
+                                                                                    }
                                                                                 </IconButton>
                                                                             </TableCell>
                                                                         ))

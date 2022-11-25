@@ -32,7 +32,7 @@ export const DashboardProvider = ({ children }) => {
         const elemento = await getElementoPorId( id );
         console.log( elementoActivo );
 
-        setElementoActivo( prev => ({ ...prev, nombre: elemento.nombre+' '+elemento.numero }));
+        setElementoActivo( prev => ({ ...prev, nombre: elemento.nombre+' '+elemento.numero, id }));
         setValoresParametros(listaParametros.filter( param => param.id_Elemento === id ));
 
     }
