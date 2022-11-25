@@ -4,7 +4,6 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -138,22 +137,24 @@ export const VisualizacionPage = () => {
         id: 0,
         codigoCliente: 0,
         nombreCliente: '',
-        oferta: '',
+        oferta: 0,
         pedido: 0,
         elemento: 0,
+        nombreElemento: '',
         periodo: '',
         analisis: 0,
-        nombreAnalisis: '',
         fecha: null,
+        recogido: false,
+        fechaRecogido: null,
         realizado: false,
+        fechaRealizado: null,
         operario: '',
         protocolo: '',
         observaciones: '',
         facturado: false,
         numeroFacturado: '',
-        resultado: '',
-        recogido: false,
-        pdf: "",
+        cancelado: false,
+        comentarios: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -255,7 +256,6 @@ export const VisualizacionPage = () => {
     const [actualState, changeCheckState] = useState(false);
     const [actualState2, changeActualState] = useState(false);
 
-    console.log(analisisNivelesPlantasCliente)
     const columnas = [
         //visibles
         { title: 'Periodo', field: 'periodo' },
@@ -362,8 +362,6 @@ export const VisualizacionPage = () => {
     const [data16, setData16] = useState([]);
     const [data17, setData17] = useState([]);
     const [data18, setData18] = useState([]);
-    const [data19, setData19] = useState([]);
-    const [data20, setData20] = useState([]);
     const [dataTablas, setDataTablas] = useState([]);
     const [dataEntregas, setDataEntregas] = useState([]);
     const [dataOtros, setDataOtros] = useState([]);
@@ -385,7 +383,7 @@ export const VisualizacionPage = () => {
 
         setElementosAutocomplete(opcionesFiltradas);
 
-    
+
     }, [analisisSeleccionado.codigoCliente, analisisSeleccionado.oferta]);
 
     useEffect(() => {
@@ -393,8 +391,6 @@ export const VisualizacionPage = () => {
         opcionesFiltradasAnalisis = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta && planta.id_Elemento === analisisSeleccionado.elemento);
-
-        console.log({lista})
 
         lista.map(analisis => {
             opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id)[0]);
@@ -1292,7 +1288,7 @@ export const VisualizacionPage = () => {
         })
     }
 
-    console.log({analisisSeleccionado})
+    console.log({ analisisSeleccionado })
 
     const FisicoQuimicoAporte = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
@@ -1396,11 +1392,11 @@ export const VisualizacionPage = () => {
         })
     }
 
-    const Otros = async () => {
+    /*const Otros = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
             setDataOtros(response.data.data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
-    }
+    }*/
 
     function FiltrarData() {
         setData1(data.filter(analisis => analisis.analisis === 1))
@@ -1421,11 +1417,8 @@ export const VisualizacionPage = () => {
         setData16(data.filter(analisis => analisis.analisis === 16))
         setData17(data.filter(analisis => analisis.analisis === 17))
         setData18(data.filter(analisis => analisis.analisis === 18))
-        setDataOtros(data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja"))
+        //setDataOtros(data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja"))
     }
-
-    console.log({data10})
-    console.log({data})
 
     useEffect(() => {
         GetOperarios();
@@ -1466,7 +1459,7 @@ export const VisualizacionPage = () => {
                 DesinfeccionACS();
                 abrirCerrarModalInsertar();
                 GetParametrosAnalisisPlanta();
-                Otros();
+                //Otros();
                 setAnalisisSeleccionado({
                     id: 0,
                     codigoCliente: analisisSeleccionado.codigoCliente,
@@ -1677,7 +1670,7 @@ export const VisualizacionPage = () => {
                 Desinfecciones();
                 DesinfeccionACS();
                 GetParametrosAnalisisPlanta();
-                Otros();
+                //Otros();
                 abrirCerrarModalEditar();
                 setAnalisisSeleccionado({
                     id: 0,
@@ -1919,7 +1912,7 @@ export const VisualizacionPage = () => {
                     ControlFugaGas();
                     AguaPotable();
                     RevisionBandeja();
-                    Otros();
+                    //Otros();
                     GetParametrosAnalisisPlanta();
                     abrirCerrarModalEliminar();
                     setAnalisisSeleccionado({
@@ -1978,14 +1971,15 @@ export const VisualizacionPage = () => {
             setData17(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData18(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setDataTablas(opcionesFiltradasAnalisis)
-            setDataOtros(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            //setDataOtros(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
         }
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.codigo,
             oferta: '',
-            elemento: ''
+            elemento: '',
+            nombreElemento: ''
         }))
     }
 
@@ -2011,43 +2005,47 @@ export const VisualizacionPage = () => {
             setData17(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData18(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setDataTablas(opcionesFiltradasAnalisis)
-            setDataOtros(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            //setDataOtros(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         }
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.numeroOferta,
-            elemento: ''
+            elemento: '',
+            nombreElemento: ''
         }))
     }
 
     const onChangeElemento = (e, value, name) => {
+
+        console.log(value.id)
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData2(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData3(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData4(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData5(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData6(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData7(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData8(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData9(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData10(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData11(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData12(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData13(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData14(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData15(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData16(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData17(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData18(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData1(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData2(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData3(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData4(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData5(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData6(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData7(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData8(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData9(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData10(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData11(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData12(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData13(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData14(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData15(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData16(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData17(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData18(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setDataTablas(opcionesFiltradasAnalisis)
-            setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            //setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
         }
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.id,
+            nombreElemento: e.target.textContent
         }))
     }
 
@@ -2102,7 +2100,7 @@ export const VisualizacionPage = () => {
                         disableClearable={true}
                         id="Elemento"
                         options={elementosAutocomplete}
-                        inputValue={analisisSeleccionado.elemento}
+                        inputValue={analisisSeleccionado.nombreElemento}
                         getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                         sx={{ width: 250 }}
                         renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
@@ -3282,70 +3280,70 @@ export const VisualizacionPage = () => {
                     </div>
                 </div>
                 <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
+                    open={modalInsertar}
+                    onClose={abrirCerrarModalInsertar}>
+                    {bodyInsertar}
+                </Modal>
 
-            <Modal
-                open={modalInsertar1}
-                onClose={abrirCerrarModalInsertar1}>
-                {bodyInsertar1}
-            </Modal>
+                <Modal
+                    open={modalInsertar1}
+                    onClose={abrirCerrarModalInsertar1}>
+                    {bodyInsertar1}
+                </Modal>
 
-            <Modal
-                open={modalInsertarOperario}
-                onClose={abrirCerrarModalInsertarOperario}>
-                {bodyInsertarOperario}
-            </Modal>
+                <Modal
+                    open={modalInsertarOperario}
+                    onClose={abrirCerrarModalInsertarOperario}>
+                    {bodyInsertarOperario}
+                </Modal>
 
-            <Modal
-                open={modalInsertarAerobio}
-                onClose={abrirCerrarModalInsertarAerobio}>
-                {bodyInsertarAerobio}
-            </Modal>
+                <Modal
+                    open={modalInsertarAerobio}
+                    onClose={abrirCerrarModalInsertarAerobio}>
+                    {bodyInsertarAerobio}
+                </Modal>
 
-            <Modal
-                open={modalInsertarLegionela}
-                onClose={abrirCerrarModalInsertarLegionela}>
-                {bodyInsertarLegionela}
-            </Modal>
+                <Modal
+                    open={modalInsertarLegionela}
+                    onClose={abrirCerrarModalInsertarLegionela}>
+                    {bodyInsertarLegionela}
+                </Modal>
 
-            <Modal
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
+                <Modal
+                    open={modalEliminar}
+                    onClose={abrirCerrarModalEliminar}>
+                    {bodyEliminar}
+                </Modal>
 
-            <Modal
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
+                <Modal
+                    open={modalEditar}
+                    onClose={abrirCerrarModalEditar}>
+                    {bodyEditar}
+                </Modal>
 
-            <Modal
-                open={modalEditar1}
-                onClose={abrirCerrarModalEditar1}>
-                {bodyEditar1}
-            </Modal>
+                <Modal
+                    open={modalEditar1}
+                    onClose={abrirCerrarModalEditar1}>
+                    {bodyEditar1}
+                </Modal>
 
-            <Modal
-                open={modalEditarOperario}
-                onClose={abrirCerrarModalEditarOperario}>
-                {bodyEditarOperario}
-            </Modal>
+                <Modal
+                    open={modalEditarOperario}
+                    onClose={abrirCerrarModalEditarOperario}>
+                    {bodyEditarOperario}
+                </Modal>
 
-            <Modal
-                open={modalEditarAerobio}
-                onClose={abrirCerrarModalEditarAerobio}>
-                {bodyEditarAerobio}
-            </Modal>
+                <Modal
+                    open={modalEditarAerobio}
+                    onClose={abrirCerrarModalEditarAerobio}>
+                    {bodyEditarAerobio}
+                </Modal>
 
-            <Modal
-                open={modalEditarLegionela}
-                onClose={abrirCerrarModalEditarLegionela}>
-                {bodyEditarLegionela}
-            </Modal>
+                <Modal
+                    open={modalEditarLegionela}
+                    onClose={abrirCerrarModalEditarLegionela}>
+                    {bodyEditarLegionela}
+                </Modal>
             </div>
         </MainLayout>
     );

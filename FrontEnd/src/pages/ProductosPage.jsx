@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
+import { Grid, Card, Typography, Button } from '@mui/material';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { Modal, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
+import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 
 
 const token = {
@@ -19,86 +28,20 @@ const token = {
     }
 };
 
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 700,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
-
-
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const ProductosPage = () => {
+
+    const [rowsIds, setRowsIds] = useState([]);
+    const [rows, setRows] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
     const [modalEditar, setModalEditar] = useState(false);
 
     const [modalEliminar, setModalEliminar] = useState(false);
-
-
 
     const [productoSeleccionado, setProductoSeleccionado] = useState({
         id: 0,
@@ -119,13 +62,13 @@ export const ProductosPage = () => {
 
     const [data, setData] = useState([]);
 
-    const styles = useStyles();
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const columnas = [
 
         //Visibles
-        { title: 'CodigoProducto', field: 'codigoProducto', filterPlaceholder: "Filtrar por codigo de producto" },
-        { title: 'Descripcion', field: 'descripcion'}
+        { title: 'CodigoProducto', field: 'codigoProducto', width: 700 },
+        { title: 'Descripcion', field: 'descripcion', width: 700 }
 
     ];
 
@@ -138,6 +81,14 @@ export const ProductosPage = () => {
     useEffect(() => {
         getProductos();
     }, [])
+
+    useEffect(() => {
+
+        if (data.length > 0) {
+            setRows(data);
+        }
+
+    }, [data]);
 
     const peticionPost = async () => {
         productoSeleccionado.id = null;
@@ -170,7 +121,7 @@ export const ProductosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ProductoEliminar.length) {
-            await axios.delete("/productos/" + ProductoEliminar[i].id, token)
+            await axios.delete("/productos/" + ProductoEliminar[i], token)
                 .then(response => {
                     getProductos();
                     abrirCerrarModalEliminar();
@@ -203,182 +154,178 @@ export const ProductosPage = () => {
         }));
     }
 
-    const bodyInsertar = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Producto</h3>
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoProducto" name="codigoProducto" onChange={handleChange} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} type="textbox" label="Descripcion" name="descripcion" onChange={handleChange} />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+    const handleSelectRow = (ids) => {
 
-    const bodyEditar = (
-        <div className={styles.modal}>
-            <h3>Editar Producto</h3>
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="CodigoProducto" name="codigoProducto" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.codigoProducto} />
-                </div>
-                <div className="col-md-6">
-                    <TextField className={styles.inputMaterial} label="Descripcion" name="descripcion" onChange={handleChange} value={productoSeleccionado && productoSeleccionado.descripcion} />
-                </div>
-            </div>
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Editar</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+        if (ids.length > 0) {
+            setProductoSeleccionado(data.filter(producto => producto.id === ids[0])[0]);
+        } else {
+            setProductoSeleccionado(productoSeleccionado);
+        }
 
-    const bodyEliminar = (
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el producto ? </p>
-            <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-            </div>
-        </div>
-    )
+        setRowsIds(ids);
+
+    }
+
+    const handleSnackClose = (event, reason) => {
+
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackData({ open: false, msg: '', severity: 'info' });
+
+    };
 
 
 
     return (
-        <MainLayout title="Productos">
-        <div>
-            <MaterialTable columns={columnas} data={data}
-                localization={{
-                    body: {
-                        emptyDataSourceMessage: 'No hay datos por mostrar',
-                        addTooltip: 'Añadir',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
-                        },
-                        editRow: {
-                            deleteText: '¿Segura(o) que quiere eliminar?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
-                        },
-                    },
-                    grouping: {
-                        placeholder: "Arrastre un encabezado aquí para agrupar",
-                        groupedBy: 'Agrupado por',
-                    },
-                    header: {
-                        actions: 'Acciones',
-                    },
-                    pagination: {
-                        firstAriaLabel: 'Primera página',
-                        firstTooltip: 'Primera página',
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsPerPage: 'Filas por página:',
-                        labelRowsSelect: 'filas',
-                        lastAriaLabel: 'Ultima página',
-                        lastTooltip: 'Ultima página',
-                        nextAriaLabel: 'Pagina siguiente',
-                        nextTooltip: 'Pagina siguiente',
-                        previousAriaLabel: 'Pagina anterior',
-                        previousTooltip: 'Pagina anterior',
-                    },
-                    toolbar: {
-                        addRemoveColumns: 'Agregar o eliminar columnas',
-                        exportAriaLabel: 'Exportar',
-                        exportName: 'Exportar a CSV',
-                        exportTitle: 'Exportar',
-                        nRowsSelected: '{0} filas seleccionadas',
-                        searchPlaceholder: 'Buscar',
-                        searchTooltip: 'Buscar',
-                        showColumnsAriaLabel: 'Mostrar columnas',
-                        showColumnsTitle: 'Mostrar columnas',
-                    },
-                }}
-                actions={[
-                    {
-                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                        tooltip: "Añadir Producto",
-                        isFreeAction: true,
-                        onClick: (e, data) => {
-                            abrirCerrarModalInsertar()
-                        },
-                    },
-                    {
-                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                        tooltip: "Eliminar Producto",
-                        onClick: (event, rowData) => {
-                            setProductoEliminar(FilasSeleccionadas);
-                            abrirCerrarModalEliminar()
-                        },
-                    },
-                    {
-                        icon: () => <Edit />,
-                        tooltip: "Editar Producto",
-                        onClick: (e, data) => {
-                            abrirCerrarModalEditar();
-                        },
-                    },
-                ]}
+        <MainLayout title='Productos'>
 
-                onRowClick={((evt, productoSeleccionado) => {
-                    setProductoSeleccionado(productoSeleccionado)
-                    getProductos();
-                    abrirCerrarModalEditar();
-                })}
-                
-                onSelectionChange={(filas) => {
-                    setFilasSeleccionadas(filas);
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                    {snackData.msg}
+                </Alert>
+            </Snackbar>
 
-                    if (filas.length > 0) {
-                        setProductoSeleccionado(filas[0]);
+            <Grid container spacing={2}>
+
+                {/* Título y botones de opción */}
+                <Grid item xs={12}>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6'>Listado de Productos</Typography>
+                        {
+                            (rowsIds.length > 0) ?
+                                (
+                                    <Grid item>
+                                        <Button
+                                            sx={{ mr: 2 }}
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteIcon />}
+                                            onClick={(event, rowData) => {
+                                                setProductoEliminar(rowsIds)
+                                                abrirCerrarModalEliminar()
+                                            }}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <Button
+                                        color='success'
+                                        variant='contained'
+                                        startIcon={<AddIcon />}
+                                        onClick={abrirCerrarModalInsertar}
+                                    >Añadir</Button>
+                                )
+                        }
+                    </Card>
+                </Grid>
+
+                {/* Tabla donde se muestran los registros de los clientes */}
+                <Grid item xs={12}>
+                    <Card>
+                        <DataGrid
+                            components={{ Toolbar: GridToolbar }}
+                            localeText={DATAGRID_LOCALE_TEXT}
+                            sx={{
+                                width: '100%',
+                                height: 700,
+                                backgroundColor: '#FFFFFF'
+                            }}
+                            rows={rows}
+                            columns={columnas}
+                            pageSize={9}
+                            rowsPerPageOptions={[9]}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                            onRowClick={(productoSeleccionado, evt) => {
+                                setProductoSeleccionado(productoSeleccionado.row)
+                                abrirCerrarModalEditar();
+                            }}
+                        />
+                    </Card>
+                </Grid>
+
+                {/* LISTA DE MODALS */}
+
+                {/* Agregar Producto */}
+                <ModalLayout
+                    titulo="Agregar nuevo cliente"
+                    contenido={
+                        <InsertarProductoModal change={handleChange} />
                     }
-                }}
-                
-                options={{
-                    sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-                    columnsButton: true,
-                    rowStyle: rowData => ({
-                        backgroundColor: (productoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                        whiteSpace: "nowrap"
-                    }),
+                    botones={[
+                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                            abrirCerrarModalInsertar();
 
-                    exportMenu: [{
-                        label: 'Export PDF',
-                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Productos')
-                    }, {
-                        label: 'Export CSV',
-                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Productos')
-                    }]
-                }}
+                            if (peticionPost()) {
+                                setSnackData({ open: true, msg: 'Producto añadido correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al añadir el producto', severity: 'error' })
+                            }
 
-                title="Listado de Productos"
-            />
-            <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
+                        }, 'success')
+                    ]}
+                    open={modalInsertar}
+                    onClose={abrirCerrarModalInsertar}
+                />
 
-            <Modal
+            </Grid>
+
+            {/* Modal Editar Producto*/}
+
+            <ModalLayout
+                titulo="Editar producto"
+                contenido={
+                    <EditarProductoModal
+                        productoSeleccionado={productoSeleccionado}
+                        change={handleChange}
+                    />}
+                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                    abrirCerrarModalEditar()
+
+                    if (peticionPut()) {
+                        setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
+                    } else {
+                        setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
+                    }
+                })
+                ]}
                 open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
+                onClose={abrirCerrarModalEditar}
+            />
 
-            <Modal
+            {/* Eliminar producto */}
+            <ModalLayout
+                titulo="Eliminar producto"
+                contenido={
+                    <>
+                        <Grid item xs={12}>
+                            <Typography>Estás seguro que deseas eliminar el producto?</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography><b>{productoSeleccionado.descripcion}</b></Typography>
+                        </Grid>
+                    </>
+                }
+                botones={[
+                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                        abrirCerrarModalEliminar();
+
+                        if (peticionDelete()) {
+                            setSnackData({ open: true, msg: `Producto eliminado correctamente: ${productoSeleccionado.descripcion}`, severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el producto', severity: 'error' })
+                        }
+
+                    }, 'error'),
+                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                ]}
                 open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
-        </div>
+                onClose={abrirCerrarModalEliminar}
+            />
         </MainLayout>
     )
 }

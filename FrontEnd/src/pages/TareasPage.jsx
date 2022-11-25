@@ -869,10 +869,23 @@ export const TareasPage = () => {
                 setTareaSeleccionada(tareaSeleccionada.row)
                 setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
                 setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
-                //setElementoTareaEditar(analisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
-                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
-                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
-                //setAnalisisEditar(analisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
+                setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
+                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
+                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.row.operario));
+                setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
+
+                if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {
+                  setEstadoOperario(false)
+                } else {
+                  setEstadoOperario(true)
+                }
+      
+                if (analisisEditar[0].nombre === "Desinfecciones") {
+                  setEstadoProtocolo(false)
+                } else {
+                  setEstadoProtocolo(true)
+                }
+
                 abrirCerrarModalEditar();
               }}
             />
@@ -934,6 +947,8 @@ export const TareasPage = () => {
             tecnicoTareaEditar={tecnicoTareaEditar}
             elementosAutocomplete={elementosAutocomplete}
             analisisAutocomplete={analisisAutocomplete}
+            elementoTareaEditar={elementoTareaEditar}
+            analisisEditar={analisisEditar}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()

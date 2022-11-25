@@ -1,15 +1,28 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
+import { Grid, Card, Typography, Button, TextField } from '@mui/material';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
+import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 
 
 const token = {
@@ -18,98 +31,14 @@ const token = {
     }
 };
 
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 850,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
-
-const useStyles2 = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 850,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '60%'
-    }
-}));
-
-
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export const ConsumoArticulosPage = () => {
+
+    const [rowsIds, setRowsIds] = useState([]);
+    const [rows, setRows] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -117,13 +46,11 @@ export const ConsumoArticulosPage = () => {
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-
-
     const [consumoSeleccionado, setConsumoSeleccionado] = useState({
         id: 0,
         oferta: 0,
         fecha: null,
-        codigoProducto: '',
+        producto: '',
         cantidad: 0,
         addDate: null,
         addIdUser: null,
@@ -133,8 +60,6 @@ export const ConsumoArticulosPage = () => {
         delIdUser: null,
         deleted: null,
     });
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
     const [ConsumoEliminar, setConsumoEliminar] = useState([]);
 
@@ -149,16 +74,15 @@ export const ConsumoArticulosPage = () => {
     const [productoEditar, setProductoEditar] = useState([]);
     const [descripcionEditar, setDescripcionEditar] = useState([]);
 
-    const styles = useStyles();
-    const styles2 = useStyles2();
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const columnas = [
 
         //Visibles
-        { title: 'Oferta', field: 'oferta', filterPlaceholder: "Filtrar por numero oferta" },
-        { title: 'Fecha', field: 'fecha', type: 'date', filterPlaceholder: "Filtrar por fecha" },
-        { title: 'Producto', field: 'codigoProducto', filterPlaceholder: "Filtrar por producto" },
-        { title: 'Cantidad', field: 'cantidad', filterPlaceholder: "Filtrar por Cantidad" }
+        { title: 'Oferta', field: 'oferta', width: 400 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 400 },
+        { title: 'Producto', field: 'producto', width: 400 },
+        { title: 'Cantidad', field: 'cantidad', width: 400 }
     ];
 
 
@@ -188,12 +112,18 @@ export const ConsumoArticulosPage = () => {
         getProductos();
     }, [])
 
+    useEffect(() => {
+
+        if (data.length > 0) {
+            setRows(data);
+        }
+
+    }, [data]);
+
     const peticionPost = async () => {
         consumoSeleccionado.id = 0;
-        console.log(consumoSeleccionado)
         await axios.post("/consumos", consumoSeleccionado, token)
             .then(response => {
-                //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
                 getConsumos();
             }).catch(error => {
@@ -220,7 +150,7 @@ export const ConsumoArticulosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ConsumoEliminar.length) {
-            await axios.delete("/consumos/" + ConsumoEliminar[i].id, token)
+            await axios.delete("/consumos/" + ConsumoEliminar[i], token)
                 .then(response => {
                     getConsumos();
                     abrirCerrarModalEliminar();
@@ -253,270 +183,177 @@ export const ConsumoArticulosPage = () => {
         }));
     }
 
-    const bodyInsertar = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Consumo</h3>
-            <br />
-            <div className="row g-3">
-                <div className="col-md-4">
-                    <h5> Oferta </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Oferta"
-                        options={ofertas}
-                        getOptionLabel={option => option.numeroOferta}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} type="number" name="oferta" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            oferta: parseInt(value.numeroOferta)
-                        }))}
-                    />
-                </div>
-                <div className="col-md-2">
-                    {/* Fecha prevista */}
-                    <h5> Fecha </h5>
-                    <TextField
-                        className={styles.inputMaterial}
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 225 }}
-                        onChange={handleChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <h5> Producto </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="codigoProducto"
-                        options={productos}
-                        getOptionLabel={option => option.codigoProducto}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            codigoProducto: value.codigoProducto
-                        }))}
-                    />
-                </div>
-                <div className="col-md-3">
-                    <h5> Cantidad </h5>
-                    <TextField className={styles2.inputMaterial} type="number" name="cantidad" onChange={handleChange} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+    const handleSelectRow = (ids) => {
 
-    const bodyEditar = (
-        <div className={styles.modal}>
-            <h3> Consumo </h3>
-            <br />
-            <div className="row g-3">
-                <div className="col-md-6">
-                    <h5> Oferta </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Oferta"
-                        options={ofertas}
-                        getOptionLabel={option => option.numeroOferta}
-                        defaultValue={ofertaEditar[0]}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} type="number" name="oferta" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            oferta: parseInt(value.numeroOferta)
-                        }))}
-                    />
-                </div>
-                <div className="col-md-2">
-                    {/* Fecha prevista */}
-                    <h5> Fecha </h5>
-                    <TextField
-                        className={styles.inputMaterial}
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 225 }}
-                        onChange={handleChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={consumoSeleccionado && consumoSeleccionado.fecha}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Producto </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        id="codigoProducto"
-                        options={productos}
-                        getOptionLabel={option => option.codigoProducto}
-                        defaultValue={productoEditar[0]}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="codigoProducto" />}
-                        onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                            ...prevState,
-                            codigoProducto: value.codigoProducto
-                        }))}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Cantidad </h5>
-                    <TextField className={styles.inputMaterial} type="number" name="cantidad" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
+        if (ids.length > 0) {
+            setConsumoSeleccionado(data.filter(consumo => consumo.id === ids[0])[0]);
+        } else {
+            setConsumoSeleccionado(consumoSeleccionado);
+        }
 
-    const bodyEliminar = (
-        <div className={styles.modal}>
-            <h5>Estás seguro que deseas eliminar el consumo ? </h5>
-            <br />
-            <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-            </div>
-        </div>
-    )
+        setRowsIds(ids);
 
+    }
+
+    const handleSnackClose = (event, reason) => {
+
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackData({ open: false, msg: '', severity: 'info' });
+
+    };
 
 
     return (
-        <MainLayout title="Consumo de Artículos">
-        <div>
-            <MaterialTable columns={columnas} data={data}
-                localization={{
-                    body: {
-                        emptyDataSourceMessage: 'No hay datos por mostrar',
-                        addTooltip: 'Añadir',
-                        deleteTooltip: 'Eliminar',
-                        editTooltip: 'Editar',
-                        filterRow: {
-                            filterTooltip: 'Filtrar',
-                        },
-                        editRow: {
-                            deleteText: '¿Segura(o) que quiere eliminar?',
-                            cancelTooltip: 'Cancelar',
-                            saveTooltip: 'Guardar',
-                        },
-                    },
-                    grouping: {
-                        placeholder: "Arrastre un encabezado aquí para agrupar",
-                        groupedBy: 'Agrupado por',
-                    },
-                    header: {
-                        actions: 'Acciones',
-                    },
-                    pagination: {
-                        firstAriaLabel: 'Primera página',
-                        firstTooltip: 'Primera página',
-                        labelDisplayedRows: '{from}-{to} de {count}',
-                        labelRowsPerPage: 'Filas por página:',
-                        labelRowsSelect: 'filas',
-                        lastAriaLabel: 'Ultima página',
-                        lastTooltip: 'Ultima página',
-                        nextAriaLabel: 'Pagina siguiente',
-                        nextTooltip: 'Pagina siguiente',
-                        previousAriaLabel: 'Pagina anterior',
-                        previousTooltip: 'Pagina anterior',
-                    },
-                    toolbar: {
-                        addRemoveColumns: 'Agregar o eliminar columnas',
-                        exportAriaLabel: 'Exportar',
-                        exportName: 'Exportar a CSV',
-                        exportTitle: 'Exportar',
-                        nRowsSelected: '{0} filas seleccionadas',
-                        searchPlaceholder: 'Buscar',
-                        searchTooltip: 'Buscar',
-                        showColumnsAriaLabel: 'Mostrar columnas',
-                        showColumnsTitle: 'Mostrar columnas',
-                    },
-                }}
-                actions={[
-                    {
-                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                        tooltip: "Añadir Consumo",
-                        isFreeAction: true,
-                        onClick: (e, data) => {
-                            abrirCerrarModalInsertar()
-                        },
-                    },
-                    {
-                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                        tooltip: "Eliminar Consumo",
-                        onClick: (event, rowData) => {
-                            setConsumoEliminar(FilasSeleccionadas);
-                            abrirCerrarModalEliminar()
-                        },
-                    },
-                ]}
+        <MainLayout title='Consumos'>
 
-                onRowClick={((evt, consumoSeleccionado) => {
-                    setConsumoSeleccionado(consumoSeleccionado)
-                    getConsumos();
-                    setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.oferta))
-                    setProductoEditar(productos.filter(producto => producto.codigoProducto === consumoSeleccionado.codigoProducto))
-                    abrirCerrarModalEditar();
-                })}
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                    {snackData.msg}
+                </Alert>
+            </Snackbar>
 
-                onSelectionChange={(filas) => {
-                    setFilasSeleccionadas(filas);
-                    if (filas.length > 0) {
-                        setConsumoSeleccionado(filas[0]);
+            <Grid container spacing={2}>
+
+                {/* Título y botones de opción */}
+                <Grid item xs={12}>
+                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6'>Listado de Consumos</Typography>
+                        {
+                            (rowsIds.length > 0) ?
+                                (
+                                    <Grid item>
+                                        <Button
+                                            sx={{ mr: 2 }}
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteIcon />}
+                                            onClick={(event, rowData) => {
+                                                setConsumoEliminar(rowsIds)
+                                                abrirCerrarModalEliminar()
+                                            }}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <Button
+                                        color='success'
+                                        variant='contained'
+                                        startIcon={<AddIcon />}
+                                        onClick={abrirCerrarModalInsertar}
+                                    >Añadir</Button>
+                                )
+                        }
+                    </Card>
+                </Grid>
+
+                {/* Tabla donde se muestran los registros de los clientes */}
+                <Grid item xs={12}>
+                    <Card>
+                        <DataGrid
+                            components={{ Toolbar: GridToolbar }}
+                            localeText={DATAGRID_LOCALE_TEXT}
+                            sx={{
+                                width: '100%',
+                                height: 700,
+                                backgroundColor: '#FFFFFF'
+                            }}
+                            rows={rows}
+                            columns={columnas}
+                            pageSize={9}
+                            rowsPerPageOptions={[9]}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                            onRowClick={(consumoSeleccionado, evt) => {
+                                setConsumoSeleccionado(consumoSeleccionado.row)
+                                setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
+                                abrirCerrarModalEditar();
+                            }}
+                        />
+                    </Card>
+                </Grid>
+
+                {/* LISTA DE MODALS */}
+
+                {/* Agregar consumo */}
+                <ModalLayout
+                    titulo="Agregar nuevo consumo"
+                    contenido={
+                        <InsertarConsumoModal change={handleChange} setConsumoSeleccionado={setConsumoSeleccionado} />
                     }
-                }}
+                    botones={[
+                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                            abrirCerrarModalInsertar();
 
-                options={{
-                    sorting: true, paging: true, pageSizeOptions: [5, 10, 20, 50, 100, 200], pageSize: 10, filtering: true, search: false, selection: true,
-                    columnsButton: true, showSelectAllCheckbox: false,
-                    rowStyle: rowData => ({
-                        backgroundColor: (consumoSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                        whiteSpace: "nowrap"
-                    }),
+                            if (peticionPost()) {
+                                setSnackData({ open: true, msg: 'Consumo añadido correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al añadir el consumo', severity: 'error' })
+                            }
 
-                    exportMenu: [{
-                        label: 'Export PDF',
-                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Consumos')
-                    }, {
-                        label: 'Export CSV',
-                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Consumos')
-                    }]
-                }}
+                        }, 'success')
+                    ]}
+                    open={modalInsertar}
+                    onClose={abrirCerrarModalInsertar}
+                />
 
-                title="Listado de Consumos"
-            />
-            <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
-                {bodyInsertar}
-            </Modal>
+            </Grid>
 
-            <Modal
+            {/* Modal Editar Consumo*/}
+
+            <ModalLayout
+                titulo="Editar consumo"
+                contenido={
+                    <EditarConsumoModal
+                        consumoSeleccionado={consumoSeleccionado}
+                        change={handleChange}
+                        setConsumoSeleccionado={setConsumoSeleccionado}
+                        productoEditar={productoEditar}
+                    />}
+                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                    abrirCerrarModalEditar()
+
+                    if (peticionPut()) {
+                        setSnackData({ open: true, msg: 'Consumo editado correctamente', severity: 'success' });
+                    } else {
+                        setSnackData({ open: true, msg: 'Ha habido un error al editar el consumo', severity: 'error' })
+                    }
+                })
+                ]}
                 open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
-                {bodyEditar}
-            </Modal>
+                onClose={abrirCerrarModalEditar}
+            />
 
-            <Modal
+            {/* Eliminar consumo */}
+            <ModalLayout
+                titulo="Eliminar consumo"
+                contenido={
+                    <>
+                        <Grid item xs={12}>
+                            <Typography>Estás seguro que deseas eliminar el consumo?</Typography>
+                        </Grid>
+                    </>
+                }
+                botones={[
+                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                        abrirCerrarModalEliminar();
+
+                        if (peticionDelete()) {
+                            setSnackData({ open: true, msg: `Consumo eliminado correctamente`, severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el consumo', severity: 'error' })
+                        }
+
+                    }, 'error'),
+                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                ]}
                 open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
-                {bodyEliminar}
-            </Modal>
-        </div>
+                onClose={abrirCerrarModalEliminar}
+            />
         </MainLayout>
     )
 }

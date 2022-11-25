@@ -129,12 +129,11 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
     const peticionGet = async () => {
         axios.get("/clientescontactos", token).then(response => {
-            setData(response.data.data)
+            setData(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
         })
     }
 
     const peticionPostContacto = async () => {
-        console.log("Peticion Post ejecutandose");
         contactoSeleccionado.id = null;
         await axios.post("/clientescontactos", contactoSeleccionado, token)
             .then(response => {
@@ -311,11 +310,11 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={4} md={3}>
                 <TextField sx={{ width: '100%' }} label="Código" name="codigo" type="number" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={4} md={4}>
                 <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
             </Grid>
 
@@ -378,7 +377,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
                 {/* Título y botones de opción */}
                 <Grid item xs={12}>
-                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                    <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
                         <Typography variant='h6'>Listado de Contactos</Typography>
                         {
                             (rowsIds.length > 0) ?
@@ -422,8 +421,8 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                             }}
                             rows={rows}
                             columns={columns}
-                            pageSize={9}
-                            rowsPerPageOptions={[9]}
+                            pageSize={4}
+                            rowsPerPageOptions={[4]}
                             checkboxSelection
                             disableSelectionOnClick
                             onSelectionModelChange={(ids) => handleSelectRow(ids)}

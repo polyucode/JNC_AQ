@@ -56,7 +56,7 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete }) =>{
+export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) =>{
 
 
     // Declaramos variables necesarias
@@ -108,7 +108,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
 
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboClientes"
@@ -138,7 +138,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -166,13 +166,13 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
                     inputValue={tareaSeleccionada.nombreElemento}
+                    defaultValue={elementoTareaEditar[0]}
                     options={elementosAutocomplete}
-                    //filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
                     getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
@@ -183,12 +183,12 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
                     options={analisisAutocomplete}
-                    //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
+                    defaultValue={analisisEditar[0]}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" />}
@@ -196,7 +196,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={6}>
                 <Autocomplete
                     disabled={estadoOperario}
                     disableClearable={true}
@@ -212,24 +212,6 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         operario: value.nombre + ' ' + value.apellidos
                     }))}
                 />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-                <TextField
-                    disabled={estadoProtocolo}
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChange}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
             </Grid>
 
             <Grid item xs={4} md={3}>
@@ -254,7 +236,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                     defaultValue={tipoTareaEditar[0]}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="idTipo" />}
+                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="tipo" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         tipo: value.id
