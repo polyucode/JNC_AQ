@@ -139,11 +139,10 @@ export const VisualizacionPage = () => {
         codigoCliente: 0,
         nombreCliente: '',
         oferta: '',
-        pedido: '',
-        idElemento: 0,
-        elemento: '',
+        pedido: 0,
+        elemento: 0,
         periodo: '',
-        analisis: '',
+        analisis: 0,
         nombreAnalisis: '',
         fecha: null,
         realizado: false,
@@ -393,7 +392,7 @@ export const VisualizacionPage = () => {
 
         opcionesFiltradasAnalisis = [];
 
-        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta && planta.id_Elemento === analisisSeleccionado.idElemento);
+        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta && planta.id_Elemento === analisisSeleccionado.elemento);
 
         console.log({lista})
 
@@ -403,7 +402,7 @@ export const VisualizacionPage = () => {
 
         setDataTablas(opcionesFiltradasAnalisis)
 
-    }, [analisisSeleccionado.idElemento])
+    }, [analisisSeleccionado.elemento])
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -1289,109 +1288,111 @@ export const VisualizacionPage = () => {
 
     const FisicoQuimicoTorre = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData1(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Torre" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(response.data.data.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
+    console.log({analisisSeleccionado})
+
     const FisicoQuimicoAporte = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData2(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Aporte" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData2(response.data.data.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoAlimentacion = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData3(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Alimentación" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData3(response.data.data.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoRechazo = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData4(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Rechazo" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData4(response.data.data.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoCondensados = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData5(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Condensados" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData5(response.data.data.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoCaldera = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData6(response.data.data.filter(analisis => analisis.analisis === "Físico-Químico Caldera" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData6(response.data.data.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Aerobios = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData7(response.data.data.filter(analisis => analisis.analisis === "Aerobios" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData7(response.data.data.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Legionela = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData8(response.data.data.filter(analisis => analisis.analisis === "Legionela" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData8(response.data.data.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguasResiduales = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData9(response.data.data.filter(analisis => analisis.analisis === "Aguas Residuales" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData9(response.data.data.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Desinfecciones = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData10(response.data.data.filter(analisis => analisis.analisis === "Desinfecciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData10(response.data.data.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Osmosis = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData11(response.data.data.filter(analisis => analisis.analisis === "Osmosis" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData11(response.data.data.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguaPozo = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData12(response.data.data.filter(analisis => analisis.analisis === "AguaPozo" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData12(response.data.data.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const DesinfeccionACS = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData13(response.data.data.filter(analisis => analisis.analisis === "Desinfección ACS" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData13(response.data.data.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const MantMaqFrio = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData14(response.data.data.filter(analisis => analisis.analisis === "Mantenimiento Maq Frio" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData14(response.data.data.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Mediciones = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData15(response.data.data.filter(analisis => analisis.analisis === "Mediciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData15(response.data.data.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const ControlFugaGas = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData16(response.data.data.filter(analisis => analisis.analisis === "Control Fuga Gas" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData16(response.data.data.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguaPotable = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData17(response.data.data.filter(analisis => analisis.analisis === "Agua Potable" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData17(response.data.data.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const RevisionBandeja = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData18(response.data.data.filter(analisis => analisis.analisis === "Revision de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData18(response.data.data.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
@@ -1402,26 +1403,29 @@ export const VisualizacionPage = () => {
     }
 
     function FiltrarData() {
-        setData1(data.filter(analisis => analisis.analisis === "Físico-Químico Torre"))
-        setData2(data.filter(analisis => analisis.analisis === "Físico-Químico Aporte"))
-        setData3(data.filter(analisis => analisis.analisis === "Físico-Químico Alimentación"))
-        setData4(data.filter(analisis => analisis.analisis === "Físico-Químico Rechazo"))
-        setData5(data.filter(analisis => analisis.analisis === "Físico-Químico Condensados"))
-        setData6(data.filter(analisis => analisis.analisis === "Físico-Químico Caldera"))
-        setData7(data.filter(analisis => analisis.analisis === "Aerobios"))
-        setData8(data.filter(analisis => analisis.analisis === "Legionela"))
-        setData9(data.filter(analisis => analisis.analisis === "Aguas Residuales"))
-        setData10(data.filter(analisis => analisis.analisis === "Desinfecciones"))
-        setData11(data.filter(analisis => analisis.analisis === "Físico-Químico Osmosis"))
-        setData12(data.filter(analisis => analisis.analisis === "AguaPozo"))
-        setData13(data.filter(analisis => analisis.analisis === "Desinfección ACS"))
-        setData14(data.filter(analisis => analisis.analisis === "Mantenimiento Maq Frio"))
-        setData15(data.filter(analisis => analisis.analisis === "Mediciones"))
-        setData16(data.filter(analisis => analisis.analisis === "Control Fuga Gas"))
-        setData17(data.filter(analisis => analisis.analisis === "Agua Potable"))
-        setData18(data.filter(analisis => analisis.analisis === "Revision de Bandeja"))
+        setData1(data.filter(analisis => analisis.analisis === 1))
+        setData2(data.filter(analisis => analisis.analisis === 2))
+        setData3(data.filter(analisis => analisis.analisis === 3))
+        setData4(data.filter(analisis => analisis.analisis === 4))
+        setData5(data.filter(analisis => analisis.analisis === 5))
+        setData6(data.filter(analisis => analisis.analisis === 6))
+        setData7(data.filter(analisis => analisis.analisis === 7))
+        setData8(data.filter(analisis => analisis.analisis === 8))
+        setData9(data.filter(analisis => analisis.analisis === 9))
+        setData10(data.filter(analisis => analisis.analisis === 10))
+        setData11(data.filter(analisis => analisis.analisis === 11))
+        setData12(data.filter(analisis => analisis.analisis === 12))
+        setData13(data.filter(analisis => analisis.analisis === 13))
+        setData14(data.filter(analisis => analisis.analisis === 14))
+        setData15(data.filter(analisis => analisis.analisis === 15))
+        setData16(data.filter(analisis => analisis.analisis === 16))
+        setData17(data.filter(analisis => analisis.analisis === 17))
+        setData18(data.filter(analisis => analisis.analisis === 18))
         setDataOtros(data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja"))
     }
+
+    console.log({data10})
+    console.log({data})
 
     useEffect(() => {
         GetOperarios();
@@ -1433,7 +1437,6 @@ export const VisualizacionPage = () => {
         GetElementos();
         GetConfNivelesPlantasCliente();
         GetAnalisisNivelesPlantasCliente();
-        Tablas();
         FisicoQuimicoTorre();
         FisicoQuimicoAporte();
         FisicoQuimicoAlimentacion();
@@ -1956,26 +1959,24 @@ export const VisualizacionPage = () => {
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Torre" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Aporte" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Alimentación" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Rechazo" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Condensados" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Caldera" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Aerobios" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Legionela" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Aguas Residuales" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Desinfecciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Osmosis" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "AguaPozo" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData13(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Desinfección ACS" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData14(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Mantenimiento Maq Frio" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData15(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Mediciones" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData16(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Control Fuga Gas" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData17(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Agua Potable" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData18(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Revision de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData19(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Otros con Fecha de Trabajo" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData20(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === "Otros sin Fecha de Trabajo" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData13(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData14(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData15(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData16(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData17(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData18(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setDataTablas(opcionesFiltradasAnalisis)
             setDataOtros(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
         }
@@ -1991,26 +1992,24 @@ export const VisualizacionPage = () => {
     const onChangeOferta = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Torre" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Aporte" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Alimentación" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Rechazo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Condensados" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Físico-Químico Caldera" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Aerobios" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Legionela" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Aguas Residuales" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Desinfecciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Osmosis" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "AguaPozo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData13(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Desinfección ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData14(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Mantenimiento Maq Frio" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData15(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Mediciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData16(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Control Fuga Gas" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData17(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Agua Potable" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData18(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Revision de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData19(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Otros con Fecha de Trabajo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData20(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === "Otros sin Fecha de Trabajo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData13(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData14(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData15(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData16(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData17(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData18(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setDataTablas(opcionesFiltradasAnalisis)
             setDataOtros(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         }
@@ -2024,39 +2023,32 @@ export const VisualizacionPage = () => {
 
     const onChangeElemento = (e, value, name) => {
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Torre" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData2(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Aporte" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData3(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Alimentación" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData4(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Rechazo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData5(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Condensados" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData6(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Físico-Químico Caldera" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData7(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Aerobios" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData8(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Legionela" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData9(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Aguas Residuales" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData10(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Desinfecciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData11(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Osmosis" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData12(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "AguaPozo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData13(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Desinfección ACS" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData14(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Mantenimiento Maq Frio" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData15(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Mediciones" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData16(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Control Fuga Gas" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData17(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Agua Potable" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData18(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Revision de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData19(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Otros con Fecha de Trabajo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData20(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === "Otros sin Fecha de Trabajo" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData1(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData2(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData3(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData4(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData5(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData6(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData7(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData8(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData9(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData10(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData11(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData12(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData13(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData14(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData15(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData16(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData17(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData18(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setDataTablas(opcionesFiltradasAnalisis)
             setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
         }
 
         setAnalisisSeleccionado((prevState) => ({
             ...prevState,
-            [name]: e.target.textContent,
-            idElemento: value.id
+            [name]: value.id,
         }))
-    }
-
-    function Tablas() {
-        setDataTablas(confNivelesPlantasCliente.filter((analisisPlanta) => analisisPlanta.codigoCliente === analisisSeleccionado.codigoCliente && analisisPlanta.oferta === analisisSeleccionado.oferta && analisisPlanta.elemento === analisisSeleccionado.elemento))
     }
 
     useEffect(() => {
@@ -2079,8 +2071,6 @@ export const VisualizacionPage = () => {
         })
 
     }, [analisisSeleccionado.oferta])
-
-    console.log(analisisSeleccionado)
 
     return (
         <MainLayout title="Visualización">
@@ -2156,7 +2146,7 @@ export const VisualizacionPage = () => {
                         <div className="visualizacion-tablas">
                             {dataTablas.map((analisi, index) => {
                                 switch (analisi.id_Analisis) {
-                                    case "1":
+                                    case 1:
                                         return (
                                             <MaterialTable columns={columnas1} data={data1}
                                                 localization={localization}
@@ -2216,9 +2206,9 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Torre"
                                             />
                                         )
-                                    case 7:
+                                    case 2:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data}
+                                            <MaterialTable columns={columnas1} data={data2}
                                                 localization={localization}
                                                 actions={[
                                                     {
@@ -2276,7 +2266,7 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Aporte"
                                             />
                                         )
-                                    case "Físico-Químico Alimentación":
+                                    case 3:
                                         return (
                                             <MaterialTable columns={columnas1} data={data3}
                                                 localization={localization}
@@ -2336,7 +2326,7 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Alimentación"
                                             />
                                         )
-                                    case "Físico-Químico Rechazo":
+                                    case 4:
                                         return (
                                             <MaterialTable columns={columnas1} data={data4}
                                                 localization={localization}
@@ -2396,7 +2386,7 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Rechazo"
                                             />
                                         )
-                                    case "Físico-Químico Condensados":
+                                    case 5:
                                         return (
                                             <MaterialTable columns={columnas1} data={data5}
                                                 localization={localization}
@@ -2456,7 +2446,7 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Condensados"
                                             />
                                         )
-                                    case "Físico-Químico Caldera":
+                                    case 6:
                                         return (
                                             <MaterialTable columns={columnas1} data={data6}
                                                 localization={localization}
@@ -2516,7 +2506,7 @@ export const VisualizacionPage = () => {
                                                 title="Fisico Quimico Caldera"
                                             />
                                         )
-                                    case "Aerobios":
+                                    case 7:
                                         return (
                                             <MaterialTable columns={columnasAerobios} data={data7}
                                                 localization={localization}
@@ -2575,7 +2565,7 @@ export const VisualizacionPage = () => {
                                                 title="Aerobios"
                                             />
                                         )
-                                    case "Legionela":
+                                    case 8:
                                         return (
                                             <MaterialTable columns={columnasLegionela} data={data8}
                                                 localization={localization}
@@ -2634,7 +2624,7 @@ export const VisualizacionPage = () => {
                                                 title="Legionela"
                                             />
                                         )
-                                    case "Aguas Residuales":
+                                    case 9:
                                         return (
                                             <MaterialTable columns={columnas1} data={data9}
                                                 localization={localization}
@@ -2693,7 +2683,7 @@ export const VisualizacionPage = () => {
                                                 title="Aguas Residuales"
                                             />
                                         )
-                                    case "Desinfecciones":
+                                    case 10:
                                         return (
                                             <MaterialTable columns={columnas} data={data10}
                                                 localization={localization}
@@ -2752,7 +2742,7 @@ export const VisualizacionPage = () => {
                                                 title="Desinfecciones"
                                             />
                                         )
-                                    case "Osmosis":
+                                    case 11:
                                         return (
                                             <MaterialTable columns={columnas1} data={data11}
                                                 localization={localization}
@@ -2811,7 +2801,7 @@ export const VisualizacionPage = () => {
                                                 title="Osmosis"
                                             />
                                         )
-                                    case "AguaPozo":
+                                    case 12:
                                         return (
                                             <MaterialTable columns={columnas1} data={data12}
                                                 localization={localization}
@@ -2870,7 +2860,7 @@ export const VisualizacionPage = () => {
                                                 title="Agua Pozo"
                                             />
                                         )
-                                    case "Desinfección ACS":
+                                    case 13:
                                         return (
                                             <MaterialTable columns={columnas} data={data13}
                                                 localization={localization}
@@ -2929,7 +2919,7 @@ export const VisualizacionPage = () => {
                                                 title="Desinfeccion ACS"
                                             />
                                         )
-                                    case "Mantenimiento Maq Frio":
+                                    case 14:
                                         return (
                                             <MaterialTable columns={columnasOperario} data={data14}
                                                 localization={localization}
@@ -2989,7 +2979,7 @@ export const VisualizacionPage = () => {
                                                 title="Mantenimiento Maquina Frio"
                                             />
                                         )
-                                    case "Mediciones":
+                                    case 15:
                                         return (
                                             <MaterialTable columns={columnasOperario} data={data15}
                                                 localization={localization}
@@ -3048,7 +3038,7 @@ export const VisualizacionPage = () => {
                                                 title="Mediciones"
                                             />
                                         )
-                                    case "Control Fuga Gas":
+                                    case 16:
                                         return (
                                             <MaterialTable columns={columnasOperario} data={data16}
                                                 localization={localization}
@@ -3107,7 +3097,7 @@ export const VisualizacionPage = () => {
                                                 title="Control Fuga de Gas"
                                             />
                                         )
-                                    case "Agua Potable":
+                                    case 17:
                                         return (
                                             <MaterialTable columns={columnas1} data={data17}
                                                 localization={localization}
@@ -3166,7 +3156,7 @@ export const VisualizacionPage = () => {
                                                 title="Agua Potable"
                                             />
                                         )
-                                    case "Revision de Bandeja":
+                                    case 18:
                                         return (
                                             <MaterialTable columns={columnas1} data={data18}
                                                 localization={localization}
@@ -3223,124 +3213,6 @@ export const VisualizacionPage = () => {
                                                 }}
 
                                                 title="Revision de Bandeja"
-                                            />
-                                        )
-                                    case "Otros con Fecha de Trabajo":
-                                        return (
-                                            <MaterialTable columns={columnasVis} data={data19}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Otros con Fecha de Trabajo"
-                                                            })
-                                                            abrirCerrarModalInsertar();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas19);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
-
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar();
-                                                })}
-
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas19(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
-                                                    }
-                                                }}
-
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
-                                                    }]
-                                                }}
-
-                                                title="Otros con Fecha de Trabajo"
-                                            />
-                                        )
-                                    case "Otros sin Fecha de Trabajo":
-                                        return (
-                                            <MaterialTable columns={columnasVis} data={data20}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Otros sin Fecha de Trabajo"
-                                                            })
-                                                            abrirCerrarModalInsertar();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas20);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
-
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar();
-                                                })}
-
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas20(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
-                                                    }
-                                                }}
-
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de analisis')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de analisis')
-                                                    }]
-                                                }}
-
-                                                title="Otros sin Fecha de Trabajo"
                                             />
                                         )
                                     default:

@@ -58,7 +58,7 @@ const tipos = [
 
 
 
-export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario }) => {
+export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, elementosAutocomplete, analisisAutocomplete }) => {
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -111,7 +111,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                         ...prevState,
                         codigoCliente: parseInt(value.codigo),
                         pedido: '',
-                        elementoPlanta: ''
+                        elemento: ''
                     }))}
                 />
             </Grid>
@@ -159,15 +159,15 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
-                    inputValue={tareaSeleccionada.elementoPlanta}
-                    options={elementos}
-                    //filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
-                    getOptionLabel={option => option.id_Elemento}
+                    inputValue={tareaSeleccionada.nombreElemento}
+                    options={elementosAutocomplete}
+                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
-                        elementoPlanta: value.nombre + value.numero
+                        elemento: parseInt(value.id),
+                        nombreElemento: event.target.textContent
                     }))}
                 />
             </Grid>
@@ -176,9 +176,8 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
-                    options={analisis}
-                    //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
-                    getOptionLabel={option => option.analisis}
+                    options={analisisAutocomplete}
+                    getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" />}
                     onChange={handleChangeAnalisis}

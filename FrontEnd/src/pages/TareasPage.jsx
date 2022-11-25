@@ -47,6 +47,10 @@ export const TareasPage = () => {
 
   const { valores, setValores } = useContext(ThemeContext);
 
+  let opcionesFiltradas = [];
+  let opcionesFiltradasAnalisis = [];
+  let opcionesNombreFiltradasAnalisis = [];
+
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -75,8 +79,10 @@ export const TareasPage = () => {
     pedido: 0,
     operario: "",
     protocolo: "",
-    elemento: "",
-    analisis: "",
+    elemento: 0,
+    nombreElemento: "",
+    analisis: 0,
+    nombreAnalisis: "",
     fecha: null,
     tipo: 0,
     addDate: null,
@@ -96,17 +102,21 @@ export const TareasPage = () => {
     nombreCliente: '',
     oferta: 0,
     pedido: 0,
-    elemento: '',
+    elemento: 0,
     periodo: '',
-    analisis: '',
+    analisis: 0,
     fecha: null,
+    recogido: false,
+    fechaRecogido: null,
     realizado: false,
+    fechaRealizado: null,
     operario: '',
     protocolo: '',
     observaciones: '',
     facturado: false,
     numeroFacturado: '',
-    recogido: false,
+    cancelado: false,
+    comentarios: '',
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -137,8 +147,12 @@ export const TareasPage = () => {
   const [elementosplanta, setElementosPlanta] = useState([]);
 
   const [clientes, setClientes] = useState([]);
+  const [analisis, setAnalisis] = useState([]);
   const [ofertas, setOfertas] = useState([]);
   const [operarios, setOperarios] = useState([]);
+
+  const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
+  const [analisisNivelesPlantasCliente, setAnalisisNivelesPlantasCliente] = useState([]);
 
   const [clientesTable, setClientesTable] = useState({});
 
@@ -148,18 +162,24 @@ export const TareasPage = () => {
 
   const [tiposTable, setTiposTable] = useState({});
 
+  const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
+  const [analisisAutocomplete, setAnalisisAutocomplete] = useState([]);
+
   let navigate = useNavigate();
 
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+  console.log({analisisSeleccionado})
+  console.log({tareaSeleccionada})
 
   const columns = [
     { title: 'Cliente', field: 'codigoCliente', width: 120 },
     { title: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
     { title: 'Operario', field: 'operario', width: 200 },
-    { title: 'Elemento', field: 'elementoPlanta', width: 200 },
+    { title: 'Elemento', field: 'elemento', width: 200 },
     { title: 'Analisis', field: 'analisis', width: 200 },
     { title: 'Oferta', field: 'oferta', width: 100 },
-    { title: 'Tipo', field: 'tipo', lookup: tiposTable , width: 100 },
+    { title: 'Tipo', field: 'tipo', lookup: tiposTable, width: 100 },
     { title: 'Fecha', field: 'fecha', type: 'date', width: 220 }
   ]
 
@@ -191,17 +211,41 @@ export const TareasPage = () => {
     })
   }
 
+  const GetConfNivelesPlantasCliente = async () => {
+    axios.get("/confnivelesplantascliente", token).then(response => {
+      const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setConfNivelesPlantasCliente(niveles);
+    })
+  }
+
+  const GetAnalisisNivelesPlantasCliente = async () => {
+    axios.get("/analisisnivelesplantascliente", token).then(response => {
+      const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setAnalisisNivelesPlantasCliente(analisisNiveles);
+    })
+  }
+
+  const GetAnalisis = async () => {
+    axios.get("/analisis", token).then(response => {
+      const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
+      setAnalisis(analisi);
+    }, [])
+  }
+
   useEffect(() => {
     peticionGet();
     GetElementosPlanta();
     GetClientes();
     GetTecnicos();
+    GetConfNivelesPlantasCliente();
+    GetAnalisisNivelesPlantasCliente();
+    GetAnalisis();
 
     getOfertas()
       .then(ofertas => {
         setOfertas(ofertas);
       })
-    
+
     getOperarios()
       .then(operarios => {
         setOperarios(operarios);
@@ -237,6 +281,39 @@ export const TareasPage = () => {
 
   }, [tareaSeleccionada.oferta])
 
+
+  useEffect(() => {
+
+    opcionesFiltradas = [];
+
+    const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta);
+    lista.map(elemento => {
+      opcionesFiltradas.push(elementosplanta.filter(elem => elem.id === elemento.id_Elemento)[0]);
+    })
+
+    setElementosAutocomplete(opcionesFiltradas);
+
+  }, [tareaSeleccionada.codigoCliente, tareaSeleccionada.oferta]);
+
+  useEffect(() => {
+
+    opcionesFiltradasAnalisis = [];
+    opcionesNombreFiltradasAnalisis = [];
+
+    const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.id_Elemento === tareaSeleccionada.elemento);
+
+    lista.map(analisis => {
+      opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id)[0]);
+    })
+
+    opcionesFiltradasAnalisis.map(nomAnalisis => {
+      opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === nomAnalisis.id_Analisis)[0])
+    })
+
+    setAnalisisAutocomplete(opcionesNombreFiltradasAnalisis)
+
+  }, [tareaSeleccionada.elemento])
+
   useEffect(() => {
 
     let lookupTipos = {};
@@ -252,25 +329,29 @@ export const TareasPage = () => {
       .then(response => {
         //Creamos los detalles
         var date = new Date(tareaSeleccionada.fecha);
+        console.log({date})
 
         if (tareaSeleccionada.tipo === 1) {
           for (let i = 0; i < 12; i++) {
 
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
             analisisSeleccionado.realizado = false;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setMonth(date.getMonth() + 1)
             peticionPostVis();
           }
@@ -278,21 +359,26 @@ export const TareasPage = () => {
         if (tareaSeleccionada.tipo === 2) {
           for (let i = 0; i < 6; i++) {
 
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
+            analisisSeleccionado.fechaRecogido = null;
             analisisSeleccionado.realizado = false;
+            analisisSeleccionado.fechaRealizado = null;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setMonth(date.getMonth() + 2)
             peticionPostVis();
           }
@@ -300,21 +386,26 @@ export const TareasPage = () => {
         if (tareaSeleccionada.tipo === 3) {
           for (let i = 0; i < 4; i++) {
 
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
+            analisisSeleccionado.fechaRecogido = null;
             analisisSeleccionado.realizado = false;
+            analisisSeleccionado.fechaRealizado = null;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setMonth(date.getMonth() + 3)
             peticionPostVis();
           }
@@ -322,63 +413,78 @@ export const TareasPage = () => {
         if (tareaSeleccionada.tipo === 4) {
           for (let i = 0; i < 2; i++) {
 
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
+            analisisSeleccionado.fechaRecogido = null;
             analisisSeleccionado.realizado = false;
+            analisisSeleccionado.fechaRealizado = null;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setMonth(date.getMonth() + 6)
             peticionPostVis();
           }
         }
         if (tareaSeleccionada.tipo === 5) {
           for (let i = 0; i < 1; i++) {
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
+            analisisSeleccionado.fechaRecogido = null;
             analisisSeleccionado.realizado = false;
+            analisisSeleccionado.fechaRealizado = null;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setMonth(date.getMonth() + 12)
             peticionPostVis();
           }
         }
         /*if (tareaSeleccionada.tipo === 6) {
           for (let i = 0; i < 48; i++) {
-            analisisSeleccionado.id = null;
+            analisisSeleccionado.id = 0;
             analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
             analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
             analisisSeleccionado.oferta = response.data.data.oferta;
             analisisSeleccionado.pedido = response.data.data.pedido;
-            analisisSeleccionado.elemento = response.data.data.elementoPlanta;
+            analisisSeleccionado.elemento = response.data.data.elemento;
             analisisSeleccionado.periodo = "";
             analisisSeleccionado.analisis = response.data.data.analisis;
             analisisSeleccionado.fecha = date.toJSON();
+            analisisSeleccionado.recogido = false;
+            analisisSeleccionado.fechaRecogido = null;
             analisisSeleccionado.realizado = false;
+            analisisSeleccionado.fechaRealizado = null;
             analisisSeleccionado.operario = response.data.data.operario;
             analisisSeleccionado.protocolo = response.data.data.protocolo;
             analisisSeleccionado.observaciones = "";
             analisisSeleccionado.facturado = false;
             analisisSeleccionado.numeroFacturado = "";
+            analisisSeleccionado.cancelado = false;
+            analisisSeleccionado.comentarios = "";
             date.setDate(date.getDay() + 7)
             peticionPostVis();
           }
@@ -392,19 +498,16 @@ export const TareasPage = () => {
           id: 0,
           codigoCliente: 0,
           nombreCliente: "",
-          operario: "",
-          protocolo: "",
-          elementoPlanta: "",
           oferta: 0,
           pedido: 0,
-          analisis: "",
-          final: "",
-          valor: "",
-          nombreValor: "",
-          unidades: "",
+          operario: "",
+          protocolo: "",
+          elemento: 0,
+          nombreElemento: "",
+          analisis: 0,
+          nombreAnalisis: "",
+          fecha: null,
           tipo: 0,
-          cancelado: false,
-          comentarios: "",
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -433,19 +536,16 @@ export const TareasPage = () => {
           id: 0,
           codigoCliente: 0,
           nombreCliente: "",
-          operario: "",
-          protocolo: "",
-          elementoPlanta: "",
           oferta: 0,
           pedido: 0,
-          analisis: "",
-          final: "",
-          valor: "",
-          nombreValor: "",
-          unidades: "",
+          operario: "",
+          protocolo: "",
+          elemento: 0,
+          nombreElemento: "",
+          analisis: 0,
+          nombreAnalisis: "",
+          fecha: null,
           tipo: 0,
-          cancelado: false,
-          comentarios: "",
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -468,19 +568,16 @@ export const TareasPage = () => {
           id: 0,
           codigoCliente: 0,
           nombreCliente: "",
-          operario: "",
-          protocolo: "",
-          elementoPlanta: "",
           oferta: 0,
           pedido: 0,
-          analisis: "",
-          final: "",
-          valor: "",
-          nombreValor: "",
-          unidades: "",
+          operario: "",
+          protocolo: "",
+          elemento: 0,
+          nombreElemento: "",
+          analisis: 0,
+          nombreAnalisis: "",
+          fecha: null,
           tipo: 0,
-          cancelado: false,
-          comentarios: "",
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -502,27 +599,31 @@ export const TareasPage = () => {
     analisisSeleccionado.oferta = tareaSeleccionada.oferta;
     analisisSeleccionado.analisis = tareaSeleccionada.analisis;
     analisisSeleccionado.pedido = tareaSeleccionada.pedido;
-    analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
+    analisisSeleccionado.elemento = tareaSeleccionada.elemento;
     await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
         //abrirCerrarModalInsertarDet();
-
         setAnalisisSeleccionado({
           id: 0,
           codigoCliente: 0,
           nombreCliente: '',
           oferta: 0,
           pedido: 0,
-          elemento: '',
+          elemento: 0,
           periodo: '',
-          analisis: '',
+          analisis: 0,
           fecha: null,
+          recogido: false,
+          fechaRecogido: null,
           realizado: false,
+          fechaRealizado: null,
           operario: '',
           protocolo: '',
           observaciones: '',
           facturado: false,
           numeroFacturado: '',
+          cancelado: false,
+          comentarios: '',
           addDate: null,
           addIdUser: null,
           modDate: null,
@@ -568,16 +669,17 @@ export const TareasPage = () => {
   const handleChangeAnalisis = (event, value) => {
     setTareaSeleccionada(prevState => ({
       ...prevState,
-      analisis: value.analisis
+      analisis: parseInt(value.id),
+      nombreAnalisis: value.nombre
     }))
 
-    if (value.analisis === "Desinfecciones" || value.analisis === "Desinfeccion ACS" || value.analisis === "Mantenimiento Maq Frio" || value.analisis === "Mediciones" || value.analisis === "Control Fuga Gas" || value.analisis === "Agua Potable" || value.analisis === "Revision de Bandeja" || value.analisis === "Otros con Fecha de Trabajo" || value.analisis === "Otros sin Fecha de Trabajo") {
+    if (value.nombre === "Desinfecciones" || value.nombre === "Desinfeccion ACS" || value.nombre === "Mantenimiento Maq Frio" || value.nombre === "Mediciones" || value.nombre === "Control Fuga Gas" || value.nombre === "Agua Potable" || value.nombre === "Revision de Bandeja") {
       setEstadoOperario(false)
     } else {
       setEstadoOperario(true)
     }
 
-    if (value.analisis === "Desinfecciones") {
+    if (value.nombre === "Desinfecciones") {
       setEstadoProtocolo(false)
     } else {
       setEstadoProtocolo(true)
@@ -595,16 +697,12 @@ export const TareasPage = () => {
         pedido: 0,
         operario: "",
         protocolo: "",
-        elementoPlanta: "",
-        analisis: "",
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
         fecha: null,
-        final: "",
-        valor: "",
-        nombreValor: "",
-        unidades: "",
         tipo: 0,
-        cancelado: false,
-        comentarios: "",
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -631,16 +729,12 @@ export const TareasPage = () => {
         pedido: 0,
         operario: "",
         protocolo: "",
-        elementoPlanta: "",
-        analisis: "",
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
         fecha: null,
-        final: "",
-        valor: "",
-        nombreValor: "",
-        unidades: "",
         tipo: 0,
-        cancelado: false,
-        comentarios: "",
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -666,16 +760,12 @@ export const TareasPage = () => {
         pedido: 0,
         operario: "",
         protocolo: "",
-        elementoPlanta: "",
-        analisis: "",
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
         fecha: null,
-        final: "",
-        valor: "",
-        nombreValor: "",
-        unidades: "",
         tipo: 0,
-        cancelado: false,
-        comentarios: "",
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -779,10 +869,10 @@ export const TareasPage = () => {
                 setTareaSeleccionada(tareaSeleccionada.row)
                 setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
                 setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
-                //setElementoTareaEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
+                //setElementoTareaEditar(analisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
                 setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
                 setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
-                //setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
+                //setAnalisisEditar(analisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
                 abrirCerrarModalEditar();
               }}
             />
@@ -805,6 +895,8 @@ export const TareasPage = () => {
             handleChangeAnalisis={handleChangeAnalisis}
             estadoProtocolo={estadoProtocolo}
             estadoOperario={estadoOperario}
+            elementosAutocomplete={elementosAutocomplete}
+            analisisAutocomplete={analisisAutocomplete}
           />
         }
         botones={[
@@ -840,6 +932,8 @@ export const TareasPage = () => {
             codigoClienteEditar={clienteTareaEditar}
             tipoTareaEditar={tipoTareaEditar}
             tecnicoTareaEditar={tecnicoTareaEditar}
+            elementosAutocomplete={elementosAutocomplete}
+            analisisAutocomplete={analisisAutocomplete}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()

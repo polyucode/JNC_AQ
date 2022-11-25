@@ -13,8 +13,8 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Pedido { get; set; }
         public string Operario { get; set; }
         public string Protocolo { get; set; }
-        public string Elemento { get; set; }
-        public string Analisis { get; set; }
+        public int? Elemento { get; set; }
+        public int? Analisis { get; set; }
         public DateTime? Fecha { get; set; }      
         public int? Tipo { get; set; }
         public DateTime? AddDate { get; set; }
