@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 import MenuItem from '@mui/material/MenuItem';
 import { getOperarios } from '../../api/apiBackend';
-
 
 const protocolos = [
     {
@@ -48,10 +50,9 @@ const protocolos = [
     }
 ]
 
-export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado }) => {
+export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheck, estadoRecogido }) => {
 
-    const [operarios, setOperarios] = useState([]);
-
+    const [operarios, setOperarios] = useState([])
     useEffect(() => {
 
         getOperarios()
@@ -60,6 +61,16 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             })
     }, [])
 
+    function formateandofechas(fecha) {
+        const fecha1 = new Date(fecha)
+
+        const fecha2 = fecha1.getFullYear() +
+            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+            '-' + String(fecha1.getDate()).padStart(2, '0')
+
+        return fecha2
+    }
+
     return (
         <>
             <Grid item xs={3} md={4}>
@@ -67,7 +78,7 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreCliente}  />
+                <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreCliente} />
             </Grid>
 
             <Grid item xs={6} md={4}>
@@ -75,19 +86,33 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.elemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>
-                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeDet} />
+                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeDet} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
             <Grid item xs={8} md={9}>
-                <TextField sx={{ width: '100%' }} name="fecha" type="date" onChange={handleChangeDet} />
+                <TextField
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeDet}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
+                />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+                <FormControlLabel control={<Checkbox />} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheck} />
             </Grid>
 
             <Grid item xs={6} md={4}>
@@ -103,6 +128,7 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                         ...prevState,
                         operario: value.nombre + ' ' + value.apellidos
                     }))}
+                    value={analisisSeleccionado && analisisSeleccionado.operario}
                 />
             </Grid>
 
@@ -115,6 +141,7 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                     select
                     name="protocolo"
                     onChange={handleChangeDet}
+                    value={analisisSeleccionado && analisisSeleccionado.protocolo}
                 >
                     {protocolos.map((option) => (
                         <MenuItem key={option.value} value={option.value}>

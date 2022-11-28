@@ -594,7 +594,6 @@ export const TareasPage = () => {
     analisisSeleccionado.elemento = tareaSeleccionada.elemento;
     await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
-        //abrirCerrarModalInsertarDet();
         setAnalisisSeleccionado({
           id: 0,
           codigoCliente: 0,
@@ -676,6 +675,14 @@ export const TareasPage = () => {
     } else {
       setEstadoProtocolo(true)
     }
+  }
+
+  const handleChangeCheck = (e) => {
+    const { name, value, checked } = e.target
+    setAnalisisSeleccionado(prevState => ({
+      ...prevState,
+      [name]: checked
+    }))
   }
 
   //modal insertar mantenimientocab
@@ -939,6 +946,7 @@ export const TareasPage = () => {
             analisisAutocomplete={analisisAutocomplete}
             elementoTareaEditar={elementoTareaEditar}
             analisisEditar={analisisEditar}
+            handleChangeCheck={handleChangeCheck}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()

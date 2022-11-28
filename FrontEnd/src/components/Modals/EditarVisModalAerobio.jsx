@@ -118,6 +118,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
                 />
             </Grid>
 
@@ -129,7 +130,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 <TextField
                     id="fecha"
                     type="date"
-                    name="fecha"
+                    name="fechaRecogido"
                     label="Fecha Recogido"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
@@ -148,7 +149,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 <TextField
                     id="fecha"
                     type="date"
-                    name="fecha"
+                    name="fechaRealizado"
                     label="Fecha Realizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
@@ -173,6 +174,14 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
 
             <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} label="Resultado" name="resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
+            </Grid>
+
+            <Grid item xs={4} md={3}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} label="Comentarios" name="comentarios" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.comentarios} />
             </Grid>
 
         </>

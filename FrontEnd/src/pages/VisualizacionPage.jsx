@@ -47,95 +47,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 800,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%'
-    }
-}));
-
-const useStylesParagraph = makeStyles((theme) => ({
-    modal: {
-        position: 'absolute',
-        width: 800,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-    },
-    iconos: {
-        cursor: 'pointer'
-    },
-    inputMaterial: {
-        width: '100%',
-        border: '1px solid #DBDBDB'
-    }
-}));
-
 export const VisualizacionPage = () => {
 
     let opcionesFiltradas = [];
@@ -273,28 +184,6 @@ export const VisualizacionPage = () => {
         }
     ]
 
-    const [FilasSeleccionadas1, setFilasSeleccionadas1] = useState([]);
-    const [FilasSeleccionadas2, setFilasSeleccionadas2] = useState([]);
-    const [FilasSeleccionadas3, setFilasSeleccionadas3] = useState([]);
-    const [FilasSeleccionadas4, setFilasSeleccionadas4] = useState([]);
-    const [FilasSeleccionadas5, setFilasSeleccionadas5] = useState([]);
-    const [FilasSeleccionadas6, setFilasSeleccionadas6] = useState([]);
-    const [FilasSeleccionadas7, setFilasSeleccionadas7] = useState([]);
-    const [FilasSeleccionadas8, setFilasSeleccionadas8] = useState([]);
-    const [FilasSeleccionadas9, setFilasSeleccionadas9] = useState([]);
-    const [FilasSeleccionadas10, setFilasSeleccionadas10] = useState([]);
-    const [FilasSeleccionadas11, setFilasSeleccionadas11] = useState([]);
-    const [FilasSeleccionadas12, setFilasSeleccionadas12] = useState([]);
-    const [FilasSeleccionadas13, setFilasSeleccionadas13] = useState([]);
-    const [FilasSeleccionadas14, setFilasSeleccionadas14] = useState([]);
-    const [FilasSeleccionadas15, setFilasSeleccionadas15] = useState([]);
-    const [FilasSeleccionadas16, setFilasSeleccionadas16] = useState([]);
-    const [FilasSeleccionadas17, setFilasSeleccionadas17] = useState([]);
-    const [FilasSeleccionadas18, setFilasSeleccionadas18] = useState([]);
-    const [FilasSeleccionadas19, setFilasSeleccionadas19] = useState([]);
-    const [FilasSeleccionadas20, setFilasSeleccionadas20] = useState([]);
-    const [FilasSeleccionadasOtros, setFilasSeleccionadasOtros] = useState([]);
-
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
     const [elementoTareaEditar, setElementoTareaEditar] = useState([]);
@@ -418,9 +307,6 @@ export const VisualizacionPage = () => {
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
     const [analisisAutocomplete, setAnalisisAutocomplete] = useState([]);
 
-    const styles = useStyles();
-    const stylesParagraph = useStylesParagraph();
-
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     useEffect(() => {
@@ -478,7 +364,7 @@ export const VisualizacionPage = () => {
         }
 
         if (data5.length > 0) {
-            setRows1(data5);
+            setRows5(data5);
         }
 
         if (data6.length > 0) {
@@ -553,10 +439,6 @@ export const VisualizacionPage = () => {
             ...prevState,
             [name]: checked
         }))
-    }
-
-    const handleChangeCheckbox2 = e => {
-        changeActualState(e.target.checked)
     }
 
     function formateandofechas(fecha) {
@@ -2268,7 +2150,8 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
-                                                        />}
+                                                        />
+                                                    }
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
@@ -3218,7 +3101,7 @@ export const VisualizacionPage = () => {
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                        abrirCerrarModalEditarAerobio()
 
                                                         if (peticionPutAerobio()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
@@ -3227,8 +3110,8 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditarAerobio}
+                                                    onClose={abrirCerrarModalEditarAerobio}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -3385,7 +3268,7 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
+                                                    open={modalEditarLegionela}
                                                     onClose={abrirCerrarModalEditarLegionela}
                                                 />
 
@@ -3824,7 +3707,7 @@ export const VisualizacionPage = () => {
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
                                                             abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost()) {
+                                                            if (peticionPost1()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -3854,7 +3737,7 @@ export const VisualizacionPage = () => {
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
-                                                        if (peticionPut()) {
+                                                        if (peticionPut1()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
@@ -3982,7 +3865,7 @@ export const VisualizacionPage = () => {
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
                                                             abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost()) {
+                                                            if (peticionPost1()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4012,7 +3895,7 @@ export const VisualizacionPage = () => {
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
-                                                        if (peticionPut()) {
+                                                        if (peticionPut1()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
@@ -4772,7 +4655,7 @@ export const VisualizacionPage = () => {
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
                                                             abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost()) {
+                                                            if (peticionPost1()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4802,7 +4685,7 @@ export const VisualizacionPage = () => {
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
-                                                        if (peticionPut()) {
+                                                        if (peticionPut1()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
@@ -4930,7 +4813,7 @@ export const VisualizacionPage = () => {
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
                                                             abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost()) {
+                                                            if (peticionPost1()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4960,7 +4843,7 @@ export const VisualizacionPage = () => {
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
-                                                        if (peticionPut()) {
+                                                        if (peticionPut1()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })

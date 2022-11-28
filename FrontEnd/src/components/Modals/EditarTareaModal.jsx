@@ -84,7 +84,7 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) => {
+export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, handleChangeCheck }) => {
 
 
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -137,6 +137,8 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const [elementos, setElementos] = useState([]);
     const [analisis, setAnalisis] = useState([]);
     const [operarios, setOperarios] = useState([]);
+
+    const [estadoRecogido, setEstadoRecogido] = useState(true);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
@@ -700,12 +702,18 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                             onSelectionModelChange={(ids) => handleSelectRow(ids)}
                             onRowClick={(analisisSeleccionado, evt) => {
                                 setAnalisisSeleccionado(analisisSeleccionado.row)
+                                if (analisisSeleccionado.analisis === 7 || analisisSeleccionado.analisis === 8) {
+                                    setEstadoRecogido(false)
+                                } else {
+                                    setEstadoRecogido(true)
+                                }
                                 abrirCerrarModalEditar();
                             }}
                         />
                     </Card>
                 </Grid>
             </Grid>
+            {console.log(analisisSeleccionado)}
 
             <ModalLayout
                 titulo="Agregar nuevo detalle"
@@ -742,6 +750,8 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         analisisSeleccionado={analisisSeleccionado}
                         change={handleChangeDet}
                         handleChangeFecha={handleChangeDetFecha}
+                        handleChangeCheck={handleChangeCheck}
+                        estadoRecogido={estadoRecogido}
                     />}
                 botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                     abrirCerrarModalEditar()
