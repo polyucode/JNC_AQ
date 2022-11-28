@@ -128,7 +128,6 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                         ...prevState,
                         operario: value.nombre + ' ' + value.apellidos
                     }))}
-                    value={analisisSeleccionado && analisisSeleccionado.operario}
                 />
             </Grid>
 
