@@ -73,11 +73,11 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -95,39 +95,6 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
                         shrink: true,
                     }}
                 />
-            </Grid>
-
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    sx={{ width: '100%' }}
-                    id="Operarios"
-                    options={operarios}
-                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
-                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                        ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
-                    }))}
-                />
-            </Grid>
-
-            <Grid item xs={4} md={3}>
-                <TextField
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChangeInput}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
             </Grid>
 
             <Grid item xs={6} md={4}>

@@ -297,6 +297,7 @@ export const VisualizacionPage = () => {
 
     const [analisisEliminar, setAnalisisEliminar] = useState([]);
     const [analisisEditar, setAnalisisEditar] = useState([]);
+    const [elementoTareaEditar, setElementoTareaEditar] = useState([]);
 
     const [operarioEditar, setOperarioEditar] = useState([]);
 
@@ -322,89 +323,75 @@ export const VisualizacionPage = () => {
 
     const columnas = [
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario' },
-        { title: 'Protocolo', field: 'protocolo' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' }
+        { title: 'Periodo', field: 'periodo', width: 150 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
+        { title: 'Operario', field: 'operario', width: 200 },
+        { title: 'Protocolo', field: 'protocolo', width: 200 },
+        { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const columnasOperario = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
-    ];
-
-    const columnasVis = [
-
-        //visibles
-        { title: 'Nombre Analisis', field: 'nombreAnalisis' },
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario' },
-        { title: 'Protocolo', field: 'protocolo' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
+        { title: 'Periodo', field: 'periodo', width: 150 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
+        { title: 'Operario', field: 'operario', width: 200 },
+        { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const columnas1 = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
+        { title: 'Periodo', field: 'periodo', width: 150 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 200 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
+        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 200 },
+        { title: 'Observaciones', field: 'observaciones', width: 300 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const columnasLegionela = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
-        { title: 'Recogido', field: 'recogido', type: 'boolean' },
+        { title: 'Periodo', field: 'periodo', width: 150 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 120 },
+        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
+        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const columnasAerobios = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
-        { title: 'Recogido', field: 'recogido', type: 'boolean' },
-        { title: 'Resultado', field: 'resultado' },
-    ];
-
-    const columnasDet = [
-        //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date' },
-        { title: 'Realizado', field: 'realizado', type: 'boolean' },
-        { title: 'Operario', field: 'operario' },
-        { title: 'Protocolo', field: 'protocolo' },
-        { title: 'Observaciones', field: 'observaciones' },
-        { title: 'Facturado', field: 'facturado', type: 'boolean' },
-        { title: 'Numero Factura', field: 'numeroFacturado' },
-        { title: 'Resultado', field: 'resultado' }
+        { title: 'Periodo', field: 'periodo', width: 150 },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 120 },
+        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const [data, setData] = useState([]);
@@ -470,6 +457,7 @@ export const VisualizacionPage = () => {
         })
 
         setDataTablas(opcionesTablasFiltradasAnalisis)
+        setAnalisisAutocomplete(opcionesTablasFiltradasAnalisis)
 
     }, [analisisSeleccionado.elemento])
 
@@ -479,7 +467,79 @@ export const VisualizacionPage = () => {
             setRows1(data1);
         }
 
-    }, [data1]);
+        if (data2.length > 0) {
+            setRows2(data2);
+        }
+
+        if (data3.length > 0) {
+            setRows3(data3);
+        }
+
+        if (data4.length > 0) {
+            setRows4(data4);
+        }
+
+        if (data5.length > 0) {
+            setRows1(data5);
+        }
+
+        if (data6.length > 0) {
+            setRows6(data6);
+        }
+
+        if (data7.length > 0) {
+            setRows7(data7);
+        }
+
+        if (data8.length > 0) {
+            setRows8(data8);
+        }
+
+        if (data9.length > 0) {
+            setRows9(data9);
+        }
+
+        if (data10.length > 0) {
+            setRows10(data10);
+        }
+
+        if (data11.length > 0) {
+            setRows11(data11);
+        }
+
+        if (data12.length > 0) {
+            setRows12(data12);
+        }
+
+        if (data12.length > 0) {
+            setRows12(data12);
+        }
+
+        if (data13.length > 0) {
+            setRows13(data13);
+        }
+
+        if (data14.length > 0) {
+            setRows14(data14);
+        }
+
+        if (data15.length > 0) {
+            setRows15(data15);
+        }
+
+        if (data16.length > 0) {
+            setRows16(data16);
+        }
+
+        if (data17.length > 0) {
+            setRows17(data17);
+        }
+
+        if (data18.length > 0) {
+            setRows18(data18);
+        }
+
+    }, [data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15, data16, data17, data18]);
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -490,7 +550,11 @@ export const VisualizacionPage = () => {
     }
 
     const handleChangeCheckbox = e => {
-        changeCheckState(e.target.checked)
+        const { name, value, checked } = e.target
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [name]: checked
+        }))
     }
 
     const handleChangeCheckbox2 = e => {
@@ -506,621 +570,6 @@ export const VisualizacionPage = () => {
 
         return fecha2
     }
-
-    const bodyInsertar = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Operario </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Operarios"
-                        options={operarios}
-                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="operario" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            operario: value.nombre + ' ' + value.apellidos
-                        }))}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Protocolo </h5>
-                    <TextField
-                        id='protocolo'
-                        className={styles.inputMaterial}
-                        select
-                        name="protocolo"
-                        onChange={handleChangeInput}
-                    >
-                        {protocolos.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyInsertarLegionela = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPostLegionela()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertarLegionela()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyInsertarOperario = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Operario </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Operarios"
-                        options={operarios}
-                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="operario" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            operario: value.nombre + ' ' + value.apellidos
-                        }))}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPostOperario()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertarOperario()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyInsertarAerobio = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Resultado </h5>
-                    <TextField className={styles.inputMaterial} name="resultado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel disabled control={<Checkbox />} className={styles.inputMaterial} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPostAerobio()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertarAerobio()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEditar = (
-        <div className={styles.modal}>
-            <h3> Analisis</h3>
-            <br />
-            <div className="row g-3">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" onChange={handleChangeInput} disabled value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Operario </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Operarios"
-                        options={operarios}
-                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                        defaultValue={operarioEditar[0]}
-                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="operario" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            operario: value.nombre + ' ' + value.apellidos
-                        }))}
-                    />
-                </div>
-                <div className="col-md-9">
-                    <h5> Protocolo </h5>
-                    <TextField
-                        id='protocolo'
-                        className={styles.inputMaterial}
-                        select
-                        name="protocolo"
-                        onChange={handleChangeInput}
-                        value={analisisSeleccionado && analisisSeleccionado.protocolo}
-                    >
-                        {protocolos.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEditarLegionela = (
-        <div className={styles.modal}>
-            <h3> Analisis </h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPutLegionela()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditarLegionela()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEditarOperario = (
-        <div className={styles.modal}>
-            <h3> Analisis </h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <h5> Operario </h5>
-                    <Autocomplete
-                        disableClearable={true}
-                        className={styles.inputMaterial}
-                        id="Operarios"
-                        options={operarios}
-                        filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                        defaultValue={operarioEditar[0]}
-                        getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} name="operario" />}
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            operario: value.nombre + ' ' + value.apellidos
-                        }))}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPutOperario()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditarOperario()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEditarAerobio = (
-        <div className={styles.modal}>
-            <h3> Analisis </h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Resultado </h5>
-                    <TextField className={styles.inputMaterial} name="resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPutAerobio()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditarAerobio()}>Cancelar</Button>
-            </div>
-        </div>
-    )
 
     const abrirCerrarModalInsertar = () => {
         setModalInsertar(!modalInsertar);
@@ -2380,6 +1829,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow1(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -2425,7 +1876,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -2533,6 +1987,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow2(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -2578,7 +2034,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -2686,6 +2145,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow3(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -2731,7 +2192,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -2839,6 +2303,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow4(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -2884,7 +2350,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -2992,6 +2461,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow5(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -3037,7 +2508,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -3145,6 +2619,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow6(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -3190,7 +2666,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -3298,6 +2777,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow7(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditarAerobio();
                                                                 }}
                                                             />
@@ -3343,7 +2824,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -3451,6 +2935,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow8(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditarLegionela();
                                                                 }}
                                                             />
@@ -3496,7 +2982,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditarLegionela()
@@ -3604,6 +3093,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow9(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -3649,7 +3140,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -3757,6 +3251,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow10(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar();
                                                                 }}
                                                             />
@@ -3774,6 +3270,8 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
                                                         />
                                                     }
                                                     botones={[
@@ -3802,7 +3300,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar()
@@ -3910,6 +3411,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow11(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -3955,7 +3458,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -4063,6 +3569,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow12(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -4108,7 +3616,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -4216,6 +3727,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow13(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar();
                                                                 }}
                                                             />
@@ -4261,7 +3774,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar()
@@ -4369,6 +3885,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow14(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditarOperario();
                                                                 }}
                                                             />
@@ -4414,7 +3932,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditarOperario()
@@ -4522,6 +4043,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow15(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditarOperario();
                                                                 }}
                                                             />
@@ -4567,7 +4090,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditarOperario()
@@ -4675,6 +4201,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow16(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditarOperario();
                                                                 }}
                                                             />
@@ -4720,7 +4248,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditarOperario()
@@ -4828,6 +4359,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow17(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -4873,7 +4406,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -4981,6 +4517,8 @@ export const VisualizacionPage = () => {
                                                                 onSelectionModelChange={(ids) => handleSelectRow18(ids)}
                                                                 onRowClick={(analisisSeleccionado, evt) => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
                                                                     abrirCerrarModalEditar1();
                                                                 }}
                                                             />
@@ -5026,7 +4564,10 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             handleChangeCheckbox={handleChangeCheckbox}
-                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                            analisisAutocomplete={analisisAutocomplete}
+                                                            analisisEditar={analisisEditar}
+                                                            elementoTareaEditar={elementoTareaEditar}
+                                                            elementosAutocomplete={elementosAutocomplete}
                                                         />}
                                                     botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
@@ -5071,7 +4612,7 @@ export const VisualizacionPage = () => {
 
                                             </>
                                         )
-                                    default:
+                                    {/*default:
                                         return (
                                             <MaterialTable columns={columnasDet} data={dataOtros}
                                                 localization={localization}
@@ -5130,7 +4671,7 @@ export const VisualizacionPage = () => {
 
                                                 title={analisi.analisis}
                                             />
-                                        )
+                                            )*/}
                                 }
                             })}
                         </div>

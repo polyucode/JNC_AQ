@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 
 import MenuItem from '@mui/material/MenuItem';
+import { getOperarios } from '../../api/apiBackend';
+
 
 const protocolos = [
     {
@@ -46,7 +48,17 @@ const protocolos = [
     }
 ]
 
-export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada }) => {
+export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado }) => {
+
+    const [operarios, setOperarios] = useState([]);
+
+    useEffect(() => {
+
+        getOperarios()
+            .then(operarios => {
+                setOperarios(operarios);
+            })
+    }, [])
 
     return (
         <>
@@ -79,7 +91,19 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Operario" name="operario" type="boolean" onChange={handleChangeDet} />
+                <Autocomplete
+                    disableClearable={true}
+                    sx={{ width: '100%' }}
+                    id="Operarios"
+                    options={operarios}
+                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
+                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                        ...prevState,
+                        operario: value.nombre + ' ' + value.apellidos
+                    }))}
+                />
             </Grid>
 
             <Grid item xs={4} md={3}>

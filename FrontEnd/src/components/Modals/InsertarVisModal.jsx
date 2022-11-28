@@ -73,11 +73,11 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -97,7 +97,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -113,7 +113,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={12} md={6}>
                 <TextField
                     sx={{ width: '100%' }}
                     id='protocolo'

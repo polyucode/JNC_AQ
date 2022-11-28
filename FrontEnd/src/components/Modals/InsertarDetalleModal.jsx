@@ -53,9 +53,10 @@ export const InsertarDetalleModal = ({ change: handleChangeDet, tareaSeleccionad
 
     useEffect(() => {
 
-        getOperarios(operarios => {
-            setOperarios(operarios);
-        })
+        getOperarios()
+            .then(operarios => {
+                setOperarios(operarios);
+            })
     }, [])
 
     return (

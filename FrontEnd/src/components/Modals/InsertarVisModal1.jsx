@@ -73,11 +73,11 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>

@@ -53,9 +53,10 @@ export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSe
 
     useEffect(() => {
 
-        getOperarios(operarios => {
-            setOperarios(operarios);
-        })
+        getOperarios()
+            .then(operarios => {
+                setOperarios(operarios);
+            })
     }, [])
 
     return (
@@ -73,11 +74,11 @@ export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSe
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -111,23 +112,6 @@ export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSe
                         operario: value.nombre + ' ' + value.apellidos
                     }))}
                 />
-            </Grid>
-
-            <Grid item xs={4} md={3}>
-                <TextField
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChangeInput}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
             </Grid>
 
             <Grid item xs={6} md={4}>
