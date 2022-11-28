@@ -128,6 +128,15 @@ export const getOfertas = async () => {
 
 }
 
+/*** TAREAS ***/
+
+export const getTareas = async () => {
+
+    const resp = await axios.get('/tareas', token);
+    return resp.data.data;
+
+}
+
 /*** PLANTAS ***/
 
 export const getConfPlantaCliente = async () => {

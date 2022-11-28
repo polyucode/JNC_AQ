@@ -409,12 +409,16 @@ export const MantenimientoTecnicoPage = () => {
                                             <TableBody>
                                                 {
                                                     valoresParametros.map( (parametro, index) => {
+
+                                                        const nombreParametro = parametros.filter( param => param.id === parametro.parametro)[0].nombre;
+
                                                         return (
                                                             <ParametroMantenimiento
                                                                 key={ index }
                                                                 indice={ index }
                                                                 parametros={ valoresParametros }
                                                                 onChange={ handleEditarParametro }
+                                                                nombre={ nombreParametro }
                                                             />
                                                         )
                                                     })

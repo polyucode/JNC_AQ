@@ -1,26 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Card, Typography, Button } from '@mui/material';
+import { Grid, Card, Typography, Button, Snackbar, Slide } from '@mui/material';
 import axios from "axios";
-import { ThemeContext } from "../router/AppRouter";
-
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
-
-import { MainLayout } from "../layout/MainLayout";
-
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { ThemeContext } from "../router/AppRouter";
+import { MainLayout } from "../layout/MainLayout";
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { getOfertas, getOperarios } from "../api/apiBackend";
 

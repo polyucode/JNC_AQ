@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-//import Diagram, { useSchema, createSchema } from 'beautiful-react-diagrams';
 import { Grid, Card, CardContent, TextField, Typography, Autocomplete, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Tooltip } from '@mui/material';
 
 import {
@@ -12,12 +11,17 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getValorParametros } from '../api/apiBackend';
+import { getAnalisis, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros } from '../api/apiBackend';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
 import { DashboardContext } from '../context/DashboardContext';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import RemoveIcon from '@mui/icons-material/Remove';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 
 const HomeCliente = () => {
@@ -25,7 +29,14 @@ const HomeCliente = () => {
     // Guardado de datos
     const [ ofertas, setOfertas ] = useState([]);
     const [ parametros, setParametros ] = useState([]);
+    const [ tareas, setTareas ] = useState([]);
+    const [ analisis, setAnalisis ] = useState([]);
+    const [ parametrosAnalisis, setParametrosAnalisis ] = useState([]);
+    const [ tareasFiltradas, setTareasFiltradas ] = useState([]);
+    const [ parametrosAnalisisFiltrados, setParametrosAnalisisFiltrados ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
+    const [ anoActual, setAnoActual ] = useState(new Date().getFullYear());
+    const [ valoresCalendarioTareas, setValoresCalendarioTareas ] = useState([]);
 
     // Variables para el diagrama
     const [ nodos, setNodos ] = useState([]);
@@ -44,6 +55,15 @@ const HomeCliente = () => {
 
         getParametros()
             .then( resp => setParametros( resp ));
+
+        getTareas()
+            .then( resp => setTareas( resp ));
+
+        getAnalisis()
+            .then( resp => setAnalisis( resp ));
+
+         getParametrosAnalisisPlanta()
+            .then( resp => setParametrosAnalisis( resp ));
 
     }, []);
 
@@ -65,7 +85,15 @@ const HomeCliente = () => {
 
         }
 
-    }, [ plantaActiva ])
+    }, [ plantaActiva ]);
+    
+    // Efecto que filtra las tareas al cambiar los datos de planta activa
+    useEffect(() => {
+        if( plantaActiva.codigoCliente ) {
+            setTareasFiltradas(tareas.filter( tarea => tarea.codigoCliente === plantaActiva.codigoCliente && tarea.oferta === plantaActiva.oferta && parseInt(tarea.elemento, 10) === elementoActivo.id ));
+            setParametrosAnalisisFiltrados(parametrosAnalisis.filter( parametro => parametro.codigoCliente === plantaActiva.codigoCliente && parametro.oferta === plantaActiva.oferta && parametro.elemento === elementoActivo.id ));
+        }
+    }, [ plantaActiva, elementoActivo ]);
 
     const ChartContainer = () => (
         <Chart>
@@ -81,8 +109,7 @@ const HomeCliente = () => {
                 <ChartSeriesItem type="line" data={parametroActivo.datos} />
             </ChartSeries>
         </Chart>
-      );
-      
+      );      
 
     // Con esta función, al seleccionar una oferta seteamos la planta activa
     const handleSeleccionOferta = (e) => {
@@ -93,6 +120,60 @@ const HomeCliente = () => {
             .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
 
     }
+    
+    const handelCambioAnoCalendarioTareas = ( ano ) => {
+
+        let valoresCalendario = [];
+
+        // Mapeamos todos los parametros
+        analisis.map( row => {
+
+            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+            const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
+            let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+            
+            if( valoresPorTarea.length > 0 ) {
+
+                // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                valoresPorTarea.map( val => {
+
+                    // Convertimos la fecha del registro en un objeto de fecha
+                    const fecha = new Date(val.fecha);
+
+                    // Contamos solo si los registros son de este año
+                    if( fecha.getFullYear() === anoActual ) {
+                        for(let i = 0; i < 12; i++) {
+                            if(fecha.getMonth() === i) {
+                                val.realizado
+                                    ? fechas[i] = 1
+                                    : fechas[i] = 0
+                            }
+                        }
+                    }
+
+                });
+
+            }
+
+            // Preparamos el objeto del valor actual
+            let valorActual = {
+                id: row.id,
+                nombre: row.nombre,
+                fechas,
+                valoresPorTarea: valoresPorTarea.length
+            }
+
+            valoresCalendario.push( valorActual );
+
+        });
+
+        setValoresCalendarioTareas( valoresCalendario );
+        console.log({ valoresCalendario })
+
+        setAnoActual(ano);
+
+    }
+
 
     return (
         <>
@@ -286,6 +367,179 @@ const HomeCliente = () => {
                             </Grid>
                             
                             <ChartContainer />
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                {/* APARTADO CALENDARIO DE TAREAS POR ELEMENTO */}
+                <Grid item xs={ 12 }>
+                    <Card>
+                        <CardContent sx={{ p: 2 }}>
+
+                            <Grid containter spacing={ 2 }>
+
+                                <Grid item xs={ 12 } sx={{ pb: 2 }}>
+                                    <Grid container xs={12} sx={{ justifyContent: 'space-between' }}>
+                                        <Grid item>
+                                            <Typography variant="h6">Calendario de tareas</Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+                                                <Grid item>
+                                                    <IconButton color="primary" onClick={ () => handelCambioAnoCalendarioTareas( anoActual - 1 ) }>
+                                                        <ArrowBackIosIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography>{ anoActual }</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <IconButton color="primary" onClick={ () => handelCambioAnoCalendarioTareas( anoActual + 1 ) }>
+                                                        <ArrowForwardIosIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid item xs={ 12 }>
+                                    <TableContainer component={ Paper }>
+                                        <Table sx={{ minWidth: 650 }}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell align="left">Tipo de análisis</TableCell>
+                                                    <TableCell>Ene</TableCell>
+                                                    <TableCell>Feb</TableCell>
+                                                    <TableCell>Mar</TableCell>
+                                                    <TableCell>Abr</TableCell>
+                                                    <TableCell>May</TableCell>
+                                                    <TableCell>Jun</TableCell>
+                                                    <TableCell>Jul</TableCell>
+                                                    <TableCell>Ago</TableCell>
+                                                    <TableCell>Sep</TableCell>
+                                                    <TableCell>Oct</TableCell>
+                                                    <TableCell>Nov</TableCell>
+                                                    <TableCell>Dic</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {
+                                                    valoresCalendarioTareas.map( valor => {
+                                                        return(
+                                                            valor.valoresPorTarea > 0 && (
+                                                                <TableRow
+                                                                    key={ valor.id }
+                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                >
+                                                                    <TableCell aligh="left" component="th" scope="row">
+                                                                        { valor.nombre }
+                                                                    </TableCell>
+                                                                    {
+                                                                        valor.fechas.map( (fecha, index) => (
+                                                                            <TableCell key={ index }>
+                                                                                <IconButton
+                                                                                    onClick={ () => {} }
+                                                                                    color={ fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success' }
+                                                                                    disabled={ fecha === -1 ? true : false }
+                                                                                >
+                                                                                    {
+                                                                                        fecha === -1
+                                                                                            ? <RemoveIcon />
+                                                                                            : fecha === 0
+                                                                                                ? <ClearIcon />
+                                                                                                : <CheckIcon />
+                                                                                    }
+                                                                                </IconButton>
+                                                                            </TableCell>
+                                                                        ))
+                                                                    }
+                                                                </TableRow>
+                                                            )
+                                                        )
+                                                    })
+                                                }
+
+                                                {
+                                                    // // Mapeamos todos los parametros
+                                                    // analisis.map( row => {
+
+                                                    //     // row -> id, nombre
+                                                    //     // tareasFiltradas -> analisis, elemento
+                                                    //     var currentTime = new Date();
+
+                                                    //     // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                    //     const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
+                                                    //     let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+                                                        
+                                                    //     if( valoresPorTarea.length > 0 ) {
+
+                                                    //         console.log({ valoresPorTarea });
+
+                                                    //         // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                                                    //         valoresPorTarea.map( val => {
+    
+                                                    //             // Convertimos la fecha del registro en un objeto de fecha
+                                                    //             const fecha = new Date(val.fecha);
+
+                                                    //             // Contamos solo si los registros son de este año
+                                                    //             if( fecha.getFullYear() === currentTime.getFullYear() ) {
+                                                    //                 for(let i = 0; i < 12; i++) {
+                                                    //                     if(fecha.getMonth() === i) {
+                                                    //                         val.realizado
+                                                    //                             ? fechas[i] = 1
+                                                    //                             : fechas[i] = 0
+                                                    //                     }
+                                                    //                 }
+                                                    //             }
+
+                                                    //             console.log({ fechas })
+    
+                                                    //         });
+
+                                                    //     }
+
+                                                    //     // Devolvemos los valores
+                                                    //     return (
+                                                    //         valoresPorTarea.length > 0 && (
+                                                    //             <TableRow
+                                                    //                 key={ row.id }
+                                                    //                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    //             >
+                                                    //                 <TableCell aligh="left" component="th" scope="row">
+                                                    //                     { row.nombre } - { row.id }
+                                                    //                 </TableCell>
+                                                    //                 {
+                                                    //                     fechas.map( (fecha, index) => (
+                                                    //                         <TableCell key={ index }>
+                                                    //                             <IconButton
+                                                    //                                 onClick={ () => {} }
+                                                    //                                 color={ fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success' }
+                                                    //                                 disabled={ fecha === -1 ? true : false }
+                                                    //                             >
+                                                    //                                 {
+                                                    //                                     fecha === -1
+                                                    //                                         ? <RemoveIcon />
+                                                    //                                         : fecha === 0
+                                                    //                                             ? <ClearIcon />
+                                                    //                                             : <CheckIcon />
+                                                    //                                 }
+                                                    //                             </IconButton>
+                                                    //                         </TableCell>
+                                                    //                     ))
+                                                    //                 }
+                                                    //             </TableRow>
+                                                    //         )
+                                                    //     )
+                                                    // })
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
+
+                            </Grid>
 
                         </CardContent>
                     </Card>
