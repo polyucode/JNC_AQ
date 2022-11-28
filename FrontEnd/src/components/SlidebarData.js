@@ -1,92 +1,93 @@
 import React from 'react'
-import * as AiIcons from "react-icons/ai";
-import { HiOutlineBriefcase } from "react-icons/hi";
-import { MdOutlineConstruction } from "react-icons/md";
-
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import BusinessIcon from '@mui/icons-material/Business';
+import SettingsIcon from '@mui/icons-material/Settings';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import CategoryIcon from '@mui/icons-material/Category';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const SlidebarData = [
     {
         title: 'Inicio',
-        path: '/YC_React',
-        icon: <AiIcons.AiFillHome />,
-        cName: 'nav-text'
+        path: '/',
+        icon: <HomeIcon />,
+        cName: 'nav-text',
+        key: 1
     },
     {
         title: 'Usuarios',
-        path: '/YC_React/usuarios',
-        icon: <AiIcons.AiOutlineUser />,
-        cName: 'nav-text'
+        path: '/usuarios',
+        icon: <PersonIcon />,
+        cName: 'nav-text',
+        key: 2
     },
     {
         title: 'Clientes',
-        path: '/YC_React/clientes',
-        icon: <HiOutlineBriefcase />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Ofertas',
-        path: '/YC_React/ofertas',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Plantas',
-        path: '/YC_React/plantas',
-        icon: <MdOutlineConstruction />,
-        cName: 'nav-text'
+        path: '/clientes',
+        icon: <BusinessCenterIcon />,
+        cName: 'nav-text',
+        key: 3
     },
     {
         title: 'Tareas',
-        path: '/YC_React/tareas',
-        icon: <MdOutlineConstruction />,
-        cName: 'nav-text'
+        path: '/tareas',
+        icon: <FormatListBulletedIcon />,
+        cName: 'nav-text',
+        key: 4
     },
     {
-        title: 'Visualizacion',
-        path: '/YC_React/visualizacion',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
+        title: 'Plantas',
+        path: '/plantas',
+        icon: <BusinessIcon />,
+        cName: 'nav-text',
+        key: 5
     },
     {
-        title: 'Plantas (Tabla)',
-        path: '/YC_React/plantasTabla',
-        icon: <MdOutlineConstruction />,
-        cName: 'nav-text'
+        title: 'Parametrización de planta',
+        path: '/plantasTabla',
+        icon: <SettingsIcon/>,
+        cName: 'nav-text',
+        key: 6
     },
     {
         title: 'Mantenimiento (Tecnico)',
-        path: '/YC_React/mantenimientoTecnico',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
+        path: '/mantenimientoTecnico',
+        icon: <EngineeringIcon />,
+        cName: 'nav-text',
+        key: 7
+    },
+    {
+        title: 'Ofertas',
+        path: '/ofertas',
+        icon: <LocalOfferIcon />,
+        cName: 'nav-text',
+        key: 8
     },
     {
         title: 'Productos',
-        path: '/YC_React/productos',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
+        path: '/productos',
+        icon: <InventoryIcon />,
+        cName: 'nav-text',
+        key: 9
     },
     {
         title: 'Consumos de Articulos',
-        path: '/YC_React/consumoarticulos',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
+        path: '/consumoarticulos',
+        icon: <CategoryIcon />,
+        cName: 'nav-text',
+        key: 10
     },
     {
-        title: 'Entregas',
-        path: '/YC_React/entregas',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Proveedores',
-        path: '/YC_React/proveedores',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Modo de Envio',
-        path: '/YC_React/modoenvio',
-        icon: <AiIcons.AiOutlineDatabase />,
-        cName: 'nav-text'
+        title: 'Visualizacion',
+        path: '/visualizacion',
+        icon: <VisibilityIcon />,
+        cName: 'nav-text',
+        key: 11
     }
+
 ]

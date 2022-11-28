@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
-import { TabPanel } from '@mui/lab';
+//import { TabPanel } from '@mui/lab';
 import { ThemeContext } from '../App';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -12,6 +12,7 @@ import CampoPersPlantasTabla from './CampoPersPlantasTabla';
 
 import './TablaElementosTabla.css';
 import { ThreeSixty } from '@material-ui/icons';
+import { Grid } from '@mui/material';
 
 
 const TablaElementosTabla = (props) => {
@@ -308,9 +309,14 @@ const TablaElementosTabla = (props) => {
 
 
     return (
-        <TabPanel value={props.value.toString()}>
-            {usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
-        </TabPanel>
+        // <TabPanel value={props.value.toString()}>
+        //     {usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
+        // </TabPanel>
+        <Grid container>
+            <Grid item>
+                {usuario.idPerfil == 1 ? tablaAdministrador : tablaTecnico}
+            </Grid>
+        </Grid>
     );
 
 

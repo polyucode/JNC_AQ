@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-import { ThemeContext } from "../App";
+import { ThemeContext } from "../router/AppRouter";
 
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -22,6 +22,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
 import { FamilyRestroomRounded } from "@mui/icons-material";
+import { MainLayout } from "../layout/MainLayout";
 
 
 const token = {
@@ -373,6 +374,8 @@ function Tareas() {
 
   const [ofertas, setOfertas] = useState([]);
 
+  const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
+
   const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
 
   const [elementosplantaTable, setElementosPlantaTable] = useState({});
@@ -436,67 +439,67 @@ function Tareas() {
 
   //peticiones API
   const GetClientes = async () => {
-    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+    axios.get("/cliente", token).then(response => {
       const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setClientes(cliente);
     }, [])
   }
 
   const GetOperarios = async () => {
-    axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
+    axios.get("/usuario", token).then(response => {
       const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOperarios(usuario);
     }, [])
   }
 
   const GetElementosPlanta = async () => {
-    axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
+    axios.get("/elementosplanta", token).then(response => {
       const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setElementosPlanta(elemento);
     }, [])
   }
 
   const GetAnalisis = async () => {
-    axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
+    axios.get("/analisis", token).then(response => {
       const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setAnalisis(analisi);
     }, [])
   }
 
   const GetOfertas = async () => {
-    axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+    axios.get("/ofertasclientes", token).then(response => {
       const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOfertas(oferta);
     }, [])
   }
 
-  const GetConfAnalisisNivelesPlantasCliente = async () => {
-    axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
-      const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setConfAnalisisNivelesPlantasCliente(niveles);
-    }, [])
-  }
+  const GetConfNivelesPlantasCliente = async () => {
+    axios.get("/confnivelesplantascliente", token).then(response => {
+        const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
+        setConfNivelesPlantasCliente(niveles);
+    })
+}
 
   const peticionGet = async () => {
-    axios.get("http://172.26.0.169:44343/api/tareas", token).then(response => {
+    axios.get("/tareas", token).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionGetVis = async () => {
-    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+    axios.get("/parametrosanalisisplanta", token).then(response => {
       setDataVis(response.data.data)
     })
   }
 
   const peticionGetAnalisis = async () => {
-    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+    axios.get("/parametrosanalisisplanta", token).then(response => {
       setDataAnalisis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
     })
   }
 
   const peticionGetEntregas = async () => {
-    axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
+    axios.get("/entregas", token).then(response => {
       setDataEntregas(response.data.data)
     })
   }
@@ -508,7 +511,7 @@ function Tareas() {
     GetOperarios();
     GetAnalisis();
     GetOfertas();
-    GetConfAnalisisNivelesPlantasCliente();
+    GetConfNivelesPlantasCliente();
     peticionGetAnalisis();
     peticionGetVis();
     peticionGetEntregas();
@@ -566,13 +569,14 @@ function Tareas() {
         }
       }
     })
+    console.log(newArray)
 
   }, [tareaSeleccionada.oferta])
 
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
-    await axios.post("http://172.26.0.169:44343/api/tareas", tareaSeleccionada, token)
+    await axios.post("/tareas", tareaSeleccionada, token)
       .then(response => {
         //Creamos los detalles
         var date = new Date(fechaprevista);
@@ -711,7 +715,7 @@ function Tareas() {
         abrirCerrarModalInsertar();
         peticionGet();
         setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-        { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/YC_React/plantasTabla", { replace: true }); }
+        { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); }
         setTareaSeleccionada({
           id: 0,
           codigoCliente: 0,
@@ -743,7 +747,7 @@ function Tareas() {
   }
 
   const peticionPut = async () => {
-    await axios.put("http://172.26.0.169:44343/api/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
+    await axios.put("/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
       .then(response => {
         var tareaSeleccionada = data;
         tareaSeleccionada.map(tarea => {
@@ -784,7 +788,7 @@ function Tareas() {
   }
 
   const peticionDelete = async () => {
-    await axios.delete("http://172.26.0.169:44343/api/tareas/" + TareaEliminar[0].id, token)
+    await axios.delete("/tareas/" + TareaEliminar[0].id, token)
       .then(response => {
         peticionGet();
         abrirCerrarModalEliminar();
@@ -827,7 +831,7 @@ function Tareas() {
     analisisSeleccionado.pedido = tareaSeleccionada.pedido;
     analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
     console.log(analisisSeleccionado)
-    await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+    await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
       .then(response => {
         //abrirCerrarModalInsertarDet();
         peticionGetAnalisis();
@@ -865,7 +869,7 @@ function Tareas() {
     if (analisisSeleccionado.recogido === true) {
       peticionPostEntrega();
     }
-    await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+    await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
       .then(response => {
         var analisisSeleccionado = dataAnalisis;
         analisisSeleccionado.map(analisis => {
@@ -908,7 +912,7 @@ function Tareas() {
   const peticionDeleteVis = async () => {
     var i = 0;
     while (i < AnalisisEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
+      await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
         .then(response => {
           peticionGetAnalisis();
           peticionGetVis();
@@ -953,7 +957,7 @@ function Tareas() {
     entregaSeleccionada.analisis = analisisSeleccionado.analisis;
     entregaSeleccionada.descripcion = `Muestra de ${analisisSeleccionado.analisis} del cliente ${analisisSeleccionado.nombreCliente}`;
     entregaSeleccionada.fecha = analisisSeleccionado.fecha;
-    await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, token)
+    await axios.post("/entregas", entregaSeleccionada, token)
       .then(response => {
         peticionGetEntregas();
         setEntregaSeleccionada({
@@ -1151,13 +1155,13 @@ function Tareas() {
             id="CboElementosPlanta"
             inputValue={tareaSeleccionada.elementoPlanta}
             options={elementosplanta}
-            filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
-            getOptionLabel={option => option.elemento}
+            filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
+            getOptionLabel={option => option.id_Elemento}
             sx={{ width: 225 }}
             renderInput={(params) => <TextField {...params} name="elementoPlanta" />}
             onChange={(event, value) => setTareaSeleccionada(prevState => ({
               ...prevState,
-              elementoPlanta: value.elemento
+              elementoPlanta: value.nombre + value.numero
             }))}
           />
         </div>
@@ -1868,6 +1872,7 @@ function Tareas() {
   )
 
   return (
+    <MainLayout title="Tareas">
     <div>
       <MaterialTable columns={columnas} data={data}
         localization={localization}
@@ -2001,6 +2006,7 @@ function Tareas() {
       </Modal>
 
     </div>
+    </MainLayout>
   );
 
 }

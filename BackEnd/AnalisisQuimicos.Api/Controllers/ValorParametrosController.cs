@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,11 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class ValorParametrosController : ControllerBase
     {
-        private readonly IRepository<ValorParametros> _valorParametrosService;
+        private readonly IValorParametrosService _valorParametrosService;
         private readonly IMapper _mapper;
 
 
-        public ValorParametrosController(IRepository<ValorParametros> valorParametrosServicey, IMapper mapper)
+        public ValorParametrosController(IValorParametrosService valorParametrosServicey, IMapper mapper)
         {
             _valorParametrosService = valorParametrosServicey;
             _mapper = mapper;
@@ -43,6 +44,15 @@ namespace AnalisisQuimicos.Api.Controllers
             var valores = await _valorParametrosService.GetById(id);
             var valoresDto = _mapper.Map<ValorParametrosDTO>(valores);
             var response = new ApiResponses<ValorParametrosDTO>(valoresDto);
+            return Ok(response);
+        }
+
+        [HttpGet("parametros")]
+        public IActionResult GetParameters([FromQuery] ValorParametrosQueryFilter filtro)
+        {
+            var valores = _valorParametrosService.GetParameters(filtro);
+            var valoresDto = _mapper.Map<IEnumerable<ValorParametrosDTO>>(valores);
+            var response = new ApiResponses<IEnumerable<ValorParametrosDTO>>(valoresDto);
             return Ok(response);
         }
 

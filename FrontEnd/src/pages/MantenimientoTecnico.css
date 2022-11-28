@@ -1,3 +1,8 @@
+
+input[type="date"]::-webkit-input-placeholder{
+	visibility: hidden !important;
+}
+
 hr {
     margin-bottom: 0;
 }

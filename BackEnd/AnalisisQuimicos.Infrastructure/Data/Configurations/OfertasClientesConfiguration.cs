@@ -33,6 +33,8 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Contacto2).HasColumnName("Contacto2");
 
+            builder.Property(e => e.Contacto3).HasColumnName("Contacto3");
+
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 
             builder.Property(e => e.DelDate).HasColumnType("datetime");

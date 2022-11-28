@@ -24,7 +24,7 @@ export const crearParametrizacionBack = ( datos ) => {
                 parametrosBack = {
                     ...parametrosBack,
                     [nombreParametro]: datosCampo[parametro]
-                } 
+                }
             }
 
         }

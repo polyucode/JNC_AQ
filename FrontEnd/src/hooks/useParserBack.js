@@ -3,7 +3,24 @@ import { crearParametrizacionBack } from '../helpers';
 
 export const useParserBack = () => {
 
+
     const [ parametrosBack, setParametroBack ] = useState({
+
+        id: 0,
+        parametro: 0,
+        codigoCliente: 0,
+        nombreCliente: '',
+        oferta: 0,
+        elemento: '',
+        limInf: 0,
+        limSup: 0,
+        unidades: '',
+        activo: false,
+        verInspector: false
+
+    })
+    
+/*    const [ parametrosBack, setParametroBack ] = useState({
         id: 0,
         alcalinitatMActivo: false,
         alcalinitatMLimInf: 0,
@@ -182,6 +199,7 @@ export const useParserBack = () => {
         terbolesaUnidades: "",
         terbolesaVerInspector: false
     });
+    */
 
     const setDatosParametrosBack = ( datosFront ) => {
 
