@@ -1,24 +1,51 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from '@material-table/core';
 import axios from "axios";
+import { Grid, Card, Typography, Button, TextField, Modal, Autocomplete } from '@mui/material';
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@mui/material/MenuItem';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+
 import './Visualizacion.css';
 import { MainLayout } from "../layout/MainLayout";
+import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import { InsertarVisModal } from "../components/Modals/InsertarVisModal";
+import { InsertarVisModal1 } from "../components/Modals/InsertarVisModal1";
+import { InsertarVisModalAerobio } from "../components/Modals/InsertarVisModalAerobio";
+import { InsertarVisModalLegionela } from "../components/Modals/InsertarVisModalLegionela";
+import { InsertarVisModalOperario } from "../components/Modals/InsertarVisModalOperario";
+import { EditarVisModal } from "../components/Modals/EditarVisModal";
+import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
+import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
+import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
+import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 
 const token = {
     headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
     }
 };
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const localization = {
     body: {
@@ -113,6 +140,45 @@ export const VisualizacionPage = () => {
 
     let opcionesFiltradas = [];
     let opcionesFiltradasAnalisis = [];
+    let opcionesTablasFiltradasAnalisis = [];
+
+    const [rows1, setRows1] = useState([]);
+    const [rows2, setRows2] = useState([]);
+    const [rows3, setRows3] = useState([]);
+    const [rows4, setRows4] = useState([]);
+    const [rows5, setRows5] = useState([]);
+    const [rows6, setRows6] = useState([]);
+    const [rows7, setRows7] = useState([]);
+    const [rows8, setRows8] = useState([]);
+    const [rows9, setRows9] = useState([]);
+    const [rows10, setRows10] = useState([]);
+    const [rows11, setRows11] = useState([]);
+    const [rows12, setRows12] = useState([]);
+    const [rows13, setRows13] = useState([]);
+    const [rows14, setRows14] = useState([]);
+    const [rows15, setRows15] = useState([]);
+    const [rows16, setRows16] = useState([]);
+    const [rows17, setRows17] = useState([]);
+    const [rows18, setRows18] = useState([]);
+
+    const [rowsIds1, setRowsIds1] = useState([]);
+    const [rowsIds2, setRowsIds2] = useState([]);
+    const [rowsIds3, setRowsIds3] = useState([]);
+    const [rowsIds4, setRowsIds4] = useState([]);
+    const [rowsIds5, setRowsIds5] = useState([]);
+    const [rowsIds6, setRowsIds6] = useState([]);
+    const [rowsIds7, setRowsIds7] = useState([]);
+    const [rowsIds8, setRowsIds8] = useState([]);
+    const [rowsIds9, setRowsIds9] = useState([]);
+    const [rowsIds10, setRowsIds10] = useState([]);
+    const [rowsIds11, setRowsIds11] = useState([]);
+    const [rowsIds12, setRowsIds12] = useState([]);
+    const [rowsIds13, setRowsIds13] = useState([]);
+    const [rowsIds14, setRowsIds14] = useState([]);
+    const [rowsIds15, setRowsIds15] = useState([]);
+    const [rowsIds16, setRowsIds16] = useState([]);
+    const [rowsIds17, setRowsIds17] = useState([]);
+    const [rowsIds18, setRowsIds18] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalInsertar1, setModalInsertar1] = useState(false);
@@ -206,8 +272,6 @@ export const VisualizacionPage = () => {
             label: 'Desinfeccion AFCH (cloracion)'
         }
     ]
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
     const [FilasSeleccionadas1, setFilasSeleccionadas1] = useState([]);
     const [FilasSeleccionadas2, setFilasSeleccionadas2] = useState([]);
@@ -372,6 +436,8 @@ export const VisualizacionPage = () => {
     const styles = useStyles();
     const stylesParagraph = useStylesParagraph();
 
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
     useEffect(() => {
 
         opcionesFiltradas = [];
@@ -389,16 +455,31 @@ export const VisualizacionPage = () => {
     useEffect(() => {
 
         opcionesFiltradasAnalisis = [];
+        opcionesTablasFiltradasAnalisis = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === analisisSeleccionado.codigoCliente && planta.oferta === analisisSeleccionado.oferta && planta.id_Elemento === analisisSeleccionado.elemento);
 
         lista.map(analisis => {
-            opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id)[0]);
+            opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
         })
 
-        setDataTablas(opcionesFiltradasAnalisis)
+        opcionesFiltradasAnalisis.map(nomAnalisis => {
+            nomAnalisis.map(anal => {
+                opcionesTablasFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
+            })
+        })
+
+        setDataTablas(opcionesTablasFiltradasAnalisis)
 
     }, [analisisSeleccionado.elemento])
+
+    useEffect(() => {
+
+        if (data1.length > 0) {
+            setRows1(data1);
+        }
+
+    }, [data1]);
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -410,12 +491,10 @@ export const VisualizacionPage = () => {
 
     const handleChangeCheckbox = e => {
         changeCheckState(e.target.checked)
-        console.log(e.target.checked)
     }
 
     const handleChangeCheckbox2 = e => {
         changeActualState(e.target.checked)
-        console.log(e.target.checked)
     }
 
     function formateandofechas(fecha) {
@@ -518,67 +597,6 @@ export const VisualizacionPage = () => {
             <div align="right">
                 <Button color="primary" onClick={() => peticionPost()}>Insertar</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyInsertar1 = (
-        <div className={styles.modal}>
-            <h3>Agregar Nuevo Analisis</h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPost1()}>Insertar</Button>
-                <Button onClick={() => abrirCerrarModalInsertar1()}>Cancelar</Button>
             </div>
         </div>
     )
@@ -890,68 +908,6 @@ export const VisualizacionPage = () => {
         </div>
     )
 
-    const bodyEditar1 = (
-        <div className={styles.modal}>
-            <h3> Analisis </h3>
-            <br />
-            <div className="row g-4">
-                <div className="col-md-3">
-                    <h5> Codigo Cliente </h5>
-                    <TextField className={styles.inputMaterial} name="codigoCliente" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Oferta </h5>
-                    <TextField className={styles.inputMaterial} name="oferta" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Elemento </h5>
-                    <TextField className={styles.inputMaterial} name="elemento" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
-                </div>
-                <div className="col-md-5">
-                    <h5> Analisis </h5>
-                    <TextField className={styles.inputMaterial} name="analisis" disabled onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Periodo </h5>
-                    <TextField className={styles.inputMaterial} name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
-                </div>
-                <div className="col-md-3">
-                    <h5> Fecha </h5>
-                    <TextField
-                        id="fecha"
-                        type="date"
-                        name="fecha"
-                        sx={{ width: 220 }}
-                        onChange={handleChangeInput}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
-                    />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <FormControlLabel control={<Checkbox />} className={styles.inputMaterial} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
-                </div>
-                <div className="col-md-4">
-                    <h5> Numero Facturacion </h5>
-                    <TextField className={styles.inputMaterial} name="numeroFacturado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
-                </div>
-                <div className="col-md-12">
-                    <h5> Observaciones </h5>
-                    <TextField className={stylesParagraph.inputMaterial} multiline rows={4} name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
-                </div>
-            </div>
-            <br />
-            <div align="right">
-                <Button color="primary" onClick={() => peticionPut1()}>Guardar</Button>
-                <Button onClick={() => abrirCerrarModalEditar1()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
     const bodyEditarLegionela = (
         <div className={styles.modal}>
             <h3> Analisis </h3>
@@ -1162,17 +1118,6 @@ export const VisualizacionPage = () => {
             <div align="right">
                 <Button color="primary" onClick={() => peticionPutAerobio()}>Guardar</Button>
                 <Button onClick={() => abrirCerrarModalEditarAerobio()}>Cancelar</Button>
-            </div>
-        </div>
-    )
-
-    const bodyEliminar = (
-
-        <div className={styles.modal}>
-            <p>Estás seguro que deseas eliminar el analisis ? </p>
-            <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Sí</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
             </div>
         </div>
     )
@@ -2070,8 +2015,235 @@ export const VisualizacionPage = () => {
 
     }, [analisisSeleccionado.oferta])
 
+    const handleSelectRow1 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data1.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds1(ids);
+
+    }
+
+    const handleSelectRow2 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data2.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds2(ids);
+
+    }
+
+    const handleSelectRow3 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data3.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds3(ids);
+
+    }
+
+    const handleSelectRow4 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data4.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds4(ids);
+
+    }
+
+    const handleSelectRow5 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data5.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds5(ids);
+
+    }
+
+    const handleSelectRow6 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data6.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds6(ids);
+
+    }
+
+    const handleSelectRow7 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data7.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds7(ids);
+
+    }
+
+    const handleSelectRow8 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data8.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds8(ids);
+
+    }
+
+    const handleSelectRow9 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data9.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds9(ids);
+
+    }
+
+    const handleSelectRow10 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data10.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds10(ids);
+
+    }
+
+    const handleSelectRow11 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data11.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds11(ids);
+
+    }
+
+    const handleSelectRow12 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data12.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds12(ids);
+
+    }
+
+    const handleSelectRow13 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data13.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds13(ids);
+
+    }
+
+    const handleSelectRow14 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data14.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds14(ids);
+
+    }
+
+    const handleSelectRow15 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data15.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds15(ids);
+
+    }
+
+    const handleSelectRow16 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data16.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds16(ids);
+
+    }
+
+    const handleSelectRow17 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data17.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds17(ids);
+
+    }
+
+    const handleSelectRow18 = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data18.filter(tarea => tarea.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds18(ids);
+
+    }
+
+    const handleSnackClose = (event, reason) => {
+
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackData({ open: false, msg: '', severity: 'info' });
+
+    };
+
     return (
         <MainLayout title="Visualización">
+
             <div className="home-container">
                 <h4> Visualizacion de datos </h4>
                 <div className="datos">
@@ -2143,1075 +2315,2761 @@ export const VisualizacionPage = () => {
                     <div className="visualizacion">
                         <div className="visualizacion-tablas">
                             {dataTablas.map((analisi, index) => {
-                                switch (analisi.id_Analisis) {
+                                switch (analisi.id) {
                                     case 1:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data1}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Torre"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas1);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas1(filas);
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Torre</Typography>
+                                                            {
+                                                                (rowsIds1.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds1)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows1}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow1(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Torre"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 2:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data2}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Aporte"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas2);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Aporte</Typography>
+                                                            {
+                                                                (rowsIds2.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds2)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas2(filas);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows2}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow2(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Aporte"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 3:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data3}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Alimentación"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas3);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Alimentación</Typography>
+                                                            {
+                                                                (rowsIds3.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds3)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas3(filas);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows3}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow3(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Alimentación"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 4:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data4}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Rechazo"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas4);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Rechazo</Typography>
+                                                            {
+                                                                (rowsIds4.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds4)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas4(filas);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows4}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow4(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Rechazo"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 5:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data5}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Condensados"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas5);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Condensados</Typography>
+                                                            {
+                                                                (rowsIds5.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds5)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas5(filas);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows5}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow5(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Condensados"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 6:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data6}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Físico-Químico Caldera"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas6);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Caldera</Typography>
+                                                            {
+                                                                (rowsIds6.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds6)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas6(filas);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows6}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow6(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
 
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data1, 'Listado de Fisico Quimicos')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Fisico Quimico Caldera"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 7:
                                         return (
-                                            <MaterialTable columns={columnasAerobios} data={data7}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Aerobios"
-                                                            })
-                                                            abrirCerrarModalInsertarAerobio();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas7);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditarAerobio();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Aerobios</Typography>
+                                                            {
+                                                                (rowsIds7.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds7)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertarAerobio}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas7(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows7}
+                                                                columns={columnasAerobios}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow7(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditarAerobio();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModalAerobio
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertarAerobio();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Aerobios')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Aerobios')
-                                                    }]
-                                                }}
+                                                            if (peticionPostAerobio()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Aerobios"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertarAerobio}
+                                                    onClose={abrirCerrarModalInsertarAerobio}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModalAerobio
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPutAerobio()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 8:
                                         return (
-                                            <MaterialTable columns={columnasLegionela} data={data8}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Legionela"
-                                                            })
-                                                            abrirCerrarModalInsertarLegionela();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas8);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditarLegionela();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Legionela</Typography>
+                                                            {
+                                                                (rowsIds8.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds8)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertarLegionela}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas8(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows8}
+                                                                columns={columnasLegionela}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow8(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditarLegionela();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModalLegionela
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertarLegionela();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Legionela')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Legionela')
-                                                    }]
-                                                }}
+                                                            if (peticionPostLegionela()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Legionela"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertarLegionela}
+                                                    onClose={abrirCerrarModalInsertarLegionela}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModalLegionela
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditarLegionela()
+
+                                                        if (peticionPutLegionela()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditarLegionela}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 9:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data9}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Aguas Residuales"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas9);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.nombre === analisisSeleccionado.analisis));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Aguas Residuales</Typography>
+                                                            {
+                                                                (rowsIds9.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds9)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas9(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows9}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow9(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Aguas Residuales')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Aguas Residuales')
-                                                    }]
-                                                }}
+                                                            if (peticionPost1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Aguas Residuales"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut1()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 10:
                                         return (
-                                            <MaterialTable columns={columnas} data={data10}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Desinfecciones"
-                                                            })
-                                                            abrirCerrarModalInsertar();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas10);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    GetParametrosAnalisisPlanta();
-                                                    abrirCerrarModalEditar();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Desinfecciones</Typography>
+                                                            {
+                                                                (rowsIds10.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds10)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas10(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows10}
+                                                                columns={columnas}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow10(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Desinfecciones')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Desinfecciones')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Desinfecciones"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 11:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data11}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Osmosis"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas11);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    GetParametrosAnalisisPlanta();
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Físico-Químico Osmosis</Typography>
+                                                            {
+                                                                (rowsIds11.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds11)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas11(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows11}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow11(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Osmosis')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Osmosis')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Osmosis"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 12:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data12}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "AguaPozo"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas12);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Agua Pozo</Typography>
+                                                            {
+                                                                (rowsIds12.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds12)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas12(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows12}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow12(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Agua Pozo')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Agua Pozo')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Agua Pozo"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 13:
                                         return (
-                                            <MaterialTable columns={columnas} data={data13}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Desinfección ACS"
-                                                            })
-                                                            abrirCerrarModalInsertar();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas13);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Desinfeccion ACS</Typography>
+                                                            {
+                                                                (rowsIds13.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds13)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas13(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows13}
+                                                                columns={columnas}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow13(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Desinfeccion ACS')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Desinfeccion ACS')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Desinfeccion ACS"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 14:
                                         return (
-                                            <MaterialTable columns={columnasOperario} data={data14}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Mantenimiento Maq Frio"
-                                                            })
-                                                            abrirCerrarModalInsertarOperario();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas14);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    setOperarioEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === analisisSeleccionado.operario))
-                                                    abrirCerrarModalEditarOperario();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Mantenimiento Maq Frio</Typography>
+                                                            {
+                                                                (rowsIds14.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds14)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas14(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows14}
+                                                                columns={columnasOperario}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow14(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditarOperario();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModalOperario
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertarOperario();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Mantenimiento de Maquina de Frio')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Mantenimiento de Maquina de Frio')
-                                                    }]
-                                                }}
+                                                            if (peticionPostOperario()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Mantenimiento Maquina Frio"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertarOperario}
+                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModalOperario
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditarOperario()
+
+                                                        if (peticionPutOperario()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditarOperario}
+                                                    onClose={abrirCerrarModalEditarOperario}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 15:
                                         return (
-                                            <MaterialTable columns={columnasOperario} data={data15}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Mediciones"
-                                                            })
-                                                            abrirCerrarModalInsertarOperario();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas15);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditarOperario();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Mediciones</Typography>
+                                                            {
+                                                                (rowsIds15.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds15)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas15(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows15}
+                                                                columns={columnasOperario}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow15(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditarOperario();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModalOperario
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertarOperario();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Mediciones')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Mediciones')
-                                                    }]
-                                                }}
+                                                            if (peticionPostOperario()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Mediciones"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertarOperario}
+                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModalOperario
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditarOperario()
+
+                                                        if (peticionPutOperario()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditarOperario}
+                                                    onClose={abrirCerrarModalEditarOperario}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 16:
                                         return (
-                                            <MaterialTable columns={columnasOperario} data={data16}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Control Fuga Gas"
-                                                            })
-                                                            abrirCerrarModalInsertarOperario();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas16);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditarOperario();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Control Fuga de Gas</Typography>
+                                                            {
+                                                                (rowsIds16.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds16)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas16(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows16}
+                                                                columns={columnasOperario}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow16(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditarOperario();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModalOperario
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertarOperario();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Control de Fuga de Gas')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Control de Fuga de Gas')
-                                                    }]
-                                                }}
+                                                            if (peticionPostOperario()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Control Fuga de Gas"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertarOperario}
+                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModalOperario
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditarOperario()
+
+                                                        if (peticionPutOperario()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditarOperario}
+                                                    onClose={abrirCerrarModalEditarOperario}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 17:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data17}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Agua Potable"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas17);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Agua Potable</Typography>
+                                                            {
+                                                                (rowsIds17.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds17)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas17(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows17}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow17(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Agua Potable')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Agua Potable')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Agua Potable"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     case 18:
                                         return (
-                                            <MaterialTable columns={columnas1} data={data18}
-                                                localization={localization}
-                                                actions={[
-                                                    {
-                                                        icon: () => <AddCircle style={{ fill: "green" }} />,
-                                                        tooltip: "Añadir analisis",
-                                                        isFreeAction: true,
-                                                        onClick: (e, data) => {
-                                                            setAnalisisSeleccionado({
-                                                                ...analisisSeleccionado,
-                                                                analisis: "Revision de Bandeja"
-                                                            })
-                                                            abrirCerrarModalInsertar1();
-                                                        },
-                                                    },
-                                                    {
-                                                        icon: () => <RemoveCircle style={{ fill: "red" }} />,
-                                                        tooltip: "Eliminar analisis",
-                                                        onClick: (event, rowData) => {
-                                                            setAnalisisEliminar(FilasSeleccionadas18);
-                                                            abrirCerrarModalEliminar();
-                                                        },
-                                                    },
-                                                ]}
+                                            <>
+                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                        {snackData.msg}
+                                                    </Alert>
+                                                </Snackbar>
 
-                                                onRowClick={((evt, analisisSeleccionado) => {
-                                                    setAnalisisSeleccionado(analisisSeleccionado)
-                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
-                                                    abrirCerrarModalEditar1();
-                                                })}
+                                                <Grid container spacing={2}>
+                                                    {/* Título y botones de opción */}
+                                                    <Grid item xs={12}>
+                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                            <Typography variant='h6'>Revisión de Bandeja</Typography>
+                                                            {
+                                                                (rowsIds18.length > 0) ?
+                                                                    (
+                                                                        <Grid item>
+                                                                            <Button
+                                                                                sx={{ mr: 2 }}
+                                                                                color='error'
+                                                                                variant='contained'
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={(event, rowData) => {
+                                                                                    setAnalisisEliminar(rowsIds18)
+                                                                                    abrirCerrarModalEliminar()
+                                                                                }}
+                                                                            >
+                                                                                Eliminar
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    ) : (
+                                                                        <Button
+                                                                            color='success'
+                                                                            variant='contained'
+                                                                            startIcon={<AddIcon />}
+                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                        >Añadir</Button>
+                                                                    )
+                                                            }
+                                                        </Card>
+                                                    </Grid>
 
-                                                onSelectionChange={(filas) => {
-                                                    setFilasSeleccionadas18(filas);
-                                                    if (filas.length > 0) {
-                                                        setAnalisisSeleccionado(filas[0]);
+                                                    {/* Tabla donde se muestran los registros de los clientes */}
+                                                    <Grid item xs={12}>
+                                                        <Card>
+                                                            <DataGrid
+                                                                components={{ Toolbar: GridToolbar }}
+                                                                localeText={DATAGRID_LOCALE_TEXT}
+                                                                sx={{
+                                                                    width: '100%',
+                                                                    height: 700,
+                                                                    backgroundColor: '#FFFFFF'
+                                                                }}
+                                                                rows={rows18}
+                                                                columns={columnas1}
+                                                                pageSize={12}
+                                                                rowsPerPageOptions={[12]}
+                                                                checkboxSelection
+                                                                disableSelectionOnClick
+                                                                onSelectionModelChange={(ids) => handleSelectRow18(ids)}
+                                                                onRowClick={(analisisSeleccionado, evt) => {
+                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                    abrirCerrarModalEditar1();
+                                                                }}
+                                                            />
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+
+                                                {/* LISTA DE MODALS */}
+
+                                                {/* Agregar tarea */}
+                                                <ModalLayout
+                                                    titulo="Agregar nueva Tarea"
+                                                    contenido={
+                                                        <InsertarVisModal1
+                                                            change={handleChangeInput}
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                        />
                                                     }
-                                                }}
+                                                    botones={[
+                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                            abrirCerrarModalInsertar1();
 
-                                                options={{
-                                                    sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
-                                                    columnsButton: false, showSelectAllCheckbox: false,
-                                                    rowStyle: rowData => ({
-                                                        backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
-                                                        whiteSpace: "nowrap"
-                                                    }),
-                                                    exportMenu: [{
-                                                        label: 'Export PDF',
-                                                        exportFunc: (cols, datas) => ExportPdf(cols, data, 'Listado de Revision de Bandeja')
-                                                    }, {
-                                                        label: 'Export CSV',
-                                                        exportFunc: (cols, datas) => ExportCsv(cols, data, 'Listado de Revision de Bandeja')
-                                                    }]
-                                                }}
+                                                            if (peticionPost()) {
+                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                            }
 
-                                                title="Revision de Bandeja"
-                                            />
+                                                        }, 'success')
+                                                    ]}
+                                                    open={modalInsertar1}
+                                                    onClose={abrirCerrarModalInsertar1}
+                                                />
+
+                                                {/* Modal Editar Tarea*/}
+
+                                                <ModalLayout
+                                                    titulo="Editar tarea"
+                                                    contenido={
+                                                        <EditarVisModal1
+                                                            analisisSeleccionado={analisisSeleccionado}
+                                                            change={handleChangeInput}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            handleChangeCheckbox={handleChangeCheckbox}
+                                                            handleChangeCheckbox2={handleChangeCheckbox2}
+                                                        />}
+                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar1()
+
+                                                        if (peticionPut()) {
+                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                        } else {
+                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                        }
+                                                    })
+                                                    ]}
+                                                    open={modalEditar1}
+                                                    onClose={abrirCerrarModalEditar1}
+                                                />
+
+                                                {/* Eliminar tarea */}
+                                                <ModalLayout
+                                                    titulo="Eliminar tarea"
+                                                    contenido={
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                            </Grid>
+                                                        </>
+                                                    }
+                                                    botones={[
+                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                            abrirCerrarModalEliminar();
+
+                                                            if (peticionDelete()) {
+                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            }
+
+                                                        }, 'error'),
+                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                    ]}
+                                                    open={modalEliminar}
+                                                    onClose={abrirCerrarModalEliminar}
+                                                />
+
+                                            </>
                                         )
                                     default:
                                         return (
@@ -3274,76 +5132,10 @@ export const VisualizacionPage = () => {
                                             />
                                         )
                                 }
-                            })
-                            }
+                            })}
                         </div>
                     </div>
                 </div>
-                <Modal
-                    open={modalInsertar}
-                    onClose={abrirCerrarModalInsertar}>
-                    {bodyInsertar}
-                </Modal>
-
-                <Modal
-                    open={modalInsertar1}
-                    onClose={abrirCerrarModalInsertar1}>
-                    {bodyInsertar1}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarOperario}
-                    onClose={abrirCerrarModalInsertarOperario}>
-                    {bodyInsertarOperario}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarAerobio}
-                    onClose={abrirCerrarModalInsertarAerobio}>
-                    {bodyInsertarAerobio}
-                </Modal>
-
-                <Modal
-                    open={modalInsertarLegionela}
-                    onClose={abrirCerrarModalInsertarLegionela}>
-                    {bodyInsertarLegionela}
-                </Modal>
-
-                <Modal
-                    open={modalEliminar}
-                    onClose={abrirCerrarModalEliminar}>
-                    {bodyEliminar}
-                </Modal>
-
-                <Modal
-                    open={modalEditar}
-                    onClose={abrirCerrarModalEditar}>
-                    {bodyEditar}
-                </Modal>
-
-                <Modal
-                    open={modalEditar1}
-                    onClose={abrirCerrarModalEditar1}>
-                    {bodyEditar1}
-                </Modal>
-
-                <Modal
-                    open={modalEditarOperario}
-                    onClose={abrirCerrarModalEditarOperario}>
-                    {bodyEditarOperario}
-                </Modal>
-
-                <Modal
-                    open={modalEditarAerobio}
-                    onClose={abrirCerrarModalEditarAerobio}>
-                    {bodyEditarAerobio}
-                </Modal>
-
-                <Modal
-                    open={modalEditarLegionela}
-                    onClose={abrirCerrarModalEditarLegionela}>
-                    {bodyEditarLegionela}
-                </Modal>
             </div>
         </MainLayout>
     );

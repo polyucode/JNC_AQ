@@ -59,13 +59,6 @@ export const TareasPage = () => {
   const [modalEliminar, setModalEliminar] = useState(false);
 
   //modals detalle
-  const [modalInsertarDet, setModalInsertarDet] = useState(false);
-
-  const [modalEditarDet, setModalEditarDet] = useState(false);
-
-  const [modalEliminarDet, setModalEliminarDet] = useState(false);
-
-  const [modalCalendario, setmodalCalendario] = useState(false);
 
   const [rows, setRows] = useState([]);
   const [rowsIds, setRowsIds] = useState([]);
@@ -168,9 +161,6 @@ export const TareasPage = () => {
   let navigate = useNavigate();
 
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
-
-  console.log({analisisSeleccionado})
-  console.log({tareaSeleccionada})
 
   const columns = [
     { title: 'Cliente', field: 'codigoCliente', width: 120 },
@@ -303,11 +293,13 @@ export const TareasPage = () => {
     const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.id_Elemento === tareaSeleccionada.elemento);
 
     lista.map(analisis => {
-      opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id)[0]);
+      opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
     })
 
     opcionesFiltradasAnalisis.map(nomAnalisis => {
-      opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === nomAnalisis.id_Analisis)[0])
+      nomAnalisis.map(anal => {
+        opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
+      })
     })
 
     setAnalisisAutocomplete(opcionesNombreFiltradasAnalisis)
@@ -801,8 +793,6 @@ export const TareasPage = () => {
     setSnackData({ open: false, msg: '', severity: 'info' });
 
   };
-
-  console.log(tareaSeleccionada)
 
   return (
     <MainLayout title="Tareas">
