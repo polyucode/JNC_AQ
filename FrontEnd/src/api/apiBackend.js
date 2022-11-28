@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const urlBase = 'https://localhost:44343/api';
+const urlBase = 'http://172.26.0.169:44343/api';
 
 const token = {
     headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }

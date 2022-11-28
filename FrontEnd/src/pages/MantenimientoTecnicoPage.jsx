@@ -57,7 +57,7 @@ export const MantenimientoTecnicoPage = () => {
     const [dataParametros, setDataParametros] = useState([]);
 
     const GetConfNivelesPlantasCliente = async () => {
-        axios.get("/confnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", token).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfNivelesPlantasCliente(niveles);
         })

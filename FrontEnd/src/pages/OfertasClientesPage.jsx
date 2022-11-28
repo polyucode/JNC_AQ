@@ -112,13 +112,13 @@ export const OfertasClientesPage = () => {
         { title: 'Contacto3', field: 'contacto3', width: 100 }
     ];
     const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             setData(response.data.data)
         })
     }
 
     const getClientes = async () => {
-        axios.get("/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
@@ -152,7 +152,7 @@ export const OfertasClientesPage = () => {
 
     const peticionPost = async () => {
         ofertaSeleccionada.id = null;
-        await axios.post("/ofertasclientes", ofertaSeleccionada, token)
+        await axios.post("http://172.26.0.169:44343/api/ofertasclientes", ofertaSeleccionada, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getOfertas();
@@ -182,8 +182,7 @@ export const OfertasClientesPage = () => {
     }
 
     const peticionPut = async () => {
-        console.log(ofertaSeleccionada)
-        await axios.put("/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
+        await axios.put("http://172.26.0.169:44343/api/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
             .then(response => {
                 var ofertaModificada = data;
                 ofertaModificada.map(oferta => {
@@ -221,7 +220,7 @@ export const OfertasClientesPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("/ofertasclientes/" + OfertaEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/ofertasclientes/" + OfertaEliminar[i], token)
                 .then(response => {
                     getOfertas();
                     abrirCerrarModalEliminar();

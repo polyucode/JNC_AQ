@@ -87,20 +87,20 @@ export const ConsumoArticulosPage = () => {
 
 
     const getConsumos = async () => {
-        axios.get("/consumos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/consumos", token).then(response => {
             setData(response.data.data)
         })
     }
 
     const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/productos", token).then(response => {
             const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setProductos(producto);
         }, [])
     }
 
     const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOfertas(oferta);
         }, [])
@@ -122,7 +122,7 @@ export const ConsumoArticulosPage = () => {
 
     const peticionPost = async () => {
         consumoSeleccionado.id = 0;
-        await axios.post("/consumos", consumoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/consumos", consumoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getConsumos();
@@ -132,7 +132,7 @@ export const ConsumoArticulosPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
             .then(response => {
                 var consumoModificado = data;
                 consumoModificado.map(consumo => {
@@ -150,7 +150,7 @@ export const ConsumoArticulosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ConsumoEliminar.length) {
-            await axios.delete("/consumos/" + ConsumoEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/consumos/" + ConsumoEliminar[i], token)
                 .then(response => {
                     getConsumos();
                     abrirCerrarModalEliminar();

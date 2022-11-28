@@ -73,7 +73,7 @@ export const ProductosPage = () => {
     ];
 
     const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/productos", token).then(response => {
             setData(response.data.data)
         })
     }
@@ -92,7 +92,7 @@ export const ProductosPage = () => {
 
     const peticionPost = async () => {
         productoSeleccionado.id = null;
-        await axios.post("/productos", productoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/productos", productoSeleccionado, token)
             .then(response => {
                 //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
@@ -103,7 +103,7 @@ export const ProductosPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("/productos?id=" + productoSeleccionado.id, productoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/productos?id=" + productoSeleccionado.id, productoSeleccionado, token)
             .then(response => {
                 var productoModificado = data;
                 productoModificado.map(producto => {
@@ -121,7 +121,7 @@ export const ProductosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ProductoEliminar.length) {
-            await axios.delete("/productos/" + ProductoEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/productos/" + ProductoEliminar[i], token)
                 .then(response => {
                     getProductos();
                     abrirCerrarModalEliminar();

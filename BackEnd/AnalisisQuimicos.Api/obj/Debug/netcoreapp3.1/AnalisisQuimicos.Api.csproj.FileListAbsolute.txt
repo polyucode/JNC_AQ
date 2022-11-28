@@ -550,3 +550,4 @@ C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug
 C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\System.IO.Pipelines.dll
 C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.AssemblyReference.cache
 C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.StaticWebAssets.xml

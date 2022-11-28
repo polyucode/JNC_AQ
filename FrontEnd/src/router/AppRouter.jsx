@@ -38,19 +38,19 @@ export const AppRouter = () => {
                 <Route path='/*' element={
                     <PrivateRoute>
                         <Routes>
-                            <Route path='/' exact element={<HomePage />} />
-                            <Route path='/login' element={<Navigate to="/" replace={true} />} />
-                            <Route path='/usuarios' element={<UsuariosPage />} />
-                            <Route path='/clientes' element={<ClientesPage />} />
-                            <Route path='/perfil' element={<Perfil />} />
-                            <Route path='/plantas' element={<PlantasPage />} />
-                            <Route path='/plantasTabla' element={<PlantasTablaPage />} />
-                            <Route path='/mantenimientoTecnico' element={<MantenimientoTecnicoPage />} />
-                            <Route path="/tareas" element={<TareasPage />} />
-                            <Route path="/ofertas" element={<OfertasClientesPage />} />
-                            <Route path='/productos' element={<ProductosPage />} />
-                            <Route path='/consumoarticulos' element={<ConsumoArticulosPage />} />
-                            <Route path='/visualizacion' element={<VisualizacionPage />} />
+                            <Route path='/YC_React' exact element={<HomePage />} />
+                            <Route path='/YC_React/login' element={<Navigate to="/" replace={true} />} />
+                            <Route path='/YC_React/usuarios' element={<UsuariosPage />} />
+                            <Route path='/YC_React/clientes' element={<ClientesPage />} />
+                            <Route path='/YC_React/perfil' element={<Perfil />} />
+                            <Route path='/YC_React/plantas' element={<PlantasPage />} />
+                            <Route path='/YC_React/plantasTabla' element={<PlantasTablaPage />} />
+                            <Route path='/YC_React/mantenimientoTecnico' element={<MantenimientoTecnicoPage />} />
+                            <Route path="/YC_React/tareas" element={<TareasPage />} />
+                            <Route path="/YC_React/ofertas" element={<OfertasClientesPage />} />
+                            <Route path='/YC_React/productos' element={<ProductosPage />} />
+                            <Route path='/YC_React/consumoarticulos' element={<ConsumoArticulosPage />} />
+                            <Route path='/YC_React/visualizacion' element={<VisualizacionPage />} />
                         </Routes>
                     </PrivateRoute>
                 } />

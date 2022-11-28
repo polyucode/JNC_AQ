@@ -156,7 +156,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     ];
 
     const peticionGet = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
             setData(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis))
         })
     }
@@ -352,7 +352,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         analisisSeleccionado.analisis = tareaSeleccionada.analisis;
         analisisSeleccionado.pedido = tareaSeleccionada.pedido;
         analisisSeleccionado.elemento = tareaSeleccionada.elemento;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
             .then(response => {
                 peticionGet();
                 abrirCerrarModalInsertar();
@@ -394,7 +394,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         /*if (analisisSeleccionado.recogido === true) {
             peticionPostEntrega();
         }*/
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
                 var analisisSeleccionado = data;
                 analisisSeleccionado.map(analisis => {
@@ -441,7 +441,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const peticionDelete = async () => {
         var i = 0;
         while (i < AnalisisEliminar.length) {
-            await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + AnalisisEliminar[i], token)
                 .then(response => {
                     peticionGet();
                     abrirCerrarModalEliminar();

@@ -133,14 +133,14 @@ export const ClientesPage = () => {
   ]
 
   const GetPoblacion = async () => {
-    axios.get("/poblacion", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/poblacion", token).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
   }
 
   const GetProvincia = async () => {
-    axios.get("/provincia", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/provincia", token).then(response => {
       const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setProvincia(provincia);
     }, [])
@@ -199,14 +199,14 @@ export const ClientesPage = () => {
   }, [clienteSeleccionado.cp])
 
   const peticionGet = async () => {
-    axios.get("/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    await axios.post("/cliente", clienteSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, token)
       .then(response => {
         abrirCerrarModalInsertar();
         peticionGet();
@@ -238,7 +238,7 @@ export const ClientesPage = () => {
   }
 
   const peticionPut = async () => {
-    await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
       .then(response => {
         var clienteModificado = data;
         clienteModificado.map(cliente => {
@@ -279,7 +279,7 @@ export const ClientesPage = () => {
     var i = 0;
     console.log(ClienteEliminar[i])
     while (i < ClienteEliminar.length) {
-      await axios.delete("/cliente/" + ClienteEliminar[i], token)
+      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i], token)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();
@@ -417,22 +417,6 @@ export const ClientesPage = () => {
     } else {
       setModalEliminar(!modalEliminar);
     }
-  }
-
-  //modal insertar contacto cliente
-  const abrirCerrarModalInsertarContacto = () => {
-    setModalInsertarContacto(!modalInsertarContacto);
-  }
-
-  //modal editar contacto cliente
-  const abrirCerrarModalEditarContacto = () => {
-    setModalEditarContacto(!modalEditarContacto);
-  }
-
-  //modal eliminar contacto cliente
-  const abrirCerrarModalEliminarContacto = () => {
-    setModalEditar(!modalEditar);
-    setModalEliminarContacto(!modalEliminarContacto);
   }
 
   const handleAutocompleteChange = (e) => {

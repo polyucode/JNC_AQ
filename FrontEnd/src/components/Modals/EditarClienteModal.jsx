@@ -128,14 +128,14 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     }
 
     const peticionGet = async () => {
-        axios.get("/clientescontactos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
             setData(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
         })
     }
 
     const peticionPostContacto = async () => {
         contactoSeleccionado.id = null;
-        await axios.post("/clientescontactos", contactoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, token)
             .then(response => {
                 abrirCerrarModalInsertar();
                 peticionGet();
@@ -164,7 +164,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     const peticionDeleteContacto = async () => {
         var i = 0;
         while (i < ContactoClienteEliminar.length) {
-            await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i], token)
                 .then(response => {
                     peticionGet();
                     abrirCerrarModalEliminar();
@@ -192,7 +192,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     }
 
     const peticionPutContacto = async () => {
-        await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
             .then(response => {
                 var contactoModificado = data;
                 contactoModificado.map(contacto => {
