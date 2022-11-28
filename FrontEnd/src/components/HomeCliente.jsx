@@ -20,6 +20,8 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 
 const HomeCliente = () => {
@@ -33,6 +35,8 @@ const HomeCliente = () => {
     const [ tareasFiltradas, setTareasFiltradas ] = useState([]);
     const [ parametrosAnalisisFiltrados, setParametrosAnalisisFiltrados ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
+    const [ anoActual, setAnoActual ] = useState(new Date().getFullYear());
+    const [ valoresCalendarioTareas, setValoresCalendarioTareas ] = useState([]);
 
     // Variables para el diagrama
     const [ nodos, setNodos ] = useState([]);
@@ -114,6 +118,59 @@ const HomeCliente = () => {
 
         getConfPlantaClientePorClienteOferta( user.idCliente , ofertaSeleccionada )
             .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
+
+    }
+    
+    const handelCambioAnoCalendarioTareas = ( ano ) => {
+
+        let valoresCalendario = [];
+
+        // Mapeamos todos los parametros
+        analisis.map( row => {
+
+            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+            const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
+            let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+            
+            if( valoresPorTarea.length > 0 ) {
+
+                // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                valoresPorTarea.map( val => {
+
+                    // Convertimos la fecha del registro en un objeto de fecha
+                    const fecha = new Date(val.fecha);
+
+                    // Contamos solo si los registros son de este año
+                    if( fecha.getFullYear() === anoActual ) {
+                        for(let i = 0; i < 12; i++) {
+                            if(fecha.getMonth() === i) {
+                                val.realizado
+                                    ? fechas[i] = 1
+                                    : fechas[i] = 0
+                            }
+                        }
+                    }
+
+                });
+
+            }
+
+            // Preparamos el objeto del valor actual
+            let valorActual = {
+                id: row.id,
+                nombre: row.nombre,
+                fechas,
+                valoresPorTarea: valoresPorTarea.length
+            }
+
+            valoresCalendario.push( valorActual );
+
+        });
+
+        setValoresCalendarioTareas( valoresCalendario );
+        console.log({ valoresCalendario })
+
+        setAnoActual(ano);
 
     }
 
@@ -323,7 +380,28 @@ const HomeCliente = () => {
                             <Grid containter spacing={ 2 }>
 
                                 <Grid item xs={ 12 } sx={{ pb: 2 }}>
-                                    <Typography variant="h6">Calendario de tareas</Typography>
+                                    <Grid container xs={12} sx={{ justifyContent: 'space-between' }}>
+                                        <Grid item>
+                                            <Typography variant="h6">Calendario de tareas</Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+                                                <Grid item>
+                                                    <IconButton color="primary" onClick={ () => handelCambioAnoCalendarioTareas( anoActual - 1 ) }>
+                                                        <ArrowBackIosIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography>{ anoActual }</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <IconButton color="primary" onClick={ () => handelCambioAnoCalendarioTareas( anoActual + 1 ) }>
+                                                        <ArrowForwardIosIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
 
                                 <Grid item xs={ 12 }>
@@ -348,56 +426,18 @@ const HomeCliente = () => {
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    // Mapeamos todos los parametros
-                                                    analisis.map( row => {
-
-                                                        // row -> id, nombre
-                                                        // tareasFiltradas -> analisis, elemento
-                                                        var currentTime = new Date();
-
-                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
-                                                        let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
-                                                        
-                                                        if( valoresPorTarea.length > 0 ) {
-
-                                                            console.log({ valoresPorTarea });
-
-                                                            // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
-                                                            valoresPorTarea.map( val => {
-    
-                                                                // Convertimos la fecha del registro en un objeto de fecha
-                                                                const fecha = new Date(val.fecha);
-
-                                                                // Contamos solo si los registros son de este año
-                                                                if( fecha.getFullYear() === currentTime.getFullYear() ) {
-                                                                    for(let i = 0; i < 12; i++) {
-                                                                        if(fecha.getMonth() === i) {
-                                                                            val.realizado
-                                                                                ? fechas[i] = 1
-                                                                                : fechas[i] = 0
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                                console.log({ fechas })
-    
-                                                            });
-
-                                                        }
-
-                                                        // Devolvemos los valores
-                                                        return (
-                                                            valoresPorTarea.length > 0 && (
+                                                    valoresCalendarioTareas.map( valor => {
+                                                        return(
+                                                            valor.valoresPorTarea > 0 && (
                                                                 <TableRow
-                                                                    key={ row.id }
+                                                                    key={ valor.id }
                                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                                 >
                                                                     <TableCell aligh="left" component="th" scope="row">
-                                                                        { row.nombre } - { row.id }
+                                                                        { valor.nombre }
                                                                     </TableCell>
                                                                     {
-                                                                        fechas.map( (fecha, index) => (
+                                                                        valor.fechas.map( (fecha, index) => (
                                                                             <TableCell key={ index }>
                                                                                 <IconButton
                                                                                     onClick={ () => {} }
@@ -419,6 +459,80 @@ const HomeCliente = () => {
                                                             )
                                                         )
                                                     })
+                                                }
+
+                                                {
+                                                    // // Mapeamos todos los parametros
+                                                    // analisis.map( row => {
+
+                                                    //     // row -> id, nombre
+                                                    //     // tareasFiltradas -> analisis, elemento
+                                                    //     var currentTime = new Date();
+
+                                                    //     // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                    //     const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
+                                                    //     let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+                                                        
+                                                    //     if( valoresPorTarea.length > 0 ) {
+
+                                                    //         console.log({ valoresPorTarea });
+
+                                                    //         // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                                                    //         valoresPorTarea.map( val => {
+    
+                                                    //             // Convertimos la fecha del registro en un objeto de fecha
+                                                    //             const fecha = new Date(val.fecha);
+
+                                                    //             // Contamos solo si los registros son de este año
+                                                    //             if( fecha.getFullYear() === currentTime.getFullYear() ) {
+                                                    //                 for(let i = 0; i < 12; i++) {
+                                                    //                     if(fecha.getMonth() === i) {
+                                                    //                         val.realizado
+                                                    //                             ? fechas[i] = 1
+                                                    //                             : fechas[i] = 0
+                                                    //                     }
+                                                    //                 }
+                                                    //             }
+
+                                                    //             console.log({ fechas })
+    
+                                                    //         });
+
+                                                    //     }
+
+                                                    //     // Devolvemos los valores
+                                                    //     return (
+                                                    //         valoresPorTarea.length > 0 && (
+                                                    //             <TableRow
+                                                    //                 key={ row.id }
+                                                    //                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    //             >
+                                                    //                 <TableCell aligh="left" component="th" scope="row">
+                                                    //                     { row.nombre } - { row.id }
+                                                    //                 </TableCell>
+                                                    //                 {
+                                                    //                     fechas.map( (fecha, index) => (
+                                                    //                         <TableCell key={ index }>
+                                                    //                             <IconButton
+                                                    //                                 onClick={ () => {} }
+                                                    //                                 color={ fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success' }
+                                                    //                                 disabled={ fecha === -1 ? true : false }
+                                                    //                             >
+                                                    //                                 {
+                                                    //                                     fecha === -1
+                                                    //                                         ? <RemoveIcon />
+                                                    //                                         : fecha === 0
+                                                    //                                             ? <ClearIcon />
+                                                    //                                             : <CheckIcon />
+                                                    //                                 }
+                                                    //                             </IconButton>
+                                                    //                         </TableCell>
+                                                    //                     ))
+                                                    //                 }
+                                                    //             </TableRow>
+                                                    //         )
+                                                    //     )
+                                                    // })
                                                 }
                                             </TableBody>
                                         </Table>
