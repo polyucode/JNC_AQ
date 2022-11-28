@@ -1,7 +1,35 @@
-import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
 import { getAnalisis, getClientes, getElementos, getOfertas, getOperarios } from '../../api/apiBackend';
 import MenuItem from '@mui/material/MenuItem';
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
+import { DataGrid } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
+import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
+
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import { ModalLayout } from "../ModalLayout";
+import { InsertarDetalleModal } from './InsertarDetalleModal';
+import { EditarDetalleModal } from './EditarDetalleModal';
+
+const token = {
+    headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+};
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const protocolos = [
     {
@@ -56,8 +84,52 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete }) =>{
+export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) => {
 
+
+    const [modalInsertar, setModalInsertar] = useState(false);
+
+    const [modalEditar, setModalEditar] = useState(false);
+
+    const [modalEliminar, setModalEliminar] = useState(false);
+
+    const [rows, setRows] = useState([]);
+    const [rowsIds, setRowsIds] = useState([]);
+
+    const [data, setData] = useState([]);
+
+    const [AnalisisEliminar, setAnalisisEliminar] = useState([]);
+
+    const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
+
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: '',
+        oferta: 0,
+        pedido: 0,
+        elemento: 0,
+        periodo: '',
+        analisis: 0,
+        fecha: null,
+        recogido: false,
+        fechaRecogido: null,
+        realizado: false,
+        fechaRealizado: null,
+        operario: '',
+        protocolo: '',
+        observaciones: '',
+        facturado: false,
+        numeroFactura: '',
+        cancelado: false,
+        comentarios: '',
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -65,6 +137,27 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const [elementos, setElementos] = useState([]);
     const [analisis, setAnalisis] = useState([]);
     const [operarios, setOperarios] = useState([]);
+
+    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+    const columns = [
+        //visibles
+        { title: 'Periodo', field: 'periodo' },
+        { title: 'Fecha', field: 'fecha', type: 'date', width: 120 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { title: 'Protocolo', field: 'protocolo', width: 220 },
+        { title: 'Observaciones', field: 'observaciones', width: 150 },
+        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { title: 'Numero Facturado', field: 'numeroFactura', width: 120 },
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+    ];
+
+    const peticionGet = async () => {
+        axios.get("/parametrosanalisisplanta", token).then(response => {
+            setData(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis))
+        })
+    }
 
     useEffect(() => {
 
@@ -87,14 +180,24 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
             .then(analisis => {
                 setAnalisis(analisis)
             })
-        
+
         getOperarios()
             .then(operarios => {
                 setOperarios(operarios)
             })
-        
+
+        peticionGet();
+
     }, []);
-    
+
+    useEffect(() => {
+
+        if (data.length > 0) {
+            setRows(data);
+        }
+
+    }, [data]);
+
 
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
@@ -106,9 +209,301 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         return fecha2
     }
 
+    const handleChangeDet = e => {
+        const { name, value } = e.target;
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+        }));
+    }
+
+    const handleChangeDetFecha = e => {
+        const { name, value } = e.target;
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    //modal insertar detalle
+    const abrirCerrarModalInsertar = () => {
+        if (modalInsertar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                oferta: 0,
+                pedido: 0,
+                elemento: 0,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar(!modalInsertar);
+        } else {
+            setModalInsertar(!modalInsertar);
+        }
+    }
+
+    //modal editar detalle
+
+    const abrirCerrarModalEditar = () => {
+        if (modalEditar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                oferta: 0,
+                pedido: 0,
+                elemento: 0,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar(!modalEditar);
+        } else {
+            setModalEditar(!modalEditar);
+        }
+    }
+
+    // modal eliminar detalle
+    const abrirCerrarModalEliminar = () => {
+        if (modalEliminar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                oferta: 0,
+                pedido: 0,
+                elemento: 0,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEliminar(!modalEliminar);
+        } else {
+            setModalEliminar(!modalEliminar);
+        }
+    }
+
+    console.log(analisisSeleccionado)
+
+    const peticionPost = async () => {
+        analisisSeleccionado.id = 0;
+        analisisSeleccionado.codigoCliente = tareaSeleccionada.codigoCliente;
+        analisisSeleccionado.nombreCliente = tareaSeleccionada.nombreCliente;
+        analisisSeleccionado.oferta = tareaSeleccionada.oferta;
+        analisisSeleccionado.analisis = tareaSeleccionada.analisis;
+        analisisSeleccionado.pedido = tareaSeleccionada.pedido;
+        analisisSeleccionado.elemento = tareaSeleccionada.elemento;
+        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
+            .then(response => {
+                peticionGet();
+                abrirCerrarModalInsertar();
+                setAnalisisSeleccionado({
+                    id: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    oferta: 0,
+                    pedido: 0,
+                    elemento: 0,
+                    periodo: '',
+                    analisis: 0,
+                    fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
+                    realizado: false,
+                    fechaRealizado: null,
+                    operario: '',
+                    protocolo: '',
+                    observaciones: '',
+                    facturado: false,
+                    numeroFacturado: '',
+                    cancelado: false,
+                    comentarios: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionPut = async () => {
+        /*if (analisisSeleccionado.recogido === true) {
+            peticionPostEntrega();
+        }*/
+        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+            .then(response => {
+                var analisisSeleccionado = data;
+                analisisSeleccionado.map(analisis => {
+                    if (analisis.id === analisisSeleccionado.id) {
+                        analisis = analisisSeleccionado
+                    }
+                });
+                peticionGet();
+                abrirCerrarModalEditar();
+                setAnalisisSeleccionado({
+                    id: 0,
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    oferta: 0,
+                    pedido: 0,
+                    elemento: 0,
+                    periodo: '',
+                    analisis: 0,
+                    fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
+                    realizado: false,
+                    fechaRealizado: null,
+                    operario: '',
+                    protocolo: '',
+                    observaciones: '',
+                    facturado: false,
+                    numeroFacturado: '',
+                    cancelado: false,
+                    comentarios: '',
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+    const peticionDelete = async () => {
+        var i = 0;
+        while (i < AnalisisEliminar.length) {
+            await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i], token)
+                .then(response => {
+                    peticionGet();
+                    abrirCerrarModalEliminar();
+                    setAnalisisSeleccionado({
+                        id: 0,
+                        codigoCliente: 0,
+                        nombreCliente: '',
+                        oferta: 0,
+                        pedido: 0,
+                        elemento: 0,
+                        periodo: '',
+                        analisis: 0,
+                        fecha: null,
+                        recogido: false,
+                        fechaRecogido: null,
+                        realizado: false,
+                        fechaRealizado: null,
+                        operario: '',
+                        protocolo: '',
+                        observaciones: '',
+                        facturado: false,
+                        numeroFacturado: '',
+                        cancelado: false,
+                        comentarios: '',
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
+                }).catch(error => {
+                    console.log(error);
+                })
+            i++;
+        }
+    }
+
+    const handleSelectRow = (ids) => {
+
+        if (ids.length > 0) {
+            setAnalisisSeleccionado(data.filter(analisis => analisis.id === ids[0])[0]);
+        } else {
+            setAnalisisSeleccionado(analisisSeleccionado);
+        }
+
+        setRowsIds(ids);
+
+    }
+
+    const handleSnackClose = (event, reason) => {
+
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackData({ open: false, msg: '', severity: 'info' });
+
+    };
+
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboClientes"
@@ -138,7 +533,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -166,13 +561,13 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
                     inputValue={tareaSeleccionada.nombreElemento}
+                    defaultValue={elementoTareaEditar[0]}
                     options={elementosAutocomplete}
-                    //filterOptions={options => confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta)}
                     getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
@@ -183,12 +578,12 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
                     options={analisisAutocomplete}
-                    //filterOptions={options => confAnalisisNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.elemento === tareaSeleccionada.elementoPlanta)}
+                    defaultValue={analisisEditar[0]}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" />}
@@ -196,7 +591,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={6}>
                 <Autocomplete
                     disabled={estadoOperario}
                     disableClearable={true}
@@ -214,24 +609,6 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
-                <TextField
-                    disabled={estadoProtocolo}
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChange}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>
-
             <Grid item xs={4} md={3}>
                 <TextField
                     id="fecha"
@@ -242,7 +619,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    value={ tareaSeleccionada && formateandofechas(tareaSeleccionada.fecha)}
+                    value={tareaSeleccionada && formateandofechas(tareaSeleccionada.fecha)}
                 />
             </Grid>
 
@@ -254,13 +631,158 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                     defaultValue={tipoTareaEditar[0]}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="idTipo" />}
+                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="tipo" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         tipo: value.id
                     }))}
                 />
             </Grid>
+
+            <Grid container spacing={2}>
+
+                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                        {snackData.msg}
+                    </Alert>
+                </Snackbar>
+
+                {/* Título y botones de opción */}
+                <Grid item xs={12}>
+                    <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6'>Detalles de la tarea</Typography>
+                        {
+                            (rowsIds.length > 0) ?
+                                (
+                                    <Grid item>
+                                        <Button
+                                            sx={{ mr: 2 }}
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteIcon />}
+                                            onClick={(event, rowData) => {
+                                                setAnalisisEliminar(rowsIds)
+                                                abrirCerrarModalEliminar()
+                                            }}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    </Grid>
+                                ) : (
+                                    <Button
+                                        color='success'
+                                        variant='contained'
+                                        startIcon={<AddIcon />}
+                                        onClick={abrirCerrarModalInsertar}
+                                    >Añadir</Button>
+                                )
+                        }
+                    </Card>
+                </Grid>
+
+                {/* Tabla donde se muestran los registros de los clientes */}
+                <Grid item xs={12}>
+                    <Card>
+                        <DataGrid
+                            components={{ Toolbar: GridToolbar }}
+                            localeText={DATAGRID_LOCALE_TEXT}
+                            sx={{
+                                width: '100%',
+                                height: 700,
+                                backgroundColor: '#FFFFFF'
+                            }}
+                            rows={rows}
+                            columns={columns}
+                            pageSize={12}
+                            rowsPerPageOptions={[12]}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                            onRowClick={(analisisSeleccionado, evt) => {
+                                setAnalisisSeleccionado(analisisSeleccionado.row)
+                                abrirCerrarModalEditar();
+                            }}
+                        />
+                    </Card>
+                </Grid>
+            </Grid>
+
+            <ModalLayout
+                titulo="Agregar nuevo detalle"
+                contenido={
+                    <InsertarDetalleModal
+                        change={handleChangeDet}
+                        tareaSeleccionada={tareaSeleccionada}
+                        handleChangeFecha={handleChangeDetFecha}
+                        setAnalisisSeleccionado={setAnalisisSeleccionado}
+                    />
+                }
+                botones={[
+                    insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                        abrirCerrarModalInsertar();
+
+                        if (peticionPost()) {
+                            setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
+                        }
+
+                    }, 'success')
+                ]}
+                open={modalInsertar}
+                onClose={abrirCerrarModalInsertar}
+            />
+            {/* Modal Editar Detalle*/}
+            <ModalLayout
+                titulo="Editar detalle"
+                contenido={
+                    <EditarDetalleModal
+                        setAnalisisSeleccionado={setAnalisisSeleccionado}
+                        tareaSeleccionada={tareaSeleccionada}
+                        analisisSeleccionado={analisisSeleccionado}
+                        change={handleChangeDet}
+                        handleChangeFecha={handleChangeDetFecha}
+                    />}
+                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                    abrirCerrarModalEditar()
+
+                    if (peticionPut()) {
+                        setSnackData({ open: true, msg: 'Detalle editado correctamente', severity: 'success' });
+                    } else {
+                        setSnackData({ open: true, msg: 'Ha habido un error al editar el detalle', severity: 'error' })
+                    }
+                })
+                ]}
+                open={modalEditar}
+                onClose={abrirCerrarModalEditar}
+            />
+
+            {/* Eliminar detalle */}
+            <ModalLayout
+                titulo="Eliminar detalle"
+                contenido={
+                    <>
+                        <Grid item xs={12}>
+                            <Typography>Estás seguro que deseas eliminar el detalle?</Typography>
+                        </Grid>
+                    </>
+                }
+                botones={[
+                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                        abrirCerrarModalEliminar();
+
+                        if (peticionDelete()) {
+                            setSnackData({ open: true, msg: `Detalle eliminado correctamente`, severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el detalle', severity: 'error' })
+                        }
+
+                    }, 'error'),
+                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                ]}
+                open={modalEliminar}
+                onClose={abrirCerrarModalEliminar}
+            />
 
         </>
     )

@@ -56,6 +56,13 @@ export const getContactos = async () => {
 
 }
 
+export const getProductos = async () => {
+
+    const resp = await axios.get(`/productos`, token);
+    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+
+}
+
 export const getListaElementos = async () => {
 
     const resp = await axios.get('/elementos', token);

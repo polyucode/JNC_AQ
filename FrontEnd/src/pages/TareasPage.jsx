@@ -52,13 +52,6 @@ export const TareasPage = () => {
   const [modalEliminar, setModalEliminar] = useState(false);
 
   //modals detalle
-  const [modalInsertarDet, setModalInsertarDet] = useState(false);
-
-  const [modalEditarDet, setModalEditarDet] = useState(false);
-
-  const [modalEliminarDet, setModalEliminarDet] = useState(false);
-
-  const [modalCalendario, setmodalCalendario] = useState(false);
 
   const [rows, setRows] = useState([]);
   const [rowsIds, setRowsIds] = useState([]);
@@ -161,9 +154,6 @@ export const TareasPage = () => {
   let navigate = useNavigate();
 
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
-
-  console.log({analisisSeleccionado})
-  console.log({tareaSeleccionada})
 
   const columns = [
     { title: 'Cliente', field: 'codigoCliente', width: 120 },
@@ -296,11 +286,13 @@ export const TareasPage = () => {
     const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === tareaSeleccionada.codigoCliente && planta.oferta === tareaSeleccionada.oferta && planta.id_Elemento === tareaSeleccionada.elemento);
 
     lista.map(analisis => {
-      opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id)[0]);
+      opcionesFiltradasAnalisis.push(analisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
     })
 
     opcionesFiltradasAnalisis.map(nomAnalisis => {
-      opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === nomAnalisis.id_Analisis)[0])
+      nomAnalisis.map(anal => {
+        opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
+      })
     })
 
     setAnalisisAutocomplete(opcionesNombreFiltradasAnalisis)
@@ -795,8 +787,6 @@ export const TareasPage = () => {
 
   };
 
-  console.log(tareaSeleccionada)
-
   return (
     <MainLayout title="Tareas">
 
@@ -862,10 +852,23 @@ export const TareasPage = () => {
                 setTareaSeleccionada(tareaSeleccionada.row)
                 setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
                 setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
-                //setElementoTareaEditar(analisisNivelesPlantasCliente.filter(elemento => elemento.elemento === tareaSeleccionada.elementoPlanta));
-                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.tipo));
-                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.operario));
-                //setAnalisisEditar(analisisNivelesPlantasCliente.filter(analisi => analisi.analisis === tareaSeleccionada.analisis));
+                setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
+                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
+                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.row.operario));
+                setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
+
+                if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {
+                  setEstadoOperario(false)
+                } else {
+                  setEstadoOperario(true)
+                }
+      
+                if (analisisEditar[0].nombre === "Desinfecciones") {
+                  setEstadoProtocolo(false)
+                } else {
+                  setEstadoProtocolo(true)
+                }
+
                 abrirCerrarModalEditar();
               }}
             />
@@ -927,6 +930,8 @@ export const TareasPage = () => {
             tecnicoTareaEditar={tecnicoTareaEditar}
             elementosAutocomplete={elementosAutocomplete}
             analisisAutocomplete={analisisAutocomplete}
+            elementoTareaEditar={elementoTareaEditar}
+            analisisEditar={analisisEditar}
           />}
         botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
           abrirCerrarModalEditar()
