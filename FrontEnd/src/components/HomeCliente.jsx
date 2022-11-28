@@ -11,7 +11,7 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { getAnalisis, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getTareas, getValorParametros } from '../api/apiBackend';
+import { getAnalisis, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros } from '../api/apiBackend';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
@@ -29,7 +29,9 @@ const HomeCliente = () => {
     const [ parametros, setParametros ] = useState([]);
     const [ tareas, setTareas ] = useState([]);
     const [ analisis, setAnalisis ] = useState([]);
+    const [ parametrosAnalisis, setParametrosAnalisis ] = useState([]);
     const [ tareasFiltradas, setTareasFiltradas ] = useState([]);
+    const [ parametrosAnalisisFiltrados, setParametrosAnalisisFiltrados ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
 
     // Variables para el diagrama
@@ -54,7 +56,10 @@ const HomeCliente = () => {
             .then( resp => setTareas( resp ));
 
         getAnalisis()
-         .then( resp => setAnalisis( resp ));
+            .then( resp => setAnalisis( resp ));
+
+         getParametrosAnalisisPlanta()
+            .then( resp => setParametrosAnalisis( resp ));
 
     }, []);
 
@@ -82,6 +87,7 @@ const HomeCliente = () => {
     useEffect(() => {
         if( plantaActiva.codigoCliente ) {
             setTareasFiltradas(tareas.filter( tarea => tarea.codigoCliente === plantaActiva.codigoCliente && tarea.oferta === plantaActiva.oferta && parseInt(tarea.elemento, 10) === elementoActivo.id ));
+            setParametrosAnalisisFiltrados(parametrosAnalisis.filter( parametro => parametro.codigoCliente === plantaActiva.codigoCliente && parametro.oferta === plantaActiva.oferta && parametro.elemento === elementoActivo.id ));
         }
     }, [ plantaActiva, elementoActivo ]);
 
@@ -347,12 +353,12 @@ const HomeCliente = () => {
 
                                                         // row -> id, nombre
                                                         // tareasFiltradas -> analisis, elemento
-
+                                                        var currentTime = new Date();
 
                                                         // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorTarea = tareasFiltradas.filter( tarea => parseInt(tarea.analisis, 10) === row.id );
+                                                        const valoresPorTarea = parametrosAnalisisFiltrados.filter( analisis => parseInt(analisis.analisis, 10) === row.id );
                                                         let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
-
+                                                        
                                                         if( valoresPorTarea.length > 0 ) {
 
                                                             console.log({ valoresPorTarea });
@@ -360,12 +366,17 @@ const HomeCliente = () => {
                                                             // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
                                                             valoresPorTarea.map( val => {
     
-                                                                console.log({ val })
+                                                                // Convertimos la fecha del registro en un objeto de fecha
                                                                 const fecha = new Date(val.fecha);
-                                                                
-                                                                for(let i = 0; i < 12; i++) {
-                                                                    if(fecha.getMonth() === i) {
-                                                                        fechas[i] = 0;
+
+                                                                // Contamos solo si los registros son de este año
+                                                                if( fecha.getFullYear() === currentTime.getFullYear() ) {
+                                                                    for(let i = 0; i < 12; i++) {
+                                                                        if(fecha.getMonth() === i) {
+                                                                            val.realizado
+                                                                                ? fechas[i] = 1
+                                                                                : fechas[i] = 0
+                                                                        }
                                                                     }
                                                                 }
 
