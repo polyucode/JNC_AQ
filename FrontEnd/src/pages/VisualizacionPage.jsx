@@ -299,8 +299,6 @@ export const VisualizacionPage = () => {
     const [analisisEditar, setAnalisisEditar] = useState([]);
     const [elementoTareaEditar, setElementoTareaEditar] = useState([]);
 
-    const [operarioEditar, setOperarioEditar] = useState([]);
-
     const [oferta, setOferta] = useState([]);
 
     const [clientes, setClientes] = useState([]);
@@ -572,47 +570,410 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
+        if (modalInsertar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar(!modalInsertar);
+        } else {
+            setModalInsertar(!modalInsertar);
+        }
     }
 
     const abrirCerrarModalInsertar1 = () => {
-        setModalInsertar1(!modalInsertar1);
+        if (modalInsertar1) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar1(!modalInsertar1);
+        } else {
+            setModalInsertar1(!modalInsertar1);
+        }
     }
 
     const abrirCerrarModalInsertarOperario = () => {
-        setModalInsertarOperario(!modalInsertarOperario);
+        if (modalInsertarOperario) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertarOperario(!modalInsertarOperario);
+        } else {
+            setModalInsertarOperario(!modalInsertarOperario);
+        }
     }
 
     const abrirCerrarModalInsertarAerobio = () => {
-        setModalInsertarAerobio(!modalInsertarAerobio);
+        if (modalInsertarAerobio) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertarAerobio(!modalInsertarAerobio);
+        } else {
+            setModalInsertarAerobio(!modalInsertarAerobio);
+        }
     }
 
     const abrirCerrarModalInsertarLegionela = () => {
-        setModalInsertarLegionela(!modalInsertarLegionela);
+        if (modalInsertarLegionela) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertarLegionela(!modalInsertarLegionela);
+        } else {
+            setModalInsertarLegionela(!modalInsertarLegionela);
+        }
     }
 
     const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
+        if (modalEditar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar(!modalEditar);
+        } else {
+            setModalEditar(!modalEditar);
+        }
     }
 
     const abrirCerrarModalEditar1 = () => {
-        setModalEditar1(!modalEditar1);
+        if (modalEditar1) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar1(!modalEditar1);
+        } else {
+            setModalEditar1(!modalEditar1);
+        }
     }
 
     const abrirCerrarModalEditarOperario = () => {
-        setModalEditarOperario(!modalEditarOperario);
+        if (modalEditarOperario) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditarOperario(!modalEditarOperario);
+        } else {
+            setModalEditarOperario(!modalEditarOperario);
+        }
     }
 
     const abrirCerrarModalEditarAerobio = () => {
-        setModalEditarAerobio(!modalEditarAerobio);
+        if (modalEditarAerobio) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditarAerobio(!modalEditarAerobio);
+        } else {
+            setModalEditarAerobio(!modalEditarAerobio);
+        }
     }
 
     const abrirCerrarModalEditarLegionela = () => {
-        setModalEditarLegionela(!modalEditarLegionela);
+        if (modalEditarLegionela) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditarLegionela(!modalEditarLegionela);
+        } else {
+            setModalEditarLegionela(!modalEditarLegionela);
+        }
     }
 
     const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
+        if (modalEliminar) {
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEliminar(!modalEliminar);
+        } else {
+            setModalEliminar(!modalEliminar);
+        }
     }
 
     const GetOperarios = async () => {
@@ -681,8 +1042,6 @@ export const VisualizacionPage = () => {
             setData1(response.data.data.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
-
-    console.log({ analisisSeleccionado })
 
     const FisicoQuimicoAporte = async () => {
         axios.get("/parametrosanalisisplanta", token).then(response => {
@@ -862,16 +1221,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -911,16 +1273,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -951,16 +1316,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -989,17 +1357,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
-                    recogido: false,
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1028,17 +1398,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
-                    recogido: false,
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1074,16 +1446,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1127,16 +1502,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1172,16 +1550,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1215,17 +1596,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
-                    recogido: false,
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1259,17 +1642,19 @@ export const VisualizacionPage = () => {
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
                     periodo: '',
-                    analisis: '',
-                    nombreAnalisis: '',
+                    analisis: 0,
                     fecha: null,
+                    recogido: false,
+                    fechaRecogido: null,
                     realizado: false,
+                    fechaRealizado: null,
                     operario: '',
                     protocolo: '',
                     observaciones: '',
                     facturado: false,
                     numeroFacturado: '',
-                    resultado: '',
-                    recogido: false,
+                    cancelado: false,
+                    comentarios: '',
                     addDate: null,
                     addIdUser: null,
                     modDate: null,
@@ -1317,16 +1702,19 @@ export const VisualizacionPage = () => {
                         pedido: analisisSeleccionado.pedido,
                         elemento: analisisSeleccionado.elemento,
                         periodo: '',
-                        analisis: '',
-                        nombreAnalisis: '',
+                        analisis: 0,
                         fecha: null,
+                        recogido: false,
+                        fechaRecogido: null,
                         realizado: false,
+                        fechaRealizado: null,
                         operario: '',
                         protocolo: '',
                         observaciones: '',
                         facturado: false,
                         numeroFacturado: '',
-                        resultado: '',
+                        cancelado: false,
+                        comentarios: '',
                         addDate: null,
                         addIdUser: null,
                         modDate: null,
@@ -4612,7 +5000,7 @@ export const VisualizacionPage = () => {
 
                                             </>
                                         )
-                                    {/*default:
+                                        {/*default:
                                         return (
                                             <MaterialTable columns={columnasDet} data={dataOtros}
                                                 localization={localization}
