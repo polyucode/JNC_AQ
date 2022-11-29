@@ -1,22 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import axios from "axios";
-import { Link } from 'react-router-dom';
 import { Tab, Box } from '@mui/material';
 import { TabContext, TabList } from '@mui/lab';
 import { Modal, TextField, Button } from '@material-ui/core';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { ThemeContext } from '../App';
-
+import { axiosOptions } from '../api/apiBackend';
 import './PlantasTabla.css';
 import TablaElementosTabla from '../components/TablaElementosTabla';
-import MaterialTable from "@material-table/core";
 
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
@@ -597,34 +589,34 @@ function PlantasTabla() {
     };
 
     const GetClientes = async () => {
-        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOferta(oferta);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", axiosOptions).then(response => {
             const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(analisisNiveles);
         })
     }
 
     const GetConfParametrosElementoPlantaCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametroselementoplantacliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametroselementoplantacliente", axiosOptions).then(response => {
             setData2(response.data.data)
         })
     }
 
     const GetElementos = async () => {
-        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", axiosOptions).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
@@ -637,7 +629,7 @@ function PlantasTabla() {
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
 
-        await axios.post("http://172.26.0.169:44343/api/parametroselementoplantacliente", parametrosBack, token)
+        await axios.post("http://172.26.0.169:44343/api/parametroselementoplantacliente", parametrosBack, axiosOptions)
             .then(response => {
                 alert("Los parametros se han guardado correctamente")
                 return response
@@ -649,7 +641,7 @@ function PlantasTabla() {
     }
 
     const editarPlantilla = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
+        await axios.put("http://172.26.0.169:44343/api/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, axiosOptions)
             .then(response => {
                 var parametrosModificado = data2;
                 parametrosModificado.map(parametro => {
@@ -666,7 +658,7 @@ function PlantasTabla() {
     const GetParametros = async () => {
 
         const url = "http://172.26.0.169:44343/api/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
-        const response = await axios.get(url, token)
+        const response = await axios.get(url, axiosOptions)
 
         setDatosParametrosFront(response.data.data)
 

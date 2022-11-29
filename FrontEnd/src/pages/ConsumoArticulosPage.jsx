@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Card, Typography, Button, TextField } from '@mui/material';
 import axios from "axios";
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 
@@ -13,7 +9,6 @@ import MuiAlert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -23,6 +18,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+import { axiosOptions } from "../api/apiBackend";
 
 
 const token = {
@@ -87,20 +83,20 @@ export const ConsumoArticulosPage = () => {
 
 
     const getConsumos = async () => {
-        axios.get("http://172.26.0.169:44343/api/consumos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/consumos", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
 
     const getProductos = async () => {
-        axios.get("http://172.26.0.169:44343/api/productos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/productos", axiosOptions).then(response => {
             const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setProductos(producto);
         }, [])
     }
 
     const getOfertas = async () => {
-        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOfertas(oferta);
         }, [])
@@ -122,7 +118,7 @@ export const ConsumoArticulosPage = () => {
 
     const peticionPost = async () => {
         consumoSeleccionado.id = 0;
-        await axios.post("http://172.26.0.169:44343/api/consumos", consumoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/consumos", consumoSeleccionado, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getConsumos();
@@ -132,7 +128,7 @@ export const ConsumoArticulosPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, axiosOptions)
             .then(response => {
                 var consumoModificado = data;
                 consumoModificado.map(consumo => {
@@ -150,7 +146,7 @@ export const ConsumoArticulosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ConsumoEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/consumos/" + ConsumoEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/consumos/" + ConsumoEliminar[i], axiosOptions)
                 .then(response => {
                     getConsumos();
                     abrirCerrarModalEliminar();

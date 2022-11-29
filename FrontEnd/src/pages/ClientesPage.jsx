@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button } from '@mui/material';
-import MaterialTable from '@material-table/core';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 
 import Snackbar from '@mui/material/Snackbar';
@@ -17,7 +9,6 @@ import Slide from '@mui/material/Slide';
 
 // Iconos
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -28,11 +19,10 @@ import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { addCliente, deleteCliente, getClientes, getComarcas } from '../api/apiBackend';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { useForm } from '../hooks/useForm';
+import { axiosOptions } from '../api/apiBackend';
 
 
 const token = {
@@ -133,14 +123,14 @@ export const ClientesPage = () => {
   ]
 
   const GetPoblacion = async () => {
-    axios.get("http://172.26.0.169:44343/api/poblacion", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/poblacion", axiosOptions).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
   }
 
   const GetProvincia = async () => {
-    axios.get("http://172.26.0.169:44343/api/provincia", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/provincia", axiosOptions).then(response => {
       const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setProvincia(provincia);
     }, [])
@@ -199,14 +189,14 @@ export const ClientesPage = () => {
   }, [clienteSeleccionado.cp])
 
   const peticionGet = async () => {
-    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, axiosOptions)
       .then(response => {
         abrirCerrarModalInsertar();
         peticionGet();
@@ -238,7 +228,7 @@ export const ClientesPage = () => {
   }
 
   const peticionPut = async () => {
-    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, axiosOptions)
       .then(response => {
         var clienteModificado = data;
         clienteModificado.map(cliente => {
@@ -279,7 +269,7 @@ export const ClientesPage = () => {
     var i = 0;
     console.log(ClienteEliminar[i])
     while (i < ClienteEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i], token)
+      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i], axiosOptions)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();

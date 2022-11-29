@@ -2,7 +2,7 @@ import React , {useState, useEffect} from "react";
 import {TextField} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import axios from "axios";
-
+import { axiosOptions } from '../api/apiBackend';
 import FirmaFileUploader from '../components/FirmaFileUploader';
 import './Perfil.css';
 
@@ -83,7 +83,7 @@ function Perfil() {
     const uploader = React.createRef();
 
     const peticionPut=async()=>{
-      await axios.put("http://172.26.0.169:44343/api/usuario?id=" + User.id, User, token)
+      await axios.put("http://172.26.0.169:44343/api/usuario?id=" + User.id, User, axiosOptions)
       .then(response=>{
         var usuarioModificado = data;
         usuarioModificado.map(usuario=>{

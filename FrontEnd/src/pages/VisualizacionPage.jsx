@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
 import axios from "axios";
-import { Grid, Card, Typography, Button, TextField, Modal, Autocomplete } from '@mui/material';
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@mui/material/MenuItem';
+import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -18,7 +10,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-
+import { axiosOptions } from '../api/apiBackend';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -859,176 +851,176 @@ export const VisualizacionPage = () => {
     }
 
     const GetOperarios = async () => {
-        axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/usuario", axiosOptions).then(response => {
             const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOperarios(usuario);
         }, [])
     }
 
     const GetClientes = async () => {
-        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetAnalisis = async () => {
-        axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisis", axiosOptions).then(response => {
             const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisis(analisi);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOferta(oferta);
         }, [])
     }
 
     const GetElementos = async () => {
-        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", axiosOptions).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
     }
 
     const GetParametrosAnalisisPlanta = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
 
     const GetAnalisisNivelesPlantasCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", axiosOptions).then(response => {
             const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisisNivelesPlantasCliente(analisisNiveles);
         })
     }
 
     const GetConfNivelesPlantasCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", axiosOptions).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfNivelesPlantasCliente(niveles);
         })
     }
 
     const peticionGetEntregas = async () => {
-        axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/entregas", axiosOptions).then(response => {
             setDataEntregas(response.data.data)
         })
     }
 
     const FisicoQuimicoTorre = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData1(response.data.data.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoAporte = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData2(response.data.data.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoAlimentacion = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData3(response.data.data.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoRechazo = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData4(response.data.data.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoCondensados = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData5(response.data.data.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const FisicoQuimicoCaldera = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData6(response.data.data.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Aerobios = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData7(response.data.data.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Legionela = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData8(response.data.data.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguasResiduales = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData9(response.data.data.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Desinfecciones = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData10(response.data.data.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Osmosis = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData11(response.data.data.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguaPozo = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData12(response.data.data.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const DesinfeccionACS = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData13(response.data.data.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const MantMaqFrio = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData14(response.data.data.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const Mediciones = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData15(response.data.data.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const ControlFugaGas = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData16(response.data.data.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const AguaPotable = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData17(response.data.data.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     const RevisionBandeja = async () => {
-        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
             setData18(response.data.data.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }
 
     /*const Otros = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
+        axios.get("/parametrosanalisisplanta", axiosOptions).then(response => {
             setDataOtros(response.data.data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }*/
@@ -1088,7 +1080,7 @@ export const VisualizacionPage = () => {
 
     const peticionPost = async () => {
         analisisSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
             .then(response => {
                 Desinfecciones();
                 DesinfeccionACS();
@@ -1131,7 +1123,7 @@ export const VisualizacionPage = () => {
 
     const peticionPost1 = async () => {
         analisisSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
             .then(response => {
                 //setData(data.concat(response.data));
                 FisicoQuimicoTorre();
@@ -1183,7 +1175,7 @@ export const VisualizacionPage = () => {
 
     const peticionPostOperario = async () => {
         analisisSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
             .then(response => {
                 MantMaqFrio();
                 Mediciones();
@@ -1226,7 +1218,7 @@ export const VisualizacionPage = () => {
 
     const peticionPostAerobio = async () => {
         analisisSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
             .then(response => {
                 Aerobios();
                 abrirCerrarModalInsertarAerobio();
@@ -1267,7 +1259,7 @@ export const VisualizacionPage = () => {
 
     const peticionPostLegionela = async () => {
         analisisSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
             .then(response => {
                 Legionela();
                 abrirCerrarModalInsertarLegionela();
@@ -1307,7 +1299,7 @@ export const VisualizacionPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
             .then(response => {
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
@@ -1355,7 +1347,7 @@ export const VisualizacionPage = () => {
     }
 
     const peticionPut1 = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
             .then(response => {
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
@@ -1411,7 +1403,7 @@ export const VisualizacionPage = () => {
     }
 
     const peticionPutOperario = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
             .then(response => {
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
@@ -1459,7 +1451,7 @@ export const VisualizacionPage = () => {
     }
 
     const peticionPutAerobio = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
             .then(response => {
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
@@ -1505,7 +1497,7 @@ export const VisualizacionPage = () => {
     }
 
     const peticionPutLegionela = async () => {
-        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
             .then(response => {
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
@@ -1553,7 +1545,7 @@ export const VisualizacionPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < analisisEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + analisisEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + analisisEliminar[i].id, axiosOptions)
                 .then(response => {
                     FisicoQuimicoTorre();
                     FisicoQuimicoAporte();

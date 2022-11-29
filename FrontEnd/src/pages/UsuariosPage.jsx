@@ -1,29 +1,18 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
 import { Grid, Card, Typography, Button } from '@mui/material';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
-import { Modal } from '@mui/material';
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
+import { ModalLayout } from "../components/ModalLayout";
+import { InsertarUsuarioModal } from '../components/Modals/InsertarUsuarioModal';
 import { insertarBotonesModal } from "../helpers/insertarBotonesModal";
 import { EditarUsuarioModal } from '../components/Modals/EditarUsuarioModal';
-
+import { axiosOptions } from '../api/apiBackend';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel'
 
@@ -120,14 +109,14 @@ export const UsuariosPage = () => {
 
   //peticiones API
   const GetClientes = async () => {
-    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
       const clientes = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setClientes(clientes);
     }, [])
   }
 
   const GetPerfiles = async () => {
-    axios.get("http://172.26.0.169:44343/api/perfil", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/perfil", axiosOptions).then(response => {
       const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPerfiles(perfil);
     }, [])
@@ -136,7 +125,7 @@ export const UsuariosPage = () => {
 
   // Recoger Usuarios
   const peticionGet = async () => {
-    axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/usuario", axiosOptions).then(response => {
       for (let i = 0; i < response.data.data.length; i++) {
         if (response.data.data[i].firma) {
           let firmaB64 = response.data.data[i].firma;
@@ -173,7 +162,7 @@ export const UsuariosPage = () => {
   //Insertar usuario
   const peticionPost = async () => {
     usuarioSeleccionado.id = null;
-    await axios.post("http://172.26.0.169:44343/api/usuario", usuarioSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/usuario", usuarioSeleccionado, axiosOptions)
       .then(response => {
         abrirCerrarModalInsertar();
         peticionGet();
@@ -205,7 +194,7 @@ export const UsuariosPage = () => {
   // Editar el usuario
   const peticionPut = async () => {
     console.log(usuarioSeleccionado)
-    await axios.put("http://172.26.0.169:44343/api/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, axiosOptions)
       .then(response => {
         var usuarioModificado = data;
         usuarioModificado.map(usuario => {
@@ -245,7 +234,7 @@ export const UsuariosPage = () => {
     var i = 0;
     console.log(UsuarioEliminar[i])
     while (i < UsuarioEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/usuario/" + UsuarioEliminar[i], token)
+      await axios.delete("http://172.26.0.169:44343/api/usuario/" + UsuarioEliminar[i], axiosOptions)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();

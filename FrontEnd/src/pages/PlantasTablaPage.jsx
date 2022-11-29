@@ -9,7 +9,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 //import CreateIcon from '@mui/icons-material/Create';
 import { useLocation } from "react-router-dom";
-import { getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
+import { axiosOptions, getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
 import {
     getConfNivelesPlantasCliente,
     getConfParametrosElementoPlantaCliente,
@@ -399,7 +399,7 @@ export const PlantasTablaPage = () => {
     //     tipoParametros.map(parametro => {
 
     //         if (parametro.activo == true) {
-    //             axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, token)
+    //             axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, axiosOptions)
     //                 .then(response => {
     //                     var parametrosModificado = parametrosElementoPlanta;
     //                     parametrosModificado.map(param => {
@@ -438,7 +438,7 @@ export const PlantasTablaPage = () => {
                     delIdUser: null,
                     deleted: null
                 }
-                axios.post("http://172.26.0.169:44343/api/valorparametros", param2, token)
+                axios.post("http://172.26.0.169:44343/api/valorparametros", param2, axiosOptions)
                     .then(response => {
                         return response
                     })

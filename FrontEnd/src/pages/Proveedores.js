@@ -5,11 +5,8 @@ import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@mui/material/MenuItem';
+import { axiosOptions } from '../api/apiBackend';
 
 
 const token = {
@@ -128,7 +125,7 @@ function Proveedores() {
     ];
 
     const getProveedores = async () => {
-        axios.get("http://172.26.0.169:44343/api/proveedores", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/proveedores", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
@@ -140,7 +137,7 @@ function Proveedores() {
     const peticionPost = async () => {
         proveedorSeleccionado.id = null;
         console.log(proveedorSeleccionado)
-        await axios.post("http://172.26.0.169:44343/api/proveedores", proveedorSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/proveedores", proveedorSeleccionado, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getProveedores();
@@ -150,7 +147,7 @@ function Proveedores() {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/proveedores?id=" + proveedorSeleccionado.id, proveedorSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/proveedores?id=" + proveedorSeleccionado.id, proveedorSeleccionado, axiosOptions)
             .then(response => {
                 var proveedorModificado = data;
                 proveedorModificado.map(proveedor => {
@@ -168,7 +165,7 @@ function Proveedores() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ProveedorEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/proveedores/" + ProveedorEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/proveedores/" + ProveedorEliminar[i].id, axiosOptions)
                 .then(response => {
                     getProveedores();
                     abrirCerrarModalEliminar();

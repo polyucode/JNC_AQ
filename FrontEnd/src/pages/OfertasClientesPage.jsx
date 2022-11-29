@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
 import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { Grid, Card, Typography, Button } from '@mui/material';
 
@@ -29,7 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { getContactos } from "../api/apiBackend";
+import { axiosOptions,  getContactos } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -112,13 +102,13 @@ export const OfertasClientesPage = () => {
         { title: 'Contacto3', field: 'contacto3', width: 100 }
     ];
     const getOfertas = async () => {
-        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
 
     const getClientes = async () => {
-        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
@@ -152,7 +142,7 @@ export const OfertasClientesPage = () => {
 
     const peticionPost = async () => {
         ofertaSeleccionada.id = null;
-        await axios.post("http://172.26.0.169:44343/api/ofertasclientes", ofertaSeleccionada, token)
+        await axios.post("http://172.26.0.169:44343/api/ofertasclientes", ofertaSeleccionada, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getOfertas();
@@ -182,7 +172,7 @@ export const OfertasClientesPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
+        await axios.put("http://172.26.0.169:44343/api/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, axiosOptions)
             .then(response => {
                 var ofertaModificada = data;
                 ofertaModificada.map(oferta => {
@@ -220,7 +210,7 @@ export const OfertasClientesPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/ofertasclientes/" + OfertaEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/ofertasclientes/" + OfertaEliminar[i], axiosOptions)
                 .then(response => {
                     getOfertas();
                     abrirCerrarModalEliminar();

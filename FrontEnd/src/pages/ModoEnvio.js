@@ -5,11 +5,8 @@ import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
 import { Modal, TextField, Button } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@mui/material/MenuItem';
+import { axiosOptions } from '../api/apiBackend';
 
 
 const token = {
@@ -126,7 +123,7 @@ function ModoEnvio() {
     ];
 
     const getEnvios = async () => {
-        axios.get("http://172.26.0.169:44343/api/modoenvio", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/modoenvio", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
@@ -137,7 +134,7 @@ function ModoEnvio() {
 
     const peticionPost = async () => {
         envioSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/modoenvio", envioSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/modoenvio", envioSeleccionado, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getEnvios();
@@ -147,7 +144,7 @@ function ModoEnvio() {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/modoenvio?id=" + envioSeleccionado.id, envioSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/modoenvio?id=" + envioSeleccionado.id, envioSeleccionado, axiosOptions)
             .then(response => {
                 var envioModificado = data;
                 envioModificado.map(envio => {
@@ -165,7 +162,7 @@ function ModoEnvio() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < EnvioEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/modoenvio/" + EnvioEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/modoenvio/" + EnvioEliminar[i].id, axiosOptions)
                 .then(response => {
                     getEnvios();
                     abrirCerrarModalEliminar();

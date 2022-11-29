@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { ThemeContext } from '../App';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { axiosOptions } from "../api/apiBackend";
 
 import axios from "axios";
 
@@ -200,7 +201,7 @@ const TablaElementosTabla = (props) => {
     const GetParametros = async () => {
 
         const url = "http://172.26.0.169:44343/api/parametroselementoplantascliente/parametros/?CodigoCliente=" + props.parametrosSeleccionado.codigoCliente + "&Oferta=" + props.parametrosSeleccionado.oferta + "&Elemento=" + props.parametrosSeleccionado.elemento
-        axios.get(url , token).then(response => {
+        axios.get(url , axiosOptions).then(response => {
             console.log(response)            
         }, [])
     }

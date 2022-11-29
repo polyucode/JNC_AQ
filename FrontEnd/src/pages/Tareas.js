@@ -13,7 +13,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import { ThemeContext } from "../router/AppRouter";
-
+import { axiosOptions } from '../api/apiBackend';
 import FullCalendar from '@fullcalendar/react'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
@@ -21,7 +21,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import { FamilyRestroomRounded } from "@mui/icons-material";
 import { MainLayout } from "../layout/MainLayout";
 
 
@@ -439,67 +438,67 @@ function Tareas() {
 
   //peticiones API
   const GetClientes = async () => {
-    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
       const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setClientes(cliente);
     }, [])
   }
 
   const GetOperarios = async () => {
-    axios.get("http://172.26.0.169:44343/api/usuario", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/usuario", axiosOptions).then(response => {
       const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOperarios(usuario);
     }, [])
   }
 
   const GetElementosPlanta = async () => {
-    axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/elementosplanta", axiosOptions).then(response => {
       const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setElementosPlanta(elemento);
     }, [])
   }
 
   const GetAnalisis = async () => {
-    axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/analisis", axiosOptions).then(response => {
       const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setAnalisis(analisi);
     }, [])
   }
 
   const GetOfertas = async () => {
-    axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
       const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setOfertas(oferta);
     }, [])
   }
 
   const GetConfNivelesPlantasCliente = async () => {
-    axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", axiosOptions).then(response => {
         const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
         setConfNivelesPlantasCliente(niveles);
     })
 }
 
   const peticionGet = async () => {
-    axios.get("http://172.26.0.169:44343/api/tareas", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/tareas", axiosOptions).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionGetVis = async () => {
-    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
       setDataVis(response.data.data)
     })
   }
 
   const peticionGetAnalisis = async () => {
-    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/parametrosanalisisplanta", axiosOptions).then(response => {
       setDataAnalisis(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elementoPlanta && analisi.analisis === tareaSeleccionada.analisis))
     })
   }
 
   const peticionGetEntregas = async () => {
-    axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/entregas", axiosOptions).then(response => {
       setDataEntregas(response.data.data)
     })
   }
@@ -576,7 +575,7 @@ function Tareas() {
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
-    await axios.post("http://172.26.0.169:44343/api/tareas", tareaSeleccionada, token)
+    await axios.post("http://172.26.0.169:44343/api/tareas", tareaSeleccionada, axiosOptions)
       .then(response => {
         //Creamos los detalles
         var date = new Date(fechaprevista);
@@ -747,7 +746,7 @@ function Tareas() {
   }
 
   const peticionPut = async () => {
-    await axios.put("http://172.26.0.169:44343/api/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, token)
+    await axios.put("http://172.26.0.169:44343/api/tareas?id=" + tareaSeleccionada.id, tareaSeleccionada, axiosOptions)
       .then(response => {
         var tareaSeleccionada = data;
         tareaSeleccionada.map(tarea => {
@@ -788,7 +787,7 @@ function Tareas() {
   }
 
   const peticionDelete = async () => {
-    await axios.delete("http://172.26.0.169:44343/api/tareas/" + TareaEliminar[0].id, token)
+    await axios.delete("http://172.26.0.169:44343/api/tareas/" + TareaEliminar[0].id, axiosOptions)
       .then(response => {
         peticionGet();
         abrirCerrarModalEliminar();
@@ -831,7 +830,7 @@ function Tareas() {
     analisisSeleccionado.pedido = tareaSeleccionada.pedido;
     analisisSeleccionado.elemento = tareaSeleccionada.elementoPlanta;
     console.log(analisisSeleccionado)
-    await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/parametrosanalisisplanta", analisisSeleccionado, axiosOptions)
       .then(response => {
         //abrirCerrarModalInsertarDet();
         peticionGetAnalisis();
@@ -869,7 +868,7 @@ function Tareas() {
     if (analisisSeleccionado.recogido === true) {
       peticionPostEntrega();
     }
-    await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, axiosOptions)
       .then(response => {
         var analisisSeleccionado = dataAnalisis;
         analisisSeleccionado.map(analisis => {
@@ -912,7 +911,7 @@ function Tareas() {
   const peticionDeleteVis = async () => {
     var i = 0;
     while (i < AnalisisEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + AnalisisEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/parametrosanalisisplanta/" + AnalisisEliminar[i].id, axiosOptions)
         .then(response => {
           peticionGetAnalisis();
           peticionGetVis();
@@ -957,7 +956,7 @@ function Tareas() {
     entregaSeleccionada.analisis = analisisSeleccionado.analisis;
     entregaSeleccionada.descripcion = `Muestra de ${analisisSeleccionado.analisis} del cliente ${analisisSeleccionado.nombreCliente}`;
     entregaSeleccionada.fecha = analisisSeleccionado.fecha;
-    await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, token)
+    await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, axiosOptions)
       .then(response => {
         peticionGetEntregas();
         setEntregaSeleccionada({

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Card, Typography, Button } from '@mui/material';
 import axios from "axios";
-import { Modal, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 
@@ -20,6 +18,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
 import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+import { axiosOptions } from '../api/apiBackend';
 
 
 const token = {
@@ -73,7 +72,7 @@ export const ProductosPage = () => {
     ];
 
     const getProductos = async () => {
-        axios.get("http://172.26.0.169:44343/api/productos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/productos", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
@@ -92,7 +91,7 @@ export const ProductosPage = () => {
 
     const peticionPost = async () => {
         productoSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/productos", productoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/productos", productoSeleccionado, axiosOptions)
             .then(response => {
                 //setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
@@ -103,7 +102,7 @@ export const ProductosPage = () => {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/productos?id=" + productoSeleccionado.id, productoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/productos?id=" + productoSeleccionado.id, productoSeleccionado, axiosOptions)
             .then(response => {
                 var productoModificado = data;
                 productoModificado.map(producto => {
@@ -121,7 +120,7 @@ export const ProductosPage = () => {
     const peticionDelete = async () => {
         var i = 0;
         while (i < ProductoEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/productos/" + ProductoEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/productos/" + ProductoEliminar[i], axiosOptions)
                 .then(response => {
                     getProductos();
                     abrirCerrarModalEliminar();

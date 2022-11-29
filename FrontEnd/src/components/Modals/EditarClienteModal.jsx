@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, Autocomplete } from '@mui/material';
-import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
+import { axiosOptions, getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
 import axios from "axios";
-import { Modal, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
-import { MainLayout } from "../../layout/MainLayout";
 import { ModalLayout, ModalPopup } from "../ModalLayout";
 
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -19,12 +17,6 @@ import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 import { InsertarContactoModal } from './InsertarContactoModal';
 import { EditarContactoModal } from './EditarContactoModal';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
-
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
 
 export const EditarClienteModal = ({ change: handleChange, autocompleteChange, clienteSeleccionado }) => {
 
@@ -128,14 +120,14 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     }
 
     const peticionGet = async () => {
-        axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/clientescontactos", axiosOptions).then(response => {
             setData(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
         })
     }
 
     const peticionPostContacto = async () => {
         contactoSeleccionado.id = null;
-        await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, token)
+        await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 peticionGet();
@@ -164,7 +156,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     const peticionDeleteContacto = async () => {
         var i = 0;
         while (i < ContactoClienteEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i], token)
+            await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i], axiosOptions)
                 .then(response => {
                     peticionGet();
                     abrirCerrarModalEliminar();
@@ -192,7 +184,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     }
 
     const peticionPutContacto = async () => {
-        await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
+        await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, axiosOptions)
             .then(response => {
                 var contactoModificado = data;
                 contactoModificado.map(contacto => {

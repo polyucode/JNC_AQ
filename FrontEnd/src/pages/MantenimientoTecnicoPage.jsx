@@ -16,7 +16,7 @@ import { useParserBack } from "../hooks/useParserBack";
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros } from "../api/apiBackend";
+import { axiosOptions, getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros } from "../api/apiBackend";
 import Swal from "sweetalert2";
 
 const token = {
@@ -57,7 +57,7 @@ export const MantenimientoTecnicoPage = () => {
     const [dataParametros, setDataParametros] = useState([]);
 
     const GetConfNivelesPlantasCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/confnivelesplantascliente", axiosOptions).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfNivelesPlantasCliente(niveles);
         })

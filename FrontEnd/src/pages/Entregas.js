@@ -9,6 +9,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { axiosOptions } from "../api/apiBackend";
 
 
 const token = {
@@ -153,7 +154,7 @@ function Entregas() {
     ];
 
     const getEntregas = async () => {
-        axios.get("http://172.26.0.169:44343/api/entregas", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/entregas", axiosOptions).then(response => {
             setData(response.data.data)
         })
     }
@@ -164,7 +165,7 @@ function Entregas() {
 
     const peticionPost = async () => {
         entregaSeleccionada.id = null;
-        await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, token)
+        await axios.post("http://172.26.0.169:44343/api/entregas", entregaSeleccionada, axiosOptions)
             .then(response => {
                 abrirCerrarModalInsertar();
                 getEntregas();
@@ -192,7 +193,7 @@ function Entregas() {
     }
 
     const peticionPut = async () => {
-        await axios.put("http://172.26.0.169:44343/api/entregas?id=" + entregaSeleccionada.id, entregaSeleccionada, token)
+        await axios.put("http://172.26.0.169:44343/api/entregas?id=" + entregaSeleccionada.id, entregaSeleccionada, axiosOptions)
             .then(response => {
                 var entregaModificada = data;
                 entregaModificada.map(entrega => {
@@ -228,7 +229,7 @@ function Entregas() {
     const peticionDelete = async () => {
         var i = 0;
         while (i < EntregaEliminar.length) {
-            await axios.delete("http://172.26.0.169:44343/api/entregas/" + EntregaEliminar[i].id, token)
+            await axios.delete("http://172.26.0.169:44343/api/entregas/" + EntregaEliminar[i].id, axiosOptions)
                 .then(response => {
                     getEntregas();
                     abrirCerrarModalEliminar();
@@ -259,35 +260,35 @@ function Entregas() {
 
 
     const GetAnalisis = async () => {
-        axios.get("http://172.26.0.169:44343/api/analisis", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisis", axiosOptions).then(response => {
             const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setAnalisis(analisi);
         }, [])
     }
 
     const GetClientes = async () => {
-        axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setClientes(cliente);
         }, [])
     }
 
     const GetElementos = async () => {
-        axios.get("http://172.26.0.169:44343/api/elementosplanta", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/elementosplanta", axiosOptions).then(response => {
             const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setElementos(elemento);
         }, [])
     }
 
     const GetOfertas = async () => {
-        axios.get("http://172.26.0.169:44343/api/ofertasclientes", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/ofertasclientes", axiosOptions).then(response => {
             const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setOfertas(oferta);
         }, [])
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", token).then(response => {
+        axios.get("http://172.26.0.169:44343/api/analisisnivelesplantascliente", axiosOptions).then(response => {
             const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
             setConfAnalisisNivelesPlantasCliente(niveles);
         }, [])

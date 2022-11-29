@@ -4,24 +4,16 @@ import axios from "axios";
 import { ExportCsv, ExportPdf } from '@material-table/exporters';
 import AddCircle from '@material-ui/icons/AddCircle';
 import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
 import { Modal, TextField, Button } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-
 import './Clientes.css';
 import { MainLayout } from "../layout/MainLayout";
+import { axiosOptions } from "../api/apiBackend";
 
-
-const token = {
-  headers: {
-    Authorization: 'Bearer ' + localStorage.getItem('token')
-  }
-};
 
 //estilos modal
 
@@ -283,47 +275,47 @@ function Clientes() {
 
   //peticiones API
   const GetPoblacion = async () => {
-    axios.get("http://172.26.0.169:44343/api/poblacion", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/poblacion", axiosOptions).then(response => {
       const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPoblacion(poblacion);
     }, [])
   }
 
   const GetProvincia = async () => {
-    axios.get("http://172.26.0.169:44343/api/provincia", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/provincia", axiosOptions).then(response => {
       const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setProvincia(provincia);
     }, [])
   }
 
   const GetComarca = async () => {
-    axios.get("http://172.26.0.169:44343/api/comarca", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/comarca", axiosOptions).then(response => {
       const comarca = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setComarca(comarca);
     }, [])
   }
 
   const GetPerfiles = async () => {
-    axios.get("http://172.26.0.169:44343/api/perfil", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/perfil", axiosOptions).then(response => {
       const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
       setPerfiles(perfil);
     }, [])
   }
 
   const peticionGet = async () => {
-    axios.get("http://172.26.0.169:44343/api/cliente", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/cliente", axiosOptions).then(response => {
       setData(response.data.data)
     })
   }
 
   const peticionGetContacto = async () => {
-    axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/clientescontactos", axiosOptions).then(response => {
       setDataDet(response.data.data)
     })
   }
 
   const peticionGetContactoCliente = async () => {
-    axios.get("http://172.26.0.169:44343/api/clientescontactos", token).then(response => {
+    axios.get("http://172.26.0.169:44343/api/clientescontactos", axiosOptions).then(response => {
       setDataContacto(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
     })
   }
@@ -364,7 +356,7 @@ function Clientes() {
 
   const peticionPost = async () => {
     clienteSeleccionado.id = null;
-    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/cliente", clienteSeleccionado, axiosOptions)
       .then(response => {
         abrirCerrarModalInsertar();
         peticionGet();
@@ -397,7 +389,7 @@ function Clientes() {
   }
 
   const peticionPut = async () => {
-    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, axiosOptions)
       .then(response => {
         var clienteModificado = data;
         clienteModificado.map(cliente => {
@@ -438,7 +430,7 @@ function Clientes() {
   const peticionDelete = async () => {
     var i = 0;
     while (i < ClienteEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/cliente/" + ClienteEliminar[i].id, axiosOptions)
         .then(response => {
           peticionGet();
           abrirCerrarModalEliminar();
@@ -475,7 +467,7 @@ function Clientes() {
   const peticionPostContacto = async () => {
     contactoSeleccionado.id = 0;
     contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
-    await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, token)
+    await axios.post("http://172.26.0.169:44343/api/clientescontactos", contactoSeleccionado, axiosOptions)
       .then(response => {
         abrirCerrarModalInsertarContacto();
         peticionGetContacto();
@@ -506,7 +498,7 @@ function Clientes() {
   const peticionDeleteContacto = async () => {
     var i = 0;
     while (i < ContactoClienteEliminar.length) {
-      await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i].id, token)
+      await axios.delete("http://172.26.0.169:44343/api/clientescontactos/" + ContactoClienteEliminar[i].id, axiosOptions)
         .then(response => {
           peticionGetContactoCliente();
           peticionGetContacto();
@@ -536,7 +528,7 @@ function Clientes() {
   }
 
   const peticionPutContacto = async () => {
-    await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
+    await axios.put("http://172.26.0.169:44343/api/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, axiosOptions)
       .then(response => {
         var contactoModificado = dataContacto;
         contactoModificado.map(contacto => {
