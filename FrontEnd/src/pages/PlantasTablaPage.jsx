@@ -438,7 +438,7 @@ export const PlantasTablaPage = () => {
                     delIdUser: null,
                     deleted: null
                 }
-                axios.post("/valorparametros", param2, token)
+                axios.post("http://172.26.0.169:44343/api/valorparametros", param2, token)
                     .then(response => {
                         return response
                     })

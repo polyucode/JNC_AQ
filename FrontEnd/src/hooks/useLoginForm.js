@@ -61,7 +61,7 @@ export const useLoginForm = () => {
 
         try {
 
-            const { data } = await axios.post('/token/', loginValues);
+            const { data } = await axios.post('http://172.26.0.169:44343/api/token/', loginValues);
 
             // Seteamos el token en el localStorage
             localStorage.setItem( 'token', data.token );
