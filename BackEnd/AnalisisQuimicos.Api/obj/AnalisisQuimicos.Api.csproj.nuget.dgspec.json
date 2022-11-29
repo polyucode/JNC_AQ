@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj": {}
+    "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj": {
+    "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
+        "projectUniqueName": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
         "projectName": "AnalisisQuimicos.Api",
-        "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
-        "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\obj\\",
+        "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\AnalisisQuimicos.Api.csproj",
+        "packagesPath": "C:\\Users\\Aitor\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Aitor\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,11 +28,11 @@
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
-                "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
+              "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+                "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
               },
-              "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj"
+              "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj"
               }
             }
           }
@@ -72,12 +72,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[3.1.25, 3.1.25]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -86,21 +80,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+    "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "projectUniqueName": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
         "projectName": "AnalisisQuimicos.Core",
-        "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
-        "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\obj\\",
+        "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj",
+        "packagesPath": "C:\\Users\\Aitor\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Aitor\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -146,21 +140,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
+    "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj",
         "projectName": "AnalisisQuimicos.Infrastructure",
-        "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\AnalisisQuimicos.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Aitor\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Aitor\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -174,8 +168,8 @@
           "netstandard2.1": {
             "targetAlias": "netstandard2.1",
             "projectReferences": {
-              "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
-                "projectPath": "C:\\Users\\chris\\Desktop\\Proyecto Yucode\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
+              "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj": {
+                "projectPath": "C:\\Users\\Aitor\\Documents\\Proyectos\\JNC_AQ\\BackEnd\\AnalisisQuimicos.Core\\AnalisisQuimicos.Core.csproj"
               }
             }
           }
@@ -232,7 +226,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
         }
       }
     }

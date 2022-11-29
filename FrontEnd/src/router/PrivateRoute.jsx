@@ -9,6 +9,6 @@ export const PrivateRoute = ({ children }) => {
     return (
         logged
             ? children
-            : <Navigate to="/YC_React/login" />
+            : <Navigate to="/login" />
     )
 }

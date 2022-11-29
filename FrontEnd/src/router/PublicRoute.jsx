@@ -9,6 +9,6 @@ export const PublicRoute = ({ children }) => {
     return (
         !logged
             ? children
-            : <Navigate to="/YC_React" />
+            : <Navigate to="/" />
     )
 }
