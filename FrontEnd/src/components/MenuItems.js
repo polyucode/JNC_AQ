@@ -83,7 +83,7 @@ const MenuItems = ({ items, depthLevel }) => {
             aria-haspopup="menu"
             onClick={items.id ? () => handleClick(items.id) : null}
         >
-          {items.link ? (<Link  style={{padding: 0}} className='nav-link' to={"YC_React/" + items.linkName} onClick={() => handleClick('Login')}>{items.title}</Link>) : items.title}
+          {items.link ? (<Link  style={{padding: 0}} className='nav-link' to={"/" + items.linkName} onClick={() => handleClick('Login')}>{items.title}</Link>) : items.title}
         {/* {items.title} */}
       </button>
       )}

@@ -30,6 +30,14 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Password).HasMaxLength(150);
 
+            builder.Property(e => e.Activo).HasColumnName("Activo"); 
+
+            builder.Property(e => e.IdPerfil).HasColumnName("IdPerfil");
+
+            builder.Property(e => e.IdCliente).HasColumnName("IdCliente");
+
+            builder.Property(e => e.CodigoOperario).HasColumnName("CodigoOperario");
+
             builder.Property(e => e.Telefono).HasMaxLength(250);
 
             builder.Property(e => e.Usuario).HasMaxLength(50);

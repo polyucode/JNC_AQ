@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 const urlBase = 'http://172.26.0.169:44343/api';
-
+// const urlBase = 'http://localhost:29135/api';
 export const axiosOptions = {
     headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Headers, Access-Control-Allow-Origin',
+        'Access-Control-Allow-Headers': 'POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Headers', //, Access-Control-Allow-Origin',
         'Content-Type': 'application/json'
     }
 }

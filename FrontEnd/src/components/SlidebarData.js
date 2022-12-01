@@ -14,35 +14,35 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 export const SlidebarData = [
     {
         title: 'Inicio',
-        path: '/YC_React',
+        path: '/',
         icon: <HomeIcon />,
         cName: 'nav-text',
         key: 1
     },
     {
         title: 'Usuarios',
-        path: '/YC_React/usuarios',
+        path: '/usuarios',
         icon: <PersonIcon />,
         cName: 'nav-text',
         key: 2
     },
     {
         title: 'Clientes',
-        path: '/YC_React/clientes',
+        path: '/clientes',
         icon: <BusinessCenterIcon />,
         cName: 'nav-text',
         key: 3
     },
     {
         title: 'Tareas',
-        path: '/YC_React/tareas',
+        path: '/tareas',
         icon: <FormatListBulletedIcon />,
         cName: 'nav-text',
         key: 4
     },
     {
         title: 'Plantas',
-        path: '/YC_React/plantas',
+        path: '/plantas',
         icon: <BusinessIcon />,
         cName: 'nav-text',
         key: 5
@@ -56,35 +56,35 @@ export const SlidebarData = [
     },
     {
         title: 'Mantenimiento (Tecnico)',
-        path: '/YC_React/mantenimientoTecnico',
+        path: '/mantenimientoTecnico',
         icon: <EngineeringIcon />,
         cName: 'nav-text',
         key: 7
     },
     {
         title: 'Ofertas',
-        path: '/YC_React/ofertas',
+        path: '/ofertas',
         icon: <LocalOfferIcon />,
         cName: 'nav-text',
         key: 8
     },
     {
         title: 'Productos',
-        path: '/YC_React/productos',
+        path: '/productos',
         icon: <InventoryIcon />,
         cName: 'nav-text',
         key: 9
     },
     {
         title: 'Consumos de Articulos',
-        path: '/YC_React/consumoarticulos',
+        path: '/consumoarticulos',
         icon: <CategoryIcon />,
         cName: 'nav-text',
         key: 10
     },
     {
         title: 'Visualizacion',
-        path: '/YC_React/visualizacion',
+        path: '/visualizacion',
         icon: <VisibilityIcon />,
         cName: 'nav-text',
         key: 11

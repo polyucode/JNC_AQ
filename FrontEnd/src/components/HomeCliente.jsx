@@ -25,7 +25,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 
 const HomeCliente = () => {
-
+    console.log("HOMER CLI")
     // Guardado de datos
     const [ ofertas, setOfertas ] = useState([]);
     const [ parametros, setParametros ] = useState([]);
