@@ -195,6 +195,13 @@ export const getConfNivelesPlantasClientePorPlanta = async ( idPlanta ) => {
 
 }
 
+export const getConfAnalisisNivelesPlantasCliente = async () => {
+
+    const resp = await axios.get('/analisisnivelesplantascliente', token);
+    return Object.entries(resp.data.data).map(([key, value]) => (key, value));
+
+}
+
 /*** ELEMENTOS ***/
 
 export const getElementos = async () => {
