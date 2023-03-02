@@ -48,6 +48,8 @@ export const PlantasTablaPage = () => {
         oferta: '',
         idElemento: 0,
         nombreElemento: "",
+        idAnalisis: 0,
+        nombreAnalisis: "",
         fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
@@ -593,6 +595,24 @@ export const PlantasTablaPage = () => {
                                 <Autocomplete
                                     disableClearable={true}
                                     id="elemento"
+                                    inputValue={ parametrosSeleccionado.nombreElemento }
+                                    options={ elementosAutocomplete }
+                                    getOptionLabel={option => ( option.nombre+' '+option.numero )}
+                                    renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
+                                    onChange={(event, value) => {
+                                        setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            idElemento: value.id,
+                                            nombreElemento: event.target.innerText
+                                        }))
+                                    }}
+                                />
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="analisis"
                                     inputValue={ parametrosSeleccionado.nombreElemento }
                                     options={ elementosAutocomplete }
                                     getOptionLabel={option => ( option.nombre+' '+option.numero )}
