@@ -12,6 +12,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
         public int? Id_Elemento { get; set; }
+        public int ? Id_Analisis { get; set; }
         public bool? EsPlantilla { get; set; }
         public int? LimInf { get; set; }
         public int? LimSup { get; set; }

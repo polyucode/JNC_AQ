@@ -460,6 +460,7 @@ export const PlantasTablaPage = () => {
                     Referencia: "",
                     Oferta: parametrosSeleccionado.oferta,
                     Id_Elemento: parametrosSeleccionado.idElemento,
+                    Id_Analisis: parametrosSeleccionado.idAnalisis,
                     Parametro: parametro.id,
                     Fecha: null,
                     Valor: 0,
@@ -482,10 +483,11 @@ export const PlantasTablaPage = () => {
             }
         })
     }
+    console.log(parametrosSeleccionado)
 
     const abrirPlantilla = async () => {
 
-        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento);
+        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         //let tipoParametrosActualizados = tipoParametros;
 
@@ -527,6 +529,7 @@ export const PlantasTablaPage = () => {
                 NombreCliente: parametrosSeleccionado.nombreCliente,
                 Oferta: parametrosSeleccionado.oferta,
                 Id_Elemento: parametrosSeleccionado.idElemento,
+                Id_Analisis: parametrosSeleccionado.idAnalisis,
                 EsPlantilla: true,
                 LimInf: parseInt(parametro.limInf, 10),
                 LimSup: parseInt(parametro.limSup, 10),
@@ -647,8 +650,9 @@ export const PlantasTablaPage = () => {
                                     id="analisis"
                                     inputValue={ parametrosSeleccionado.nombreAnalisis }
                                     options={ analisisAutocomplete }
+                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11)}
                                     getOptionLabel={option => option.nombre}
-                                    renderInput={(params) => <TextField {...params} name="analisis" label="Analisis FQ" />}
+                                    renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
                                     onChange={(event, value) => {
                                         setParametrosSeleccionado(prevState => ({
                                             ...prevState,

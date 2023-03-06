@@ -248,23 +248,23 @@ export const getValorParametros = async () => {
     
 }
 
-export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento) => {
+export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento, idAnalisis) => {
     
-    const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`, token);
     return resp.data.data;
     
 }
 
-export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento) => {
+export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento, idAnalisis) => {
     
-    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }`, token);
+    const resp = await axios.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`, token);
     return resp.data.data;
     
 }
 
-export const getParametrosElemento = async ( cliente, oferta, elemento ) => {
+export const getParametrosElemento = async ( cliente, oferta, elemento, analisis ) => {
 
-    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }`;
+    const url = `${ urlBase }/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }&Id_Analisis=${ analisis }`;
     const resp = await axios.get(url, token);
     return resp.data.data;
 
