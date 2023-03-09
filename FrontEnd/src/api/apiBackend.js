@@ -250,7 +250,7 @@ export const getValorParametros = async () => {
 
 export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento, idAnalisis) => {
     
-    const resp = await axios.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`, token);
+    const resp = await axios.get(`${ urlBase }/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`, token);
     return resp.data.data;
     
 }
@@ -301,6 +301,13 @@ export const postParametrosElementoPlantaCliente = async ( parametro ) => {
 export const postValorParametros = async ( parametro ) => {
 
     const resp = await axios.post('/valorparametros', parametro, token);
+    return resp.data.data;
+
+}
+
+export const putValorParametros = async ( parametro ) => {
+
+    const resp = await axios.put('/valorparametros', parametro, token);
     return resp.data.data;
 
 }

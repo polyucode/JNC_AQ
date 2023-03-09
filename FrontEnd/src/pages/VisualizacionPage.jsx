@@ -19,6 +19,7 @@ import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -2269,7 +2270,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -2277,7 +2283,8 @@ export const VisualizacionPage = () => {
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                         }
-                                                    })
+                                                    }),
+                                                    
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2427,7 +2434,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -2585,7 +2597,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -2743,7 +2760,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -2901,7 +2923,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -3059,7 +3086,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
                                                         if (peticionPut1()) {
@@ -3851,10 +3883,15 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar1()
 
-                                                        if (peticionPut()) {
+                                                        if (peticionPut1()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })

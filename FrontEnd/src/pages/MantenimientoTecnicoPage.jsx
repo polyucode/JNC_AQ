@@ -16,10 +16,12 @@ import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta } from "../api/apiBackend";
 import Swal from "sweetalert2";
 
 const token = {
@@ -212,7 +214,9 @@ export const MantenimientoTecnicoPage = () => {
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.numeroOferta
+            [name]: value.numeroOferta,
+            nombre: "",
+            nombreAnalisis: ""
         }))
 
     }
@@ -225,7 +229,8 @@ export const MantenimientoTecnicoPage = () => {
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.id
+            [name]: value.id,
+            nombreAnalisis: ""
         }))
     }
 
@@ -238,6 +243,7 @@ export const MantenimientoTecnicoPage = () => {
         let parametrosMostrar = [];
         const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
+        console.log(parametrosElemento, "PARAMETROS ELEMENTO")
         // Recorremos los registros para ver que valores podemos guardar (activo)
         datos.map(registro => {
 
@@ -250,6 +256,8 @@ export const MantenimientoTecnicoPage = () => {
                 // Preparamos el valor del mes actual y el arreglo de meses
                 let mesActual = new Date().getMonth();
                 let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                console.log(valoresPorParametro , "VALORESPORPARAMETROS")
 
                 // Mapeamos los valores en un array, y si no hay datos seteamos un 0
                 valoresPorParametro.map(val => {
@@ -286,8 +294,7 @@ export const MantenimientoTecnicoPage = () => {
                     unidad: registro.unidades,
                     valor: '',
                     dosMeses: valoresMeses
-                });
-
+                })
             }
 
         });
@@ -336,7 +343,7 @@ export const MantenimientoTecnicoPage = () => {
 
                 console.log({ parametroPost });
 
-                const resp = await postValorParametros(parametroPost);
+                const resp = await putValorParametros(parametroPost);
 
             } else {
 
@@ -388,7 +395,7 @@ export const MantenimientoTecnicoPage = () => {
                         <CardContent>
                             <Grid container spacing={2}>
 
-                                <Grid item xs={3}>
+                                <Grid item xs={2}>
                                     <Autocomplete
                                         disableClearable={true}
                                         id="codigoCliente"
@@ -410,7 +417,7 @@ export const MantenimientoTecnicoPage = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={3}>
+                                <Grid item xs={2}>
                                     <Autocomplete
                                         disableClearable={true}
                                         id="codigoOferta"
@@ -422,7 +429,7 @@ export const MantenimientoTecnicoPage = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={3}>
+                                <Grid item xs={2}>
                                     <Autocomplete
                                         disableClearable={true}
                                         id="elemento"
@@ -440,12 +447,12 @@ export const MantenimientoTecnicoPage = () => {
                                         inputValue={parametrosSeleccionado.nombreAnalisis}
                                         options={analisisAutocomplete}
                                         getOptionLabel={option => option.nombre}
-                                        renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis" />}
+                                        renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis y Revisiones" />}
                                         onChange={(event, value) => onChangeElemento(event, value, "idAnalisis")}
                                     />
                                 </Grid>
 
-                                <Grid item xs={6} md={3}>
+                                <Grid item xs={3}>
                                     <Autocomplete
                                         disableClearable={true}
                                         sx={{ width: '100%' }}
@@ -461,7 +468,7 @@ export const MantenimientoTecnicoPage = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={4}>
+                                <Grid item xs={2}>
                                     <TextField
                                         sx={{ width: '100%' }}
                                         label="Referencia"
@@ -471,7 +478,7 @@ export const MantenimientoTecnicoPage = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={3}>
+                                <Grid item xs={2}>
                                     <FormControl>
                                         <RadioGroup
                                             aria-labelledby="demo-radio-buttons-group-label"
@@ -479,7 +486,7 @@ export const MantenimientoTecnicoPage = () => {
                                             value={parametrosSeleccionado.realizado}
                                             onChange={handleChangeRadioButton}
                                         >
-                                            <FormControlLabel value={false} control={<Radio />} name="realizado" label="Pendiente de Realizar" />
+                                            <FormControlLabel value={false} control={<Radio />} name="realizado" label="Pendientes" />
                                             <FormControlLabel value={true} control={<Radio />} name="realizado" label="Realizado" />
 
                                         </RadioGroup>
@@ -510,67 +517,93 @@ export const MantenimientoTecnicoPage = () => {
                 {/* Sección tabla de parámetros */}
                 <Grid item xs={12}>
                     <Card>
-                        <CardContent>
-                            {
-                                (parametrosElemento.length > 0) ? (
-                                    <TableContainer>
-                                        <Table size="small">
+                        {
+                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) ?
+                                (<CardContent style={{ padding: '30px', margin: '15px' }}>
+                                    <Grid container spacing={4}>
+                                        <Grid item xs={4}>
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Recogida de Muestras" name="recogido" />
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Realizado" name="recogido" />
+                                        </Grid>
+                                        <Grid item xs={6} md={6}>
+                                            <p> Observaciones </p>
+                                            <TextareaAutosize
+                                                aria-label="empty textarea"
+                                                minRows={8}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={4}>
 
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell><b>Parámetro</b></TableCell>
-                                                    <TableCell><b>Valor</b></TableCell>
-                                                    <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
-                                                    <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
-                                                </TableRow>
-                                            </TableHead>
+                                    </Grid>
+                                </CardContent>
+                                ) :
+                                (
+                                    <CardContent>
+                                        {
+                                            (parametrosElemento.length > 0) ? (
+                                                <TableContainer>
+                                                    <Table size="small">
 
-                                            <TableBody>
-                                                {
-                                                    valoresParametros.map((parametro, index) => {
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell><b>Parámetro</b></TableCell>
+                                                                <TableCell><b>Valor</b></TableCell>
+                                                                <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
+                                                                <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
+                                                            </TableRow>
+                                                        </TableHead>
 
-                                                        const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
+                                                        <TableBody>
+                                                            {
+                                                                valoresParametros.map((parametro, index) => {
 
-                                                        return (
-                                                            <ParametroMantenimiento
-                                                                key={index}
-                                                                indice={index}
-                                                                parametros={valoresParametros}
-                                                                onChange={handleEditarParametro}
-                                                                nombre={nombreParametro}
-                                                            />
-                                                        )
-                                                    })
-                                                }
-                                            </TableBody>
+                                                                    const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
 
-                                        </Table>
-                                    </TableContainer>
-                                ) : (
-                                    <Typography>No hay parametros para mostrar</Typography>
-                                )
-                            }
-                        </CardContent>
+                                                                    return (
+                                                                        <ParametroMantenimiento
+                                                                            key={index}
+                                                                            indice={index}
+                                                                            parametros={valoresParametros}
+                                                                            onChange={handleEditarParametro}
+                                                                            nombre={nombreParametro}
+                                                                        />
+                                                                    )
+                                                                })
+                                                            }
+                                                        </TableBody>
+
+                                                    </Table>
+                                                </TableContainer>
+                                            ) : (
+                                                <Typography>No hay parametros para mostrar</Typography>
+                                            )
+                                        }
+                                    </CardContent>
+                                )}
                     </Card>
                 </Grid>
+
+                {console.log(valoresParametros, "VALORES PARAMETROS")}
 
                 {/* Sección de botones */}
                 <Grid item xs={12}>
                     <Card>
                         <CardContent>
                             <Grid container sx={{ justifyContent: 'flex-end' }} spacing={2}>
-                                {parametrosSeleccionado.idAnalisis === 6 && 
-                                <Grid item sx={{ justifyContent: 'flex-start' }}>
-                                    <Button
-                                        variant="contained"
-                                        startIcon={<PictureAsPdfIcon />}
-                                        onClick={guardarParametros}
-                                    >
-                                        Generar PDF
-                                    </Button>
-                                </Grid>
+                                {valoresParametros != "" &&
+                                    <Grid item sx={{ justifyContent: 'flex-start' }}>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<PictureAsPdfIcon />}
+                                            onClick={guardarParametros}
+                                        >
+                                            Generar PDF
+                                        </Button>
+                                    </Grid>
                                 }
-                                
+
                                 <Grid item>
                                     <Button
                                         variant="contained"
