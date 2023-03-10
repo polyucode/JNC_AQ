@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Title of the document</title>
+    <style>
+
+        table.border {
+            border-collapse: collapse;
+        }
+
+            table.border th {
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            table.border td {
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+    </style>
+</head>
+<body>
+
+    <table style="width:100%">
+        <tr>
+            <td style="width: 35%" align="center">
+                LOGO JNEGRE
+            </td>
+            <td style="width: 65%">
+                <table>
+                    <tr>
+                        <td><b>ANALÍTIQUES FÍSICO/QUÍMIQUES</b></td>
+                        <td align="right">@NUM</td>
+                    </tr>
+                </table>
+                <table class="border" style="width:100%">
+                    <tr><td colspan="2">Client</td></tr>
+                    <tr><td colspan="2">Empresa</td></tr>
+                    <tr>
+                        <td>Referència</td>
+                        <td>Data</td>
+                    </tr>
+                    <tr><td colspan="2">Domicili</td></tr>
+                    <tr><td colspan="2">Població</td></tr>
+                    <tr><td colspan="2">Tel.</td></tr>
+                    <tr><td colspan="2">Persona de contacte</td></tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr><td colspan="2" height="20"></td></tr>
+        <tr>
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td>Núm. de registre de laboratori: <b>@REG</b></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+
+            <td colspan="2">
+                <table class="border" style="width:100%;">
+                    <thead>
+                        <tr style="background-color:#D8D8D8">
+                            <th>Paràmetre</th>
+                            <th>Unitats</th>
+                            <!--<th>Arqueta</th>
+                            <th>Acometida</th>
+                            <th>Caldera</th>
+                            <th>Torre</th>-->
+                            @COLUMNAS
+                            <th>Límits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @FILAS
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="20"></td></tr>
+
+        <tr>
+            <td colspan="2">
+                <table class="border" style="width:100%">
+                    <tr>
+                        <td height="150" width="60" style="vertical-align: top">Comentaris</td>
+                        <td height="150" width="20" style="vertical-align: top" align="center">Signatura tècnic</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!--<div class="row">
+        <div class="column" style="width: 30%">
+            @IMAGELKHDFKJLDÑASHFJÑLADSHGJÑLADHSLÑDHSFLKÑADHSKLDÑSHFDKLÑASHFLAKDSÑHFÑLAKDSHFKÑLAHDSKFLÑDASHFÑLHDSAFFHDAKÑLDSHFLA
+        </div>
+
+        <div class="column" style="width: 70%">
+
+            <b style="width: 100% !important;">ANALÍTIQUES FÍSICO/QUÍMIQUES</b> número
+            <table style="table-layout: fixed; width: 100%">
+                <tr><td colspan="2">Client</td></tr>
+                <tr><td colspan="2">Empresa</td></tr>
+                <tr>
+                    <td>Referència</td>
+                    <td>Data</td>
+                </tr>
+                <tr><td colspan="2">Domicili</td></tr>
+                <tr><td colspan="2">Població</td></tr>
+                <tr><td colspan="2">Tel.</td></tr>
+                <tr><td colspan="2">Persona de contacte</td></tr>
+            </table>
+
+        </div>
+
+
+    </div>-->
+
+
+
+</body>
+</html>

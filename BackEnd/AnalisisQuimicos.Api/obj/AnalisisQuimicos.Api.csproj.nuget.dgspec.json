@@ -129,6 +129,14 @@
             "Microsoft.AspNetCore.Http.Features": {
               "target": "Package",
               "version": "[5.0.17, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.3, )"
+            },
+            "itextsharp.xmlworker": {
+              "target": "Package",
+              "version": "[5.5.13.3, )"
             }
           },
           "imports": [

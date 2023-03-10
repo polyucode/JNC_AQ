@@ -38,6 +38,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<Proveedores> _proveedoresRepository;
         private readonly IRepository<ModoEnvio> _modoEnvioRepository;
         private readonly IRepository<Elementos> _elementosRepository;
+        private readonly IRepository<Parametros> _parametrosRepository;
+        private readonly IFilesRepository _elementosFiles;
 
         public UnidadDeTrabajo(YucodeDevelopmentJNC_AQContext context)
         {
@@ -86,6 +88,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<Proveedores> ProveedoresRepository => _proveedoresRepository ?? new BaseRepository<Proveedores>(_context);
         public IRepository<ModoEnvio> ModoEnvioRepository => _modoEnvioRepository ?? new BaseRepository<ModoEnvio>(_context);
         public IRepository<Elementos> ElementosRepository => _elementosRepository ?? new BaseRepository<Elementos>(_context);
+        public IRepository<Parametros> ParametrosRepository => _parametrosRepository ?? new BaseRepository<Parametros>(_context);
+        public IFilesRepository FilesRepository => _elementosFiles ?? new FilesRepository(_context);
 
         public void Dispose()
         {
