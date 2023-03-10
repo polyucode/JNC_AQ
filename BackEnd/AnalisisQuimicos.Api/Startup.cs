@@ -63,6 +63,7 @@ namespace AnalisisQuimicos.Api
             //    );
 
             services.AddTransient<IUsuarioService, UsuarioService>();
+            services.AddTransient<IFileUploadService, FileUploadService>();
             services.AddTransient<IParametrosElementoPlantaClienteService, ParametrosElementoPlantaClienteService>();
             services.AddTransient<IConfPlantasClienteService, ConfPlantasClienteService>();
             services.AddTransient<IConfNivelesPlantasClienteService, ConfNivelesPlantasClienteService>();
@@ -73,6 +74,7 @@ namespace AnalisisQuimicos.Api
             services.AddTransient<IUnidadDeTrabajo, UnidadDeTrabajo>();
             //services.AddTransient<IUnidadDeTrabajoJNegre, UnidadDeTrabajoJNegre>();
             services.AddTransient<IPasswordService, PasswordService>();
+            services.AddTransient<IPDFGeneratorService, PDFGeneratorService>();
 
             services.AddAuthentication(options =>
             {

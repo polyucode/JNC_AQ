@@ -37,6 +37,7 @@ namespace AnalisisQuimicos.Infrastructure.Mappings
             CreateMap<Proveedores, ProveedoresDTO>().ReverseMap();
             CreateMap<ModoEnvio, ModoEnvioDTO>().ReverseMap();
             CreateMap<Elementos, ElementosDTO>().ReverseMap();
+            CreateMap<Files, FilesDTO>().ReverseMap();
 
         }
 
