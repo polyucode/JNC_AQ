@@ -5,6 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
+import Button from '@mui/material/Button';
 import { getOperarios } from '../../api/apiBackend';
 
 const protocolos = [
@@ -76,7 +78,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
@@ -90,7 +92,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
@@ -104,11 +106,12 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={3}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={12} md={7} style={{ display: 'flex' }}>
+                <p style={{ width: '100%' }}> Fecha Prevista </p>
                 <TextField
                     id="fecha"
                     type="date"
@@ -121,35 +124,12 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-            </Grid>
-
-            <Grid item xs={8} md={9}>
-                <TextField
-                    id="fecha"
-                    type="date"
-                    name="fecha"
-                    label="Fecha Recogido"
-                    sx={{ width: '100%' }}
-                    onChange={handleChangeInput}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
-                />
-            </Grid>
-
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={6} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-            </Grid>
-
-            <Grid item xs={8} md={9}>
                 <TextField
                     id="fecha"
                     type="date"
                     name="fecha"
-                    label="Fecha Realizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -159,20 +139,57 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <br />
+
+            <Grid item xs={7} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                />
+            </Grid>
+
+            <Grid item xs={12} md={12} style={{ display: "flex" }}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                    Subir PDF
+                </Button>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+                <TextField
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeInput}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
+                />
+                <TextField sx={{ width: '100%' }} name="resultado" label="Resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
+            </Grid>
+
+            <br/>
+
+            <Grid item xs={6} md={4}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={5}>
                 <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Observaciones" name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+            <Grid item xs={4} md={5}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Resultado" name="resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
+            <Grid item xs={7} md={6}>
+                <p> Comentario </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                />
             </Grid>
 
         </>

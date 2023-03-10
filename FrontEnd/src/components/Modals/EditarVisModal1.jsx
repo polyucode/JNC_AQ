@@ -85,7 +85,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
@@ -99,7 +99,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
@@ -113,7 +113,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={3}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 

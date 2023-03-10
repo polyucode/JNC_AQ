@@ -3249,8 +3249,13 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditarAerobio()
 
                                                         if (peticionPutAerobio()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
@@ -3259,8 +3264,8 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditarAerobio}
+                                                    onClose={abrirCerrarModalEditarAerobio}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -3407,7 +3412,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditarLegionela()
 
                                                         if (peticionPutLegionela()) {
@@ -3417,7 +3427,7 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
+                                                    open={modalEditarLegionela}
                                                     onClose={abrirCerrarModalEditarLegionela}
                                                 />
 
@@ -3486,7 +3496,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -3505,7 +3515,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows9}
-                                                                columns={columnas1}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -3515,7 +3525,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -3528,7 +3538,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModal1
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -3536,9 +3546,9 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
+                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost1()) {
+                                                            if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -3546,8 +3556,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -3555,7 +3565,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModal1
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -3565,18 +3575,23 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
-                                                        if (peticionPut1()) {
+                                                        if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -3725,7 +3740,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar()
 
                                                         if (peticionPut()) {
@@ -3967,7 +3987,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -3986,7 +4006,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows12}
-                                                                columns={columnas1}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -3996,7 +4016,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4009,7 +4029,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModal1
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4017,7 +4037,7 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
+                                                            abrirCerrarModalInsertar();
 
                                                             if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
@@ -4027,8 +4047,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4036,7 +4056,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModal1
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4046,8 +4066,13 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
                                                         if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
@@ -4056,8 +4081,8 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -4204,7 +4229,12 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                         abrirCerrarModalEditar()
 
                                                         if (peticionPut()) {
@@ -4283,7 +4313,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -4302,7 +4332,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows14}
-                                                                columns={columnasOperario}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -4312,7 +4342,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditarOperario();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4325,7 +4355,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModalOperario
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4333,9 +4363,9 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertarOperario();
+                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPostOperario()) {
+                                                            if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4343,8 +4373,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertarOperario}
-                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4352,7 +4382,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModalOperario
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4362,18 +4392,23 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditarOperario()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
-                                                        if (peticionPutOperario()) {
+                                                        if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditarOperario}
-                                                    onClose={abrirCerrarModalEditarOperario}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -4441,7 +4476,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -4460,7 +4495,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows15}
-                                                                columns={columnasOperario}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -4470,7 +4505,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditarOperario();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4483,7 +4518,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModalOperario
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4491,9 +4526,9 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertarOperario();
+                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPostOperario()) {
+                                                            if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4501,8 +4536,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertarOperario}
-                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4510,7 +4545,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModalOperario
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4520,18 +4555,23 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditarOperario()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
-                                                        if (peticionPutOperario()) {
+                                                        if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditarOperario}
-                                                    onClose={abrirCerrarModalEditarOperario}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -4599,7 +4639,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertarOperario}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -4618,7 +4658,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows16}
-                                                                columns={columnasOperario}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -4628,7 +4668,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditarOperario();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4641,7 +4681,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModalOperario
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4649,9 +4689,9 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertarOperario();
+                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPostOperario()) {
+                                                            if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                                                             } else {
                                                                 setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
@@ -4659,8 +4699,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertarOperario}
-                                                    onClose={abrirCerrarModalInsertarOperario}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4668,7 +4708,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModalOperario
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4678,18 +4718,23 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditarOperario()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
-                                                        if (peticionPutOperario()) {
+                                                        if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
                                                         } else {
                                                             setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditarOperario}
-                                                    onClose={abrirCerrarModalEditarOperario}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -4757,7 +4802,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -4776,7 +4821,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows17}
-                                                                columns={columnas1}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -4786,7 +4831,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4799,7 +4844,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModal1
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4807,7 +4852,7 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
+                                                            abrirCerrarModalInsertar();
 
                                                             if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
@@ -4817,8 +4862,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4826,7 +4871,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModal1
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4836,8 +4881,13 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
                                                         if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
@@ -4846,8 +4896,8 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}
@@ -4915,7 +4965,7 @@ export const VisualizacionPage = () => {
                                                                             color='success'
                                                                             variant='contained'
                                                                             startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
+                                                                            onClick={abrirCerrarModalInsertar}
                                                                         >Añadir</Button>
                                                                     )
                                                             }
@@ -4934,7 +4984,7 @@ export const VisualizacionPage = () => {
                                                                     backgroundColor: '#FFFFFF'
                                                                 }}
                                                                 rows={rows18}
-                                                                columns={columnas1}
+                                                                columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
@@ -4944,7 +4994,7 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado(analisisSeleccionado.row)
                                                                     setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
                                                                     setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
+                                                                    abrirCerrarModalEditar();
                                                                 }}
                                                             />
                                                         </Card>
@@ -4957,7 +5007,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Agregar nueva Tarea"
                                                     contenido={
-                                                        <InsertarVisModal1
+                                                        <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4965,7 +5015,7 @@ export const VisualizacionPage = () => {
                                                     }
                                                     botones={[
                                                         insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
+                                                            abrirCerrarModalInsertar();
 
                                                             if (peticionPost()) {
                                                                 setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
@@ -4975,8 +5025,8 @@ export const VisualizacionPage = () => {
 
                                                         }, 'success')
                                                     ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
+                                                    open={modalInsertar}
+                                                    onClose={abrirCerrarModalInsertar}
                                                 />
 
                                                 {/* Modal Editar Tarea*/}
@@ -4984,7 +5034,7 @@ export const VisualizacionPage = () => {
                                                 <ModalLayout
                                                     titulo="Editar tarea"
                                                     contenido={
-                                                        <EditarVisModal1
+                                                        <EditarVisModal
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             change={handleChangeInput}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
@@ -4994,8 +5044,13 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                         />}
-                                                    botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                    botones={[
+                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                            abrirCerrarModalInsertar1();
+    
+                                                        }, ''),
+                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                        abrirCerrarModalEditar()
 
                                                         if (peticionPut()) {
                                                             setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
@@ -5004,8 +5059,8 @@ export const VisualizacionPage = () => {
                                                         }
                                                     })
                                                     ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
+                                                    open={modalEditar}
+                                                    onClose={abrirCerrarModalEditar}
                                                 />
 
                                                 {/* Eliminar tarea */}

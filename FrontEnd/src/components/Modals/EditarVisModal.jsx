@@ -88,7 +88,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
@@ -102,7 +102,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
@@ -116,7 +116,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={3}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
@@ -160,9 +160,9 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
-            <Grid item xs={12} md={9}>
-                <Button variant="contained" component="label">
-                    Upload
+            <Grid item xs={12} md={12} style={{ display: "flex" }}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                    Subir PDF
                 </Button>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
                 <TextField
