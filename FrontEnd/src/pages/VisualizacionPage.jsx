@@ -183,13 +183,11 @@ export const VisualizacionPage = () => {
 
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalInsertar1, setModalInsertar1] = useState(false);
-    const [modalInsertarOperario, setModalInsertarOperario] = useState(false);
     const [modalInsertarAerobio, setModalInsertarAerobio] = useState(false);
     const [modalInsertarLegionela, setModalInsertarLegionela] = useState(false);
 
     const [modalEditar, setModalEditar] = useState(false);
     const [modalEditar1, setModalEditar1] = useState(false);
-    const [modalEditarOperario, setModalEditarOperario] = useState(false);
     const [modalEditarAerobio, setModalEditarAerobio] = useState(false);
     const [modalEditarLegionela, setModalEditarLegionela] = useState(false);
 
@@ -211,13 +209,12 @@ export const VisualizacionPage = () => {
         periodo: '',
         analisis: 0,
         fecha: null,
-        recogido: false,
-        fechaRecogido: null,
         realizado: false,
         fechaRealizado: null,
-        operario: '',
-        protocolo: '',
         observaciones: '',
+        pdf: '',
+        fechaPdf: null,
+        resultado: '',
         facturado: false,
         numeroFacturado: '',
         cancelado: false,
@@ -326,26 +323,11 @@ export const VisualizacionPage = () => {
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
-        { title: 'Operario', field: 'operario', width: 200 },
-        { title: 'Protocolo', field: 'protocolo', width: 200 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
-    ];
-
-    const columnasOperario = [
-
-        //visibles
-        { title: 'Periodo', field: 'periodo', width: 150 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
-        { title: 'Operario', field: 'operario', width: 200 },
-        { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { title: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnas1 = [
@@ -358,7 +340,8 @@ export const VisualizacionPage = () => {
         { title: 'Observaciones', field: 'observaciones', width: 300 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { title: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnasLegionela = [
@@ -366,15 +349,14 @@ export const VisualizacionPage = () => {
         //visibles
         { title: 'Periodo', field: 'periodo', width: 150 },
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 120 },
-        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Resultado', field: 'resultado', type: 'boolean', width: 120 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
-        { title: 'Resultado', field: 'resultado', width: 120 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { title: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnasAerobios = [
@@ -382,15 +364,15 @@ export const VisualizacionPage = () => {
         //visibles
         { title: 'Periodo', field: 'periodo', width: 150 },
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 120 },
-        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
+        { title: 'Resultado', field: 'resultado', type: 'boolean', width: 120 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { title: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const [data, setData] = useState([]);
@@ -479,7 +461,7 @@ export const VisualizacionPage = () => {
         }
 
         if (data5.length > 0) {
-            setRows1(data5);
+            setRows5(data5);
         }
 
         if (data6.length > 0) {
@@ -644,43 +626,6 @@ export const VisualizacionPage = () => {
         }
     }
 
-    const abrirCerrarModalInsertarOperario = () => {
-        if (modalInsertarOperario) {
-            setAnalisisSeleccionado({
-                id: 0,
-                codigoCliente: analisisSeleccionado.codigoCliente,
-                nombreCliente: analisisSeleccionado.nombreCliente,
-                oferta: analisisSeleccionado.oferta,
-                pedido: analisisSeleccionado.pedido,
-                elemento: analisisSeleccionado.elemento,
-                periodo: '',
-                analisis: 0,
-                fecha: null,
-                recogido: false,
-                fechaRecogido: null,
-                realizado: false,
-                fechaRealizado: null,
-                operario: '',
-                protocolo: '',
-                observaciones: '',
-                facturado: false,
-                numeroFacturado: '',
-                cancelado: false,
-                comentarios: '',
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
-            setModalInsertarOperario(!modalInsertarOperario);
-        } else {
-            setModalInsertarOperario(!modalInsertarOperario);
-        }
-    }
-
     const abrirCerrarModalInsertarAerobio = () => {
         if (modalInsertarAerobio) {
             setAnalisisSeleccionado({
@@ -826,43 +771,6 @@ export const VisualizacionPage = () => {
             setModalEditar1(!modalEditar1);
         } else {
             setModalEditar1(!modalEditar1);
-        }
-    }
-
-    const abrirCerrarModalEditarOperario = () => {
-        if (modalEditarOperario) {
-            setAnalisisSeleccionado({
-                id: 0,
-                codigoCliente: analisisSeleccionado.codigoCliente,
-                nombreCliente: analisisSeleccionado.nombreCliente,
-                oferta: analisisSeleccionado.oferta,
-                pedido: analisisSeleccionado.pedido,
-                elemento: analisisSeleccionado.elemento,
-                periodo: '',
-                analisis: 0,
-                fecha: null,
-                recogido: false,
-                fechaRecogido: null,
-                realizado: false,
-                fechaRealizado: null,
-                operario: '',
-                protocolo: '',
-                observaciones: '',
-                facturado: false,
-                numeroFacturado: '',
-                cancelado: false,
-                comentarios: '',
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
-            setModalEditarOperario(!modalEditarOperario);
-        } else {
-            setModalEditarOperario(!modalEditarOperario);
         }
     }
 
@@ -1300,49 +1208,6 @@ export const VisualizacionPage = () => {
             })
     }
 
-    const peticionPostOperario = async () => {
-        analisisSeleccionado.id = null;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                MantMaqFrio();
-                Mediciones();
-                ControlFugaGas();
-                abrirCerrarModalInsertarOperario();
-                GetParametrosAnalisisPlanta();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
-                    observaciones: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
-    }
-
     const peticionPostAerobio = async () => {
         analisisSeleccionado.id = null;
         await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
@@ -1495,54 +1360,6 @@ export const VisualizacionPage = () => {
                 RevisionBandeja();
                 GetParametrosAnalisisPlanta();
                 abrirCerrarModalEditar1();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
-                    observaciones: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
-    }
-
-    const peticionPutOperario = async () => {
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                MantMaqFrio();
-                Mediciones();
-                ControlFugaGas();
-                GetParametrosAnalisisPlanta();
-                abrirCerrarModalEditarOperario();
                 setAnalisisSeleccionado({
                     id: 0,
                     codigoCliente: analisisSeleccionado.codigoCliente,

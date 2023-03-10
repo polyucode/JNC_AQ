@@ -107,7 +107,7 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
             </Grid>
 
             <Grid item xs={12} md={3}>
-                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
+                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
             <Grid item xs={12} md={7} style={{ display: 'flex' }}>
