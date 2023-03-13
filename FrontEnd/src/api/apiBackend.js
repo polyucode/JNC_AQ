@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const urlBase = 'https://localhost:44343/api';
+const urlBase = 'https://localhost:5001/api';
 
 const token = {
     headers:{ Authorization: 'Bearer ' + localStorage.getItem('token') }
@@ -161,7 +161,7 @@ export const postConfPlantaCliente = async ( confPlantaCliente ) => {
 
 export const putConfPlantaCliente = async ( confPlantaCliente ) => {
 
-    const resp = await axios.put('https://localhost:44343/api/confplantascliente', confPlantaCliente);
+    const resp = await axios.put('https://localhost:5001/api/confplantascliente', confPlantaCliente);
 
 }
 

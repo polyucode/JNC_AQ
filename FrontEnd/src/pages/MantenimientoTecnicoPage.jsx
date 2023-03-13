@@ -168,6 +168,15 @@ export const MantenimientoTecnicoPage = () => {
 
     }, [parametrosSeleccionado.idElemento])
 
+    // useEffect(() => {
+
+    //     valoresParametros.map( parametro => {
+
+
+    //     });
+
+    // },[valoresParametros])
+
     /*** FUNCIONES ***/
 
     const handleChange = e => {
@@ -243,7 +252,6 @@ export const MantenimientoTecnicoPage = () => {
         let parametrosMostrar = [];
         const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
-        console.log(parametrosElemento, "PARAMETROS ELEMENTO")
         // Recorremos los registros para ver que valores podemos guardar (activo)
         datos.map(registro => {
 
@@ -256,8 +264,6 @@ export const MantenimientoTecnicoPage = () => {
                 // Preparamos el valor del mes actual y el arreglo de meses
                 let mesActual = new Date().getMonth();
                 let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-                console.log(valoresPorParametro , "VALORESPORPARAMETROS")
 
                 // Mapeamos los valores en un array, y si no hay datos seteamos un 0
                 valoresPorParametro.map(val => {
@@ -283,6 +289,7 @@ export const MantenimientoTecnicoPage = () => {
 
                 // Creamos el objeto
                 parametrosMostrar.push({
+                    id:  valoresPorParametro[0] ? valoresPorParametro[0].id : 0,
                     codigoCliente: parametrosSeleccionado.codigoCliente,
                     fecha: parametrosSeleccionado.fecha,
                     id_Elemento: parametrosSeleccionado.idElemento,
@@ -292,7 +299,9 @@ export const MantenimientoTecnicoPage = () => {
                     parametro: registro.parametro,
                     referencia: parametrosSeleccionado.referencia,
                     unidad: registro.unidades,
-                    valor: '',
+                    valor: valoresPorParametro[0] ? valoresPorParametro[0].valor.toString() : '0',
+                    limInf: registro.limInf,
+                    limSup: registro.limSup,
                     dosMeses: valoresMeses
                 })
             }
@@ -322,13 +331,14 @@ export const MantenimientoTecnicoPage = () => {
         // Recorremos parametro por parametro para hacer una petición POST
         await valoresParametros.map(async (parametro) => {
 
-            let parametroPost = {
+            let parametroPut = {
+                Id: parametro.id,
                 CodigoCliente: parametro.codigoCliente,
                 Referencia: parametro.referencia,
                 Oferta: parametro.oferta,
                 Id_Elemento: parametro.id_Elemento,
                 Id_Analisis: parametro.id_Analisis,
-                Id_Operario: parametro.id_Operario,
+                Id_Operario: (parametro.id_Operario === 0) ? parametrosSeleccionado.idOperario : parametro.id_Operario,
                 Parametro: parametro.parametro,
                 Fecha: parametro.fecha,
                 Valor: parseInt(parametro.valor, 10),
@@ -338,12 +348,10 @@ export const MantenimientoTecnicoPage = () => {
             // Nos aseguramos de que tengamos código de referencia y fecha
             if (parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null) {
 
-                parametroPost.referencia = parametrosSeleccionado.referencia
-                parametroPost.fecha = parametrosSeleccionado.fecha
+                parametroPut.referencia = parametrosSeleccionado.referencia
+                parametroPut.fecha = parametrosSeleccionado.fecha
 
-                console.log({ parametroPost });
-
-                const resp = await putValorParametros(parametroPost);
+                const resp = await putValorParametros(parametroPut);
 
             } else {
 
@@ -563,6 +571,7 @@ export const MantenimientoTecnicoPage = () => {
 
                                                                     return (
                                                                         <ParametroMantenimiento
+                                                                            limite={ ({ limSup: parametro.limSup, limInf: parametro.limInf }) }
                                                                             key={index}
                                                                             indice={index}
                                                                             parametros={valoresParametros}

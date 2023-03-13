@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -79,15 +79,12 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             <Grid item xs={3} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
             </Grid>
-
             <Grid item xs={3} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreCliente} />
             </Grid>
-
             <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
-
             <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
@@ -101,7 +98,6 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     onChange={handleChangeInput}
                 />
             </Grid>
-
             <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
@@ -115,13 +111,15 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     onChange={handleChangeInput}
                 />
             </Grid>
-
             <Grid item xs={12} md={3}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={12} md={7} style={{ display: 'flex' }}>
-                <p style={{ width: '100%' }}> Fecha Prevista </p>
+
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <Typography>Fecha Prevista</Typography>
+            </Grid>
+            <Grid item xs={12} md={9}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -134,8 +132,11 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
-            <Grid item xs={6} md={6} style={{ display: 'flex' }}>
+
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={3}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -148,10 +149,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
                 />
             </Grid>
-
-            <br />
-
-            <Grid item xs={7} md={6}>
+            <Grid item xs={12} md={6}>
                 <p> Observaciones </p>
                 <TextareaAutosize
                     aria-label="empty textarea"
@@ -160,11 +158,10 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
-            <Grid item xs={12} md={12} style={{ display: "flex" }}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
-                    Subir PDF
-                </Button>
+            <Grid item xs={12} md={3}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={3}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -177,22 +174,24 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
                 />
             </Grid>
-
-            <br/>
-
-            <Grid item xs={6} md={4}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
+            <Grid item xs={12} md={6}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                    Subir PDF
+                </Button>
             </Grid>
 
-            <Grid item xs={4} md={5}>
+
+            <Grid item xs={6} md={3}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={6} md={8}>
                 <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
             </Grid>
 
-            <Grid item xs={4} md={5}>
+            <Grid item xs={6} md={3}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
             </Grid>
-
-            <Grid item xs={7} md={6}>
+            <Grid item xs={6} md={8}>
                 <p> Comentario </p>
                 <TextareaAutosize
                     aria-label="empty textarea"

@@ -1,5 +1,6 @@
 import { Modal, Fade, Grid, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import '../App.css';
 
 const style = {
   position: 'absolute',
@@ -8,9 +9,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
   width: { xl: '50%', lg: '60%', md: '70%', sm: '90%' },
-  boxShadow: 24,
-  p: 3,
-  pt: 1
+  boxShadow: 24
 };
 
 export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
@@ -29,8 +28,8 @@ export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
               sx={{
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: '1px solid #E0E0E0',
-                mb: 3
+                padding: '12px 12px 30px',
+                backgroundColor: '#FFFFFF'
               }}>
               <Typography id="transition-modal-title" variant="h6" component="h2">
                 { titulo }
@@ -40,17 +39,18 @@ export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
               </IconButton>
             </Grid>
 
-            <Grid container spacing={ 3 } sx={{ alignItems: 'center', maxHeight: 700, overflow: 'auto' }}>
+            <Grid container className="modal-cont" spacing={ 3 } sx={{ alignItems: 'center', maxHeight: 700, overflow: 'auto', width: '100%', padding: '24px' }}>
               { contenido }
             </Grid>
 
             <Grid
               container
               sx={{
+                width: '100%',
                 justifyContent: 'flex-end',
-                mt: 3,
-                borderTop: '1px solid #E0E0E0',
-                pt: 1
+                padding: '12px',
+                position: 'relative',
+                left: '16px'
               }}
               spacing={ 2 }
             >

@@ -1,6 +1,6 @@
 import { TableRow, TableCell, TextField, InputAdornment } from '@mui/material';
 
-export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre }) => {
+export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre, limite }) => {
 
     console.log(parametros)
     return (
@@ -13,6 +13,7 @@ export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre })
             <TableCell>
                 <TextField
                     id={ indice.toString() }
+                    error={ ( parametros[indice].valor > limite.limSup || parametros[indice].valor < limite.limInf ) ? true : false }
                     name="valor"
                     size="small"
                     defaultValue={ parametros[indice].valor }
