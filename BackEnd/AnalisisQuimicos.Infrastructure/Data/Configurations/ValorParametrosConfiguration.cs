@@ -24,6 +24,10 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Id_Elemento).HasColumnType("Id_Elemento");
 
+            builder.Property(e => e.Id_Analisis).HasColumnType("Id_Analisis");
+
+            builder.Property(e => e.Id_Operario).HasColumnType("Id_Operario");
+
             builder.Property(e => e.Parametro).HasColumnType("Parametro");
 
             builder.Property(e => e.Fecha).HasColumnType("Fecha");

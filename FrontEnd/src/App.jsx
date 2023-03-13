@@ -1,4 +1,3 @@
-
 import { AppTheme } from './theme';
 import { AppRouter } from './router/AppRouter';
 import { AuthProvider } from './context/AuthContext';

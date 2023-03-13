@@ -26,6 +26,8 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Id_Elemento).HasColumnName("Id_Elemento");
 
+            builder.Property(e => e.Id_Analisis).HasColumnName("Id_Analisis");
+
             builder.Property(e => e.EsPlantilla).HasColumnName("EsPlantilla");
 
             builder.Property(e => e.LimInf).HasColumnName("LimInf");

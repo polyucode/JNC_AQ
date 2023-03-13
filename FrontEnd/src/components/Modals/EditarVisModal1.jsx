@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 import MenuItem from '@mui/material/MenuItem';
 import { getOperarios } from '../../api/apiBackend';
@@ -84,7 +85,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
@@ -98,7 +99,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
@@ -112,11 +113,12 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
-                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
+            <Grid item xs={12} md={3}>
+                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={12} md={7} style={{ display: 'flex' }}>
+                <p style={{ width: '100%' }}> Fecha Prevista </p>
                 <TextField
                     id="fecha"
                     type="date"
@@ -129,16 +131,12 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={6} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
-            </Grid>
-
-            <Grid item xs={8} md={9}>
                 <TextField
                     id="fecha"
                     type="date"
                     name="fecha"
-                    label="Fecha Realizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -148,16 +146,36 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
+            <br/>
+
+            <Grid item xs={7} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                />
+            </Grid>
+
             <Grid item xs={4} md={3}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={5}>
                 <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="observaciones" name="observaciones" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.observaciones} />
+            <Grid item xs={4} md={5}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
+            </Grid>
+
+            <Grid item xs={7} md={6}>
+                <p> Comentario </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                />
             </Grid>
 
         </>

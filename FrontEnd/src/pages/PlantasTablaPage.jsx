@@ -9,13 +9,14 @@ import TaskIcon from '@mui/icons-material/Task';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 //import CreateIcon from '@mui/icons-material/Create';
 import { useLocation } from "react-router-dom";
-import { getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
+import { getAnalisis, getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
 import {
     getConfNivelesPlantasCliente,
     getConfParametrosElementoPlantaCliente,
     getElementos, getOfertas, getParametros,
     getParametrosAnalisisPlanta,
-    getParametrosPlanta
+    getParametrosPlanta,
+    getConfAnalisisNivelesPlantasCliente
 } from '../api/apiBackend';
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
@@ -30,14 +31,19 @@ export const PlantasTablaPage = () => {
 
     /*** VARIABLES ***/
     let opcionesFiltradas = [];
+    let opcionesFiltradasAnalisis = [];
+    let opcionesNombreFiltradasAnalisis = [];
 
     /*** ESTADOS ***/
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
+    const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
     const [oferta, setOferta] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [elementos, setElementos] = useState([]);
+    const [analisis, setAnalisis] = useState([]);
     const [parametros, setParametros] = useState([]);
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
+    const [analisisAutocomplete, setAnalisisAutocomplete] = useState([]);
     const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
     const [parametrosElementoPlanta, setParametrosElementoPlanta] = useState([]);
     const [tipoParametros, setTipoParametros] = useState([]);
@@ -48,6 +54,8 @@ export const PlantasTablaPage = () => {
         oferta: '',
         idElemento: 0,
         nombreElemento: "",
+        idAnalisis: 0,
+        nombreAnalisis: "",
         fecha: null,
         esPlantilla: false,
         ComptadorLimInf: 0,
@@ -255,6 +263,9 @@ export const PlantasTablaPage = () => {
         getParametros()
             .then( resp => setParametros(resp) );
 
+        getAnalisis()
+            .then( resp => setAnalisis(resp));
+
         getParametrosAnalisisPlanta()
             .then( resp => setParametrosAnalisisPlanta(resp) );
         
@@ -264,6 +275,8 @@ export const PlantasTablaPage = () => {
         getConfNivelesPlantasCliente()
             .then( resp => setConfNivelesPlantasCliente(resp) );
 
+        getConfAnalisisNivelesPlantasCliente()
+            .then( resp => setConfAnalisisNivelesPlantasCliente(resp));
     }, []);
 
     // Efecto que selecciona el nombre del cliente cuando cambia el código
@@ -292,6 +305,27 @@ export const PlantasTablaPage = () => {
         setElementosAutocomplete( opcionesFiltradas );
 
     },[parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, confNivelesPlantasCliente ]);
+
+    useEffect(() => {
+
+        opcionesFiltradasAnalisis = [];
+        opcionesNombreFiltradasAnalisis = [];
+    
+        const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta && planta.id_Elemento === parametrosSeleccionado.idElemento);
+    
+        lista.map(analisis => {
+          opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
+        })
+    
+        opcionesFiltradasAnalisis.map(nomAnalisis => {
+          nomAnalisis.map(anal => {
+            opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
+          })
+        })
+    
+        setAnalisisAutocomplete(opcionesNombreFiltradasAnalisis)
+    
+      }, [parametrosSeleccionado.idElemento])
 
     // Revisar si sirve o no
     useEffect(() => {
@@ -426,6 +460,7 @@ export const PlantasTablaPage = () => {
                     Referencia: "",
                     Oferta: parametrosSeleccionado.oferta,
                     Id_Elemento: parametrosSeleccionado.idElemento,
+                    Id_Analisis: parametrosSeleccionado.idAnalisis,
                     Parametro: parametro.id,
                     Fecha: null,
                     Valor: 0,
@@ -448,10 +483,11 @@ export const PlantasTablaPage = () => {
             }
         })
     }
+    console.log(parametrosSeleccionado)
 
     const abrirPlantilla = async () => {
 
-        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento);
+        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         //let tipoParametrosActualizados = tipoParametros;
 
@@ -493,6 +529,7 @@ export const PlantasTablaPage = () => {
                 NombreCliente: parametrosSeleccionado.nombreCliente,
                 Oferta: parametrosSeleccionado.oferta,
                 Id_Elemento: parametrosSeleccionado.idElemento,
+                Id_Analisis: parametrosSeleccionado.idAnalisis,
                 EsPlantilla: true,
                 LimInf: parseInt(parametro.limInf, 10),
                 LimSup: parseInt(parametro.limSup, 10),
@@ -541,7 +578,7 @@ export const PlantasTablaPage = () => {
                     <Card sx={{ p: 2, display: 'flex' }}>
                         <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
 
-                            <Grid item xs={ 3 }>
+                            <Grid item xs={ 2 }>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="codigoCliente"
@@ -572,7 +609,7 @@ export const PlantasTablaPage = () => {
                                 />    
                             </Grid>
 
-                            <Grid item xs={ 3 }>
+                            <Grid item xs={ 2 }>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="Oferta"
@@ -589,7 +626,7 @@ export const PlantasTablaPage = () => {
                                 />   
                             </Grid>
 
-                            <Grid item xs={ 3 }>
+                            <Grid item xs={ 2 }>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="elemento"
@@ -602,6 +639,25 @@ export const PlantasTablaPage = () => {
                                             ...prevState,
                                             idElemento: value.id,
                                             nombreElemento: event.target.innerText
+                                        }))
+                                    }}
+                                />
+                            </Grid>
+
+                            <Grid item xs={ 3 }>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="analisis"
+                                    inputValue={ parametrosSeleccionado.nombreAnalisis }
+                                    options={ analisisAutocomplete }
+                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11)}
+                                    getOptionLabel={option => option.nombre}
+                                    renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
+                                    onChange={(event, value) => {
+                                        setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            idAnalisis: value.id,
+                                            nombreAnalisis: event.target.innerText
                                         }))
                                     }}
                                 />

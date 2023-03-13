@@ -2,6 +2,7 @@ import { TableRow, TableCell, TextField, InputAdornment } from '@mui/material';
 
 export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre }) => {
 
+    console.log(parametros)
     return (
         <TableRow>
 
