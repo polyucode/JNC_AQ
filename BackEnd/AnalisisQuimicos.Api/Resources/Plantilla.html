@@ -25,21 +25,20 @@
     <table style="width:100%">
         <tr>
             <td style="width: 35%" align="center">
-                LOGO JNEGRE
             </td>
             <td style="width: 65%">
                 <table>
                     <tr>
                         <td><b>ANALÍTIQUES FÍSICO/QUÍMIQUES</b></td>
-                        <td align="right">@NUM</td>
+                        <td align="right">@ELEPLANT</td>
                     </tr>
                 </table>
                 <table class="border" style="width:100%">
-                    <tr><td colspan="2">Client</td></tr>
+                    <tr><td colspan="2">Client @CLIENT</td></tr>
                     <tr><td colspan="2">Empresa</td></tr>
                     <tr>
-                        <td>Referència</td>
-                        <td>Data</td>
+                        <td>Referència @REF</td>
+                        <td>Data @FECHA</td>
                     </tr>
                     <tr><td colspan="2">Domicili</td></tr>
                     <tr><td colspan="2">Població</td></tr>
@@ -65,14 +64,16 @@
                 <table class="border" style="width:100%;">
                     <thead>
                         <tr style="background-color:#D8D8D8">
-                            <th>Paràmetre</th>
-                            <th>Unitats</th>
+                            <th width="40%">Paràmetres</th>
+                            <th width="20%">Unitats</th>
+                            <th width="20%">Valors</th>
                             <!--<th>Arqueta</th>
-                            <th>Acometida</th>
-                            <th>Caldera</th>
-                            <th>Torre</th>-->
-                            @COLUMNAS
-                            <th>Límits</th>
+                        <th>Acometida</th>
+                        <th>Caldera</th>
+                        <th>Torre</th>-->
+                            <!--@COLUMNAS-->
+                            <th width="10%">L. Sup</th>
+                            <th width="10%">L. Inf</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +94,16 @@
                 </table>
             </td>
         </tr>
+
+        <tr><td colspan="2" height="20"></td></tr>
+
+        <tr>
+            <td colspan="2" style="font-size: 14px">
+                J Negre C, SL està inscrita en el "Registre d'Establiments i Serveis Plaguicides" Núm registre 5004CAT-LgB
+            </td>
+        </tr>
+
+
     </table>
 
     <!--<div class="row">

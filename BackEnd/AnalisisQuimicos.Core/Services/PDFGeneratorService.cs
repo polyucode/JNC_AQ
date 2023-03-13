@@ -15,6 +15,7 @@ using iTextSharp.tool.xml;
 using AnalisisQuimicos.Core.Interfaces;
 using System.util;
 using AnalisisQuimicos.Core.Entities;
+using System.Globalization;
 
 namespace AnalisisQuimicos.Core.Services
 {
@@ -53,25 +54,45 @@ namespace AnalisisQuimicos.Core.Services
             string columnasElementos = "";
             string filasParametros = "";
 
-            int idElementoAnt = 0;
-            int idParamAnt = 0;
+            //int idElementoAnt = 0;
+            //int idParamAnt = 0;
 
             string nombreParametro = "";
 
+            string nombreElemento = _unidadDeTrabajo.ElementosRepository.GetById((int)valoresSorted[0].Id_Elemento).Result.Nombre;
+            //string nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valoresSorted[0].Parametro).Result.Nombre;
+            string referencia = valoresSorted[0].Referencia;
+            //string cliente = _unidadDeTrabajo.ClienteRepository.GetById
+            DateTime fecha = (DateTime)valoresSorted[0].Fecha;
+
             foreach (ValorParametros valor in valoresSorted)
             {
-                if (!listaElementos.Contains((int)valor.Id_Elemento))
+                nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valor.Parametro).Result.Nombre;
+
+                filasParametros += "<tr>";
+                filasParametros += "<td>" + nombreParametro + "</td>";
+                filasParametros += "<td>" + valor.Unidad + "</td>";
+                filasParametros += "<td>" + valor.Valor + "</td>";
+                filasParametros += "<td></td>";
+                filasParametros += "<td></td>";
+                filasParametros += "</tr>";
+
+
+                /*if (!listaElementos.Contains((int)valor.Id_Elemento))
                 {
                     listaElementos.Add((int)valor.Id_Elemento);
 
                     string nombreElemento = _unidadDeTrabajo.ElementosRepository.GetById((int)valor.Id_Elemento).Result.Nombre;
                     columnasElementos += "<th>" + nombreElemento + "</th>";
-                }
+                }*/
+
+
+
             }
 
-            int posant;
+            //int posant;
 
-            foreach (ValorParametros valor in valoresSorted)
+            /*foreach (ValorParametros valor in valoresSorted)
             {
 
                 if (idElementoAnt == 0)
@@ -120,9 +141,9 @@ namespace AnalisisQuimicos.Core.Services
                 filasParametros += "<td>" + valor.Valor + "</td>";
 
                 idElementoAnt = (int)valor.Id_Elemento;
-            }
+            }*/
 
-            if (idElementoAnt == 0)
+            /*if (idElementoAnt == 0)
             {
                 posant = 1;
             }
@@ -137,10 +158,15 @@ namespace AnalisisQuimicos.Core.Services
             }
 
             filasParametros += "<td></td>";
-            filasParametros += "</tr>";
+            filasParametros += "</tr>";*/
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@COLUMNAS", columnasElementos);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FILAS", filasParametros);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", nombreElemento);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REF", referencia);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENT", "");
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REG", "");
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", fecha.ToString("dd/M/yyyy", CultureInfo.InvariantCulture));
 
 
 
@@ -153,14 +179,16 @@ namespace AnalisisQuimicos.Core.Services
                 pdfDoc.Open();
                 //pdfDoc.Add(new Phrase(""));
 
-                //Agregamos la imagen del banner al documento
-                //iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(Properties.Resources.shop, System.Drawing.Imaging.ImageFormat.Png);
-                //img.ScaleToFit(60, 60);
-                //img.Alignment = iTextSharp.text.Image.UNDERLYING;
+                string image = Path.Combine(workingDirectory, @"Resources\", "Logo.bmp");
 
-                //img.SetAbsolutePosition(10,100);
-                //img.SetAbsolutePosition(pdfDoc.LeftMargin, pdfDoc.Top - 60);
-                //pdfDoc.Add(img);
+                //Agregamos la imagen del banner al documento
+                Image img = Image.GetInstance(image);
+                img.ScaleToFit(120, 120);
+                img.Alignment = Image.UNDERLYING;
+
+                img.SetAbsolutePosition(10,100);
+                img.SetAbsolutePosition(pdfDoc.LeftMargin + 15, pdfDoc.Top - 60);
+                pdfDoc.Add(img);
 
 
                 //pdfDoc.Add(new Phrase("Hola Mundo"));
