@@ -19,7 +19,14 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
             var sel = list.Where(x => x.Id_Planta == filtro.Id_Planta);
 
-            return sel.ToArray();
+            if (sel.ToArray().Length == 0)
+            {
+                return sel.ToArray();
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
