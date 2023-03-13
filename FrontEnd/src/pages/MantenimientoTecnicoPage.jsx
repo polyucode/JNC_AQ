@@ -248,6 +248,8 @@ export const MantenimientoTecnicoPage = () => {
         const resp = await getFilasParametros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
         setParametrosElemento(resp);
 
+        console.log(resp)
+
         // Preparamos la variable que almacenará los valores de los parametros
         let parametrosMostrar = [];
         const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
@@ -261,6 +263,7 @@ export const MantenimientoTecnicoPage = () => {
                 // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
                 const valoresPorParametro = resp.filter(param => param.parametro === registro.parametro);
 
+                console.log(valoresPorParametro)
                 // Preparamos el valor del mes actual y el arreglo de meses
                 let mesActual = new Date().getMonth();
                 let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
