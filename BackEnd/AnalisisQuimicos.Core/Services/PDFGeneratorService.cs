@@ -28,7 +28,7 @@ namespace AnalisisQuimicos.Core.Services
             _unidadDeTrabajo = unidadDeTrabajo;
         }
 
-        public async Task<string> NewPdf(List<ValorParametros> valores)
+        public async Task<int> NewPdf(List<ValorParametros> valores)
         {
 
             List<ValorParametros> valoresSorted = valores.OrderBy(x => x.Parametro).ThenBy(x => x.Id_Elemento).ToList();
@@ -231,8 +231,7 @@ namespace AnalisisQuimicos.Core.Services
 
             try
             {
-                await _unidadDeTrabajo.FilesRepository.Upload(newFile);
-                return path;
+                return await _unidadDeTrabajo.FilesRepository.Upload(newFile);
             }
             catch (Exception e)
             {

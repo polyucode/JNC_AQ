@@ -26,10 +26,12 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
             return await _entities.FindAsync(id);
         }
 
-        public async Task Upload(Files file)
+        public async Task<int> Upload(Files file)
         {
             await _entities.AddAsync(file);
             await _context.SaveChangesAsync();
+
+            return file.Id;
         }
     }
 }
