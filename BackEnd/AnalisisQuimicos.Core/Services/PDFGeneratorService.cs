@@ -33,19 +33,30 @@ namespace AnalisisQuimicos.Core.Services
 
             List<ValorParametros> valoresSorted = valores.OrderBy(x => x.Parametro).ThenBy(x => x.Id_Elemento).ToList();
 
-            List<int> listaElementos = new List<int>();
+            Clientes cliente = _unidadDeTrabajo.ClienteRepository.GetByCodigoCliente((int)valoresSorted[0].CodigoCliente).Result;
+            Analisis analisis = _unidadDeTrabajo.AnalisisRepository.GetById((int)valoresSorted[0].Id_Analisis).Result;
 
+            ElementosPlanta elemplanta = _unidadDeTrabajo.ElementosPlantaRepository.GetById((int)valoresSorted[0].Id_Elemento).Result;
+            string nombreElemento = elemplanta.Nombre;
+
+            DateTime fecha = (DateTime)valoresSorted[0].Fecha;
 
             string workingDirectory = Environment.CurrentDirectory;
 
             string path = Path.Combine(workingDirectory, "Pdf");
+            path = Path.Combine(path, cliente.RazonSocial);
+            path = Path.Combine(path, valoresSorted[0].Oferta.ToString());
+            path = Path.Combine(path, elemplanta.Numero.ToString());
+            path = Path.Combine(path, nombreElemento);
 
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            path = Path.Combine(path, "unpdf.pdf");
+            string nombreArchivo = cliente.RazonSocial + "_" + valoresSorted[0].Oferta + "_" + nombreElemento + "_" + analisis.Nombre + "_" + fecha.ToString("ddMyyyy", CultureInfo.InvariantCulture) + ".pdf";
+
+            path = Path.Combine(path, nombreArchivo);
 
             string resourcePath = Path.Combine(workingDirectory, @"Resources\", "Plantilla.html");
 
@@ -59,11 +70,10 @@ namespace AnalisisQuimicos.Core.Services
 
             string nombreParametro = "";
 
-            string nombreElemento = _unidadDeTrabajo.ElementosRepository.GetById((int)valoresSorted[0].Id_Elemento).Result.Nombre;
+
             //string nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valoresSorted[0].Parametro).Result.Nombre;
             string referencia = valoresSorted[0].Referencia;
-            //string cliente = _unidadDeTrabajo.ClienteRepository.GetById
-            DateTime fecha = (DateTime)valoresSorted[0].Fecha;
+
 
             foreach (ValorParametros valor in valoresSorted)
             {
@@ -164,10 +174,16 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FILAS", filasParametros);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", nombreElemento);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REF", referencia);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENT", "");
+
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REG", "");
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", fecha.ToString("dd/M/yyyy", CultureInfo.InvariantCulture));
 
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENT", cliente.RazonSocial);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@EMPR", "");
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOMI", cliente.Direccion);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@POBL", cliente.Poblacion);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@TEL", cliente.Telefono);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", "");
 
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
@@ -201,7 +217,29 @@ namespace AnalisisQuimicos.Core.Services
                 stream.Close();
             }
 
-            return path;
+            int indiceDelUltimoPunto = nombreArchivo.LastIndexOf('.');
+
+            string _nombre = nombreArchivo.Substring(0, indiceDelUltimoPunto);
+            string _extension = nombreArchivo.Substring(indiceDelUltimoPunto + 1, nombreArchivo.Length - indiceDelUltimoPunto - 1);
+
+            Files newFile = new Files()
+            {
+                Name = _nombre,
+                Format = _extension,
+                Path = path
+            };
+
+            try
+            {
+                await _unidadDeTrabajo.FilesRepository.Upload(newFile);
+                return path;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+
         }
     }
 }

@@ -19,7 +19,21 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         {
             var list = _entities.AsEnumerable();
 
-            var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
+            IEnumerable<ValorParametros> sel;
+
+            if(filtro.Fecha == null)
+            {
+                sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
+            }
+            else
+            {
+                sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis && x.Fecha == filtro.Fecha);
+
+                if (sel.ToArray().Length == 0)
+                {
+                    sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
+                }
+            }
 
             if (sel.ToArray().Length == 0)
             {

@@ -18,11 +18,11 @@ namespace AnalisisQuimicos.Api.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-        private readonly IRepository<Clientes> _clienteService;
+        private readonly IClienteService _clienteService;
         private readonly IMapper _mapper;
 
 
-        public ClienteController(IRepository<Clientes> clienteServicey, IMapper mapper)
+        public ClienteController(IClienteService clienteServicey, IMapper mapper)
         {
             _clienteService = clienteServicey;
             _mapper = mapper;
@@ -42,6 +42,15 @@ namespace AnalisisQuimicos.Api.Controllers
 
         {
             var cliente = await _clienteService.GetById(id);
+            var clienteDto = _mapper.Map<ClienteDto>(cliente);
+            var response = new ApiResponses<ClienteDto>(clienteDto);
+            return Ok(response);
+        }
+
+        [HttpGet("codigo")]
+        public IActionResult GetByCodigoCliente(int codigo)
+        {
+            var cliente = _clienteService.GetByCodigoCliente(codigo);
             var clienteDto = _mapper.Map<ClienteDto>(cliente);
             var response = new ApiResponses<ClienteDto>(clienteDto);
             return Ok(response);

@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IRepository<Archivos> _archivosRepository;
         private readonly IRepository<Analisis> _analisisRepository;
-        private readonly IRepository<Clientes> _clienteRepository;
+        private readonly IClienteRepository _clienteRepository;
         private readonly IRepository<Comarcas> _comarcaRepository;
         private readonly IRepository<Perfiles> _perfilRepository;
         private readonly IRepository<Poblaciones> _poblacionRepository;
@@ -52,7 +52,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         public IRepository<Analisis> AnalisisRepository => _analisisRepository ?? new BaseRepository<Analisis>(_context);
 
-        public IRepository<Clientes> ClienteRepository => _clienteRepository ?? new BaseRepository<Clientes>(_context);
+        public IClienteRepository ClienteRepository => _clienteRepository ?? new ClienteRepository(_context);
 
         public IRepository<Perfiles> PerfilRepository => _perfilRepository ?? new BaseRepository<Perfiles>(_context);
 

@@ -551,3 +551,6 @@ C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug
 C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.csproj.AssemblyReference.cache
 C:\Users\Aitor\Documents\Proyectos\JNC_AQ\BackEnd\AnalisisQuimicos.Api\obj\Debug\netcoreapp3.1\AnalisisQuimicos.Api.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\chris\Desktop\Proyecto Yucode\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\AnalisisQuimicos.Api.StaticWebAssets.xml
+C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\itextsharp.dll
+C:\Users\34626\Documents\GitHub\JNC_AQ\BackEnd\AnalisisQuimicos.Api\bin\Debug\netcoreapp3.1\itextsharp.xmlworker.dll
