@@ -10,6 +10,6 @@ namespace AnalisisQuimicos.Core.Interfaces
     {
         Task<Files> Download(int id);
 
-        Task Upload(Files file);
+        Task<int> Upload(Files file);
     }
 }

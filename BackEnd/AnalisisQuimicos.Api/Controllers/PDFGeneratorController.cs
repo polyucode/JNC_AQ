@@ -28,11 +28,13 @@ namespace AnalisisQuimicos.Api.Controllers
         {
             var valores = _mapper.Map<List<ValorParametros>>(valoresDto);
 
-            string path = await _pdfGenerator.NewPdf(valores);
+            int idFile = await _pdfGenerator.NewPdf(valores);
 
-            FileContentResult _fileContent;
+            return Ok(idFile);
 
-            try
+            //FileContentResult _fileContent;
+
+            /*try
             {
                 // Descargamos el archivo del Servidor.
                 _fileContent = new FileContentResult(System.IO.File.ReadAllBytes(path), "application/octet-stream");
@@ -43,7 +45,7 @@ namespace AnalisisQuimicos.Api.Controllers
             catch
             {
                 return Ok("ERROR AL DESCARGAR EL PDF");
-            }
+            }*/
         }
 
     }
