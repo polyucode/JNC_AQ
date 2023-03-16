@@ -76,6 +76,8 @@ namespace AnalisisQuimicos.Api
             services.AddTransient<IPasswordService, PasswordService>();
             services.AddTransient<IPDFGeneratorService, PDFGeneratorService>();
             services.AddTransient<IClienteService, ClienteService>();
+            services.AddTransient<IClientesContactosService, ClientesContactosService>();
+            services.AddTransient<IParametrosAnalisisPlantaService, ParametrosAnalisisPlantaService>();
 
             services.AddAuthentication(options =>
             {

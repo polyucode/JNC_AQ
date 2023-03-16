@@ -47,7 +47,7 @@ namespace AnalisisQuimicos.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("codigo")]
+        [HttpGet("codigo/{codigo}")]
         public IActionResult GetByCodigoCliente(int codigo)
         {
             var cliente = _clienteService.GetByCodigoCliente(codigo);

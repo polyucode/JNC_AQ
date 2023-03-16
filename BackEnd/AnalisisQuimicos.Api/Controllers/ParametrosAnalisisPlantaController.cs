@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Core.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,10 +19,10 @@ namespace AnalisisQuimicos.Api.Controllers
     public class ParametrosAnalisisPlantaController : ControllerBase
     {
 
-        private readonly IRepository<ParametrosAnalisisPlanta> _parametrosAnalisisPlantaService;
+        private readonly IParametrosAnalisisPlantaService _parametrosAnalisisPlantaService;
         private readonly IMapper _mapper;
 
-        public ParametrosAnalisisPlantaController(IRepository<ParametrosAnalisisPlanta> parametrosAnalisisPlantaService, IMapper mapper)
+        public ParametrosAnalisisPlantaController(IParametrosAnalisisPlantaService parametrosAnalisisPlantaService, IMapper mapper)
         {
             _parametrosAnalisisPlantaService = parametrosAnalisisPlantaService;
             _mapper = mapper;
@@ -73,6 +74,15 @@ namespace AnalisisQuimicos.Api.Controllers
 
             await _parametrosAnalisisPlantaService.Delete(id);
 
+        }
+
+        [HttpGet("analisis")]
+        public IActionResult GetAnalisis([FromQuery] ParametrosAnalisisQueryFilter analisisFilter)
+        {
+            var analisis = _parametrosAnalisisPlantaService.GetAnalisis(analisisFilter);
+            var analisissDTO = _mapper.Map<IEnumerable<ParametrosAnalisisPlanta>>(analisis);
+            var response = new ApiResponses<IEnumerable<ParametrosAnalisisPlanta>>(analisissDTO);
+            return Ok(response);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace AnalisisQuimicos.Core.Services
             string path = Path.Combine(workingDirectory, "Pdf");
             path = Path.Combine(path, cliente.RazonSocial);
             path = Path.Combine(path, valoresSorted[0].Oferta.ToString());
-            path = Path.Combine(path, elemplanta.Numero.ToString());
+            path = Path.Combine(path, "Planta_" + elemplanta.Numero.ToString());
             path = Path.Combine(path, nombreElemento);
 
             if (!Directory.Exists(path))
