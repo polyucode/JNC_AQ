@@ -248,7 +248,14 @@ export const getValorParametros = async () => {
     
 }
 
-export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento, idAnalisis) => {
+export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento, idAnalisis, fecha ) => {
+    
+    const resp = await axios.get(`${ urlBase }/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }&fecha=${ fecha }`, token);
+    return resp.data.data;
+    
+}
+
+export const getFilasParametros2 = async ( codigoCliente, codigoOferta, idElemento, idAnalisis ) => {
     
     const resp = await axios.get(`${ urlBase }/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`, token);
     return resp.data.data;
@@ -340,4 +347,12 @@ export const putAnalisisNivelesPlantasCliente = async ( analisis ) => {
     const resp = await axios.put('/AnalisisNivelesPlantasCliente', analisis, token);
     return resp.data.data;
 
+}
+
+/* PDF */
+
+export const generarPdf = async ( [valores] ) => {
+    
+    const resp = await axios.post('/PDFGenerator', valores, token);
+    return resp.data.data;
 }

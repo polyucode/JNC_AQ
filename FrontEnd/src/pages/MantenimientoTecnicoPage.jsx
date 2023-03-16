@@ -21,8 +21,9 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2 } from "../api/apiBackend";
 import Swal from "sweetalert2";
+import * as moment from 'moment';
 
 const token = {
     headers: {
@@ -243,13 +244,17 @@ export const MantenimientoTecnicoPage = () => {
         }))
     }
 
+    const guardarPDF = async() => {
+
+        const response = await generarPdf(valoresParametros)
+        console.log(response)
+    }
+
     const handleGetParametros = async () => {
 
-        const resp = await getFilasParametros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
+        const resp = await getFilasParametros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis, parametrosSeleccionado.fecha);
         setParametrosElemento(resp);
-
-        console.log(resp)
-
+        
         // Preparamos la variable que almacenará los valores de los parametros
         let parametrosMostrar = [];
         const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
@@ -608,7 +613,7 @@ export const MantenimientoTecnicoPage = () => {
                                         <Button
                                             variant="contained"
                                             startIcon={<PictureAsPdfIcon />}
-                                            onClick={guardarParametros}
+                                            onClick={guardarPDF}
                                         >
                                             Generar PDF
                                         </Button>

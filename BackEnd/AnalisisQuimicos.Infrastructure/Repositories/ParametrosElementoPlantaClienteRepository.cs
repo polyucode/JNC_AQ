@@ -20,7 +20,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
             var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
 
-            if (sel.ToArray().Length == 0)
+            if (sel.ToArray().Length != 0)
             {
                 return sel.ToArray();
             }
