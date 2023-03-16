@@ -564,13 +564,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -601,13 +600,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -638,13 +636,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -675,13 +672,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -712,13 +708,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -749,13 +744,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -786,13 +780,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -823,13 +816,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -860,13 +852,12 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
-                recogido: false,
-                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
                 observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
                 facturado: false,
                 numeroFacturado: '',
                 cancelado: false,
@@ -1117,8 +1108,15 @@ export const VisualizacionPage = () => {
         analisisSeleccionado.id = null;
         await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
             .then(response => {
+                AguasResiduales();
                 Desinfecciones();
+                AguaPozo();
                 DesinfeccionACS();
+                MantMaqFrio();
+                Mediciones();
+                ControlFugaGas();
+                AguaPotable();
+                RevisionBandeja();
                 abrirCerrarModalInsertar();
                 GetParametrosAnalisisPlanta();
                 //Otros();
@@ -1132,13 +1130,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1167,11 +1164,7 @@ export const VisualizacionPage = () => {
                 FisicoQuimicoRechazo();
                 FisicoQuimicoCondensados();
                 FisicoQuimicoCaldera();
-                AguasResiduales();
                 Osmosis();
-                AguaPozo();
-                AguaPotable();
-                RevisionBandeja();
                 abrirCerrarModalInsertar1();
                 GetParametrosAnalisisPlanta();
                 setAnalisisSeleccionado({
@@ -1184,13 +1177,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1225,13 +1217,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1266,13 +1257,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1299,8 +1289,15 @@ export const VisualizacionPage = () => {
                         analisi = analisisSeleccionado
                     }
                 });
+                AguasResiduales();
                 Desinfecciones();
+                AguaPozo();
                 DesinfeccionACS();
+                MantMaqFrio();
+                Mediciones();
+                ControlFugaGas();
+                AguaPotable();
+                RevisionBandeja();
                 GetParametrosAnalisisPlanta();
                 //Otros();
                 abrirCerrarModalEditar();
@@ -1314,13 +1311,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1353,11 +1349,7 @@ export const VisualizacionPage = () => {
                 FisicoQuimicoRechazo();
                 FisicoQuimicoCondensados();
                 FisicoQuimicoCaldera();
-                AguasResiduales();
                 Osmosis();
-                AguaPozo();
-                AguaPotable();
-                RevisionBandeja();
                 GetParametrosAnalisisPlanta();
                 abrirCerrarModalEditar1();
                 setAnalisisSeleccionado({
@@ -1370,13 +1362,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1416,13 +1407,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1462,13 +1452,12 @@ export const VisualizacionPage = () => {
                     periodo: '',
                     analisis: 0,
                     fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
                     realizado: false,
                     fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
                     observaciones: '',
+                    pdf: '',
+                    fechaPdf: null,
+                    resultado: '',
                     facturado: false,
                     numeroFacturado: '',
                     cancelado: false,
@@ -1522,13 +1511,12 @@ export const VisualizacionPage = () => {
                         periodo: '',
                         analisis: 0,
                         fecha: null,
-                        recogido: false,
-                        fechaRecogido: null,
                         realizado: false,
                         fechaRealizado: null,
-                        operario: '',
-                        protocolo: '',
                         observaciones: '',
+                        pdf: '',
+                        fechaPdf: null,
+                        resultado: '',
                         facturado: false,
                         numeroFacturado: '',
                         cancelado: false,
@@ -2090,18 +2078,18 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    }),
-                                                    
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        }),
+
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2254,17 +2242,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2417,17 +2405,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2580,17 +2568,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2743,17 +2731,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -2906,17 +2894,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -3069,17 +3057,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditarAerobio()
+                                                            abrirCerrarModalEditarAerobio()
 
-                                                        if (peticionPutAerobio()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPutAerobio()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditarAerobio}
                                                     onClose={abrirCerrarModalEditarAerobio}
@@ -3232,17 +3220,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditarLegionela()
+                                                            abrirCerrarModalEditarLegionela()
 
-                                                        if (peticionPutLegionela()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPutLegionela()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditarLegionela}
                                                     onClose={abrirCerrarModalEditarLegionela}
@@ -3395,17 +3383,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -3560,17 +3548,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -3723,17 +3711,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar1()
+                                                            abrirCerrarModalEditar1()
 
-                                                        if (peticionPut1()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut1()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar1}
                                                     onClose={abrirCerrarModalEditar1}
@@ -3886,17 +3874,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4049,17 +4037,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4212,17 +4200,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4375,17 +4363,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4538,17 +4526,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4701,17 +4689,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
@@ -4864,17 +4852,17 @@ export const VisualizacionPage = () => {
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                             abrirCerrarModalInsertar1();
-    
+
                                                         }, ''),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                        abrirCerrarModalEditar()
+                                                            abrirCerrarModalEditar()
 
-                                                        if (peticionPut()) {
-                                                            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                        } else {
-                                                            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                        }
-                                                    })
+                                                            if (peticionPut()) {
+                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                            } else {
+                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                            }
+                                                        })
                                                     ]}
                                                     open={modalEditar}
                                                     onClose={abrirCerrarModalEditar}
