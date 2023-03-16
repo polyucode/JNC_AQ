@@ -18,10 +18,10 @@ namespace AnalisisQuimicos.Api.Controllers
     public class ClientesContactosController : ControllerBase
     {
 
-        private readonly IRepository<ClientesContactos> _clientesContactosService;
+        private readonly IClientesContactosService _clientesContactosService;
         private readonly IMapper _mapper;
 
-        public ClientesContactosController(IRepository<ClientesContactos> clientesContactosService, IMapper mapper)
+        public ClientesContactosController(IClientesContactosService clientesContactosService, IMapper mapper)
         {
             _clientesContactosService = clientesContactosService;
             _mapper = mapper;
@@ -73,6 +73,15 @@ namespace AnalisisQuimicos.Api.Controllers
 
             await _clientesContactosService.Delete(id);
 
+        }
+
+        [HttpGet("codigo/{codigo}")]
+        public IActionResult GetByCodigoCliente(int codigo)
+        {
+            var cliente = _clientesContactosService.GetByCodigoCliente(codigo);
+            var ClientesContactosDTO = _mapper.Map<IEnumerable<ClientesContactos>>(cliente);
+            var response = new ApiResponses<IEnumerable<ClientesContactos>>(ClientesContactosDTO);
+            return Ok(response);
         }
     }
 }

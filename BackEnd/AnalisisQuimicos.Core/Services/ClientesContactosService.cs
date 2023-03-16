@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class ClientesContactosService : IRepository<ClientesContactos>
+    public class ClientesContactosService : IClientesContactosService
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
@@ -70,6 +70,11 @@ namespace AnalisisQuimicos.Core.Services
         {
             _unidadDeTrabajo.ClientesContactosRepository.Update(cliente);
             await _unidadDeTrabajo.SaveChangesAsync();
+        }
+
+        public IEnumerable<ClientesContactos> GetByCodigoCliente(int codigo)
+        {
+            return _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente(codigo);
         }
     }
 }

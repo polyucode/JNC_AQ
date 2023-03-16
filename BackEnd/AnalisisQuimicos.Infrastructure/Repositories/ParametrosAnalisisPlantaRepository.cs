@@ -2,7 +2,6 @@
 using AnalisisQuimicos.Core.Interfaces;
 using AnalisisQuimicos.Core.QueryFilters;
 using AnalisisQuimicos.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Infrastructure.Repositories
 {
-    public class ParametrosElementoPlantaClienteRepository : BaseRepository<ParametrosElementoPlantaCliente>, IParametrosElementoPlantaClienteRepository
+    public class ParametrosAnalisisPlantaRepository : BaseRepository<ParametrosAnalisisPlanta>, IParametrosAnalisisPlantaRepository
     {
-        public ParametrosElementoPlantaClienteRepository(YucodeDevelopmentJNC_AQContext context) : base(context) { }
-        public IEnumerable<ParametrosElementoPlantaCliente> GetParameters(ParametrosElementoQueryFilter filtro)
+        public ParametrosAnalisisPlantaRepository(YucodeDevelopmentJNC_AQContext context) : base(context) { }
+        public IEnumerable<ParametrosAnalisisPlanta> GetAnalisis(ParametrosAnalisisQueryFilter analisisFilter)
         {
             var list = _entities.AsEnumerable();
 
-            var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
+            var sel = list.Where(x => x.CodigoCliente == analisisFilter.CodigoCliente && x.Oferta == analisisFilter.Oferta && x.Elemento == analisisFilter.Id_Elemento && x.Analisis == analisisFilter.Id_Analisis && x.Fecha == analisisFilter.Fecha);
 
             if (sel.ToArray().Length != 0)
             {
@@ -29,5 +28,6 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
                 return null;
             }
         }
+
     }
 }

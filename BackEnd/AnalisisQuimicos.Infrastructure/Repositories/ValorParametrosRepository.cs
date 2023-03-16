@@ -35,7 +35,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
                 }
             }
 
-            if (sel.ToArray().Length == 0)
+            if (sel.ToArray().Length != 0)
             {
                 return sel.ToArray();
             }
