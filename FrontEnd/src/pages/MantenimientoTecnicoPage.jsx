@@ -21,7 +21,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2 } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2, getParametrosAnalisisFiltrados } from "../api/apiBackend";
 import Swal from "sweetalert2";
 import * as moment from 'moment';
 
@@ -48,6 +48,7 @@ export const MantenimientoTecnicoPage = () => {
     const [parametros, setParametros] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
     const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
+    const [tareaAnalisisPlanta, setTareaAnalisisPlanta] = useState([]);
     const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
     const [confAnalisisNivelesPlantasCliente, setConfAnalisisNivelesPlantasCliente] = useState([]);
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
@@ -254,7 +255,10 @@ export const MantenimientoTecnicoPage = () => {
 
         const resp = await getFilasParametros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis, parametrosSeleccionado.fecha);
         setParametrosElemento(resp);
-        
+
+        const resp2 = await getParametrosAnalisisFiltrados(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis, parametrosSeleccionado.fecha)
+        setTareaAnalisisPlanta(resp2)
+
         // Preparamos la variable que almacenará los valores de los parametros
         let parametrosMostrar = [];
         const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
@@ -381,6 +385,13 @@ export const MantenimientoTecnicoPage = () => {
             }
 
         });
+
+        await tareaAnalisisPlanta.map(async (tarea) => {
+
+            let tareaPut = {
+                
+            }
+        })
 
         // Avisamos al usuario si ha ido bien
         Swal.fire({
@@ -600,8 +611,6 @@ export const MantenimientoTecnicoPage = () => {
                                 )}
                     </Card>
                 </Grid>
-
-                {console.log(valoresParametros, "VALORES PARAMETROS")}
 
                 {/* Sección de botones */}
                 <Grid item xs={12}>

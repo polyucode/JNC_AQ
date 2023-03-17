@@ -319,6 +319,12 @@ export const putValorParametros = async ( parametro ) => {
 
 }
 
+export const getParametrosAnalisisFiltrados = async ( cliente, oferta, elemento, analisis, fecha ) => {
+
+    const resp = await axios.get(`/parametrosanalisisplanta/analisis/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }&Id_Analisis=${ analisis }&Fecha=${ fecha }`)
+    return resp.data.data;
+}
+
 /*** ANÁLISIS  ***/
 
 export const getAnalisisNivelesPlantasCliente = async () => {
