@@ -37,6 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
+import { bajarPdf } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -212,7 +213,7 @@ export const VisualizacionPage = () => {
         realizado: false,
         fechaRealizado: null,
         observaciones: '',
-        pdf: '',
+        pdf: 0,
         fechaPdf: null,
         resultado: '',
         facturado: false,
@@ -1050,6 +1051,12 @@ export const VisualizacionPage = () => {
             setDataOtros(response.data.data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         })
     }*/
+
+    const descargarPdf = async () => {
+
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, analisisSeleccionado.elemento, analisisSeleccionado.analisis, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
+        console.log(response)
+    }
 
     function FiltrarData() {
         setData1(data.filter(analisis => analisis.analisis === 1))
@@ -2077,9 +2084,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2241,9 +2247,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf()
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2404,9 +2409,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2567,9 +2571,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2730,9 +2733,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2893,9 +2895,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -3056,9 +3057,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarAerobio()
 
@@ -3219,9 +3219,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarLegionela()
 
@@ -3382,9 +3381,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -3547,9 +3545,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -3710,9 +3707,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -3873,9 +3869,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4036,9 +4031,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4199,9 +4193,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4362,9 +4355,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4525,9 +4517,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4688,9 +4679,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4851,9 +4841,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
