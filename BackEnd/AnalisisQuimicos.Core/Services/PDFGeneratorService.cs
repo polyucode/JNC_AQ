@@ -16,6 +16,7 @@ using AnalisisQuimicos.Core.Interfaces;
 using System.util;
 using AnalisisQuimicos.Core.Entities;
 using System.Globalization;
+using AnalisisQuimicos.Core.QueryFilters;
 
 namespace AnalisisQuimicos.Core.Services
 {
@@ -37,6 +38,19 @@ namespace AnalisisQuimicos.Core.Services
             Analisis analisis = _unidadDeTrabajo.AnalisisRepository.GetById((int)valoresSorted[0].Id_Analisis).Result;
 
             ElementosPlanta elemplanta = _unidadDeTrabajo.ElementosPlantaRepository.GetById((int)valoresSorted[0].Id_Elemento).Result;
+
+            ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
+
+            ParametrosElementoQueryFilter filtro = new ParametrosElementoQueryFilter
+            {
+                CodigoCliente = cliente.Codigo,
+                Oferta = valoresSorted[0].Oferta,
+                Id_Elemento = elemplanta.Id,
+                Id_Analisis = analisis.Id
+            };
+
+            IEnumerable<ParametrosElementoPlantaCliente> listParametro = _unidadDeTrabajo.ParametrosElementoPlantaClienteRepository.GetParameters(filtro);
+
             string nombreElemento = elemplanta.Nombre;
 
             DateTime fecha = (DateTime)valoresSorted[0].Fecha;
@@ -79,12 +93,14 @@ namespace AnalisisQuimicos.Core.Services
             {
                 nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valor.Parametro).Result.Nombre;
 
+                ParametrosElementoPlantaCliente parametro = listParametro.Where(x => x.Parametro == valor.Parametro).ToArray()[0];
+
                 filasParametros += "<tr>";
                 filasParametros += "<td>" + nombreParametro + "</td>";
                 filasParametros += "<td>" + valor.Unidad + "</td>";
                 filasParametros += "<td>" + valor.Valor + "</td>";
-                filasParametros += "<td></td>";
-                filasParametros += "<td></td>";
+                filasParametros += "<td>" + parametro.LimSup + "</td>";
+                filasParametros += "<td>" + parametro.LimInf + "</td>";
                 filasParametros += "</tr>";
 
 
@@ -183,7 +199,7 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOMI", cliente.Direccion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@POBL", cliente.Poblacion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@TEL", cliente.Telefono);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", "");
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
 
 
             using (FileStream stream = new FileStream(path, FileMode.Create))

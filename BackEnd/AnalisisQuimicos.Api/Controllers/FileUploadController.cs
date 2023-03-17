@@ -45,6 +45,7 @@ namespace AnalisisQuimicos.Api.Controllers
             }
         }
 
+
         [HttpGet("download/{id}")]
         public async Task<IActionResult> Download(int id)
         {

@@ -52,6 +52,13 @@ namespace AnalisisQuimicos.Core.Services
             try
             {
                 await _unidadDeTrabajo.FilesRepository.Upload(newFile);
+
+                ParametrosAnalisisPlanta parametros = _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.GetById(id).Result;
+
+                parametros.Pdf = newFile.Id.ToString();
+
+                _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.Update(parametros);
+
                 return true;
             }
             catch (Exception e)
