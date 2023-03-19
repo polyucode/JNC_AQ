@@ -31,12 +31,12 @@ namespace AnalisisQuimicos.Api.Controllers
             return Ok("Get file");
         }
 
-        [HttpPost("upload/{id}")]
-        public async Task<IActionResult> Upload(IFormFile file, int id)
+        [HttpPost("upload/{mode}/{id}")]
+        public async Task<IActionResult> Upload(IFormFile file, string mode, int id)
         {
             try
             {
-                await _fileUpload.Upload(file, id);
+                await _fileUpload.Upload(file, mode, id);
                 return Ok("Archivo subido");
             }
             catch (Exception e)

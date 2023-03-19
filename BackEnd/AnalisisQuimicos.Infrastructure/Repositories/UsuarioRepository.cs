@@ -17,6 +17,11 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
             return await _entities.FirstOrDefaultAsync(x => x.Usuario == userLogin.User);
         }
 
+        public async Task<Usuarios> GetUsuariosByClient(int idClient)
+        {
+            return await _entities.FirstOrDefaultAsync(x => x.IdCliente == idClient);
+        }
+
         public async Task<IEnumerable<Usuarios>> GetUsuariosByPerfil(int idPerfil)
         {
             return await _entities.Where(x => x.IdPerfil == idPerfil).ToListAsync();
