@@ -421,6 +421,14 @@ export const bajarPdfNoFQ = ( id ) => {
 }
 
 export const subirPdf = async ( id ) => {
+
+    const formData = new FormData();
+
+    formData.append(
+        "myFile",
+        this.state.onSelectedFile,
+        this.state.onSelectedFile.name
+      );
     
     const resp = await axios.post(`/FileUpload/upload/pdf/${id}`, token)
     return resp
