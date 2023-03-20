@@ -20,7 +20,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.DelDate).HasColumnType("datetime");
 
-            builder.Property(e => e.Firma).HasMaxLength(4000);
+            builder.Property(e => e.Firma).HasColumnName("Firma");
 
             builder.Property(e => e.Login).HasMaxLength(50);
 
