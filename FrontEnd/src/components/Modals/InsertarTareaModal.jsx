@@ -186,7 +186,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
 
             <Grid item xs={6} md={3}>
                 <Autocomplete
-                    disabled={estadoOperario}
+                    //disabled={estadoOperario}
                     disableClearable={true}
                     sx={{ width: '100%' }}
                     id="Operarios"
@@ -196,12 +196,12 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
+                        operario: value.id
                     }))}
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            {/*<Grid item xs={12} md={6}>
                 <TextField
                     disabled={estadoProtocolo}
                     sx={{ width: '100%' }}
@@ -217,7 +217,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                         </MenuItem>
                     ))}
                 </TextField>
-            </Grid>
+            </Grid>*/}
 
             <Grid item xs={4} md={3}>
                 <TextField

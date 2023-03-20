@@ -113,7 +113,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            {/*<Grid item xs={12} md={6}>
                 <TextField
                     sx={{ width: '100%' }}
                     id='protocolo'
@@ -128,7 +128,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                         </MenuItem>
                     ))}
                 </TextField>
-            </Grid>
+            </Grid>*/}
 
             <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} label="observaciones" name="observaciones" onChange={handleChangeInput} />

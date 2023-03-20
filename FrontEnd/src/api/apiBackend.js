@@ -394,3 +394,9 @@ export const bajarPdf = ( id, nombre, oferta, elemento, analisis, fecha ) => {
     /*const resp = await axios.get(`/fileupload/download/${ id }`);
     return resp.data;*/
 }
+
+export const subirPdf = async ( id ) => {
+    
+    const resp = await axios.post(`/FileUpload/upload/pdf/${id}`, token)
+    return resp
+}

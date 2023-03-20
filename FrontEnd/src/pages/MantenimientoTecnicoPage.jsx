@@ -204,6 +204,36 @@ export const MantenimientoTecnicoPage = () => {
         }
     };
 
+    const handleChangeCheckbox = e => {
+        const { name, value, checked } = e.target
+        const fechaActual = Date.now();
+        const hoy = new Date(fechaActual); 
+        setTareaAnalisisPlanta(valorPrevio => ({
+            ...valorPrevio,
+            [name]: checked,
+            fechaRecogido: hoy.toISOString()
+        }))
+    }
+
+    const handleChangeCheckbox2 = e => {
+        const { name, value, checked } = e.target
+        const fechaActual = Date.now();
+        const hoy = new Date(fechaActual); 
+        setTareaAnalisisPlanta(valorPrevio => ({
+            ...valorPrevio,
+            [name]: checked,
+            fechaRealizado: hoy.toISOString()
+        }))
+    }
+
+    const handleTextArea = e => {
+        const { name, value } = e.target
+        setTareaAnalisisPlanta((prevState) => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
@@ -251,11 +281,15 @@ export const MantenimientoTecnicoPage = () => {
 
         const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, valor: parseInt(parametro.valor, 10) }))
 
+        const fechaActual = Date.now();
+        const hoy = new Date(fechaActual);    
+
         const response = await generarPdf(valoresParametrosParseado)
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             pdf: response,
-            realizado: true
+            realizado: true,
+            fechaRealizado: hoy.toISOString()
         }))
 
         Swal.fire({
@@ -566,15 +600,17 @@ export const MantenimientoTecnicoPage = () => {
                                 (<CardContent style={{ padding: '30px', margin: '15px' }}>
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>
-                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Recogida de Muestras" name="recogido" />
-                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Realizado" name="recogido" />
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Recogida de Muestras" name="recogido" onChange={handleChangeCheckbox} />
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Realizado" name="realizado" onChange={handleChangeCheckbox2} />
                                         </Grid>
                                         <Grid item xs={6} md={6}>
                                             <p> Observaciones </p>
                                             <TextareaAutosize
                                                 aria-label="empty textarea"
                                                 minRows={8}
+                                                name="observaciones"
                                                 style={{ width: '100%' }}
+                                                onChange={handleTextArea}
                                             />
                                         </Grid>
                                     </Grid>

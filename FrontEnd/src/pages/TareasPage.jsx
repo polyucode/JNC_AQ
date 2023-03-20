@@ -658,7 +658,7 @@ export const TareasPage = () => {
       nombreAnalisis: value.nombre
     }))
 
-    if (value.nombre === "Desinfecciones" || value.nombre === "Desinfeccion ACS" || value.nombre === "Mantenimiento Maq Frio" || value.nombre === "Mediciones" || value.nombre === "Control Fuga Gas" || value.nombre === "Agua Potable" || value.nombre === "Revision de Bandeja") {
+    /*if (value.nombre === "Desinfecciones" || value.nombre === "Desinfeccion ACS" || value.nombre === "Mantenimiento Maq Frio" || value.nombre === "Mediciones" || value.nombre === "Control Fuga Gas" || value.nombre === "Agua Potable" || value.nombre === "Revision de Bandeja") {
       setEstadoOperario(false)
     } else {
       setEstadoOperario(true)
@@ -668,7 +668,7 @@ export const TareasPage = () => {
       setEstadoProtocolo(false)
     } else {
       setEstadoProtocolo(true)
-    }
+    }*/
   }
 
   //modal insertar mantenimientocab
@@ -857,7 +857,7 @@ export const TareasPage = () => {
                 setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.row.operario));
                 setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
 
-                if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {
+                /*if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {
                   setEstadoOperario(false)
                 } else {
                   setEstadoOperario(true)
@@ -867,7 +867,7 @@ export const TareasPage = () => {
                   setEstadoProtocolo(false)
                 } else {
                   setEstadoProtocolo(true)
-                }
+                }*/
 
                 abrirCerrarModalEditar();
               }}
@@ -889,8 +889,8 @@ export const TareasPage = () => {
             handleChangeFecha={handleChangeFecha}
             setTareaSeleccionada={setTareaSeleccionada}
             handleChangeAnalisis={handleChangeAnalisis}
-            estadoProtocolo={estadoProtocolo}
-            estadoOperario={estadoOperario}
+            //estadoProtocolo={estadoProtocolo}
+            //estadoOperario={estadoOperario}
             elementosAutocomplete={elementosAutocomplete}
             analisisAutocomplete={analisisAutocomplete}
           />
@@ -923,8 +923,8 @@ export const TareasPage = () => {
             handleChangeFecha={handleChangeFecha}
             setTareaSeleccionada={setTareaSeleccionada}
             handleChangeAnalisis={handleChangeAnalisis}
-            estadoProtocolo={estadoProtocolo}
-            estadoOperario={estadoOperario}
+            //estadoProtocolo={estadoProtocolo}
+            //estadoOperario={estadoOperario}
             codigoClienteEditar={clienteTareaEditar}
             tipoTareaEditar={tipoTareaEditar}
             tecnicoTareaEditar={tecnicoTareaEditar}
