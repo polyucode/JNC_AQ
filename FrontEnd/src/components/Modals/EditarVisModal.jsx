@@ -177,7 +177,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             </Grid>
 
             <Grid item xs={8} md={5}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
                     Subir PDF
                 </Button>
             </Grid>
