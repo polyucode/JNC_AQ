@@ -41,6 +41,8 @@ namespace AnalisisQuimicos.Core.Services
 
             ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
 
+            Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetUsuariosByClient((int)valoresSorted[0].CodigoCliente).Result;
+
             ParametrosElementoQueryFilter filtro = new ParametrosElementoQueryFilter
             {
                 CodigoCliente = cliente.Codigo,
@@ -51,7 +53,7 @@ namespace AnalisisQuimicos.Core.Services
 
             IEnumerable<ParametrosElementoPlantaCliente> listParametro = _unidadDeTrabajo.ParametrosElementoPlantaClienteRepository.GetParameters(filtro);
 
-            string nombreElemento = elemplanta.Nombre;
+            string nombreElemento = elemplanta.Nombre + "_" + elemplanta.Numero;
 
             DateTime fecha = (DateTime)valoresSorted[0].Fecha;
 
@@ -188,18 +190,23 @@ namespace AnalisisQuimicos.Core.Services
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@COLUMNAS", columnasElementos);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FILAS", filasParametros);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", nombreElemento);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", elemplanta.Nombre + " " + elemplanta.Numero);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REF", referencia);
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REG", "");
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", fecha.ToString("dd/M/yyyy", CultureInfo.InvariantCulture));
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CLIENT", cliente.RazonSocial);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@EMPR", "");
+            //PaginaHTML_Texto = PaginaHTML_Texto.Replace("@EMPR", "");
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOMI", cliente.Direccion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@POBL", cliente.Poblacion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@TEL", cliente.Telefono);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ANA", analisis.Nombre);
+            
+            Files file = _unidadDeTrabajo.FilesRepository.Download(usuario.Firma).Result;
+
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@Image", file.Path);
 
 
             using (FileStream stream = new FileStream(path, FileMode.Create))

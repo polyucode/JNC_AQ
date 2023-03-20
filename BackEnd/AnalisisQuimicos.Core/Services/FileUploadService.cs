@@ -18,7 +18,7 @@ namespace AnalisisQuimicos.Core.Services
             _unidadDeTrabajo = unidadDeTrabajo;
         }
 
-        public async Task<bool> Upload(IFormFile file, int id)
+        public async Task<bool> Upload(IFormFile file, string mode, int id)
         {
             string workingDirectory = Environment.CurrentDirectory;
 
@@ -53,11 +53,27 @@ namespace AnalisisQuimicos.Core.Services
             {
                 await _unidadDeTrabajo.FilesRepository.Upload(newFile);
 
-                ParametrosAnalisisPlanta parametros = _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.GetById(id).Result;
+                switch (mode)
+                {
+                    case "pdf":
 
-                parametros.Pdf = newFile.Id.ToString();
+                        ParametrosAnalisisPlanta parametros = _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.GetById(id).Result;
 
-                _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.Update(parametros);
+                        parametros.Pdf = newFile.Id;
+
+                        _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.Update(parametros);
+
+                        break;
+                    case "firma":
+
+                        Usuarios usuarios = _unidadDeTrabajo.UsuarioRepository.GetById(id).Result;
+
+                        usuarios.Firma = newFile.Id;
+
+                        _unidadDeTrabajo.UsuarioRepository.Update(usuarios);
+
+                        break;
+                }
 
                 return true;
             }

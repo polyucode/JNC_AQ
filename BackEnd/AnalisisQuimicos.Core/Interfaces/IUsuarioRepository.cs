@@ -11,5 +11,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         Task<IEnumerable<Usuarios>> GetUsuariosByPerfil(int idPerfil);
 
         Task<Usuarios> GetLoginByCredentials(UserLogin userLogin);
+
+        Task<Usuarios> GetUsuariosByClient(int idClient);
     }
 }
