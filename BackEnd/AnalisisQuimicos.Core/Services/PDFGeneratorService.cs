@@ -101,8 +101,8 @@ namespace AnalisisQuimicos.Core.Services
                 filasParametros += "<td>" + nombreParametro + "</td>";
                 filasParametros += "<td>" + valor.Unidad + "</td>";
                 filasParametros += "<td>" + valor.Valor + "</td>";
-                filasParametros += "<td>" + parametro.LimSup + "</td>";
                 filasParametros += "<td>" + parametro.LimInf + "</td>";
+                filasParametros += "<td>" + parametro.LimSup + "</td>";
                 filasParametros += "</tr>";
 
 
@@ -204,7 +204,7 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ANA", analisis.Nombre);
             
-            Files file = _unidadDeTrabajo.FilesRepository.Download(usuario.Firma).Result;
+            Files file = _unidadDeTrabajo.FilesRepository.Download((int)usuario.Firma).Result;
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@Image", file.Path);
 
