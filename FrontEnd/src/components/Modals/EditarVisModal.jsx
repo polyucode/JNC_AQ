@@ -7,7 +7,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Button from '@mui/material/Button';
 
 import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { getOperarios, subirPdf } from '../../api/apiBackend';
 
 const protocolos = [
     {
@@ -72,6 +72,11 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             '-' + String(fecha1.getDate()).padStart(2, '0')
 
         return fecha2
+    }
+
+    const subidaPdf = async () => {
+
+        const response = await subirPdf(analisisSeleccionado.id)
     }
 
     return (
@@ -177,7 +182,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             </Grid>
 
             <Grid item xs={8} md={5}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
                     Subir PDF
                 </Button>
             </Grid>

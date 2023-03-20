@@ -37,7 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { bajarPdf } from "../api/apiBackend";
+import { bajarPdf, bajarPdfNoFQ } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -1069,6 +1069,11 @@ export const VisualizacionPage = () => {
     const descargarPdf = async () => {
 
         const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, analisisSeleccionado.elemento, analisisSeleccionado.analisis, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
+        console.log(response)
+    }
+
+    const descargarPdfNoFQ = async () => {
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, { headers: { 'Content-type' : 'application/pdf' }});
         console.log(response)
     }
 
@@ -3568,7 +3573,7 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()

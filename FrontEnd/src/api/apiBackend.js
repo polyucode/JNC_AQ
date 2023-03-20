@@ -395,6 +395,31 @@ export const bajarPdf = ( id, nombre, oferta, elemento, analisis, fecha ) => {
     return resp.data;*/
 }
 
+export const bajarPdfNoFQ = ( id ) => {
+
+    axios({
+        url: `/fileupload/download/${ id }`, //your url
+        method: 'GET',
+        responseType: 'blob', // important
+    }).then((response) => {
+        // create file link in browser's memory
+        const href = URL.createObjectURL(response.data);
+    
+        // create "a" HTML element with href to file & click
+        const link = document.createElement('a');
+        link.href = href;
+        link.setAttribute('download', `Fichero.pdf`); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+    
+        // clean up "a" element & remove ObjectURL
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+    });
+    /*const resp = await axios.get(`/fileupload/download/${ id }`);
+    return resp.data;*/
+}
+
 export const subirPdf = async ( id ) => {
     
     const resp = await axios.post(`/FileUpload/upload/pdf/${id}`, token)
