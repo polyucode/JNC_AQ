@@ -420,6 +420,23 @@ export const MantenimientoTecnicoPage = () => {
                 parametroPut.fecha = parametrosSeleccionado.fecha
 
                 const resp = await putValorParametros(parametroPut);
+                await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
+
+                // Avisamos al usuario si ha ido bien
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'Datos guardados',
+                    text: `Los parametros han sido guardados`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
 
             } else {
 
@@ -441,24 +458,6 @@ export const MantenimientoTecnicoPage = () => {
 
             }
 
-        });
-
-        await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
-
-        // Avisamos al usuario si ha ido bien
-        Swal.fire({
-            position: 'center',
-            icon: 'info',
-            title: 'Datos guardados',
-            text: `Los parametros han sido guardados`,
-            showConfirmButton: false,
-            timer: 2000,
-            showClass: {
-                popup: 'animate__animated animate__bounceIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__bounceOut'
-            }
         });
 
     }
