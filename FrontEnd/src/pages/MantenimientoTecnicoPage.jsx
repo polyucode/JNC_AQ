@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Grid, Card, CardContent, Autocomplete, Typography, RadioGroup, FormControl } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -24,6 +24,7 @@ import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMan
 import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2, getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta } from "../api/apiBackend";
 import Swal from "sweetalert2";
 import * as moment from 'moment';
+import { AuthContext } from "../context/AuthContext";
 
 const token = {
     headers: {
@@ -32,6 +33,9 @@ const token = {
 };
 
 export const MantenimientoTecnicoPage = () => {
+
+    const { user } = useContext( AuthContext );
+    console.log({ user });
 
     /*** VARIABLES ***/
     let opcionesFiltradasAnalisis = [];
@@ -105,6 +109,7 @@ export const MantenimientoTecnicoPage = () => {
 
         getOperarios()
             .then(operarios => {
+                console.log({ operarios })
                 setOperarios(operarios)
             })
 
@@ -535,6 +540,7 @@ export const MantenimientoTecnicoPage = () => {
                                         sx={{ width: '100%' }}
                                         id="Operarios"
                                         options={operarios}
+                                        defaultValue={ user.idPerfil === 1004 ? user : undefined }
                                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
                                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                                         renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
