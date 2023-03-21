@@ -27,6 +27,8 @@ namespace AnalisisQuimicos.Core.Entities
         public string NumeroFacturado { get; set; }
         public string Resultado { get; set; }
         public int? Pdf { get; set; }
+        public bool? Recibido { get; set; }
+        public DateTime? FechaPdf { get; set; }
         public bool? Cancelado { get; set; }
         public string Comentarios { get; set; }
     }

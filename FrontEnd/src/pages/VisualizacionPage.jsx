@@ -214,6 +214,7 @@ export const VisualizacionPage = () => {
         fechaRealizado: null,
         observaciones: '',
         pdf: 0,
+        recibido: false,
         fechaPdf: null,
         resultado: '',
         facturado: false,
@@ -331,6 +332,8 @@ export const VisualizacionPage = () => {
         { title: 'Observaciones', field: 'observaciones', width: 250 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -362,6 +365,8 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -379,6 +384,8 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -450,7 +457,6 @@ export const VisualizacionPage = () => {
 
     }, [analisisSeleccionado.elemento])
 
-    console.log(analisisEditar)
     useEffect(() => {
 
         if (data1.length > 0) {
@@ -567,6 +573,7 @@ export const VisualizacionPage = () => {
 
     const subirArchivo = async () => {
         const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+        return resp.data
     }
 
     const abrirCerrarModalInsertar = () => {
@@ -733,7 +740,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -770,7 +777,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -807,7 +814,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -844,7 +851,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -1322,7 +1329,10 @@ export const VisualizacionPage = () => {
     const peticionPut = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                subirArchivo()
+                let pdfsubido = 0;
+                if(fileChange != null){
+                    pdfsubido = subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1355,7 +1365,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: pdfsubido,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1407,7 +1417,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1430,7 +1440,9 @@ export const VisualizacionPage = () => {
     const peticionPutAerobio = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                subirArchivo()
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1454,7 +1466,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1477,7 +1489,9 @@ export const VisualizacionPage = () => {
     const peticionPutLegionela = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                subirArchivo();
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1501,7 +1515,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,

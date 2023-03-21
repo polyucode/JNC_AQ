@@ -35,9 +35,8 @@ namespace AnalisisQuimicos.Api.Controllers
         public async Task<IActionResult> Upload(IFormFile file, string mode, int id)
         {
             try
-            {
-                await _fileUpload.Upload(file, mode, id);
-                return Ok("Archivo subido");
+            {               
+                return Ok(await _fileUpload.Upload(file, mode, id));
             }
             catch (Exception e)
             {
