@@ -395,7 +395,7 @@ export const bajarPdf = ( id, nombre, oferta, elemento, analisis, fecha ) => {
     return resp.data;*/
 }
 
-export const bajarPdfNoFQ = ( id ) => {
+export const bajarPdfNoFQ = ( id, nombre, oferta, elemento, analisis, fecha ) => {
 
     axios({
         url: `/fileupload/download/${ id }`, //your url
@@ -408,7 +408,7 @@ export const bajarPdfNoFQ = ( id ) => {
         // create "a" HTML element with href to file & click
         const link = document.createElement('a');
         link.href = href;
-        link.setAttribute('download', `Fichero.pdf`); //or any other extension
+        link.setAttribute('download', `${nombre}_${oferta}_${elemento}_${analisis}_${fecha}.pdf`); //or any other extension
         document.body.appendChild(link);
         link.click();
     
@@ -420,16 +420,27 @@ export const bajarPdfNoFQ = ( id ) => {
     return resp.data;*/
 }
 
-export const subirPdf = async ( id ) => {
+export const subirPdf = async ( id, archivo ) => {
 
     const formData = new FormData();
 
-    formData.append(
-        "myFile",
-        this.state.onSelectedFile,
-        this.state.onSelectedFile.name
-      );
+    formData.append('file', archivo )
     
-    const resp = await axios.post(`/FileUpload/upload/pdf/${id}`, token)
+    const resp = await axios.post(`/FileUpload/upload/pdf/${id}`, formData, token)
+    console.log(resp)
     return resp
+}
+
+
+/* Firma */
+
+export const subirFirma = async ( id, firma ) => {
+
+    const formData = new FormData()
+    formData.append('file', firma)
+
+    const resp = await axios.post(`/FileUpload/upload/firma/${id}`, formData, token)
+    console.log(resp)
+    return resp
+
 }

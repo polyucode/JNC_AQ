@@ -52,7 +52,7 @@ const protocolos = [
     }
 ]
 
-export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete }) => {
+export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf }) => {
 
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
@@ -169,9 +169,10 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
             </Grid>
 
             <Grid item xs={12} md={12} style={{ display: "flex" }}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                <input type="file" onChange={handlePdf}/>
+                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
                     Subir PDF
-                </Button>
+                </Button>*/}
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
                 <TextField
                     id="fecha"

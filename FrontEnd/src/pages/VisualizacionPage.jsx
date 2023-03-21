@@ -37,7 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { bajarPdf, bajarPdfNoFQ } from "../api/apiBackend";
+import { bajarPdf, bajarPdfNoFQ, subirPdf } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -228,6 +228,8 @@ export const VisualizacionPage = () => {
         delIdUser: null,
         deleted: null,
     });
+
+    const [fileChange, setFileChange] = useState(null);
 
     const protocolos = [
         {
@@ -448,6 +450,7 @@ export const VisualizacionPage = () => {
 
     }, [analisisSeleccionado.elemento])
 
+    console.log(analisisEditar)
     useEffect(() => {
 
         if (data1.length > 0) {
@@ -548,6 +551,10 @@ export const VisualizacionPage = () => {
         changeActualState(e.target.checked)
     }
 
+    const handlePdf = e => {
+        setFileChange(e.target.files[0])
+    }
+
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
 
@@ -556,6 +563,10 @@ export const VisualizacionPage = () => {
             '-' + String(fecha1.getDate()).padStart(2, '0')
 
         return fecha2
+    }
+
+    const subirArchivo = async () => {
+        const resp = await subirPdf(analisisSeleccionado.id, fileChange)
     }
 
     const abrirCerrarModalInsertar = () => {
@@ -1068,13 +1079,11 @@ export const VisualizacionPage = () => {
 
     const descargarPdf = async () => {
 
-        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, analisisSeleccionado.elemento, analisisSeleccionado.analisis, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
-        console.log(response)
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
     }
 
     const descargarPdfNoFQ = async () => {
-        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, { headers: { 'Content-type' : 'application/pdf' }});
-        console.log(response)
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
     }
 
     function FiltrarData() {
@@ -1313,6 +1322,7 @@ export const VisualizacionPage = () => {
     const peticionPut = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                subirArchivo()
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1420,6 +1430,7 @@ export const VisualizacionPage = () => {
     const peticionPutAerobio = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                subirArchivo()
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1466,6 +1477,7 @@ export const VisualizacionPage = () => {
     const peticionPutLegionela = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                subirArchivo();
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1641,7 +1653,6 @@ export const VisualizacionPage = () => {
 
     const onChangeElemento = (e, value, name) => {
 
-        console.log(value.id)
         if (e.target.textContent !== "") {
             setData1(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData2(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
@@ -3049,7 +3060,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModalAerobio
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}                                                        
                                                         />
                                                     }
                                                     botones={[
@@ -3082,10 +3093,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarAerobio()
@@ -3244,10 +3256,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarLegionela()
@@ -3406,10 +3419,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -3570,6 +3584,7 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3894,10 +3909,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4056,10 +4072,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4218,10 +4235,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4380,10 +4398,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4542,10 +4561,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4704,10 +4724,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4866,10 +4887,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
