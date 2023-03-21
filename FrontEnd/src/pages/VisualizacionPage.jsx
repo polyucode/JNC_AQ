@@ -37,6 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
+import { bajarPdf, bajarPdfNoFQ } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -212,7 +213,7 @@ export const VisualizacionPage = () => {
         realizado: false,
         fechaRealizado: null,
         observaciones: '',
-        pdf: '',
+        pdf: 0,
         fechaPdf: null,
         resultado: '',
         facturado: false,
@@ -321,6 +322,8 @@ export const VisualizacionPage = () => {
         //visibles
         { title: 'Periodo', field: 'periodo', width: 150 },
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
@@ -349,12 +352,14 @@ export const VisualizacionPage = () => {
         //visibles
         { title: 'Periodo', field: 'periodo', width: 150 },
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Resultado', field: 'resultado', type: 'boolean', width: 120 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'Resultado', field: 'resultado', width: 120 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -364,10 +369,11 @@ export const VisualizacionPage = () => {
         //visibles
         { title: 'Periodo', field: 'periodo', width: 150 },
         { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
         { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
         { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
         { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Resultado', field: 'resultado', type: 'boolean', width: 120 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
@@ -561,6 +567,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -597,6 +604,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -633,6 +641,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -669,6 +678,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -705,6 +715,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -741,6 +752,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -777,6 +789,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -813,6 +826,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -849,6 +863,7 @@ export const VisualizacionPage = () => {
                 oferta: analisisSeleccionado.oferta,
                 pedido: analisisSeleccionado.pedido,
                 elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
                 periodo: '',
                 analisis: 0,
                 fecha: null,
@@ -1051,6 +1066,17 @@ export const VisualizacionPage = () => {
         })
     }*/
 
+    const descargarPdf = async () => {
+
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, analisisSeleccionado.elemento, analisisSeleccionado.analisis, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
+        console.log(response)
+    }
+
+    const descargarPdfNoFQ = async () => {
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, { headers: { 'Content-type' : 'application/pdf' }});
+        console.log(response)
+    }
+
     function FiltrarData() {
         setData1(data.filter(analisis => analisis.analisis === 1))
         setData2(data.filter(analisis => analisis.analisis === 2))
@@ -1127,6 +1153,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1174,6 +1201,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1214,6 +1242,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1254,6 +1283,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1308,6 +1338,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1359,6 +1390,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1404,6 +1436,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1449,6 +1482,7 @@ export const VisualizacionPage = () => {
                     oferta: analisisSeleccionado.oferta,
                     pedido: analisisSeleccionado.pedido,
                     elemento: analisisSeleccionado.elemento,
+                    nombreElemento: analisisSeleccionado.nombreElemento,
                     periodo: '',
                     analisis: 0,
                     fecha: null,
@@ -1508,6 +1542,7 @@ export const VisualizacionPage = () => {
                         oferta: analisisSeleccionado.oferta,
                         pedido: analisisSeleccionado.pedido,
                         elemento: analisisSeleccionado.elemento,
+                        nombreElemento: analisisSeleccionado.nombreElemento,
                         periodo: '',
                         analisis: 0,
                         fecha: null,
@@ -2077,9 +2112,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2241,9 +2275,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf()
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2404,9 +2437,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2567,9 +2599,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2730,9 +2761,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -2893,9 +2923,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -3056,9 +3085,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarAerobio()
 
@@ -3219,9 +3247,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarLegionela()
 
@@ -3382,9 +3409,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -3547,9 +3573,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdfNoFQ();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -3710,9 +3735,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar1()
 
@@ -3873,9 +3897,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4036,9 +4059,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4199,9 +4221,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4362,9 +4383,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4525,9 +4545,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4688,9 +4707,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 
@@ -4851,9 +4869,8 @@ export const VisualizacionPage = () => {
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                        }, ''),
+                                                            descargarPdf();
+                                                        }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
 

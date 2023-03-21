@@ -121,6 +121,24 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
+                />
+            </Grid>
+
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={9}>
+                <TextField
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeInput}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
                 />
             </Grid>
 

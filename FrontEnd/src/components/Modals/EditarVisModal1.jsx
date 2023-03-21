@@ -128,6 +128,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
                 />
             </Grid>
 

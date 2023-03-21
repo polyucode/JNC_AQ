@@ -593,7 +593,6 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
 
             <Grid item xs={6} md={6}>
                 <Autocomplete
-                    disabled={estadoOperario}
                     disableClearable={true}
                     sx={{ width: '100%' }}
                     id="Operarios"
@@ -604,7 +603,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                     renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
+                        operario: value.id
                     }))}
                 />
             </Grid>

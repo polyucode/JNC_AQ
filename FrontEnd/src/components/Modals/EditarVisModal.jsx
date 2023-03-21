@@ -7,7 +7,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Button from '@mui/material/Button';
 
 import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { getOperarios, subirPdf } from '../../api/apiBackend';
 
 const protocolos = [
     {
@@ -74,6 +74,11 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
         return fecha2
     }
 
+    const subidaPdf = async () => {
+
+        const response = await subirPdf(analisisSeleccionado.id)
+    }
+
     return (
         <>
             <Grid item xs={3} md={4}>
@@ -129,9 +134,27 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
                 />
             </Grid>
 
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={9}>
+                <TextField
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeInput}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
+                />
+            </Grid>
+            
 
             <Grid item xs={12} md={3} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
@@ -158,8 +181,13 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 />
             </Grid>
 
+            <Grid item xs={8} md={5}>
+                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
+                    Subir PDF
+                </Button>
+            </Grid>
             <Grid item xs={12} md={3}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.pdf} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
             </Grid>
             <Grid item xs={12} md={3}>
                 <TextField
@@ -171,13 +199,8 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaPdf)}
                 />
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
-                    Subir PDF
-                </Button>
             </Grid>
 
 
