@@ -52,7 +52,7 @@ const protocolos = [
     }
 ]
 
-export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete }) => {
+export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf }) => {
 
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
@@ -130,9 +130,9 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
             </Grid>
             <Grid item xs={12} md={9}>
                 <TextField
-                    id="fecha"
+                    id="fechaRecogido"
                     type="date"
-                    name="fecha"
+                    name="fechaRecogido"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -145,9 +145,9 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
             <Grid item xs={6} md={6} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 <TextField
-                    id="fecha"
+                    id="fechaRealizado"
                     type="date"
-                    name="fecha"
+                    name="fechaRealizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -165,24 +165,26 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    value={analisisSeleccionado.observaciones}
                 />
             </Grid>
 
             <Grid item xs={12} md={12} style={{ display: "flex" }}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+                <input type="file" onChange={handlePdf}/>
+                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
                     Subir PDF
-                </Button>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+                </Button>*/}
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recibido} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
                 <TextField
-                    id="fecha"
+                    id="fechaPdf"
                     type="date"
-                    name="fecha"
+                    name="fechaPdf"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaPdf)}
                 />
                 <TextField sx={{ width: '100%' }} name="resultado" label="Resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
             </Grid>

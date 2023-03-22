@@ -340,8 +340,6 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         }
     }
 
-    console.log(analisisSeleccionado)
-
     const peticionPost = async () => {
         analisisSeleccionado.id = 0;
         analisisSeleccionado.codigoCliente = tareaSeleccionada.codigoCliente;

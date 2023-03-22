@@ -23,6 +23,7 @@ import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
 import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2, getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta } from "../api/apiBackend";
 import Swal from "sweetalert2";
+import { useUsuarioActual } from '../hooks/useUsuarioActual';
 import * as moment from 'moment';
 import { AuthContext } from "../context/AuthContext";
 
@@ -78,6 +79,8 @@ export const MantenimientoTecnicoPage = () => {
 
     const [data, setData] = useState([]);
     const [dataParametros, setDataParametros] = useState([]);
+
+    const { usuarioActual } = useUsuarioActual();
 
     const GetConfNivelesPlantasCliente = async () => {
         axios.get("/confnivelesplantascliente", token).then(response => {
@@ -464,6 +467,25 @@ export const MantenimientoTecnicoPage = () => {
             }
 
         });
+
+        if(parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18){
+            await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
+            
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Datos guardados',
+                text: `Los parametros han sido guardados`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
 
     }
 

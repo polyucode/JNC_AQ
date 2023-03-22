@@ -854,7 +854,7 @@ export const TareasPage = () => {
                 setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
                 setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
                 setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
-                setTecnicoTareaEditar(operarios.filter(operario => (operario.nombre + ' ' + operario.apellidos) === tareaSeleccionada.row.operario));
+                setTecnicoTareaEditar(operarios.filter(operario => operario.id === tareaSeleccionada.row.operario));
                 setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
 
                 /*if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {

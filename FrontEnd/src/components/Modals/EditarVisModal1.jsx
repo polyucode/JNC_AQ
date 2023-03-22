@@ -135,9 +135,9 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
             <Grid item xs={6} md={6} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
                 <TextField
-                    id="fecha"
+                    id="fechaRealizado"
                     type="date"
-                    name="fecha"
+                    name="fechaRealizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -155,6 +155,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    value={analisisSeleccionado.observaciones}
                 />
             </Grid>
 

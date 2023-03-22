@@ -52,7 +52,7 @@ const protocolos = [
     }
 ]
 
-export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete }) => {
+export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -143,9 +143,9 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             </Grid>
             <Grid item xs={12} md={9}>
                 <TextField
-                    id="fecha"
+                    id="fechaRecogido"
                     type="date"
-                    name="fecha"
+                    name="fechaRecogido"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -161,9 +161,9 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             </Grid>
             <Grid item xs={12} md={3}>
                 <TextField
-                    id="fecha"
+                    id="fechaRealizado"
                     type="date"
-                    name="fecha"
+                    name="fechaRealizado"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
@@ -178,22 +178,24 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    value={analisisSeleccionado.observaciones}
                 />
             </Grid>
 
             <Grid item xs={8} md={5}>
-                <Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
+                <input type="file" onChange={handlePdf}/>
+                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
                     Subir PDF
-                </Button>
+                </Button>*/}
             </Grid>
             <Grid item xs={12} md={3}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.pdf} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recibido} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
             </Grid>
             <Grid item xs={12} md={3}>
                 <TextField
-                    id="fecha"
+                    id="fechaPdf"
                     type="date"
-                    name="fecha"
+                    name="fechaPdf"
                     sx={{ width: '100%' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{

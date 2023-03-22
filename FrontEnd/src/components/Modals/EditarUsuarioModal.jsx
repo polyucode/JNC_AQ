@@ -2,73 +2,82 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { getPerfiles } from '../../api/apiBackend';
 
-export const EditarUsuarioModal = ({ change:handleChange, handleChangePerfil, usuarioSeleccionado }) =>{
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, usuarioSeleccionado, handleFile }) => {
 
     const [perfiles, setPerfiles] = useState([]);
 
     useEffect(() => {
 
         getPerfiles()
-            .then( perfil => {
+            .then(perfil => {
                 setPerfiles(perfil);
             })
-            .catch( err => console.log('Ha habido un error:', err));
+            .catch(err => console.log('Ha habido un error:', err));
 
     }, []);
 
     return (
         <>
-            <Grid item xs={ 6 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Nombre" name="nombre" onChange={ handleChange } value={usuarioSeleccionado && usuarioSeleccionado.nombre}  />
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 5}>
-                <TextField sx={{ width: '100%' }} label="Apellidos" name="apellidos" onChange={ handleChange } value={usuarioSeleccionado && usuarioSeleccionado.apellidos} />
+            <Grid item xs={6} md={5}>
+                <TextField sx={{ width: '100%' }} label="Apellidos" name="apellidos" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.apellidos} />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 3 }>
-                <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" type="number" onChange={ handleChange } value={usuarioSeleccionado && usuarioSeleccionado.telefono} />
+            <Grid item xs={6} md={3}>
+                <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" type="number" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.telefono} />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Usuario" name="usuario" onChange={ handleChange } value={usuarioSeleccionado && usuarioSeleccionado.usuario} />
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} label="Usuario" name="usuario" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.usuario} />
             </Grid>
 
-            <Grid item xs={ 4 }>
+            <Grid item xs={4}>
                 <FormControlLabel
                     control={<Checkbox defaultChecked />}
                     label="Usuario activo"
                     name="activo"
-                    onChange={ handleChange }
+                    onChange={handleChange}
                 />
             </Grid>
 
             {/* Desplegable de Perfiles */}
-            <Grid item xs={ 4 }>
+            <Grid item xs={4}>
                 <Autocomplete
-                    disableClearable={ true }
+                    disableClearable={true}
                     id="CboPerfiles"
-                    options={ perfiles }
-                    getOptionLabel={ option => option.nombre }
-                    renderInput={ params => <TextField {...params} label="Perfil" name="idPerfil" /> }
-                    onChange={ handleChangePerfil }
+                    options={perfiles}
+                    getOptionLabel={option => option.nombre}
+                    renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" />}
+                    onChange={handleChangePerfil}
                 />
             </Grid>
 
             {/* Desplegable de Clientes */}
-            <Grid item xs={ 4 }>
+            <Grid item xs={4}>
                 <Autocomplete
-                    disableClearable={ true }
+                    disableClearable={true}
                     //disabled={ estadoCboCliente }
                     id="CboClientes"
                     //options={ clientes }
-                    getOptionLabel={ option => option.nombreComercial }
-                    renderInput={ params => <TextField {...params} label="Clientes" name="idCliente"/> }
-                    // onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
-                    //   ...prevState,
-                    //   idCliente:value.id
-                    // }))}
+                    getOptionLabel={option => option.nombreComercial}
+                    renderInput={params => <TextField {...params} label="Clientes" name="idCliente" />}
+                // onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
+                //   ...prevState,
+                //   idCliente:value.id
+                // }))}
                 />
+            </Grid>
+            <Grid item xs={12} md={12} style={{ display: "flex" }}>
+                <input type="file" onChange={handleFile}/>
+                {/*<label htmlFor='contained-button-file'>
+                    <Button variant="contained" component="span" sx={{ width: '100%', marginRight: '15px' }}>
+                        Subir Firma
+                    </Button>
+                </label>*/}
+
             </Grid>
         </>
     )

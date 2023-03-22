@@ -30,6 +30,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
+import { subirFirma } from "../api/apiBackend";
 
 const token = {
   headers: {
@@ -73,6 +74,7 @@ export const UsuariosPage = () => {
   const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
   const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
   const [data, setData] = useState([]);
+  const [fileChange, setFileChange] = useState(null);
 
   const [rowsIds, setRowsIds] = useState([]);
   const [rows, setRows] = useState([]);
@@ -93,7 +95,7 @@ export const UsuariosPage = () => {
     usuario: '',
     password: '',
     activo: false,
-    firma: '',
+    firma: 0,
     idCliente: 0,
     idPerfil: 0,
     addDate: null,
@@ -137,12 +139,6 @@ export const UsuariosPage = () => {
   // Recoger Usuarios
   const peticionGet = async () => {
     axios.get("/usuario", token).then(response => {
-      for (let i = 0; i < response.data.data.length; i++) {
-        if (response.data.data[i].firma) {
-          let firmaB64 = response.data.data[i].firma;
-          response.data.data[i].firma = <img height="58px" src={firmaB64} />;
-        }
-      }
       setData(response.data.data)
     })
   }
@@ -170,6 +166,9 @@ export const UsuariosPage = () => {
 
   }, [clientes])
 
+  const subirImagen = async () => {
+    await subirFirma(usuarioSeleccionado.id, fileChange)
+  }
   //Insertar usuario
   const peticionPost = async () => {
     usuarioSeleccionado.id = null;
@@ -207,6 +206,7 @@ export const UsuariosPage = () => {
     console.log(usuarioSeleccionado)
     await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
       .then(response => {
+        subirImagen()
         var usuarioModificado = data;
         usuarioModificado.map(usuario => {
           if (usuario.id === usuarioSeleccionado.id) {
@@ -362,6 +362,10 @@ export const UsuariosPage = () => {
       setModalEliminar(!modalEliminar);
     }
   }
+  
+  const handleFile = e => {
+    setFileChange(e.target.files[0])
+  }
 
 
   const handleChange = (e) => {
@@ -509,6 +513,7 @@ export const UsuariosPage = () => {
               usuarioSeleccionado={usuarioSeleccionado}
               change={handleChange}
               handleChangePerfil={handleChangePerfil}
+              handleFile={handleFile}
             />}
           botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
             abrirCerrarModalEditar()

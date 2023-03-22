@@ -37,7 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { bajarPdf, bajarPdfNoFQ } from "../api/apiBackend";
+import { bajarPdf, bajarPdfNoFQ, subirPdf } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -214,6 +214,7 @@ export const VisualizacionPage = () => {
         fechaRealizado: null,
         observaciones: '',
         pdf: 0,
+        recibido: false,
         fechaPdf: null,
         resultado: '',
         facturado: false,
@@ -228,6 +229,8 @@ export const VisualizacionPage = () => {
         delIdUser: null,
         deleted: null,
     });
+
+    const [fileChange, setFileChange] = useState(null);
 
     const protocolos = [
         {
@@ -329,6 +332,8 @@ export const VisualizacionPage = () => {
         { title: 'Observaciones', field: 'observaciones', width: 250 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -360,6 +365,8 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -377,6 +384,8 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { title: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -548,6 +557,10 @@ export const VisualizacionPage = () => {
         changeActualState(e.target.checked)
     }
 
+    const handlePdf = e => {
+        setFileChange(e.target.files[0])
+    }
+
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
 
@@ -556,6 +569,11 @@ export const VisualizacionPage = () => {
             '-' + String(fecha1.getDate()).padStart(2, '0')
 
         return fecha2
+    }
+
+    const subirArchivo = async () => {
+        const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+        return resp.data
     }
 
     const abrirCerrarModalInsertar = () => {
@@ -722,7 +740,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -759,7 +777,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -796,7 +814,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -833,7 +851,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -1068,13 +1086,11 @@ export const VisualizacionPage = () => {
 
     const descargarPdf = async () => {
 
-        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, analisisSeleccionado.elemento, analisisSeleccionado.analisis, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
-        console.log(response)
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
     }
 
     const descargarPdfNoFQ = async () => {
-        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, { headers: { 'Content-type' : 'application/pdf' }});
-        console.log(response)
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
     }
 
     function FiltrarData() {
@@ -1313,6 +1329,10 @@ export const VisualizacionPage = () => {
     const peticionPut = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                let pdfsubido = 0;
+                if(fileChange != null){
+                    pdfsubido = subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1345,7 +1365,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: pdfsubido,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1397,7 +1417,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1420,6 +1440,9 @@ export const VisualizacionPage = () => {
     const peticionPutAerobio = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1443,7 +1466,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1466,6 +1489,9 @@ export const VisualizacionPage = () => {
     const peticionPutLegionela = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
@@ -1489,7 +1515,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: '',
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1641,7 +1667,6 @@ export const VisualizacionPage = () => {
 
     const onChangeElemento = (e, value, name) => {
 
-        console.log(value.id)
         if (e.target.textContent !== "") {
             setData1(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData2(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
@@ -3049,7 +3074,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModalAerobio
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}                                                        
                                                         />
                                                     }
                                                     botones={[
@@ -3082,10 +3107,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarAerobio()
@@ -3244,10 +3270,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditarLegionela()
@@ -3406,10 +3433,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -3570,6 +3598,7 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3894,10 +3923,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4056,10 +4086,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4218,10 +4249,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4380,10 +4412,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4542,10 +4575,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4704,10 +4738,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
@@ -4866,10 +4901,11 @@ export const VisualizacionPage = () => {
                                                             analisisEditar={analisisEditar}
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
+                                                            handlePdf={handlePdf}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
+                                                            descargarPdfNoFQ();
                                                         }),
                                                         insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                                                             abrirCerrarModalEditar()
