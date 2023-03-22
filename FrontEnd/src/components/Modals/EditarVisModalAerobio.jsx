@@ -165,7 +165,9 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
-                    value={analisisSeleccionado.observaciones}
+                    name="observaciones"
+                    onChange={handleChangeInput}
+                    defaultValue={analisisSeleccionado.observaciones}
                 />
             </Grid>
 
@@ -209,6 +211,9 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    name="comentarios"
+                    defaultValue={analisisSeleccionado.comentarios}
+                    onChange={handleChangeInput}
                 />
             </Grid>
 

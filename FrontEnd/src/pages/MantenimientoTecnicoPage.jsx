@@ -35,7 +35,7 @@ const token = {
 
 export const MantenimientoTecnicoPage = () => {
 
-    const { user } = useContext( AuthContext );
+    const { user } = useContext(AuthContext);
 
     /*** VARIABLES ***/
     let opcionesFiltradasAnalisis = [];
@@ -215,7 +215,7 @@ export const MantenimientoTecnicoPage = () => {
     const handleChangeCheckbox = e => {
         const { name, value, checked } = e.target
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual); 
+        const hoy = new Date(fechaActual);
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             [name]: checked,
@@ -226,7 +226,7 @@ export const MantenimientoTecnicoPage = () => {
     const handleChangeCheckbox2 = e => {
         const { name, value, checked } = e.target
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual); 
+        const hoy = new Date(fechaActual);
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             [name]: checked,
@@ -289,17 +289,18 @@ export const MantenimientoTecnicoPage = () => {
         }))
     }
 
-    const guardarPDF = async() => {
+    const guardarPDF = async () => {
 
         const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, valor: parseInt(parametro.valor, 10) }))
 
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual);    
+        const hoy = new Date(fechaActual);
 
         const response = await generarPdf(valoresParametrosParseado)
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             pdf: response,
+            nombreElemento: parametrosSeleccionado.nombreElemento,
             realizado: true,
             fechaRealizado: hoy.toISOString()
         }))
@@ -369,7 +370,7 @@ export const MantenimientoTecnicoPage = () => {
 
                 // Creamos el objeto
                 parametrosMostrar.push({
-                    id:  valoresPorParametro[0] ? valoresPorParametro[0].id : 0,
+                    id: valoresPorParametro[0] ? valoresPorParametro[0].id : 0,
                     codigoCliente: parametrosSeleccionado.codigoCliente,
                     fecha: parametrosSeleccionado.fecha,
                     id_Elemento: parametrosSeleccionado.idElemento,
@@ -432,6 +433,7 @@ export const MantenimientoTecnicoPage = () => {
                 parametroPut.fecha = parametrosSeleccionado.fecha
 
                 const resp = await putValorParametros(parametroPut);
+
                 await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
 
                 // Avisamos al usuario si ha ido bien
@@ -472,9 +474,16 @@ export const MantenimientoTecnicoPage = () => {
 
         });
 
-        if(parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18){
+        if (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) {
+
+            setTareaAnalisisPlanta(valorPrevio => ({
+                ...valorPrevio,
+                nombreElemento: parametrosSeleccionado.nombreElemento
+            }))
+
+
             await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
-            
+
             Swal.fire({
                 position: 'center',
                 icon: 'info',
@@ -568,7 +577,7 @@ export const MantenimientoTecnicoPage = () => {
                                         sx={{ width: '100%' }}
                                         id="Operarios"
                                         options={operarios}
-                                        defaultValue={ user.idPerfil === 1004 ? user : undefined }
+                                        defaultValue={user.idPerfil === 1004 ? user : undefined}
                                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
                                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                                         renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
@@ -676,7 +685,7 @@ export const MantenimientoTecnicoPage = () => {
 
                                                                     return (
                                                                         <ParametroMantenimiento
-                                                                            limite={ ({ limSup: parametro.limSup, limInf: parametro.limInf }) }
+                                                                            limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
                                                                             key={index}
                                                                             indice={index}
                                                                             parametros={valoresParametros}
