@@ -53,7 +53,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     defaultValue={codigoClienteEditar[0]}
                     getOptionLabel={option => option.codigo}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
+                    renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         codigoCliente: parseInt(value.codigo)

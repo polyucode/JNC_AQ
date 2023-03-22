@@ -332,6 +332,7 @@ export const VisualizacionPage = () => {
         { title: 'Observaciones', field: 'observaciones', width: 250 },
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
+        { title: 'PDF', field: 'pdf', width: 150 },
         { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
@@ -365,6 +366,7 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF', field: 'pdf', width: 150 },
         { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
@@ -384,6 +386,7 @@ export const VisualizacionPage = () => {
         { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { title: 'Numero Factura', field: 'numeroFactura', width: 150 },
         { title: 'Resultado', field: 'resultado', width: 120 },
+        { title: 'PDF', field: 'pdf', width: 150 },
         { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
         { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
@@ -573,7 +576,7 @@ export const VisualizacionPage = () => {
 
     const subirArchivo = async () => {
         const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-        return resp.data
+        return resp;
     }
 
     const abrirCerrarModalInsertar = () => {
@@ -1329,16 +1332,15 @@ export const VisualizacionPage = () => {
     const peticionPut = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                let pdfsubido = 0;
-                if(fileChange != null){
-                    pdfsubido = subirArchivo()
-                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
                         analisi = analisisSeleccionado
                     }
                 });
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 AguasResiduales();
                 Desinfecciones();
                 AguaPozo();
@@ -1365,7 +1367,7 @@ export const VisualizacionPage = () => {
                     realizado: false,
                     fechaRealizado: null,
                     observaciones: '',
-                    pdf: pdfsubido,
+                    pdf: 0,
                     fechaPdf: null,
                     resultado: '',
                     facturado: false,
@@ -1440,15 +1442,15 @@ export const VisualizacionPage = () => {
     const peticionPutAerobio = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                if(fileChange != null){
-                    subirArchivo()
-                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
                         analisi = analisisSeleccionado
                     }
                 });
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 Aerobios();
                 GetParametrosAnalisisPlanta();
                 abrirCerrarModalEditarAerobio();
@@ -1489,15 +1491,15 @@ export const VisualizacionPage = () => {
     const peticionPutLegionela = async () => {
         await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
             .then(response => {
-                if(fileChange != null){
-                    subirArchivo()
-                }
                 var analisisModificado = data;
                 analisisModificado.map(analisi => {
                     if (analisi.id === analisisSeleccionado.id) {
                         analisi = analisisSeleccionado
                     }
                 });
+                if(fileChange != null){
+                    subirArchivo()
+                }
                 Legionela();
                 GetParametrosAnalisisPlanta();
                 abrirCerrarModalEditarLegionela();
@@ -1957,7 +1959,7 @@ export const VisualizacionPage = () => {
                         options={clientes}
                         getOptionLabel={option => option.codigo}
                         sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} type="number" label="CodigoCliente" name="codigoCliente" />}
+                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                         onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
                     />
                     <Autocomplete

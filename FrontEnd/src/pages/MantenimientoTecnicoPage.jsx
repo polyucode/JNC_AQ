@@ -36,7 +36,6 @@ const token = {
 export const MantenimientoTecnicoPage = () => {
 
     const { user } = useContext( AuthContext );
-    console.log({ user });
 
     /*** VARIABLES ***/
     let opcionesFiltradasAnalisis = [];
@@ -68,7 +67,9 @@ export const MantenimientoTecnicoPage = () => {
         referencia: '',
         oferta: 0,
         idElemento: 0,
+        nombreElemento: '',
         idAnalisis: 0,
+        nombreAnalisis: '',
         idOperario: 0,
         realizado: false,
         fecha: null,
@@ -112,7 +113,6 @@ export const MantenimientoTecnicoPage = () => {
 
         getOperarios()
             .then(operarios => {
-                console.log({ operarios })
                 setOperarios(operarios)
             })
 
@@ -244,46 +244,50 @@ export const MantenimientoTecnicoPage = () => {
 
     const onChangeCliente = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parametrosSeleccionado.idElemento))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.codigo
+            [name]: value.codigo,
+            oferta: '',
+            idElemento: '',
+            nombreElemento: '',
+            idAnalisis: '',
+            nombreAnalisis: ''
         }))
 
     }
 
     const onChangeOferta = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.idElemento === parametrosSeleccionado.idElemento))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.numeroOferta,
-            nombre: "",
-            nombreAnalisis: ""
+            idElemento: '',
+            nombreElemento: '',
+            idAnalisis: '',
+            nombreAnalisis: ''
         }))
 
     }
 
     const onChangeElemento = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parseInt(e.target.textContent)))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.id,
+            nombreElemento: e.target.textContent,
+            idAnalisis: '',
             nombreAnalisis: ""
         }))
     }
 
-    console.log(valoresParametros)
+    const onChangeAnalisis = (e, value, name) => {
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.id,
+            nombreAnalisis: e.target.textContent
+        }))
+    }
 
     const guardarPDF = async() => {
 
@@ -526,6 +530,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="codigoOferta"
                                         options={ofertas}
+                                        inputValue={parametrosSeleccionado.oferta}
                                         filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                         getOptionLabel={option => option.numeroOferta.toString()}
                                         renderInput={params => <TextField {...params} label="Código de oferta" name="oferta" />}
@@ -538,6 +543,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="elemento"
                                         options={elementosAutocomplete}
+                                        inputValue={parametrosSeleccionado.nombreElemento}
                                         getOptionLabel={option => option.nombre + ' ' + option.numero}
                                         renderInput={params => <TextField {...params} label="Elemento" name="idElemento" />}
                                         onChange={(event, value) => onChangeElemento(event, value, "idElemento")}
@@ -552,7 +558,7 @@ export const MantenimientoTecnicoPage = () => {
                                         options={analisisAutocomplete}
                                         getOptionLabel={option => option.nombre}
                                         renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis y Revisiones" />}
-                                        onChange={(event, value) => onChangeElemento(event, value, "idAnalisis")}
+                                        onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}
                                     />
                                 </Grid>
 

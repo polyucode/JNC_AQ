@@ -150,6 +150,16 @@ export const OfertasClientesPage = () => {
 
     }, [clientes])
 
+    useEffect(() => {
+
+        const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
+        (nombre.length > 0) && setOfertaSeleccionada({
+          ...ofertaSeleccionada,
+          nombreCliente: nombre[0].razonSocial
+        })
+    
+      }, [ofertaSeleccionada.codigoCliente])
+
     const peticionPost = async () => {
         ofertaSeleccionada.id = null;
         await axios.post("/ofertasclientes", ofertaSeleccionada, token)
