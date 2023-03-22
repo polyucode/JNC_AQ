@@ -26,7 +26,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public bool? Facturado { get; set; }
         public string NumeroFacturado { get; set; }
         public string Resultado { get; set; }
-        public string Pdf { get; set; }
+        public int? Pdf { get; set; }
         public bool? Cancelado { get; set; }
         public string Comentarios { get; set; }
         public DateTime? AddDate { get; set; }

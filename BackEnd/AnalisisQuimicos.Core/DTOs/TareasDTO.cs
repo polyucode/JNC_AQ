@@ -11,7 +11,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string NombreCliente { get; set; }
         public int? Oferta { get; set; }
         public int? Pedido { get; set; }
-        public string Operario { get; set; }
+        public int? Operario { get; set; }
         public string Protocolo { get; set; }
         public int? Elemento { get; set; }
         public int? Analisis { get; set; }
