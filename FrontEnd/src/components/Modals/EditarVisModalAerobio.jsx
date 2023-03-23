@@ -198,7 +198,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
             </Grid>
 
             <Grid item xs={4} md={5}>
-                <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
+                <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
             </Grid>
 
             <Grid item xs={4} md={5}>
