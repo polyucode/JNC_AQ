@@ -65,13 +65,17 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
     }, [])
 
     function formateandofechas(fecha) {
-        const fecha1 = new Date(fecha)
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
 
-        const fecha2 = fecha1.getFullYear() +
-            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
-            '-' + String(fecha1.getDate()).padStart(2, '0')
-
-        return fecha2
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
     }
 
     const subidaPdf = async () => {

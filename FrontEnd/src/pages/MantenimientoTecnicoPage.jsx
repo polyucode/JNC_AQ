@@ -427,10 +427,13 @@ export const MantenimientoTecnicoPage = () => {
             }
 
             // Nos aseguramos de que tengamos código de referencia y fecha
-            if (parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null) {
+            if (parametrosSeleccionado.fecha !== null) {
 
-                parametroPut.referencia = parametrosSeleccionado.referencia
-                parametroPut.fecha = parametrosSeleccionado.fecha
+                if(parametrosSeleccionado.referencia !== ""){
+                    parametroPut.Referencia = parametrosSeleccionado.referencia 
+                }
+
+                parametroPut.Fecha = parametrosSeleccionado.fecha
 
                 const resp = await putValorParametros(parametroPut);
 
