@@ -3110,6 +3110,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3273,6 +3274,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3436,6 +3438,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3601,6 +3604,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -3926,6 +3930,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4089,6 +4094,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4252,6 +4258,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4415,6 +4422,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4578,6 +4586,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4741,6 +4750,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
@@ -4904,6 +4914,7 @@ export const VisualizacionPage = () => {
                                                             elementoTareaEditar={elementoTareaEditar}
                                                             elementosAutocomplete={elementosAutocomplete}
                                                             handlePdf={handlePdf}
+                                                            fileChange={fileChange}
                                                         />}
                                                     botones={[
                                                         insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {

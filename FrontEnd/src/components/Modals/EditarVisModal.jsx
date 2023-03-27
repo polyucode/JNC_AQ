@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 
 import MenuItem from '@mui/material/MenuItem';
 import { getOperarios, subirPdf } from '../../api/apiBackend';
+import '../../pages/Visualizacion.css';
 
 const protocolos = [
     {
@@ -52,7 +53,7 @@ const protocolos = [
     }
 ]
 
-export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf }) => {
+export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf, fileChange }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -189,7 +190,10 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
             </Grid>
 
             <Grid item xs={8} md={5}>
-                <input type="file" onChange={handlePdf}/>
+            <div class="file-select" id="src-file" >
+                <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf}/>                
+            </div>
+            <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
                 {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
                     Subir PDF
                 </Button>*/}

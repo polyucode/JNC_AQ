@@ -39,3 +39,34 @@ div.datos2 {
     justify-content: center;
     margin-left: -280px;
 }
+
+.file-select {
+    position: relative;
+    display: inline-block;
+}
+  
+  .file-select::before {
+    background-color: #545355;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    content: 'Seleccionar'; /* testo por defecto */
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  
+  .file-select input[type="file"] {
+    opacity: 0;
+    width: 200px;
+    height: 32px;
+    display: inline-block;
+  }
+  
+  #src-file::before {
+    content: 'Seleccionar PDF';
+  }

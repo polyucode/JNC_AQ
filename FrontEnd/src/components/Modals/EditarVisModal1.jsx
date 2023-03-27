@@ -117,7 +117,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={12} md={7} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={12} style={{ display: 'flex' }}>
                 <p style={{ width: '100%' }}> Fecha Prevista </p>
                 <TextField
                     id="fecha"
