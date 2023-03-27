@@ -88,7 +88,11 @@ namespace AnalisisQuimicos.Core.Services
 
 
             //string nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valoresSorted[0].Parametro).Result.Nombre;
-            string referencia = valoresSorted[0].Referencia;
+            string referencia = valoresSorted[0].Oferta.ToString();
+            if (!string.IsNullOrEmpty(valoresSorted[0].Referencia))
+            {
+                referencia += " - " + valoresSorted[0].Referencia;
+            }
 
 
             foreach (ValorParametros valor in valoresSorted)
