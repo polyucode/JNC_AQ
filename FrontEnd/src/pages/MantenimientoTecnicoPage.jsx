@@ -35,8 +35,7 @@ const token = {
 
 export const MantenimientoTecnicoPage = () => {
 
-    const { user } = useContext( AuthContext );
-    console.log({ user });
+    const { user } = useContext(AuthContext);
 
     /*** VARIABLES ***/
     let opcionesFiltradasAnalisis = [];
@@ -68,7 +67,9 @@ export const MantenimientoTecnicoPage = () => {
         referencia: '',
         oferta: 0,
         idElemento: 0,
+        nombreElemento: '',
         idAnalisis: 0,
+        nombreAnalisis: '',
         idOperario: 0,
         realizado: false,
         fecha: null,
@@ -112,7 +113,6 @@ export const MantenimientoTecnicoPage = () => {
 
         getOperarios()
             .then(operarios => {
-                console.log({ operarios })
                 setOperarios(operarios)
             })
 
@@ -215,7 +215,7 @@ export const MantenimientoTecnicoPage = () => {
     const handleChangeCheckbox = e => {
         const { name, value, checked } = e.target
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual); 
+        const hoy = new Date(fechaActual);
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             [name]: checked,
@@ -226,7 +226,7 @@ export const MantenimientoTecnicoPage = () => {
     const handleChangeCheckbox2 = e => {
         const { name, value, checked } = e.target
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual); 
+        const hoy = new Date(fechaActual);
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             [name]: checked,
@@ -244,58 +244,63 @@ export const MantenimientoTecnicoPage = () => {
 
     const onChangeCliente = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parseInt(e.target.textContent) && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parametrosSeleccionado.idElemento))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: value.codigo
+            [name]: value.codigo,
+            oferta: '',
+            idElemento: '',
+            nombreElemento: '',
+            idAnalisis: '',
+            nombreAnalisis: ''
         }))
 
     }
 
     const onChangeOferta = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parseInt(e.target.textContent) && parametro.idElemento === parametrosSeleccionado.idElemento))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.numeroOferta,
-            nombre: "",
-            nombreAnalisis: ""
+            idElemento: '',
+            nombreElemento: '',
+            idAnalisis: '',
+            nombreAnalisis: ''
         }))
 
     }
 
     const onChangeElemento = (e, value, name) => {
 
-        if (e.target.textContent !== "") {
-            setDataParametros(data.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.idElemento === parseInt(e.target.textContent)))
-        }
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.id,
+            nombreElemento: e.target.textContent,
+            idAnalisis: '',
             nombreAnalisis: ""
         }))
     }
 
-    console.log(valoresParametros)
+    const onChangeAnalisis = (e, value, name) => {
 
-    const guardarPDF = async() => {
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.id,
+            nombreAnalisis: e.target.textContent
+        }))
+    }
+
+    const guardarPDF = async () => {
 
         const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, valor: parseInt(parametro.valor, 10) }))
 
         const fechaActual = Date.now();
-        const hoy = new Date(fechaActual);    
+        const hoy = new Date(fechaActual);
 
         const response = await generarPdf(valoresParametrosParseado)
         setTareaAnalisisPlanta(valorPrevio => ({
             ...valorPrevio,
             pdf: response,
+            nombreElemento: parametrosSeleccionado.nombreElemento,
             realizado: true,
             fechaRealizado: hoy.toISOString()
         }))
@@ -365,7 +370,7 @@ export const MantenimientoTecnicoPage = () => {
 
                 // Creamos el objeto
                 parametrosMostrar.push({
-                    id:  valoresPorParametro[0] ? valoresPorParametro[0].id : 0,
+                    id: valoresPorParametro[0] ? valoresPorParametro[0].id : 0,
                     codigoCliente: parametrosSeleccionado.codigoCliente,
                     fecha: parametrosSeleccionado.fecha,
                     id_Elemento: parametrosSeleccionado.idElemento,
@@ -422,12 +427,16 @@ export const MantenimientoTecnicoPage = () => {
             }
 
             // Nos aseguramos de que tengamos código de referencia y fecha
-            if (parametrosSeleccionado.referencia !== "" && parametrosSeleccionado.fecha !== null) {
+            if (parametrosSeleccionado.fecha !== null) {
 
-                parametroPut.referencia = parametrosSeleccionado.referencia
-                parametroPut.fecha = parametrosSeleccionado.fecha
+                if(parametrosSeleccionado.referencia !== ""){
+                    parametroPut.Referencia = parametrosSeleccionado.referencia 
+                }
+
+                parametroPut.Fecha = parametrosSeleccionado.fecha
 
                 const resp = await putValorParametros(parametroPut);
+
                 await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
 
                 // Avisamos al usuario si ha ido bien
@@ -468,9 +477,16 @@ export const MantenimientoTecnicoPage = () => {
 
         });
 
-        if(parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18){
+        if (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) {
+
+            setTareaAnalisisPlanta(valorPrevio => ({
+                ...valorPrevio,
+                nombreElemento: parametrosSeleccionado.nombreElemento
+            }))
+
+
             await putParametrosAnalisisPlanta(tareaAnalisisPlanta)
-            
+
             Swal.fire({
                 position: 'center',
                 icon: 'info',
@@ -526,6 +542,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="codigoOferta"
                                         options={ofertas}
+                                        inputValue={parametrosSeleccionado.oferta}
                                         filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                         getOptionLabel={option => option.numeroOferta.toString()}
                                         renderInput={params => <TextField {...params} label="Código de oferta" name="oferta" />}
@@ -538,6 +555,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="elemento"
                                         options={elementosAutocomplete}
+                                        inputValue={parametrosSeleccionado.nombreElemento}
                                         getOptionLabel={option => option.nombre + ' ' + option.numero}
                                         renderInput={params => <TextField {...params} label="Elemento" name="idElemento" />}
                                         onChange={(event, value) => onChangeElemento(event, value, "idElemento")}
@@ -552,7 +570,7 @@ export const MantenimientoTecnicoPage = () => {
                                         options={analisisAutocomplete}
                                         getOptionLabel={option => option.nombre}
                                         renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis y Revisiones" />}
-                                        onChange={(event, value) => onChangeElemento(event, value, "idAnalisis")}
+                                        onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}
                                     />
                                 </Grid>
 
@@ -562,7 +580,7 @@ export const MantenimientoTecnicoPage = () => {
                                         sx={{ width: '100%' }}
                                         id="Operarios"
                                         options={operarios}
-                                        defaultValue={ user.idPerfil === 1004 ? user : undefined }
+                                        defaultValue={user.idPerfil === 1004 ? user : undefined}
                                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
                                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                                         renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
@@ -670,7 +688,7 @@ export const MantenimientoTecnicoPage = () => {
 
                                                                     return (
                                                                         <ParametroMantenimiento
-                                                                            limite={ ({ limSup: parametro.limSup, limInf: parametro.limInf }) }
+                                                                            limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
                                                                             key={index}
                                                                             indice={index}
                                                                             parametros={valoresParametros}

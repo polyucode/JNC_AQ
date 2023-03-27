@@ -65,13 +65,17 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
     }, [])
 
     function formateandofechas(fecha) {
-        const fecha1 = new Date(fecha)
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
 
-        const fecha2 = fecha1.getFullYear() +
-            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
-            '-' + String(fecha1.getDate()).padStart(2, '0')
-
-        return fecha2
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
     }
 
     const subidaPdf = async () => {
@@ -178,7 +182,9 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
-                    value={analisisSeleccionado.observaciones}
+                    name="observaciones"
+                    onChange={handleChangeInput}
+                    defaultValue={analisisSeleccionado.observaciones}
                 />
             </Grid>
 
@@ -210,7 +216,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
             </Grid>
             <Grid item xs={6} md={8}>
-                <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
+                <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
             </Grid>
 
             <Grid item xs={6} md={3}>
@@ -222,6 +228,9 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    name="comentarios"
+                    defaultValue={analisisSeleccionado.comentarios}
+                    onChange={handleChangeInput}
                 />
             </Grid>
 

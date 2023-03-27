@@ -483,7 +483,6 @@ export const PlantasTablaPage = () => {
             }
         })
     }
-    console.log(parametrosSeleccionado)
 
     const abrirPlantilla = async () => {
 
@@ -638,7 +637,9 @@ export const PlantasTablaPage = () => {
                                         setParametrosSeleccionado(prevState => ({
                                             ...prevState,
                                             idElemento: value.id,
-                                            nombreElemento: event.target.innerText
+                                            nombreElemento: event.target.innerText,
+                                            idAnalisis: '',
+                                            nombreAnalisis: ''
                                         }))
                                     }}
                                 />

@@ -165,7 +165,9 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
-                    value={analisisSeleccionado.observaciones}
+                    name="observaciones"
+                    onChange={handleChangeInput}
+                    defaultValue={analisisSeleccionado.observaciones}
                 />
             </Grid>
 
@@ -196,7 +198,7 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
             </Grid>
 
             <Grid item xs={4} md={5}>
-                <TextField sx={{ width: '100%' }} name="numeroFactura" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFactura} />
+                <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
             </Grid>
 
             <Grid item xs={4} md={5}>
@@ -209,6 +211,9 @@ export const EditarVisModalLegionela = ({ change: handleChangeInput, analisisSel
                     aria-label="empty textarea"
                     minRows={8}
                     style={{ width: '100%' }}
+                    name="comentarios"
+                    defaultValue={analisisSeleccionado.comentarios}
+                    onChange={handleChangeInput}
                 />
             </Grid>
 
