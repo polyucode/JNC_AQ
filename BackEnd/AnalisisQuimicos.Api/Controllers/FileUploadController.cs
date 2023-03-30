@@ -36,8 +36,7 @@ namespace AnalisisQuimicos.Api.Controllers
         {
             try
             {
-                await _fileUpload.Upload(file, mode, id);
-                return Ok("Archivo subido");
+                return Ok(await _fileUpload.Upload(file, mode, id));
             }
             catch (Exception e)
             {

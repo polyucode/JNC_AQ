@@ -18,7 +18,7 @@ namespace AnalisisQuimicos.Core.Services
             _unidadDeTrabajo = unidadDeTrabajo;
         }
 
-        public async Task<bool> Upload(IFormFile file, string mode, int id)
+        public async Task<int> Upload(IFormFile file, string mode, int id)
         {
             string workingDirectory = Environment.CurrentDirectory;
 
@@ -75,7 +75,7 @@ namespace AnalisisQuimicos.Core.Services
                         break;
                 }
 
-                return true;
+                return newFile.Id;
             }
             catch (Exception e)
             {

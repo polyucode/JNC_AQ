@@ -203,10 +203,16 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@TEL", cliente.Telefono);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ANA", analisis.Nombre);
-            
-            Files file = _unidadDeTrabajo.FilesRepository.Download((int)usuario.Firma).Result;
 
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@Image", file.Path);
+            string pathFirma = "";
+            
+            if((int)usuario.Firma != 0)
+            {
+                Files file = _unidadDeTrabajo.FilesRepository.Download((int)usuario.Firma).Result;
+                pathFirma = file.Path;
+            }
+
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@Image", pathFirma);
 
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
