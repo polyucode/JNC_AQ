@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
 
 import MenuItem from '@mui/material/MenuItem';
 
@@ -8,6 +8,8 @@ import Checkbox from '@mui/material/Checkbox';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Button from '@mui/material/Button';
 import { getOperarios } from '../../api/apiBackend';
+
+import '../../pages/Visualizacion.css';
 
 const protocolos = [
     {
@@ -52,7 +54,7 @@ const protocolos = [
     }
 ]
 
-export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf }) => {
+export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, handleChangeCheckbox, analisisAutocomplete, analisisEditar, elementoTareaEditar, elementosAutocomplete, handlePdf, fileChange }) => {
 
     function formateandofechas(fecha) {
         const fecha1 = new Date(fecha)
@@ -110,7 +112,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={12} md={7} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={12} style={{ display: 'flex' }}>
                 <p style={{ width: '100%' }}> Fecha Prevista </p>
                 <TextField
                     id="fecha"
@@ -171,12 +173,20 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                 />
             </Grid>
 
-            <Grid item xs={12} md={12} style={{ display: "flex" }}>
-                <input type="file" onChange={handlePdf}/>
-                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }}>
+            <Grid item xs={8} md={4}>
+                <div class="file-select" id="src-file" >
+                    <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf} />
+                </div>
+                <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
+                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
                     Subir PDF
                 </Button>*/}
+            </Grid>
+            <Grid item xs={12} md={2}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recibido} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+            </Grid>
+
+            <Grid item xs={12} md={3} style={{ display: "flex" }}>
                 <TextField
                     id="fechaPdf"
                     type="date"
@@ -188,10 +198,10 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     }}
                     value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaPdf)}
                 />
+            </Grid>
+            <Grid item xs={12} md={3}>
                 <TextField sx={{ width: '100%' }} name="resultado" label="Resultado" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.resultado} />
             </Grid>
-
-            <br/>
 
             <Grid item xs={6} md={4}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
