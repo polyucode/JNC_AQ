@@ -23,6 +23,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+import { deleteConsumos, getOfertas, postConsumos, putConsumos } from "../api";
 
 
 const token = {
@@ -87,29 +88,30 @@ export const ConsumoArticulosPage = () => {
 
 
     const getConsumos = async () => {
-        axios.get("/consumos", token).then(response => {
-            setData(response.data.data)
-        })
+
+        const resp = await getConsumos();
+        setData(resp);
+
     }
 
-    const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
-            const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setProductos(producto);
-        }, [])
+    const getProducto = async () => {
+
+        const resp = await getProductos();
+        setProductos(resp);
+
     }
 
-    const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOfertas(oferta);
-        }, [])
+    const getOferta = async () => {
+
+        const resp = await getOfertas();
+        setOfertas(resp);
+
     }
 
     useEffect(() => {
         getConsumos();
-        getOfertas();
-        getProductos();
+        getOferta();
+        getProducto();
     }, [])
 
     useEffect(() => {
@@ -122,42 +124,37 @@ export const ConsumoArticulosPage = () => {
 
     const peticionPost = async () => {
         consumoSeleccionado.id = 0;
-        await axios.post("/consumos", consumoSeleccionado, token)
-            .then(response => {
-                abrirCerrarModalInsertar();
-                getConsumos();
-            }).catch(error => {
-                console.log(error);
-            })
+        const resp = await postConsumos(consumoSeleccionado);
+        abrirCerrarModalInsertar();
+        getConsumos();
     }
 
     const peticionPut = async () => {
-        await axios.put("/consumos?id=" + consumoSeleccionado.id, consumoSeleccionado, token)
-            .then(response => {
-                var consumoModificado = data;
-                consumoModificado.map(consumo => {
-                    if (consumo.id === consumoSeleccionado.id) {
-                        consumo = consumoSeleccionado
-                    }
-                });
-                getConsumos();
-                abrirCerrarModalEditar();
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putConsumos(consumoSeleccionado);
+
+        var consumoModificado = data;
+        consumoModificado.map(consumo => {
+            if (consumo.id === consumoSeleccionado.id) {
+                consumo = consumoSeleccionado
+            }
+        });
+        getConsumos();
+        abrirCerrarModalEditar();
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < ConsumoEliminar.length) {
-            await axios.delete("/consumos/" + ConsumoEliminar[i], token)
-                .then(response => {
-                    getConsumos();
-                    abrirCerrarModalEliminar();
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteConsumos(ConsumoEliminar[i]);
+            getConsumos();
+            abrirCerrarModalEliminar();
+
             i++;
+            
         }
     }
 

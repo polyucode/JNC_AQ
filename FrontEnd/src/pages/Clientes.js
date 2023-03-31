@@ -15,6 +15,9 @@ import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 
 import './Clientes.css';
 import { MainLayout } from "../layout/MainLayout";
+import { getComarcas, getPerfiles, getPoblaciones, getProvincias } from "../api";
+import { deleteCliente, getClientes, postCliente, putCliente } from "../api/cliente";
+import { deleteContactos, getContactos, postContactos, putContactos } from "../api/contactos";
 
 
 const token = {
@@ -283,49 +286,52 @@ function Clientes() {
 
   //peticiones API
   const GetPoblacion = async () => {
-    axios.get("/poblacion", token).then(response => {
-      const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setPoblacion(poblacion);
-    }, [])
+
+    const resp = await getPoblaciones();
+    setPoblacion(resp);
+
   }
 
   const GetProvincia = async () => {
-    axios.get("/provincia", token).then(response => {
-      const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setProvincia(provincia);
-    }, [])
+
+    const resp = await getProvincias();
+    setProvincia(resp);
+
   }
 
   const GetComarca = async () => {
-    axios.get("/comarca", token).then(response => {
-      const comarca = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setComarca(comarca);
-    }, [])
+
+    const resp = await getComarcas();
+    setComarca(resp);
+
   }
 
   const GetPerfiles = async () => {
-    axios.get("/perfil", token).then(response => {
-      const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setPerfiles(perfil);
-    }, [])
+
+    const resp = await getPerfiles();
+    setPerfiles(resp);
+
   }
 
   const peticionGet = async () => {
-    axios.get("/cliente", token).then(response => {
-      setData(response.data.data)
-    })
+
+    const resp = await getClientes();
+    setData(resp);
+
   }
 
   const peticionGetContacto = async () => {
-    axios.get("/clientescontactos", token).then(response => {
-      setDataDet(response.data.data)
-    })
+
+    const resp = await getContactos();
+    setDataDet(resp);
+
   }
 
   const peticionGetContactoCliente = async () => {
-    axios.get("/clientescontactos", token).then(response => {
-      setDataContacto(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
-    })
+
+    const resp = await getContactos();
+    setDataContacto(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+
   }
 
   useEffect(() => {
@@ -363,210 +369,207 @@ function Clientes() {
   }, [])
 
   const peticionPost = async () => {
+
     clienteSeleccionado.id = null;
-    await axios.post("/cliente", clienteSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertar();
-        peticionGet();
-        setClienteSeleccionado({
-          id: 0,
-          codigo: 0,
-          cif: '',
-          razonSocial: '',
-          telefono: '',
-          movil: '',
-          email: '',
-          direccion: '',
-          poblacion: '',
-          provincia: '',
-          cp: '',
-          pais: '',
-          comarca: '',
-          idSector: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await postCliente(clienteSeleccionado);
+
+    abrirCerrarModalInsertar();
+    peticionGet();
+    setClienteSeleccionado({
+      id: 0,
+      codigo: 0,
+      cif: '',
+      razonSocial: '',
+      telefono: '',
+      movil: '',
+      email: '',
+      direccion: '',
+      poblacion: '',
+      provincia: '',
+      cp: '',
+      pais: '',
+      comarca: '',
+      idSector: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   const peticionPut = async () => {
-    await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
-      .then(response => {
-        var clienteModificado = data;
-        clienteModificado.map(cliente => {
-          if (cliente.id === clienteSeleccionado.id) {
-            cliente = clienteSeleccionado
-          }
-        });
-        peticionGet();
-        abrirCerrarModalEditar();
-        setClienteSeleccionado({
-          id: 0,
-          codigo: 0,
-          cif: '',
-          razonSocial: '',
-          telefono: '',
-          movil: '',
-          email: '',
-          direccion: '',
-          poblacion: '',
-          provincia: '',
-          cp: '',
-          pais: '',
-          comarca: '',
-          idSector: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await putCliente(clienteSeleccionado);
+
+    var clienteModificado = data;
+    clienteModificado.map(cliente => {
+      if (cliente.id === clienteSeleccionado.id) {
+        cliente = clienteSeleccionado
+      }
+    });
+    peticionGet();
+    abrirCerrarModalEditar();
+    setClienteSeleccionado({
+      id: 0,
+      codigo: 0,
+      cif: '',
+      razonSocial: '',
+      telefono: '',
+      movil: '',
+      email: '',
+      direccion: '',
+      poblacion: '',
+      provincia: '',
+      cp: '',
+      pais: '',
+      comarca: '',
+      idSector: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   const peticionDelete = async () => {
     var i = 0;
     while (i < ClienteEliminar.length) {
-      await axios.delete("/cliente/" + ClienteEliminar[i].id, token)
-        .then(response => {
-          peticionGet();
-          abrirCerrarModalEliminar();
-          setClienteSeleccionado({
-            id: 0,
-            codigo: 0,
-            cif: '',
-            razonSocial: '',
-            telefono: '',
-            movil: '',
-            email: '',
-            direccion: '',
-            poblacion: '',
-            provincia: '',
-            cp: '',
-            pais: '',
-            comarca: '',
-            idSector: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-          })
-        }).catch(error => {
-          console.log(error);
-        })
+
+      const resp = await deleteCliente(ClienteEliminar[i].id);
+
+      peticionGet();
+      abrirCerrarModalEliminar();
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        pais: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
+
       i++;
     }
   }
 
   const peticionPostContacto = async () => {
+
     contactoSeleccionado.id = 0;
     contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
-    await axios.post("/clientescontactos", contactoSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertarContacto();
-        peticionGetContacto();
-        peticionGetContactoCliente();
-        setContactoSeleccionado({
-          id: 0,
-          codigoCliente: 0,
-          nombre: '',
-          telefono: '',
-          email: '',
-          cargo: '',
-          comentarios: '',
-          correo: false,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      })
-      .catch(error => {
-        console.log(error);
-      })
+
+    const resp = await postContactos(contactoSeleccionado);
+
+    abrirCerrarModalInsertarContacto();
+    peticionGetContacto();
+    peticionGetContactoCliente();
+    setContactoSeleccionado({
+      id: 0,
+      codigoCliente: 0,
+      nombre: '',
+      telefono: '',
+      email: '',
+      cargo: '',
+      comentarios: '',
+      correo: false,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   const peticionDeleteContacto = async () => {
+
     var i = 0;
     while (i < ContactoClienteEliminar.length) {
-      await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i].id, token)
-        .then(response => {
-          peticionGetContactoCliente();
-          peticionGetContacto();
-          abrirCerrarModalEliminarContacto();
-          setContactoSeleccionado({
-            id: 0,
-            codigoCliente: 0,
-            nombre: '',
-            telefono: '',
-            email: '',
-            cargo: '',
-            comentarios: '',
-            correo: false,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-          })
-        }).catch(error => {
-          console.log(error);
-        })
+
+      const resp = await deleteContactos(ContactoClienteEliminar[i].id);
+
+      peticionGetContactoCliente();
+      peticionGetContacto();
+      abrirCerrarModalEliminarContacto();
+      setContactoSeleccionado({
+        id: 0,
+        codigoCliente: 0,
+        nombre: '',
+        telefono: '',
+        email: '',
+        cargo: '',
+        comentarios: '',
+        correo: false,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
+
       i++;
+
     }
   }
 
   const peticionPutContacto = async () => {
-    await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
-      .then(response => {
-        var contactoModificado = dataContacto;
-        contactoModificado.map(contacto => {
-          if (contacto.id === contactoSeleccionado.id) {
-            contacto = contactoSeleccionado
-          }
-        });
-        peticionGetContactoCliente();
-        peticionGetContacto();
-        abrirCerrarModalEditarContacto();
-        setContactoSeleccionado({
-          id: 0,
-          codigoCliente: 0,
-          nombre: '',
-          telefono: '',
-          email: '',
-          cargo: '',
-          comentarios: '',
-          correo: false,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await putContactos(contactoSeleccionado);
+
+    var contactoModificado = dataContacto;
+    contactoModificado.map(contacto => {
+      if (contacto.id === contactoSeleccionado.id) {
+        contacto = contactoSeleccionado
+      }
+    });
+    peticionGetContactoCliente();
+    peticionGetContacto();
+    abrirCerrarModalEditarContacto();
+    setContactoSeleccionado({
+      id: 0,
+      codigoCliente: 0,
+      nombre: '',
+      telefono: '',
+      email: '',
+      cargo: '',
+      comentarios: '',
+      correo: false,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   //modal insertar cliente

@@ -28,11 +28,12 @@ import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { addCliente, deleteCliente, getClientes, getComarcas } from '../api/apiBackend';
+import { postCliente, deleteCliente, getClientes, getComarcas } from '../api/apiBackend';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { useForm } from '../hooks/useForm';
+import { getPoblaciones, getProvincias, putCliente } from '../api';
 
 
 const token = {
@@ -133,17 +134,17 @@ export const ClientesPage = () => {
   ]
 
   const GetPoblacion = async () => {
-    axios.get("/poblacion", token).then(response => {
-      const poblacion = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setPoblacion(poblacion);
-    }, [])
+
+    const resp = await getPoblaciones();
+    setPoblacion(resp);
+
   }
 
   const GetProvincia = async () => {
-    axios.get("/provincia", token).then(response => {
-      const provincia = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setProvincia(provincia);
-    }, [])
+
+    const resp = await getProvincias();
+    setProvincia(resp);
+
   }
 
   // Efectos de React
@@ -199,116 +200,116 @@ export const ClientesPage = () => {
   }, [clienteSeleccionado.cp])
 
   const peticionGet = async () => {
-    axios.get("/cliente", token).then(response => {
-      setData(response.data.data)
-    })
+
+    const resp = await getClientes();
+    setData(resp)
+
   }
 
   const peticionPost = async () => {
+
     clienteSeleccionado.id = null;
-    await axios.post("/cliente", clienteSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertar();
-        peticionGet();
-        setClienteSeleccionado({
-          id: 0,
-          codigo: 0,
-          cif: '',
-          razonSocial: '',
-          telefono: '',
-          movil: '',
-          email: '',
-          direccion: '',
-          poblacion: '',
-          provincia: '',
-          cp: '',
-          comarca: '',
-          idSector: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await postCliente(clienteSeleccionado);
+
+    abrirCerrarModalInsertar();
+    peticionGet();
+    setClienteSeleccionado({
+      id: 0,
+      codigo: 0,
+      cif: '',
+      razonSocial: '',
+      telefono: '',
+      movil: '',
+      email: '',
+      direccion: '',
+      poblacion: '',
+      provincia: '',
+      cp: '',
+      comarca: '',
+      idSector: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   const peticionPut = async () => {
-    await axios.put("/cliente?id=" + clienteSeleccionado.id, clienteSeleccionado, token)
-      .then(response => {
-        var clienteModificado = data;
-        clienteModificado.map(cliente => {
-          if (cliente.id === clienteSeleccionado.id) {
-            cliente = clienteSeleccionado
-          }
-        });
-        peticionGet();
-        abrirCerrarModalEditar();
-        setClienteSeleccionado({
-          id: 0,
-          codigo: 0,
-          cif: '',
-          razonSocial: '',
-          telefono: '',
-          movil: '',
-          email: '',
-          direccion: '',
-          poblacion: '',
-          provincia: '',
-          cp: '',
-          comarca: '',
-          idSector: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await putCliente(clienteSeleccionado);
+
+    var clienteModificado = data;
+    clienteModificado.map(cliente => {
+      if (cliente.id === clienteSeleccionado.id) {
+        cliente = clienteSeleccionado
+      }
+    });
+    peticionGet();
+    abrirCerrarModalEditar();
+    setClienteSeleccionado({
+      id: 0,
+      codigo: 0,
+      cif: '',
+      razonSocial: '',
+      telefono: '',
+      movil: '',
+      email: '',
+      direccion: '',
+      poblacion: '',
+      provincia: '',
+      cp: '',
+      comarca: '',
+      idSector: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    })
+
   }
 
   const peticionDelete = async () => {
+
     var i = 0;
-    console.log(ClienteEliminar[i])
     while (i < ClienteEliminar.length) {
-      await axios.delete("/cliente/" + ClienteEliminar[i], token)
-        .then(response => {
-          peticionGet();
-          abrirCerrarModalEliminar();
-          setClienteSeleccionado({
-            id: 0,
-            codigo: 0,
-            cif: '',
-            razonSocial: '',
-            telefono: '',
-            movil: '',
-            email: '',
-            direccion: '',
-            poblacion: '',
-            provincia: '',
-            cp: '',
-            comarca: '',
-            idSector: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-          })
-        }).catch(error => {
-          console.log(error);
-        })
+
+      const resp = await deleteCliente(ClienteEliminar[i]);
+
+      peticionGet();
+      abrirCerrarModalEliminar();
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+
       i++;
+      
     }
   }
 

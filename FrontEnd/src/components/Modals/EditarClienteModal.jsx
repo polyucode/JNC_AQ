@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, Autocomplete } from '@mui/material';
-import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
+import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos } from '../../api/apiBackend';
 import axios from "axios";
 import { Modal, TextField } from '@material-ui/core';
 
@@ -128,99 +128,99 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     }
 
     const peticionGet = async () => {
-        axios.get("/clientescontactos", token).then(response => {
-            setData(response.data.data.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
-        })
+
+        const resp = await getContactos();
+        setData(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+
     }
 
     const peticionPostContacto = async () => {
+
         contactoSeleccionado.id = null;
-        await axios.post("/clientescontactos", contactoSeleccionado, token)
-            .then(response => {
-                abrirCerrarModalInsertar();
-                peticionGet();
-                setContactoSeleccionado({
-                    id: 0,
-                    nombre: '',
-                    telefono: '',
-                    email: '',
-                    cargo: '',
-                    comentarios: '',
-                    idCliente: "",
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            })
-            .catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postContactos( contactoSeleccionado );
+
+        abrirCerrarModalInsertar();
+        peticionGet();
+        setContactoSeleccionado({
+            id: 0,
+            nombre: '',
+            telefono: '',
+            email: '',
+            cargo: '',
+            comentarios: '',
+            idCliente: "",
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionDeleteContacto = async () => {
+
         var i = 0;
         while (i < ContactoClienteEliminar.length) {
-            await axios.delete("/clientescontactos/" + ContactoClienteEliminar[i], token)
-                .then(response => {
-                    peticionGet();
-                    abrirCerrarModalEliminar();
-                    setContactoSeleccionado({
-                        id: 0,
-                        nombre: '',
-                        telefono: '',
-                        email: '',
-                        cargo: '',
-                        comentarios: '',
-                        idCliente: "",
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteContactos(ContactoClienteEliminar[i]);
+
+            peticionGet();
+            abrirCerrarModalEliminar();
+            setContactoSeleccionado({
+                id: 0,
+                nombre: '',
+                telefono: '',
+                email: '',
+                cargo: '',
+                comentarios: '',
+                idCliente: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
+
         }
     }
 
     const peticionPutContacto = async () => {
-        await axios.put("/clientescontactos?id=" + contactoSeleccionado.id, contactoSeleccionado, token)
-            .then(response => {
-                var contactoModificado = data;
-                contactoModificado.map(contacto => {
-                    if (contacto.id === contactoSeleccionado.id) {
-                        contacto = contactoSeleccionado
-                    }
-                });
-                peticionGet();
-                abrirCerrarModalEditar();
-                setContactoSeleccionado({
-                    id: 0,
-                    nombre: '',
-                    telefono: '',
-                    email: '',
-                    cargo: '',
-                    comentarios: '',
-                    idCliente: "",
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putContactos(contactoSeleccionado);
+
+        var contactoModificado = data;
+        contactoModificado.map(contacto => {
+            if (contacto.id === contactoSeleccionado.id) {
+                contacto = contactoSeleccionado
+            }
+        });
+        peticionGet();
+        abrirCerrarModalEditar();
+        setContactoSeleccionado({
+            id: 0,
+            nombre: '',
+            telefono: '',
+            email: '',
+            cargo: '',
+            comentarios: '',
+            idCliente: "",
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+        
     }
 
     const abrirCerrarModalInsertar = () => {

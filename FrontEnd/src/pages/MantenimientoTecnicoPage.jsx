@@ -26,6 +26,7 @@ import Swal from "sweetalert2";
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
 import * as moment from 'moment';
 import { AuthContext } from "../context/AuthContext";
+import { getConfNivelesPlantasCliente } from "../api";
 
 const token = {
     headers: {
@@ -84,10 +85,11 @@ export const MantenimientoTecnicoPage = () => {
     const { usuarioActual } = useUsuarioActual();
 
     const GetConfNivelesPlantasCliente = async () => {
-        axios.get("/confnivelesplantascliente", token).then(response => {
-            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfNivelesPlantasCliente(niveles);
-        })
+
+        const resp = getConfNivelesPlantasCliente();
+        const niveles = Object.entries(resp).map(([key, value]) => (key, value))
+        setConfNivelesPlantasCliente(niveles);
+
     }
 
     /*** EFECTOS ***/
