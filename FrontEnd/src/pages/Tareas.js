@@ -23,6 +23,7 @@ import listPlugin from '@fullcalendar/list';
 
 import { FamilyRestroomRounded } from "@mui/icons-material";
 import { MainLayout } from "../layout/MainLayout";
+import { getUsuarios } from "../api";
 
 
 const token = {
@@ -445,13 +446,6 @@ function Tareas() {
     }, [])
   }
 
-  const GetOperarios = async () => {
-    axios.get("/usuario", token).then(response => {
-      const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setOperarios(usuario);
-    }, [])
-  }
-
   const GetElementosPlanta = async () => {
     axios.get("/elementosplanta", token).then(response => {
       const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -508,7 +502,7 @@ function Tareas() {
     peticionGet();
     GetElementosPlanta();
     GetClientes();
-    GetOperarios();
+    getUsuarios();
     GetAnalisis();
     GetOfertas();
     GetConfNivelesPlantasCliente();

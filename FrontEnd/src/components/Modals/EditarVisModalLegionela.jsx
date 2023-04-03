@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
-
-import MenuItem from '@mui/material/MenuItem';
-
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import Button from '@mui/material/Button';
-import { getOperarios } from '../../api/apiBackend';
 
 import '../../pages/Visualizacion.css';
 

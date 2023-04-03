@@ -7,8 +7,9 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Button from '@mui/material/Button';
 
 import MenuItem from '@mui/material/MenuItem';
-import { getOperarios, subirPdf } from '../../api/apiBackend';
+import { subirPdf } from '../../api/apiBackend';
 import '../../pages/Visualizacion.css';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -59,7 +60,7 @@ export const EditarVisModal = ({ change: handleChangeInput, analisisSeleccionado
 
     useEffect(() => {
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios);
             })

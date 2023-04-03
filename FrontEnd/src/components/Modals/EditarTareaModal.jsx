@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getAnalisis, getClientes, getElementos, getOfertas, getOperarios } from '../../api/apiBackend';
+import { getAnalisis, getClientes, getElementos, getOfertas } from '../../api/apiBackend';
 import MenuItem from '@mui/material/MenuItem';
 
 import Snackbar from '@mui/material/Snackbar';
@@ -21,6 +21,7 @@ import { ModalLayout } from "../ModalLayout";
 import { InsertarDetalleModal } from './InsertarDetalleModal';
 import { EditarDetalleModal } from './EditarDetalleModal';
 import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId } from '../../api';
+import { getUsuarios } from '../../api';
 
 const token = {
     headers: {
@@ -183,7 +184,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 setAnalisis(analisis)
             })
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios)
             })

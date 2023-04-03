@@ -2,7 +2,7 @@ import React , {useState, useEffect} from "react";
 import {TextField} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 import axios from "axios";
-
+import { putUsuarios } from '../api';
 import FirmaFileUploader from '../components/FirmaFileUploader';
 import './Perfil.css';
 
@@ -83,17 +83,16 @@ function Perfil() {
     const uploader = React.createRef();
 
     const peticionPut=async()=>{
-      await axios.put("/usuario?id=" + User.id, User, token)
-      .then(response=>{
-        var usuarioModificado = data;
-        usuarioModificado.map(usuario=>{
-          if(usuario.id===User.id){
-            usuario = User
-          }
-        });
-      }).catch(error=>{
-        console.log(error);
-      })
+
+      const resp = await putUsuarios(User);
+
+      var usuarioModificado = data;
+      usuarioModificado.map(usuario=>{
+        if(usuario.id===User.id){
+          usuario = User
+        }
+      });
+
     }
 
     function enviarImagenFirma(e) {

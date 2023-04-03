@@ -14,8 +14,9 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { getOfertas, getOperarios } from "../api/apiBackend";
+import { ModalLayout } from "../components/ModalLayout";
+import { getOfertas } from "../api/apiBackend";
+import { getUsuarios } from "../api";
 
 const token = {
   headers: {
@@ -229,7 +230,7 @@ export const TareasPage = () => {
         setOfertas(ofertas);
       })
 
-    getOperarios()
+    getUsuarios()
       .then(operarios => {
         setOperarios(operarios);
       })

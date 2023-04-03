@@ -21,12 +21,11 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getParametrosElemento, getFilasParametros, postValorParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getOperarios, getParametrosAnalisisPlanta, generarPdf, getFilasParametros2, getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta } from "../api/apiBackend";
+import { getClientes, getElementos, getOfertas, getParametros, getFilasParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getParametrosAnalisisPlanta, generarPdf, getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta } from "../api/apiBackend";
 import Swal from "sweetalert2";
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
-import * as moment from 'moment';
 import { AuthContext } from "../context/AuthContext";
-import { getConfNivelesPlantasCliente } from "../api";
+import { getConfNivelesPlantasCliente, getParametrosElementoPlantaClienteConFiltros, getUsuarios } from "../api";
 
 const token = {
     headers: {
@@ -113,7 +112,7 @@ export const MantenimientoTecnicoPage = () => {
             .then(resp => setAnalisis(resp));
 
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios)
             })
@@ -333,7 +332,7 @@ export const MantenimientoTecnicoPage = () => {
 
         // Preparamos la variable que almacenará los valores de los parametros
         let parametrosMostrar = [];
-        const datos = await getParametrosElemento(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
+        const datos = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         // Recorremos los registros para ver que valores podemos guardar (activo)
         datos.map(registro => {

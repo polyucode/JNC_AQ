@@ -38,6 +38,7 @@ import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobi
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 import { bajarPdf, bajarPdfNoFQ, subirPdf } from "../api/apiBackend";
+import { getUsuarios } from "../api";
 
 const token = {
     headers: {
@@ -912,13 +913,6 @@ export const VisualizacionPage = () => {
         }
     }
 
-    const GetOperarios = async () => {
-        axios.get("/usuario", token).then(response => {
-            const usuario = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOperarios(usuario);
-        }, [])
-    }
-
     const GetClientes = async () => {
         axios.get("/cliente", token).then(response => {
             const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
@@ -1119,7 +1113,7 @@ export const VisualizacionPage = () => {
     }
 
     useEffect(() => {
-        GetOperarios();
+        getUsuarios();
         GetParametrosAnalisisPlanta();
         FiltrarData();
         GetOfertas();

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
-
-import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { Grid, TextField } from '@mui/material';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -53,7 +51,7 @@ export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSel
 
     useEffect(() => {
 
-        getOperarios(operarios => {
+        getUsuarios(operarios => {
             setOperarios(operarios);
         })
     }, [])

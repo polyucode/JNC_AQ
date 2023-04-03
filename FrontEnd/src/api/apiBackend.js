@@ -16,21 +16,6 @@ export const postToken = async ( token ) => {
 
 }
 
-//*** TABLAS "ESTÁTICAS" ***//
-export const getOperarios = async () => {
-
-    const resp = await instance.get('/usuario');
-    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
-
-}
-
-export const getListaElementos = async () => {
-
-    const resp = await instance.get('/elementos');
-    return resp.data.data;
-
-}
-
 /*** TAREAS ***/
 
 export const getTareas = async () => {
@@ -68,121 +53,12 @@ export const putConfPlantaCliente = async ( confPlantaCliente ) => {
 
 }
 
-/*** ELEMENTOS ***/
-
-export const getElementos = async () => {
-
-    const resp = await instance.get('/elementosplanta')
-    return Object.entries(resp.data.data).map(([key, value]) => (key, value));
-
-}
-
-export const getElementoPorId = async ( id ) => {
-
-    const resp = await instance.get(`/elementosplanta/${ id }`);
-    return resp.data.data;
-    
-}
-
-export const postElementos = async ( elemento ) => {
-
-    const resp = await instance.post('/elementosplanta', elemento);
-    return resp.data.data;
-
-}
-
-export const putElementos = async ( elemento ) => {
-
-    const resp = await instance.put('/elementosplanta', elemento);
-    return resp.data.data;
-
-}
-
 /*** PARÁMETROS ***/
-
 export const getParametros = async () => {
     
     const resp = await instance.get('/parametros');
     return resp.data.data;
     
-}
-
-export const getValorParametros = async () => {
-    
-    const resp = await instance.get('/valorparametros');
-    return resp.data.data; // Object.entries(response.data.data).map(([key, value]) => (key, value))
-    
-}
-
-export const getFilasParametros = async ( codigoCliente, codigoOferta, idElemento, idAnalisis, fecha ) => {
-    
-    const resp = await instance.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }&fecha=${ fecha }`);
-    return resp.data.data;
-    
-}
-
-export const getFilasParametros2 = async ( codigoCliente, codigoOferta, idElemento, idAnalisis ) => {
-    
-    const resp = await instance.get(`/valorparametros/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`);
-    return resp.data.data;
-    
-}
-
-export const getParametrosPlanta = async ( codigoCliente, codigoOferta, idElemento, idAnalisis) => {
-    
-    const resp = await instance.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ codigoCliente }&Oferta=${ codigoOferta }&Id_Elemento=${ idElemento }&Id_Analisis=${ idAnalisis }`);
-    return resp.data.data;
-    
-}
-
-export const getParametrosElemento = async ( cliente, oferta, elemento, analisis ) => {
-
-    const resp = await instance.get(`/parametroselementoplantacliente/parametros/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }&Id_Analisis=${ analisis }`);
-    return resp.data.data;
-
-}
-
-export const getConfParametrosElementoPlantaCliente = async () => {
-
-    const resp = await instance.get('/parametroselementoplantacliente');
-    return resp.data.data;
-
-}
-
-
-
-export const putParametrosElementoPlantaCliente = async ( parametro ) => {
-
-    const resp = await instance.put('/parametroselementoplantacliente', parametro);
-    return resp.data.data;
-
-}
-
-export const postParametrosElementoPlantaCliente = async ( parametro ) => {
-
-    const resp = await instance.post('/parametroselementoplantacliente', parametro);
-    return resp.data.data;
-
-}
-
-export const postValorParametros = async ( parametro ) => {
-
-    const resp = await instance.post('/valorparametros', parametro);
-    return resp.data.data;
-
-}
-
-export const putValorParametros = async ( parametro ) => {
-
-    const resp = await instance.put('/valorparametros', parametro);
-    return resp.data.data;
-
-}
-
-export const getParametrosAnalisisFiltrados = async ( cliente, oferta, elemento, analisis, fecha ) => {
-
-    const resp = await instance.get(`/parametrosanalisisplanta/analisis/?CodigoCliente=${ cliente }&Oferta=${ oferta }&Id_Elemento=${ elemento }&Id_Analisis=${ analisis }&Fecha=${ fecha }`)
-    return resp.data.data;
 }
 
 /* PDF */

@@ -3,9 +3,7 @@ import { Grid, TextField, Autocomplete } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-
-import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -56,7 +54,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
 
     useEffect(() => {
 
-        getOperarios(operarios => {
+        getUsuarios(operarios => {
             setOperarios(operarios);
         })
     }, [])

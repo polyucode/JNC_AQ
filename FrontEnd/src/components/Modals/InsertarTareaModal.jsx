@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getAnalisis, getClientes, getComarcas, getElementos, getOfertas, getOperarios, getPoblaciones, getProvincias } from '../../api/apiBackend';
-import MenuItem from '@mui/material/MenuItem';
+import { getAnalisis, getClientes, getElementos, getOfertas } from '../../api/apiBackend';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -90,7 +90,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 setAnalisis(analisis)
             })
         
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios)
             })
