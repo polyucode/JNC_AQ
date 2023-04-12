@@ -38,7 +38,7 @@ import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobi
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 import { bajarPdf, bajarPdfNoFQ, subirPdf } from "../api/apiBackend";
-import { getUsuarios } from "../api";
+import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId } from "../api";
 
 const token = {
     headers: {
@@ -913,172 +913,205 @@ export const VisualizacionPage = () => {
         }
     }
 
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
+    const GetCliente = async () => {
+
+        const resp = await getClientes();
+        
+        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
+        setClientes(cliente);
+
     }
 
-    const GetAnalisis = async () => {
-        axios.get("/analisis", token).then(response => {
-            const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setAnalisis(analisi);
-        }, [])
+    const GetAnalisi = async () => {
+
+        const resp = await getAnalisis();
+
+        const analisi = Object.entries(resp).map(([key, value]) => (key, value));
+        setAnalisis(analisi);
+
     }
 
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOferta(oferta);
-        }, [])
+    const GetOferta = async () => {
+
+        const resp = await getOfertas();
+
+        const oferta = Object.entries(resp).map(([key, value]) => (key, value));
+        setOferta(oferta);
+
     }
 
-    const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setElementos(elemento);
-        }, [])
+    const GetElemento = async () => {
+
+        const resp = await getElementosPlanta();
+
+        const elemento = Object.entries(resp).map(([key, value]) => (key, value));
+        setElementos(elemento);
+
     }
 
-    const GetParametrosAnalisisPlanta = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData(response.data.data)
-        })
+    const GetParametroAnalisisPlanta = async () => {
+
+        const resp = getParametrosAnalisisPlanta();
+        setData(resp);
+
     }
 
-    const GetAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setAnalisisNivelesPlantasCliente(analisisNiveles);
-        })
+    const GetAnalisisNivelPlantaCliente = async () => {
+
+        const resp = await getAnalisisNivelesPlantasCliente();
+
+        const analisisNiveles = Object.entries(resp).map(([key, value]) => (key, value));
+        setAnalisisNivelesPlantasCliente(analisisNiveles);
+
     }
 
-    const GetConfNivelesPlantasCliente = async () => {
-        axios.get("/confnivelesplantascliente", token).then(response => {
-            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfNivelesPlantasCliente(niveles);
-        })
+    const GetConfNivelPlantaCliente = async () => {
+
+        const resp = await getConfNivelesPlantasCliente();
+
+        const niveles = Object.entries(resp).map(([key, value]) => (key, value))
+        setConfNivelesPlantasCliente(niveles);
+
     }
 
     const peticionGetEntregas = async () => {
-        axios.get("/entregas", token).then(response => {
-            setDataEntregas(response.data.data)
-        })
+
+        const resp = await getEntregas();
+        setDataEntregas(resp);
+
     }
 
     const FisicoQuimicoTorre = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData1(response.data.data.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData1(resp.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        
     }
 
     const FisicoQuimicoAporte = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData2(response.data.data.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData2(resp.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const FisicoQuimicoAlimentacion = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData3(response.data.data.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData3(resp.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const FisicoQuimicoRechazo = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData4(response.data.data.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData4(resp.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const FisicoQuimicoCondensados = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData5(response.data.data.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData5(resp.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const FisicoQuimicoCaldera = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData6(response.data.data.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData6(resp.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const Aerobios = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData7(response.data.data.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData7(resp.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const Legionela = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData8(response.data.data.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData8(resp.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const AguasResiduales = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData9(response.data.data.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData9(resp.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const Desinfecciones = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData10(response.data.data.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData10(resp.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const Osmosis = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData11(response.data.data.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData11(resp.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const AguaPozo = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData12(response.data.data.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData12(resp.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const DesinfeccionACS = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData13(response.data.data.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData13(resp.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const MantMaqFrio = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData14(response.data.data.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData14(resp.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const Mediciones = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData15(response.data.data.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData15(resp.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const ControlFugaGas = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData16(response.data.data.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData16(resp.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const AguaPotable = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData17(response.data.data.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData17(resp.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     const RevisionBandeja = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData18(response.data.data.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData18(resp.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }
 
     /*const Otros = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setDataOtros(response.data.data.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setDataOtros(resp.filter(analisis => analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+
     }*/
 
     const descargarPdf = async () => {
@@ -1114,14 +1147,14 @@ export const VisualizacionPage = () => {
 
     useEffect(() => {
         getUsuarios();
-        GetParametrosAnalisisPlanta();
+        GetParametroAnalisisPlanta();
         FiltrarData();
-        GetOfertas();
-        GetClientes();
-        GetAnalisis();
-        GetElementos();
-        GetConfNivelesPlantasCliente();
-        GetAnalisisNivelesPlantasCliente();
+        GetOferta();
+        GetCliente();
+        GetAnalisi();
+        GetElemento();
+        GetConfNivelPlantaCliente();
+        GetAnalisisNivelPlantaCliente();
         FisicoQuimicoTorre();
         FisicoQuimicoAporte();
         FisicoQuimicoAlimentacion();
@@ -1144,452 +1177,449 @@ export const VisualizacionPage = () => {
     }, [])
 
     const peticionPost = async () => {
+
         analisisSeleccionado.id = null;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                AguasResiduales();
-                Desinfecciones();
-                AguaPozo();
-                DesinfeccionACS();
-                MantMaqFrio();
-                Mediciones();
-                ControlFugaGas();
-                AguaPotable();
-                RevisionBandeja();
-                abrirCerrarModalInsertar();
-                GetParametrosAnalisisPlanta();
-                //Otros();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: '',
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+        AguasResiduales();
+        Desinfecciones();
+        AguaPozo();
+        DesinfeccionACS();
+        MantMaqFrio();
+        Mediciones();
+        ControlFugaGas();
+        AguaPotable();
+        RevisionBandeja();
+        abrirCerrarModalInsertar();
+        GetParametrosAnalisisPlanta();
+        //Otros();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: '',
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPost1 = async () => {
+
         analisisSeleccionado.id = null;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                //setData(data.concat(response.data));
-                FisicoQuimicoTorre();
-                FisicoQuimicoAporte();
-                FisicoQuimicoAlimentacion();
-                FisicoQuimicoRechazo();
-                FisicoQuimicoCondensados();
-                FisicoQuimicoCaldera();
-                Osmosis();
-                abrirCerrarModalInsertar1();
-                GetParametrosAnalisisPlanta();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: '',
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+        //setData(data.concat(response.data));
+        FisicoQuimicoTorre();
+        FisicoQuimicoAporte();
+        FisicoQuimicoAlimentacion();
+        FisicoQuimicoRechazo();
+        FisicoQuimicoCondensados();
+        FisicoQuimicoCaldera();
+        Osmosis();
+        abrirCerrarModalInsertar1();
+        GetParametrosAnalisisPlanta();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: '',
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPostAerobio = async () => {
+
         analisisSeleccionado.id = null;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                Aerobios();
-                abrirCerrarModalInsertarAerobio();
-                GetParametrosAnalisisPlanta();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: '',
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+        Aerobios();
+        abrirCerrarModalInsertarAerobio();
+        GetParametrosAnalisisPlanta();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: '',
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+        
     }
 
     const peticionPostLegionela = async () => {
+
         analisisSeleccionado.id = null;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                Legionela();
-                abrirCerrarModalInsertarLegionela();
-                GetParametrosAnalisisPlanta();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: '',
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+        Legionela();
+        abrirCerrarModalInsertarLegionela();
+        GetParametrosAnalisisPlanta();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: '',
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPut = async () => {
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                if(fileChange != null){
-                    subirArchivo()
-                }
-                AguasResiduales();
-                Desinfecciones();
-                AguaPozo();
-                DesinfeccionACS();
-                MantMaqFrio();
-                Mediciones();
-                ControlFugaGas();
-                AguaPotable();
-                RevisionBandeja();
-                GetParametrosAnalisisPlanta();
-                //Otros();
-                abrirCerrarModalEditar();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: 0,
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        var analisisModificado = data;
+        analisisModificado.map(analisi => {
+            if (analisi.id === analisisSeleccionado.id) {
+                analisi = analisisSeleccionado
+            }
+        });
+        if(fileChange != null){
+            subirArchivo()
+        }
+        AguasResiduales();
+        Desinfecciones();
+        AguaPozo();
+        DesinfeccionACS();
+        MantMaqFrio();
+        Mediciones();
+        ControlFugaGas();
+        AguaPotable();
+        RevisionBandeja();
+        GetParametrosAnalisisPlanta();
+        //Otros();
+        abrirCerrarModalEditar();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: 0,
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPut1 = async () => {
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                FisicoQuimicoTorre();
-                FisicoQuimicoAporte();
-                FisicoQuimicoAlimentacion();
-                FisicoQuimicoRechazo();
-                FisicoQuimicoCondensados();
-                FisicoQuimicoCaldera();
-                Osmosis();
-                GetParametrosAnalisisPlanta();
-                abrirCerrarModalEditar1();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: 0,
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        var analisisModificado = data;
+        analisisModificado.map(analisi => {
+            if (analisi.id === analisisSeleccionado.id) {
+                analisi = analisisSeleccionado
+            }
+        });
+        FisicoQuimicoTorre();
+        FisicoQuimicoAporte();
+        FisicoQuimicoAlimentacion();
+        FisicoQuimicoRechazo();
+        FisicoQuimicoCondensados();
+        FisicoQuimicoCaldera();
+        Osmosis();
+        GetParametrosAnalisisPlanta();
+        abrirCerrarModalEditar1();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: 0,
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPutAerobio = async () => {
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                if(fileChange != null){
-                    subirArchivo()
-                }
-                Aerobios();
-                GetParametrosAnalisisPlanta();
-                abrirCerrarModalEditarAerobio();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: 0,
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        var analisisModificado = data;
+        analisisModificado.map(analisi => {
+            if (analisi.id === analisisSeleccionado.id) {
+                analisi = analisisSeleccionado
+            }
+        });
+        if(fileChange != null){
+            subirArchivo()
+        }
+        Aerobios();
+        GetParametrosAnalisisPlanta();
+        abrirCerrarModalEditarAerobio();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: 0,
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPutLegionela = async () => {
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisModificado = data;
-                analisisModificado.map(analisi => {
-                    if (analisi.id === analisisSeleccionado.id) {
-                        analisi = analisisSeleccionado
-                    }
-                });
-                if(fileChange != null){
-                    subirArchivo()
-                }
-                Legionela();
-                GetParametrosAnalisisPlanta();
-                abrirCerrarModalEditarLegionela();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: analisisSeleccionado.codigoCliente,
-                    nombreCliente: analisisSeleccionado.nombreCliente,
-                    oferta: analisisSeleccionado.oferta,
-                    pedido: analisisSeleccionado.pedido,
-                    elemento: analisisSeleccionado.elemento,
-                    nombreElemento: analisisSeleccionado.nombreElemento,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    observaciones: '',
-                    pdf: 0,
-                    fechaPdf: null,
-                    resultado: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        var analisisModificado = data;
+        analisisModificado.map(analisi => {
+            if (analisi.id === analisisSeleccionado.id) {
+                analisi = analisisSeleccionado
+            }
+        });
+        if(fileChange != null){
+            subirArchivo()
+        }
+        Legionela();
+        GetParametrosAnalisisPlanta();
+        abrirCerrarModalEditarLegionela();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: analisisSeleccionado.codigoCliente,
+            nombreCliente: analisisSeleccionado.nombreCliente,
+            oferta: analisisSeleccionado.oferta,
+            pedido: analisisSeleccionado.pedido,
+            elemento: analisisSeleccionado.elemento,
+            nombreElemento: analisisSeleccionado.nombreElemento,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            realizado: false,
+            fechaRealizado: null,
+            observaciones: '',
+            pdf: 0,
+            fechaPdf: null,
+            resultado: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < analisisEliminar.length) {
-            await axios.delete("/parametrosanalisisplanta/" + analisisEliminar[i].id, token)
-                .then(response => {
-                    FisicoQuimicoTorre();
-                    FisicoQuimicoAporte();
-                    FisicoQuimicoAlimentacion();
-                    FisicoQuimicoRechazo();
-                    FisicoQuimicoCondensados();
-                    FisicoQuimicoCaldera();
-                    Aerobios();
-                    Legionela();
-                    AguasResiduales();
-                    Desinfecciones();
-                    Osmosis();
-                    AguaPozo();
-                    DesinfeccionACS();
-                    MantMaqFrio();
-                    Mediciones();
-                    ControlFugaGas();
-                    AguaPotable();
-                    RevisionBandeja();
-                    //Otros();
-                    GetParametrosAnalisisPlanta();
-                    abrirCerrarModalEliminar();
-                    setAnalisisSeleccionado({
-                        id: 0,
-                        codigoCliente: analisisSeleccionado.codigoCliente,
-                        nombreCliente: analisisSeleccionado.nombreCliente,
-                        oferta: analisisSeleccionado.oferta,
-                        pedido: analisisSeleccionado.pedido,
-                        elemento: analisisSeleccionado.elemento,
-                        nombreElemento: analisisSeleccionado.nombreElemento,
-                        periodo: '',
-                        analisis: 0,
-                        fecha: null,
-                        realizado: false,
-                        fechaRealizado: null,
-                        observaciones: '',
-                        pdf: '',
-                        fechaPdf: null,
-                        resultado: '',
-                        facturado: false,
-                        numeroFacturado: '',
-                        cancelado: false,
-                        comentarios: '',
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteParametrosAnalisisPlanta(analisisEliminar[i].id);
+
+            FisicoQuimicoTorre();
+            FisicoQuimicoAporte();
+            FisicoQuimicoAlimentacion();
+            FisicoQuimicoRechazo();
+            FisicoQuimicoCondensados();
+            FisicoQuimicoCaldera();
+            Aerobios();
+            Legionela();
+            AguasResiduales();
+            Desinfecciones();
+            Osmosis();
+            AguaPozo();
+            DesinfeccionACS();
+            MantMaqFrio();
+            Mediciones();
+            ControlFugaGas();
+            AguaPotable();
+            RevisionBandeja();
+            //Otros();
+            GetParametrosAnalisisPlanta();
+            abrirCerrarModalEliminar();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
+            
         }
     }
 

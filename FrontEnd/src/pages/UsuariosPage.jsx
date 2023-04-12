@@ -31,6 +31,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { subirFirma } from "../api/apiBackend";
+import { deleteUsuarios, getClientes, getPerfiles, getUsuarios, postUsuarios, putUsuarios } from "../api";
 
 const token = {
   headers: {
@@ -121,33 +122,37 @@ export const UsuariosPage = () => {
   ];
 
   //peticiones API
-  const GetClientes = async () => {
-    axios.get("/cliente", token).then(response => {
-      const clientes = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setClientes(clientes);
-    }, [])
+  const GetCliente = async () => {
+
+    const resp = await getClientes();
+
+    const clientes = Object.entries(resp).map(([key, value]) => (key, value))
+    setClientes(clientes);
+
   }
 
-  const GetPerfiles = async () => {
-    axios.get("/perfil", token).then(response => {
-      const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setPerfiles(perfil);
-    }, [])
-  }
+  const GetPerfil = async () => {
 
+    const resp = await getPerfiles();
+    
+    const perfil = Object.entries(resp).map(([key, value]) => (key, value))
+    setPerfiles(perfil);
+
+  }
 
   // Recoger Usuarios
   const peticionGet = async () => {
-    axios.get("/usuario", token).then(response => {
-      setData(response.data.data)
-    })
+
+    const resp = await getUsuarios();
+    setData(resp);
+
   }
 
   // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
   useEffect(() => {
     peticionGet();
-    GetClientes();
-    GetPerfiles();
+    GetCliente();
+    GetPerfil();
   }, [])
 
   useEffect(() => {
@@ -171,108 +176,109 @@ export const UsuariosPage = () => {
   }
   //Insertar usuario
   const peticionPost = async () => {
+
     usuarioSeleccionado.id = null;
-    await axios.post("/usuario", usuarioSeleccionado, token)
-      .then(response => {
-        abrirCerrarModalInsertar();
-        peticionGet();
-        setUsuarioSeleccionado({
-          id: 0,
-          nombre: '',
-          apellidos: '',
-          login: null,
-          telefono: '',
-          usuario: '',
-          password: '',
-          activo: false,
-          firma: '',
-          idCliente: 0,
-          idPerfil: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await postUsuarios(usuarioSeleccionado);
+
+    abrirCerrarModalInsertar();
+    peticionGet();
+    setUsuarioSeleccionado({
+      id: 0,
+      nombre: '',
+      apellidos: '',
+      login: null,
+      telefono: '',
+      usuario: '',
+      password: '',
+      activo: false,
+      firma: '',
+      idCliente: 0,
+      idPerfil: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    });
+
   }
 
   // Editar el usuario
   const peticionPut = async () => {
+
     console.log(usuarioSeleccionado)
-    await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
-      .then(response => {
-        subirImagen()
-        var usuarioModificado = data;
-        usuarioModificado.map(usuario => {
-          if (usuario.id === usuarioSeleccionado.id) {
-            usuario = usuarioSeleccionado
-          }
-        });
-        peticionGet();
-        abrirCerrarModalEditar();
-        setUsuarioSeleccionado({
-          id: 0,
-          nombre: '',
-          apellidos: '',
-          login: null,
-          telefono: '',
-          usuario: '',
-          password: '',
-          activo: false,
-          firma: '',
-          idCliente: 0,
-          idPerfil: 0,
-          addDate: null,
-          addIdUser: null,
-          modDate: null,
-          modIdUser: null,
-          delDate: null,
-          delIdUser: null,
-          deleted: null,
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+
+    const resp = await putUsuarios(usuarioSeleccionado);
+
+    subirImagen();
+    var usuarioModificado = data;
+    usuarioModificado.map(usuario => {
+      if (usuario.id === usuarioSeleccionado.id) {
+        usuario = usuarioSeleccionado
+      }
+    });
+    peticionGet();
+    abrirCerrarModalEditar();
+    setUsuarioSeleccionado({
+      id: 0,
+      nombre: '',
+      apellidos: '',
+      login: null,
+      telefono: '',
+      usuario: '',
+      password: '',
+      activo: false,
+      firma: '',
+      idCliente: 0,
+      idPerfil: 0,
+      addDate: null,
+      addIdUser: null,
+      modDate: null,
+      modIdUser: null,
+      delDate: null,
+      delIdUser: null,
+      deleted: null,
+    });
+
   }
 
   // Borrar el usuario
   const peticionDelete = async () => {
+
     var i = 0;
     console.log(UsuarioEliminar[i])
     while (i < UsuarioEliminar.length) {
-      await axios.delete("/usuario/" + UsuarioEliminar[i], token)
-        .then(response => {
-          peticionGet();
-          abrirCerrarModalEliminar();
-          setUsuarioSeleccionado({
-            id: 0,
-            nombre: '',
-            apellidos: '',
-            login: null,
-            telefono: '',
-            usuario: '',
-            password: '',
-            activo: false,
-            firma: '',
-            idCliente: 0,
-            idPerfil: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-          })
-        }).catch(error => {
-          console.log(error);
-        })
+
+      const resp = await deleteUsuarios(UsuarioEliminar[i]);
+
+      peticionGet();
+      abrirCerrarModalEliminar();
+      setUsuarioSeleccionado({
+        id: 0,
+        nombre: '',
+        apellidos: '',
+        login: null,
+        telefono: '',
+        usuario: '',
+        password: '',
+        activo: false,
+        firma: '',
+        idCliente: 0,
+        idPerfil: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
+
       i++;
+      
     }
   }
 
