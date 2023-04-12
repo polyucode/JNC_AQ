@@ -3,7 +3,7 @@ import { instance } from '.';
 export const getUsuarios = async () => {
 
     const resp = await instance.get('/usuario');
-    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+    return resp.data.data;
 
 }
 

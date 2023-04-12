@@ -16,5 +16,6 @@ export * from './parametrosElementos';
 export * from './perfil';
 export * from './productos';
 export * from './tablasEstaticas';
+export * from './tareas';
 export * from './usuario';
 export * from './valorParametros';

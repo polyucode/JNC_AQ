@@ -18,7 +18,7 @@ import {
 } from '../api/apiBackend';
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
-import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros } from '../api';
+import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros } from '../api';
 
 const token = {
     headers: {
@@ -450,13 +450,10 @@ export const PlantasTablaPage = () => {
                     delIdUser: null,
                     deleted: null
                 }
-                axios.post("/valorparametros", param2, token)
-                    .then(response => {
-                        return response
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+
+                const resp = postValorParametros(param2);
+                return resp;
+            
             }
         })
     }

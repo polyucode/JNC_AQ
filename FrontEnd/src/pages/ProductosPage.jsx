@@ -20,6 +20,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
 import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+import { deleteProductos, postProductos, putProductos } from "../api";
 
 
 const token = {
@@ -73,9 +74,10 @@ export const ProductosPage = () => {
     ];
 
     const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
-            setData(response.data.data)
-        })
+
+        const resp = await getProductos();
+        setData(resp);
+
     }
 
     useEffect(() => {
@@ -92,43 +94,43 @@ export const ProductosPage = () => {
 
     const peticionPost = async () => {
         productoSeleccionado.id = null;
-        await axios.post("/productos", productoSeleccionado, token)
-            .then(response => {
-                //setData(data.concat(response.data));
-                abrirCerrarModalInsertar();
-                getProductos();
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postProductos(productoSeleccionado);
+
+        //setData(data.concat(response.data));
+        abrirCerrarModalInsertar();
+        getProductos();
+
     }
 
     const peticionPut = async () => {
-        await axios.put("/productos?id=" + productoSeleccionado.id, productoSeleccionado, token)
-            .then(response => {
-                var productoModificado = data;
-                productoModificado.map(producto => {
-                    if (producto.id === productoSeleccionado.id) {
-                        producto = productoSeleccionado
-                    }
-                });
-                getProductos();
-                abrirCerrarModalEditar();
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putProductos(productoSeleccionado);
+
+        var productoModificado = data;
+
+        productoModificado.map(producto => {
+            if (producto.id === productoSeleccionado.id) {
+                producto = productoSeleccionado
+            }
+        });
+        getProductos();
+        abrirCerrarModalEditar();
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < ProductoEliminar.length) {
-            await axios.delete("/productos/" + ProductoEliminar[i], token)
-                .then(response => {
-                    getProductos();
-                    abrirCerrarModalEliminar();
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteProductos(ProductoEliminar[i]);
+
+            getProductos();
+            abrirCerrarModalEliminar();
+
             i++;
+            
         }
     }
 

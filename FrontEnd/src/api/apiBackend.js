@@ -16,15 +16,6 @@ export const postToken = async ( token ) => {
 
 }
 
-/*** TAREAS ***/
-
-export const getTareas = async () => {
-
-    const resp = await instance.get('/tareas');
-    return resp.data.data;
-
-}
-
 /*** PLANTAS ***/
 
 export const getConfPlantaCliente = async () => {
