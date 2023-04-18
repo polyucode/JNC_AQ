@@ -100,16 +100,16 @@ export const OfertasClientesPage = () => {
     const columns = [
 
         //Visibles
-        { title: 'NumeroOferta', field: 'numeroOferta', width: 120 },
-        { title: 'Pedido', field: 'pedido', width: 100 },
-        { title: 'CodigoCliente', field: 'codigoCliente', width: 120 },
-        { title: 'NombreCliente', field: 'nombreCliente', width: 250 },
-        { title: 'Descripcion', field: 'descripcion', width: 150 },
-        { title: 'FechaInicio', field: 'fechaInicio', type: "date", width: 120 },
-        { title: 'FechaFinalizacion', field: 'fechaFinalizacion', type: "date", width: 140 },
-        { title: 'Contacto1', field: 'contacto1', width: 100 },
-        { title: 'Contacto2', field: 'contacto2', width: 100 },
-        { title: 'Contacto3', field: 'contacto3', width: 100 }
+        { headerName: 'Nº Oferta', field: 'numeroOferta', width: 150 },
+        { headerName: 'Descripcion', field: 'descripcion', width: 200 },
+        { headerName: 'Pedido', field: 'pedido', width: 150 },
+        { headerName: 'CodigoCliente', field: 'codigoCliente', width: 150 },
+        { headerName: 'NombreCliente', field: 'nombreCliente', width: 250 },      
+        { headerName: 'Fecha de Inicio', field: 'fechaInicio', type: "date", width: 200 },
+        { headerName: 'Fecha de Finalizacion', field: 'fechaFinalizacion', type: "date", width: 200 },
+        { headerName: 'Contacto1', field: 'contacto1', width: 200 },
+        { headerName: 'Contacto2', field: 'contacto2', width: 200 },
+        { headerName: 'Contacto3', field: 'contacto3', width: 200 }
     ];
     const getOfertas = async () => {
         axios.get("/ofertasclientes", token).then(response => {

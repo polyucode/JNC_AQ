@@ -67,8 +67,8 @@ export const ProductosPage = () => {
     const columnas = [
 
         //Visibles
-        { title: 'CodigoProducto', field: 'codigoProducto', width: 700 },
-        { title: 'Descripcion', field: 'descripcion', width: 700 }
+        { headerName: 'Codigo del Producto', field: 'codigoProducto', width: 700 },
+        { headerName: 'Descripcion', field: 'descripcion', width: 700 }
 
     ];
 
@@ -252,7 +252,7 @@ export const ProductosPage = () => {
 
                 {/* Agregar Producto */}
                 <ModalLayout
-                    titulo="Agregar nuevo cliente"
+                    titulo="Agregar nuevo producto"
                     contenido={
                         <InsertarProductoModal change={handleChange} />
                     }

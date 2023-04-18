@@ -310,11 +310,11 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
     return (
         <>
-            <Grid item xs={4} md={3}>
-                <TextField sx={{ width: '100%' }} label="Código" name="codigo" type="number" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
             </Grid>
 
-            <Grid item xs={4} md={4}>
+            <Grid item xs={3} md={4}>
                 <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
             </Grid>
 

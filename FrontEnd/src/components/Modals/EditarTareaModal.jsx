@@ -142,15 +142,15 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
 
     const columns = [
         //visibles
-        { title: 'Periodo', field: 'periodo' },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 120 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { title: 'Protocolo', field: 'protocolo', width: 220 },
-        { title: 'Observaciones', field: 'observaciones', width: 150 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Facturado', field: 'numeroFactura', width: 120 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { headerName: 'Periodo', field: 'periodo' },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150},
+        { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        //{ headerName: 'Protocolo', field: 'protocolo', width: 220 },
+        { headerName: 'Observaciones', field: 'observaciones', width: 300 },
+        { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { headerName: 'Numero Facturado', field: 'numeroFactura', width: 200 },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
     ];
 
     const peticionGet = async () => {
@@ -690,6 +690,11 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                             }}
                             rows={rows}
                             columns={columns}
+                            initialState={{
+                                sorting: {
+                                  sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                }
+                              }}
                             pageSize={12}
                             rowsPerPageOptions={[12]}
                             checkboxSelection

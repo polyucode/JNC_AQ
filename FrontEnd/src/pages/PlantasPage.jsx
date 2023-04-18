@@ -660,6 +660,7 @@ export const PlantasPage = () => {
                                     disableClearable={ true }
                                     id="Oferta"
                                     options={ ofertas }
+                                    filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
                                     getOptionLabel={ option => option.numeroOferta.toString() }
                                     renderInput={ params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
                                     onChange={ handleConfPlantaClienteChange }

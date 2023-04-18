@@ -109,14 +109,14 @@ export const UsuariosPage = () => {
 
   const columns = [
     //visibles
-    { title: 'Nombre', field: 'nombre', width: 200 },
-    { title: 'Apellidos', field: 'apellidos', width: 250 },
-    { title: 'Telefono', field: 'telefono', width: 200 },
-    { title: 'Usuario', field: 'usuario', width: 200 },
-    { title: 'Activo', field: 'activo', type: 'boolean', width: 180 },
-    { title: 'Firma', field: 'firma', width: 200 },
-    { title: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, width: 200 },
-    { title: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, width: 200 },
+    { headerName: 'Nombre', field: 'nombre', width: 200 },
+    { headerName: 'Apellidos', field: 'apellidos', width: 250 },
+    { headerName: 'Telefono', field: 'telefono', width: 200 },
+    { headerName: 'Usuario', field: 'usuario', width: 200 },
+    { headerName: 'Activo', field: 'activo', type: 'boolean', width: 180 },
+    { headerName: 'Firma', field: 'firma', width: 200 },
+    { headerName: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, width: 200 },
+    { headerName: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, width: 200 },
 
   ];
 

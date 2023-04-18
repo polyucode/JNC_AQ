@@ -120,16 +120,16 @@ export const ClientesPage = () => {
   // Columnas de la tabla
   const columns = [
     { field: 'codigo', headerName: 'Código', width: 100 },
-    { field: 'cif', headerName: 'CIF', width: 120 },
+    { field: 'cif', headerName: 'CIF', width: 150 },
     { field: 'razonSocial', headerName: 'Razón social', width: 250 },
     { field: 'direccion', headerName: 'Dirección', width: 320 },
     { field: 'cp', headerName: 'CP', width: 70 },
-    { field: 'poblacion', headerName: 'Población', width: 100 },
-    { field: 'provincia', headerName: 'Provincia', width: 120 },
-    { field: 'comarca', headerName: 'Comarca', width: 140 },
+    { field: 'poblacion', headerName: 'Población', width: 150 },
+    { field: 'provincia', headerName: 'Provincia', width: 150 },
+    { field: 'comarca', headerName: 'Comarca', width: 200 },
     { field: 'email', headerName: 'Email', width: 260 },
-    { field: 'movil', headerName: 'Movil', width: 100 },
-    { field: 'telefono', headerName: 'Teléfono', width: 100 }
+    { field: 'movil', headerName: 'Movil', width: 150 },
+    { field: 'telefono', headerName: 'Teléfono', width: 150 }
   ]
 
   const GetPoblacion = async () => {

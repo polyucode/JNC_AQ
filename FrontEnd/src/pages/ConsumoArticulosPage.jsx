@@ -79,10 +79,10 @@ export const ConsumoArticulosPage = () => {
     const columnas = [
 
         //Visibles
-        { title: 'Oferta', field: 'oferta', width: 400 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 400 },
-        { title: 'Producto', field: 'producto', width: 400 },
-        { title: 'Cantidad', field: 'cantidad', width: 400 }
+        { headerName: 'Oferta', field: 'oferta', width: 400 },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 400 },
+        { headerName: 'Producto', field: 'producto', width: 400 },
+        { headerName: 'Cantidad', field: 'cantidad', width: 400 }
     ];
 
 

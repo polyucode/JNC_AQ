@@ -99,7 +99,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
 
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboClientes"
@@ -127,7 +127,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -144,7 +144,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={2}>
                 <TextField
                     id='pedido'
                     sx={{ width: '100%' }}
@@ -155,7 +155,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboElementosPlanta"
@@ -172,7 +172,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="analisis"
@@ -184,7 +184,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     //disabled={estadoOperario}
                     disableClearable={true}
@@ -219,7 +219,8 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 </TextField>
             </Grid>*/}
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={8} style={{ display: 'flex' }}>
+                <p style={{ width: '30%' }}> Fecha </p>
                 <TextField
                     id="fecha"
                     type="date"
@@ -232,7 +233,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="CboTipos"

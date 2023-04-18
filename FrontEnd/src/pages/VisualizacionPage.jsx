@@ -323,74 +323,74 @@ export const VisualizacionPage = () => {
 
     const columnas = [
         //visibles
-        { title: 'Periodo', field: 'periodo', width: 150 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
-        { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { title: 'PDF', field: 'pdf', width: 150 },
-        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
-        { title: 'Comentario', field: 'comentario', width: 200 }
+        { headerName: 'Periodo', field: 'periodo', width: 150 },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
+        { headerName: 'Observaciones', field: 'observaciones', width: 250 },
+        { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnas1 = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo', width: 150 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 200 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 200 },
-        { title: 'Observaciones', field: 'observaciones', width: 300 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
-        { title: 'Comentario', field: 'comentario', width: 200 }
+        { headerName: 'Periodo', field: 'periodo', width: 150 },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 200 },
+        { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
+        { headerName: 'Fecha Realizado', field: 'fechaRealizado', typeof: 'date', width: 200 },
+        { headerName: 'Observaciones', field: 'observaciones', width: 300 },
+        { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnasLegionela = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo', width: 150 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
-        { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { title: 'Resultado', field: 'resultado', width: 120 },
-        { title: 'PDF', field: 'pdf', width: 150 },
-        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
-        { title: 'Comentario', field: 'comentario', width: 200 }
+        { headerName: 'Periodo', field: 'periodo', width: 150 },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
+        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { headerName: 'Observaciones', field: 'observaciones', width: 250 },
+        { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { headerName: 'Resultado', field: 'resultado', width: 120 },
+        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const columnasAerobios = [
 
         //visibles
-        { title: 'Periodo', field: 'periodo', width: 150 },
-        { title: 'Fecha', field: 'fecha', type: 'date', width: 150 },
-        { title: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { title: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
-        { title: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { title: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
-        { title: 'Observaciones', field: 'observaciones', width: 250 },
-        { title: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { title: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { title: 'Resultado', field: 'resultado', width: 120 },
-        { title: 'PDF', field: 'pdf', width: 150 },
-        { title: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { title: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
-        { title: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
-        { title: 'Comentario', field: 'comentario', width: 200 }
+        { headerName: 'Periodo', field: 'periodo', width: 150 },
+        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
+        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { headerName: 'Observaciones', field: 'observaciones', width: 250 },
+        { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
+        { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { headerName: 'Resultado', field: 'resultado', width: 120 },
+        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const [data, setData] = useState([]);
@@ -1634,6 +1634,8 @@ export const VisualizacionPage = () => {
         }))
     }
 
+    console.log(analisisSeleccionado)
+
     const onChangeOferta = (e, value, name) => {
 
         if (e.target.textContent !== "") {
@@ -1984,31 +1986,26 @@ export const VisualizacionPage = () => {
                         onChange={(event, value) => onChangeElemento(event, value, "elemento")}
                     />
                 </div>
-                <div className="datos2">
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Cliente"
-                        name="nombreCliente"
-                        options={clientes}
-                        inputValue={analisisSeleccionado.nombreCliente}
-                        getOptionLabel={option => option.razonSocial}
-                        filterOptions={options => clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente)}
+                <div className="datos">
+                    <TextField
+                        id='nombreCliente'
+                        label="Nombre Cliente"
                         sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} label="NombreCliente" name="nombreCliente" />}
+                        style={{ marginRight: "20px"}}
+                        value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
+                        name="nombreCliente"
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
                             nombreCliente: value.razonSocial
                         }))}
                     />
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Pedido"
-                        options={oferta}
-                        inputValue={analisisSeleccionado.pedido}
-                        getOptionLabel={option => option.pedido}
-                        filterOptions={options => oferta.filter(pedido => pedido.numeroOferta === analisisSeleccionado.oferta)}
+
+                    <TextField
+                        id='pedido'
                         sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} label="Pedido" name="pedido" />}
+                        label="Pedido"
+                        value={analisisSeleccionado && analisisSeleccionado.pedido}
+                        name="pedido"
                         onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
                             ...prevState,
                             pedido: value.pedido
@@ -2104,6 +2101,8 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisisid={analisi.id}
+                                                            analisis="Físico-Químico Torre"
                                                         />
                                                     }
                                                     botones={[

@@ -47,7 +47,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado }) => {
+export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisis, analisisid }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -73,11 +73,11 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreElemento} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisid} />
             </Grid>
 
             <Grid item xs={12} md={6}>

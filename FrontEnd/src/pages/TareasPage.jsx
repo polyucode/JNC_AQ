@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Grid, Card, Typography, Button, Snackbar, Slide } from '@mui/material';
 import axios from "axios";
 import MuiAlert from '@mui/material/Alert';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -144,7 +144,7 @@ export const TareasPage = () => {
 
   const [elementosplantaTable, setElementosPlantaTable] = useState({});
 
-  const [tecnicosTable, setTecnicosTable] = useState({});
+  const [operariosTable, setOperariosTable] = useState({});
 
   const [tiposTable, setTiposTable] = useState({});
 
@@ -156,15 +156,15 @@ export const TareasPage = () => {
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
   const columns = [
-    { title: 'Cliente', field: 'codigoCliente', width: 120 },
-    { title: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
-    { title: 'Operario', field: 'operario', width: 200 },
-    { title: 'Elemento', field: 'elemento', width: 200 },
-    { title: 'Analisis', field: 'analisis', width: 200 },
-    { title: 'Oferta', field: 'oferta', width: 100 },
-    { title: 'Tipo', field: 'tipo', lookup: tiposTable, width: 100 },
-    { title: 'Fecha', field: 'fecha', type: 'date', width: 220 }
-  ]
+    { headerName: 'Cliente', field: 'codigoCliente', width: 120 },
+    { headerName: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
+    { headerName: 'Operario', field: 'operario', width: 200 },
+    { headerName: 'Elemento', field: 'elemento', width: 200 },
+    { headerName: 'Analisis', field: 'analisis', width: 200 },
+    { headerName: 'Oferta', field: 'oferta', width: 100 },
+    { headerName: 'Tipo', field: 'tipo', lookup: tiposTable, width: 100 },
+    { headerName: 'Fecha', field: 'fecha', type: 'date', width: 220 }
+  ];
 
   //peticiones API
   const GetClientes = async () => {
@@ -301,12 +301,15 @@ export const TareasPage = () => {
 
   useEffect(() => {
 
+    let lookupOperario = {};
+    operarios.map(fila => lookupOperario[fila.id] = fila.nombre + ' ' + fila.apellidos)
+    setOperariosTable(lookupOperario)
+
     let lookupTipos = {};
-    tipos.map(fila => lookupTipos = { ...lookupTipos, [fila.id]: fila.nombre }); // lookupTipos[fila.id] = fila.nombre
-    console.log(lookupTipos)
+    tipos.map(fila => lookupTipos = { ...lookupTipos, [fila.id]: fila.nombre });
     setTiposTable(lookupTipos);
 
-  }, [tipos])
+  }, [operarios, tipos])
 
   const peticionPost = async () => {
     tareaSeleccionada.id = null;
@@ -843,6 +846,7 @@ export const TareasPage = () => {
               }}
               rows={rows}
               columns={columns}
+              
               pageSize={9}
               rowsPerPageOptions={[9]}
               checkboxSelection

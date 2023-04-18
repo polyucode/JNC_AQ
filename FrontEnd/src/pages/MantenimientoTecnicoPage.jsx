@@ -541,7 +541,7 @@ export const MantenimientoTecnicoPage = () => {
                                     <Autocomplete
                                         disableClearable={true}
                                         id="codigoOferta"
-                                        options={ofertas}
+                                        options={ofertas.sort((a, b) => b.numeroOferta - a.numeroOferta)}
                                         inputValue={parametrosSeleccionado.oferta}
                                         filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                         getOptionLabel={option => option.numeroOferta.toString()}
@@ -621,7 +621,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         sx={{ width: '100%' }}
                                         id="fecha"
-                                        options={parametrosAnalisisPlanta}
+                                        options={parametrosAnalisisPlanta.sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado)}
                                         getOptionLabel={option => option.fecha}
                                         renderInput={(params) => <TextField {...params} label="Fecha" name="fecha" />}
