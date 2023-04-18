@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
 
-export const InsertarContactoModal = ({ change:handleChange, autocompleteChange }) =>{
+export const InsertarContactoModal = ({ change:handleChange, autocompleteChange, cliente }) =>{
 
     // Declaramos variables necesarias
     const [comarcas, setComarcas] = useState([]);
@@ -42,7 +42,7 @@ export const InsertarContactoModal = ({ change:handleChange, autocompleteChange 
     return (
         <>
             <Grid item xs={ 3 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Código Cliente" name="codigoCliente" type="number" onChange={ handleChange } />
+                <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={ handleChange } value={cliente && cliente.codigo} />
             </Grid>
 
             <Grid item xs={ 3 } md={ 4 }>

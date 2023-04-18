@@ -677,7 +677,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                     </Card>
                 </Grid>
 
-                {/* Tabla donde se muestran los registros de los clientes */}
+                {/* Tabla donde se muestran el detalle de la tarea */}
                 <Grid item xs={12}>
                     <Card>
                         <DataGrid

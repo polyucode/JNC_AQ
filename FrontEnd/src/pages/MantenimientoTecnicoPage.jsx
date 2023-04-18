@@ -90,6 +90,8 @@ export const MantenimientoTecnicoPage = () => {
         })
     }
 
+    console.log(usuarioActual)
+
     /*** EFECTOS ***/
 
     // Peticiones a la api
@@ -419,7 +421,7 @@ export const MantenimientoTecnicoPage = () => {
                 Oferta: parametro.oferta,
                 Id_Elemento: parametro.id_Elemento,
                 Id_Analisis: parametro.id_Analisis,
-                Id_Operario: (parametro.id_Operario === 0) ? parametrosSeleccionado.idOperario : parametro.id_Operario,
+                Id_Operario: (parametro.id_Operario === 0) ? usuarioActual.id : parametro.id_Operario,
                 Parametro: parametro.parametro,
                 Fecha: parametro.fecha,
                 Valor: parseInt(parametro.valor, 10),

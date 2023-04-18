@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, Autocomplete } from '@mui/material';
 import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
 import axios from "axios";
-import { Modal, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
-import { MainLayout } from "../../layout/MainLayout";
-import { ModalLayout, ModalPopup } from "../ModalLayout";
+import { ModalLayout } from "../ModalLayout";
 
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -438,7 +436,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
             <ModalLayout
                 titulo="Agregar nuevo contacto"
                 contenido={
-                    <InsertarContactoModal change={handleChangeContacto} />
+                    <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
                 }
                 botones={[
                     insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
