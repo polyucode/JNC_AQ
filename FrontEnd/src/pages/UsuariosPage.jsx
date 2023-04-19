@@ -30,8 +30,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { subirFirma } from "../api/apiBackend";
-import { deleteUsuarios, getClientes, getPerfiles, getUsuarios, postUsuarios, putUsuarios } from "../api";
+import { deleteUsuarios, getClientes, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
 
 const token = {
   headers: {

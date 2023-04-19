@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getAnalisis, getClientes, getElementos, getOfertas } from '../../api/apiBackend';
 import MenuItem from '@mui/material/MenuItem';
 
 import Snackbar from '@mui/material/Snackbar';
@@ -20,8 +19,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { ModalLayout } from "../ModalLayout";
 import { InsertarDetalleModal } from './InsertarDetalleModal';
 import { EditarDetalleModal } from './EditarDetalleModal';
-import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId } from '../../api';
-import { getUsuarios } from '../../api';
+import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, getAnalisis, 
+    getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios 
+} from '../../api';
 
 const token = {
     headers: {

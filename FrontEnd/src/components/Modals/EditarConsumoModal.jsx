@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getOfertas, getProductos } from '../../api/apiBackend';
+import { getOfertas, getProductos } from '../../api';
 
 export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar }) => {
 

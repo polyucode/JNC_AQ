@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, Autocomplete } from '@mui/material';
-import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos } from '../../api/apiBackend';
+import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos, getContactos } from '../../api';
 import axios from "axios";
 import { TextField } from '@material-ui/core';
 

@@ -21,11 +21,13 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 //import './MantenimientoTecnico.css';
 import { MainLayout } from "../layout/MainLayout";
 import { ParametroMantenimiento } from "../components/Mantenimiento/ParametroMantenimiento";
-import { getClientes, getElementos, getOfertas, getParametros, getFilasParametros, putValorParametros, getAnalisis, getConfAnalisisNivelesPlantasCliente, getParametrosAnalisisPlanta, generarPdf, getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta } from "../api/apiBackend";
 import Swal from "sweetalert2";
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
 import { AuthContext } from "../context/AuthContext";
-import { getConfNivelesPlantasCliente, getParametrosElementoPlantaClienteConFiltros, getUsuarios } from "../api";
+import { getConfNivelesPlantasCliente, getParametrosElementoPlantaClienteConFiltros, getUsuarios, getClientes, getElementos, getOfertas, 
+    getParametros, getFilasParametros, putValorParametros, getAnalisis, getAnalisisNivelesPlantasCliente, getParametrosAnalisisPlanta, generarPdf, 
+    getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta 
+} from "../api";
 
 const token = {
     headers: {
@@ -119,7 +121,7 @@ export const MantenimientoTecnicoPage = () => {
                 setOperarios(operarios)
             })
 
-        getConfAnalisisNivelesPlantasCliente()
+        getAnalisisNivelesPlantasCliente()
             .then(resp => setConfAnalisisNivelesPlantasCliente(resp));
 
         getParametrosAnalisisPlanta()

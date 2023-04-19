@@ -9,16 +9,12 @@ import TaskIcon from '@mui/icons-material/Task';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 //import CreateIcon from '@mui/icons-material/Create';
 import { useLocation } from "react-router-dom";
-import { getAnalisis, getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
-import {
-    getConfNivelesPlantasCliente,
-    getElementos, getOfertas, getParametros,
-    getParametrosAnalisisPlanta,
-    getConfAnalisisNivelesPlantasCliente
-} from '../api/apiBackend';
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
-import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros } from '../api';
+import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros, 
+    getConfNivelesPlantasCliente, getElementos, getOfertas, getParametros, getParametrosAnalisisPlanta, getAnalisisNivelesPlantasCliente,
+    getAnalisis, getClientes, putParametrosElementoPlantaCliente
+} from '../api';
 
 const token = {
     headers: {
@@ -274,7 +270,7 @@ export const PlantasTablaPage = () => {
         getConfNivelesPlantasCliente()
             .then( resp => setConfNivelesPlantasCliente(resp) );
 
-        getConfAnalisisNivelesPlantasCliente()
+        getAnalisisNivelesPlantasCliente()
             .then( resp => setConfAnalisisNivelesPlantasCliente(resp));
     }, []);
 

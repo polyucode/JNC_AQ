@@ -29,8 +29,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { getContactos } from "../api/apiBackend";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas } from "../api";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos } from "../api";
 
 const token = {
     headers: {

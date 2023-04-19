@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
-import { getClientes, getPerfiles } from '../../api/apiBackend';
+import { getClientes, getPerfiles } from '../../api';
 
 export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, estadoCliente, setUsuarioSeleccionado }) =>{
 

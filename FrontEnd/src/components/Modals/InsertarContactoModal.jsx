@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getComarcas, getPoblaciones, getProvincias } from '../../api/apiBackend';
+import { getComarcas, getPoblaciones, getProvincias } from '../../api';
 
 export const InsertarContactoModal = ({ change:handleChange, autocompleteChange, cliente }) =>{
 

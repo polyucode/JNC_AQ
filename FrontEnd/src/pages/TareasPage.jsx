@@ -15,8 +15,7 @@ import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout } from "../components/ModalLayout";
-import { getOfertas } from "../api/apiBackend";
-import { deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas } from "../api";
+import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas } from "../api";
 
 const token = {
   headers: {
@@ -329,11 +328,10 @@ export const TareasPage = () => {
 
     tareaSeleccionada.id = null;
 
-    const resp = await postTareas(tareaSeleccionada);
+    const response = await postTareas(tareaSeleccionada);
 
     //Creamos los detalles
     var date = new Date(tareaSeleccionada.fecha);
-    console.log({date})
 
     if (tareaSeleccionada.tipo === 1) {
       for (let i = 0; i < 12; i++) {

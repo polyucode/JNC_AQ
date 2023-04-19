@@ -7,9 +7,8 @@ import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Button from '@mui/material/Button';
 
 import MenuItem from '@mui/material/MenuItem';
-import { subirPdf } from '../../api/apiBackend';
 import '../../pages/Visualizacion.css';
-import { getUsuarios } from '../../api';
+import { getUsuarios, subirPdf } from '../../api';
 
 const protocolos = [
     {

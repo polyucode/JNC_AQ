@@ -37,8 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { bajarPdf, bajarPdfNoFQ, subirPdf } from "../api/apiBackend";
-import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId } from "../api";
+import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf } from "../api";
 
 const token = {
     headers: {
@@ -949,7 +948,7 @@ export const VisualizacionPage = () => {
 
     }
 
-    const GetParametroAnalisisPlanta = async () => {
+    const GetParametrosAnalisisPlanta = async () => {
 
         const resp = getParametrosAnalisisPlanta();
         setData(resp);
@@ -1147,7 +1146,7 @@ export const VisualizacionPage = () => {
 
     useEffect(() => {
         getUsuarios();
-        GetParametroAnalisisPlanta();
+        GetParametrosAnalisisPlanta();
         FiltrarData();
         GetOferta();
         GetCliente();

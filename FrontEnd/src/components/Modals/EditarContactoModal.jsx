@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
-import { getPerfiles } from '../../api/apiBackend';
+import { getPerfiles } from '../../api';
 
 export const EditarContactoModal = ({ change:handleChangeContacto, contactoSeleccionado }) =>{
 

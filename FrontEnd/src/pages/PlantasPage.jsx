@@ -9,7 +9,10 @@ import Swal from 'sweetalert2';
 import { camelCase } from 'lodash';
 import ReactFlow, { Background } from "react-flow-renderer";
 import { MainLayout } from "../layout/MainLayout";
-import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, getConfPlantaClientePorClienteOferta, getElementoPorId, getListaAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos } from "../api/apiBackend";
+import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, 
+    getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, 
+    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos 
+} from "../api";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
 import { useDiagrama } from "../helpers/generarDiagrama";
@@ -65,7 +68,7 @@ export const PlantasPage = () => {
         getOfertas()
             .then( resp => { setOfertas(resp) });
 
-        getListaAnalisis()
+        getAnalisis()
             .then( resp => { setAnalisis(resp) });
 
         getParametros()

@@ -23,7 +23,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteConsumos, getOfertas, postConsumos, putConsumos } from "../api";
+import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos } from "../api";
 
 
 const token = {

@@ -15,7 +15,6 @@ import {
     LoginPage,
     MantenimientoTecnicoPage
 } from '../pages';
-import OfertasClientes from '../pages/OfertasClientes';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 

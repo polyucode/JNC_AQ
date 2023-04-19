@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { useEffect } from 'react';
-import { getListaElementos } from '../../api/apiBackend';
+import { getListaElementos } from '../../api';
 
 export const NivelPlanta = ({
     nivel,

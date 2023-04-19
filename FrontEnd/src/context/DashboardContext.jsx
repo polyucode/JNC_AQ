@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { getElementoPorId, getValorParametros } from "../api/apiBackend";
+import { getElementoPorId, getValorParametros } from "../api";
 
 export const DashboardContext = createContext();
 

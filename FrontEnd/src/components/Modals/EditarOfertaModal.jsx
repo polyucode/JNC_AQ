@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getContactos, getClientes } from '../../api/apiBackend';
+import { getContactos, getClientes } from '../../api';
 
 export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar }) => {
 

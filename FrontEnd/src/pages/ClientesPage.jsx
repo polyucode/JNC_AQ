@@ -28,12 +28,11 @@ import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { postCliente, deleteCliente, getClientes, getComarcas } from '../api/apiBackend';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { useForm } from '../hooks/useForm';
-import { getPoblaciones, getProvincias, putCliente } from '../api';
+import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
 
 
 const token = {
