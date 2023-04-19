@@ -67,12 +67,11 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
 
     const columns = [
-        { field: 'codigoCliente', headerName: 'CódigoCliente', width: 120 },
-        { field: 'nombre', headerName: 'Nombre', width: 150 },
+        { field: 'nombre', headerName: 'Nombre', width: 200 },
         { field: 'telefono', headerName: 'Telefono', width: 150 },
-        { field: 'email', headerName: 'Email', width: 130 },
+        { field: 'email', headerName: 'Email', width: 200 },
         { field: 'cargo', headerName: 'Cargo', width: 200 },
-        { field: 'comentarios', headerName: 'Comentarios', width: 250 },
+        { field: 'comentarios', headerName: 'Comentarios', width: 350 },
     ]
 
     // Obtener la lista de Comarcas
@@ -83,27 +82,17 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                 setComarcas(comarcas);
             });
 
-        peticionGet();
-
-    }, []);
-
-    // Obtener la lista de Provincias
-    useEffect(() => {
-
         getProvincias()
             .then(provincias => {
                 setProvincias(provincias);
             });
 
-    }, []);
-
-    // Obtener la lista de Poblaciones
-    useEffect(() => {
-
         getPoblaciones()
             .then(poblaciones => {
                 setPoblaciones(poblaciones);
             });
+
+        peticionGet();
 
     }, []);
 
@@ -347,7 +336,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                     id="comarca"
                     options={comarcas}
                     getOptionLabel={option => option.descripcion}
-                    inputValue={ clienteSeleccionado.comarca }
+                    inputValue={clienteSeleccionado.comarca}
                     renderInput={params => <TextField {...params} label="Comarca" name="comarca" />}
                     onChange={autocompleteChange}
                 />
@@ -355,13 +344,13 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
             {/* Desplegable de Provincias */}
 
-            <Grid item xs={ 6 } md={ 4 }>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
             </Grid>
 
             {/* Deplegable de Poblaciones */}
 
-            <Grid item xs={ 12 } md={ 8 }>
+            <Grid item xs={12} md={8}>
                 <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
 

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
-import { getPerfiles } from '../../api/apiBackend';
+import { getPerfiles, getClientes } from '../../api/apiBackend';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, usuarioSeleccionado, handleFile }) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, estadoCliente, usuarioSeleccionado, handleFile, setUsuarioSeleccionado, perfilUsuario }) => {
 
     const [perfiles, setPerfiles] = useState([]);
+    const [clientes, setClientes] = useState([]);
 
     useEffect(() => {
 
@@ -14,6 +15,10 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, u
             })
             .catch(err => console.log('Ha habido un error:', err));
 
+        getClientes()
+            .then(clientes => {
+                setClientes(clientes);
+            })
     }, []);
 
     return (
@@ -49,6 +54,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, u
                     disableClearable={true}
                     id="CboPerfiles"
                     options={perfiles}
+                    defaultValue={perfilUsuario[0]}
                     getOptionLabel={option => option.nombre}
                     renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" />}
                     onChange={handleChangePerfil}
@@ -59,25 +65,19 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, u
             <Grid item xs={4}>
                 <Autocomplete
                     disableClearable={true}
-                    //disabled={ estadoCboCliente }
+                    disabled={estadoCliente}
                     id="CboClientes"
-                    //options={ clientes }
-                    getOptionLabel={option => option.nombreComercial}
+                    options={clientes}
+                    getOptionLabel={option => option.razonSocial}
                     renderInput={params => <TextField {...params} label="Clientes" name="idCliente" />}
-                // onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
-                //   ...prevState,
-                //   idCliente:value.id
-                // }))}
+                    onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
+                        ...prevState,
+                        idCliente: value.id
+                    }))}
                 />
             </Grid>
             <Grid item xs={12} md={12} style={{ display: "flex" }}>
-                <input type="file" onChange={handleFile}/>
-                {/*<label htmlFor='contained-button-file'>
-                    <Button variant="contained" component="span" sx={{ width: '100%', marginRight: '15px' }}>
-                        Subir Firma
-                    </Button>
-                </label>*/}
-
+                <input type="file" onChange={handleFile} />
             </Grid>
         </>
     )

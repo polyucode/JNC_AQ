@@ -7,6 +7,14 @@ const token = {
 }
 
 //*** TABLAS "ESTÁTICAS" ***//
+
+export const getUsuarios = async() => {
+
+    const resp = await axios.get('/usuario', token);
+    return Object.entries(resp.data.data).map(([key,value]) => (key, value));
+    
+}
+
 export const getPerfiles = async () => {
 
     const resp = await axios.get(`/perfil`, token);

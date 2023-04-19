@@ -30,7 +30,8 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { subirFirma } from "../api/apiBackend";
+
+import { getClientes, getPerfiles, getUsuarios, subirFirma } from '../api/apiBackend';
 
 const token = {
   headers: {
@@ -70,7 +71,7 @@ export const UsuariosPage = () => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-  const [perfilUsuarioEditar, setperfilUsuarioEditar] = useState([]);
+  const [perfilUsuarioEditar, setPerfilUsuarioEditar] = useState([]);
   const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
   const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
   const [data, setData] = useState([]);
@@ -83,6 +84,7 @@ export const UsuariosPage = () => {
 
   const [perfiles, setPerfiles] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [clientesTable, setClientesTable] = useState({});
   const styles = useStyles();
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
@@ -120,43 +122,33 @@ export const UsuariosPage = () => {
 
   ];
 
-  //peticiones API
-  const GetClientes = async () => {
-    axios.get("/cliente", token).then(response => {
-      const clientes = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setClientes(clientes);
-    }, [])
-  }
-
-  const GetPerfiles = async () => {
-    axios.get("/perfil", token).then(response => {
-      const perfil = Object.entries(response.data.data).map(([key, value]) => (key, value))
-      setPerfiles(perfil);
-    }, [])
-  }
-
-
-  // Recoger Usuarios
-  const peticionGet = async () => {
-    axios.get("/usuario", token).then(response => {
-      setData(response.data.data)
-    })
-  }
-
   // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
   useEffect(() => {
-    peticionGet();
-    GetClientes();
-    GetPerfiles();
+
+    getClientes()
+      .then(clientes => {
+        setClientes(clientes);
+      });
+
+    getPerfiles()
+      .then(perfiles => {
+        setPerfiles(perfiles);
+      });
+
+    getUsuarios()
+      .then(usuarios => {
+        setUsuarios(usuarios);
+      });
+
   }, [])
 
   useEffect(() => {
 
-    if (data.length > 0) {
-      setRows(data);
+    if (usuarios.length > 0) {
+      setRows(usuarios);
     }
 
-  }, [data]);
+  }, [usuarios]);
 
   useEffect(() => {
 
@@ -175,7 +167,6 @@ export const UsuariosPage = () => {
     await axios.post("/usuario", usuarioSeleccionado, token)
       .then(response => {
         abrirCerrarModalInsertar();
-        peticionGet();
         setUsuarioSeleccionado({
           id: 0,
           nombre: '',
@@ -203,7 +194,6 @@ export const UsuariosPage = () => {
 
   // Editar el usuario
   const peticionPut = async () => {
-    console.log(usuarioSeleccionado)
     await axios.put("/usuario?id=" + usuarioSeleccionado.id, usuarioSeleccionado, token)
       .then(response => {
         subirImagen()
@@ -213,7 +203,6 @@ export const UsuariosPage = () => {
             usuario = usuarioSeleccionado
           }
         });
-        peticionGet();
         abrirCerrarModalEditar();
         setUsuarioSeleccionado({
           id: 0,
@@ -247,7 +236,6 @@ export const UsuariosPage = () => {
     while (i < UsuarioEliminar.length) {
       await axios.delete("/usuario/" + UsuarioEliminar[i], token)
         .then(response => {
-          peticionGet();
           abrirCerrarModalEliminar();
           setUsuarioSeleccionado({
             id: 0,
@@ -362,7 +350,7 @@ export const UsuariosPage = () => {
       setModalEliminar(!modalEliminar);
     }
   }
-  
+
   const handleFile = e => {
     setFileChange(e.target.files[0])
   }
@@ -475,7 +463,7 @@ export const UsuariosPage = () => {
               onSelectionModelChange={(ids) => handleSelectRow(ids)}
               onRowClick={(usuarioSeleccionado, evt) => {
                 setUsuarioSeleccionado(usuarioSeleccionado.row)
-                setperfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
+                setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
                 setclienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.row.idCliente))
                 abrirCerrarModalEditar();
               }}
@@ -513,11 +501,14 @@ export const UsuariosPage = () => {
               usuarioSeleccionado={usuarioSeleccionado}
               change={handleChange}
               handleChangePerfil={handleChangePerfil}
+              estadoCliente={estadoCboCliente}
               handleFile={handleFile}
+              setUsuarioSeleccionado={setUsuarioSeleccionado}
+              perfilUsuario={perfilUsuarioEditar}
             />}
           botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
             abrirCerrarModalEditar()
-            if(peticionPut()){
+            if (peticionPut()) {
               setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
             } else {
               setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
