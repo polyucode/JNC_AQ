@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
-import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -56,7 +53,7 @@ export const EditarVisModalOperario = ({ change: handleChangeInput, analisisSele
 
     useEffect(() => {
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios);
             })

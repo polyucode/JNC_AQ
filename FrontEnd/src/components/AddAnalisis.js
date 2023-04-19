@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { postAnalisis } from "../api/apiBackend";
 
 const token = {
     headers: {
@@ -17,7 +18,7 @@ export const AddAnalisis = ({ guardarAnalisis, verAnalisis }) => {
         setInputValue(e.target.value)
     }
 
-    const enviarAnalisis = e => {
+    const enviarAnalisis = async (e) => {
         e.preventDefault();
 
         const analisis2 = {
@@ -32,16 +33,10 @@ export const AddAnalisis = ({ guardarAnalisis, verAnalisis }) => {
             deleted: null
         }
 
-        axios.post("/analisis", analisis2, token)
-            .then(response => {
-                guardarAnalisis(analisis => [...analisis, response.data.data])
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        const respAnalisis = await postAnalisis(analisis2);
+        guardarAnalisis(analisis => [...analisis, respAnalisis]);
+        setInputValue('');
 
-
-        setInputValue('')
     }
 
     return (

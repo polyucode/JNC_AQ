@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-
 import MenuItem from '@mui/material/MenuItem';
-import { getOperarios } from '../../api/apiBackend';
+import { getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -53,7 +52,7 @@ export const InsertarDetalleModal = ({ change: handleChangeDet, tareaSeleccionad
 
     useEffect(() => {
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios);
             })

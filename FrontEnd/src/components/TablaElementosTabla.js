@@ -197,14 +197,6 @@ const TablaElementosTabla = (props) => {
 
     }
 
-    const GetParametros = async () => {
-
-        const url = "/parametroselementoplantascliente/parametros/?CodigoCliente=" + props.parametrosSeleccionado.codigoCliente + "&Oferta=" + props.parametrosSeleccionado.oferta + "&Elemento=" + props.parametrosSeleccionado.elemento
-        axios.get(url , token).then(response => {
-            console.log(response)            
-        }, [])
-    }
-
     useEffect(() => {
         cargarParametrosTabla();
         filasElementosActivos = [];

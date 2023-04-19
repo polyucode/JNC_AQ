@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { postToken } from '../api';
 
 export const useLoginForm = () => {
 
@@ -61,7 +62,7 @@ export const useLoginForm = () => {
 
         try {
 
-            const { data } = await axios.post('/token/', loginValues);
+            const data = await postToken(loginValues);
 
             // Seteamos el token en el localStorage
             localStorage.setItem( 'token', data.token );

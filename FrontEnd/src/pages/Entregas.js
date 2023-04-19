@@ -9,6 +9,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { deleteEntregas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getElementosPlanta, getEntregas, getOfertas, postEntregas, putEntregas } from "../api";
 
 
 const token = {
@@ -152,145 +153,149 @@ function Entregas() {
 
     ];
 
-    const getEntregas = async () => {
-        axios.get("/entregas", token).then(response => {
-            setData(response.data.data)
-        })
+    const getEntrega = async () => {
+
+        const resp = await getEntregas();
+        setData(resp);
+
     }
 
     useEffect(() => {
-        getEntregas();
+        getEntrega();
     }, [])
 
     const peticionPost = async () => {
+
         entregaSeleccionada.id = null;
-        await axios.post("/entregas", entregaSeleccionada, token)
-            .then(response => {
-                abrirCerrarModalInsertar();
-                getEntregas();
-                setEntregaSeleccionada({
-                    id: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    oferta: 0,
-                    elemento: '',
-                    analisis: '',
-                    descripcion: '',
-                    fecha: null,
-                    entregado: false,
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = postEntregas(entregaSeleccionada);
+        abrirCerrarModalInsertar();
+        getEntrega();
+        setEntregaSeleccionada({
+            id: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            oferta: 0,
+            elemento: '',
+            analisis: '',
+            descripcion: '',
+            fecha: null,
+            entregado: false,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPut = async () => {
-        await axios.put("/entregas?id=" + entregaSeleccionada.id, entregaSeleccionada, token)
-            .then(response => {
-                var entregaModificada = data;
-                entregaModificada.map(entrega => {
-                    if (entrega.id === entregaSeleccionada.id) {
-                        entrega = entregaSeleccionada
-                    }
-                });
-                getEntregas();
-                abrirCerrarModalEditar();
-                setEntregaSeleccionada({
-                    id: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    oferta: 0,
-                    elemento: '',
-                    analisis: '',
-                    descripcion: '',
-                    fecha: null,
-                    entregado: false,
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = putEntregas(entregaSeleccionada);
+
+        var entregaModificada = data;
+        entregaModificada.map(entrega => {
+            if (entrega.id === entregaSeleccionada.id) {
+                entrega = entregaSeleccionada
+            }
+        });
+        getEntrega();
+        abrirCerrarModalEditar();
+        setEntregaSeleccionada({
+            id: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            oferta: 0,
+            elemento: '',
+            analisis: '',
+            descripcion: '',
+            fecha: null,
+            entregado: false,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < EntregaEliminar.length) {
-            await axios.delete("/entregas/" + EntregaEliminar[i].id, token)
-                .then(response => {
-                    getEntregas();
-                    abrirCerrarModalEliminar();
-                    setEntregaSeleccionada({
-                        id: 0,
-                        codigoCliente: 0,
-                        nombreCliente: '',
-                        oferta: 0,
-                        elemento: '',
-                        analisis: '',
-                        descripcion: '',
-                        fecha: null,
-                        entregado: false,
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteEntregas(EntregaEliminar[i].id);
+
+            getEntrega();
+            abrirCerrarModalEliminar();
+            setEntregaSeleccionada({
+                id: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                oferta: 0,
+                elemento: '',
+                analisis: '',
+                descripcion: '',
+                fecha: null,
+                entregado: false,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
+
         }
     }
 
 
     const GetAnalisis = async () => {
-        axios.get("/analisis", token).then(response => {
-            const analisi = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setAnalisis(analisi);
-        }, [])
+
+        const resp = getAnalisis();
+        const analisi = Object.entries(resp).map(([key, value]) => (key, value))
+        setAnalisis(analisi);
+
     }
 
     const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
+
+        const resp = getClientes();
+        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
+        setClientes(cliente);
+
     }
 
     const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setElementos(elemento);
-        }, [])
+
+        const resp = getElementosPlanta();
+        const elemento = Object.entries(resp).map(([key, value]) => (key, value))
+        setElementos(elemento);
+
     }
 
     const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOfertas(oferta);
-        }, [])
+
+        const resp = await getOfertas();
+        setOfertas(resp);
+
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const niveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfAnalisisNivelesPlantasCliente(niveles);
-        }, [])
+
+        const resp = await getAnalisisNivelesPlantasCliente();
+        const niveles = Object.entries(resp).map(([key, value]) => (key, value));
+        setConfAnalisisNivelesPlantasCliente(niveles);
+
     }
 
 
@@ -667,7 +672,7 @@ function Entregas() {
                     setElementoEditar(confAnalisisNivelesPlantasCliente.filter(elemento => elemento.elemento === entregaSeleccionada.elemento));
                     setAnalisisEditar(confAnalisisNivelesPlantasCliente.filter(analisi => analisi.analisis === entregaSeleccionada.analisis));
                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === entregaSeleccionada.oferta))
-                    getEntregas();
+                    getEntrega();
                     abrirCerrarModalEditar();
                 })}
                 onSelectionChange={(filas) => {

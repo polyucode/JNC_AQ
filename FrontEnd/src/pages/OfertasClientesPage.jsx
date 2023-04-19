@@ -30,6 +30,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { getContactos } from "../api/apiBackend";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas } from "../api";
 
 const token = {
     headers: {
@@ -111,24 +112,26 @@ export const OfertasClientesPage = () => {
         { headerName: 'Contacto2', field: 'contacto2', width: 200 },
         { headerName: 'Contacto3', field: 'contacto3', width: 200 }
     ];
-    const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            setData(response.data.data)
-        })
+    const getOferta = async () => {
+
+        const resp = await getOfertas();
+        setData(resp);
+
     }
 
-    const getClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
+    const getCliente = async () => {
+
+        const resp = await getClientes()
+        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
+        setClientes(cliente);
+
     }
 
     console.log(ofertaSeleccionada)
 
     useEffect(() => {
-        getOfertas();
-        getClientes();
+        getOferta();
+        getCliente();
         getContactos()
             .then(contactos => {
                 setContactos(contactos);
@@ -161,104 +164,103 @@ export const OfertasClientesPage = () => {
       }, [ofertaSeleccionada.codigoCliente])
 
     const peticionPost = async () => {
+
         ofertaSeleccionada.id = null;
-        await axios.post("/ofertasclientes", ofertaSeleccionada, token)
-            .then(response => {
-                abrirCerrarModalInsertar();
-                getOfertas();
-                setOfertaSeleccionada({
-                    id: 0,
-                    numeroOferta: 0,
-                    pedido: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
-                    contacto1: '',
-                    contacto2: '',
-                    contacto3: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postOfertas(ofertaSeleccionada);
+
+        abrirCerrarModalInsertar();
+        getOferta();
+        setOfertaSeleccionada({
+            id: 0,
+            numeroOferta: 0,
+            pedido: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            descripcion: '',
+            fechaInicio: '',
+            fechaFinalizacion: '',
+            contacto1: '',
+            contacto2: '',
+            contacto3: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+
     }
 
     const peticionPut = async () => {
-        console.log(ofertaSeleccionada)
-        await axios.put("/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
-            .then(response => {
-                var ofertaModificada = data;
-                ofertaModificada.map(oferta => {
-                    if (oferta.id === ofertaSeleccionada.id) {
-                        oferta = ofertaSeleccionada
-                    }
-                });
-                getOfertas();
-                abrirCerrarModalEditar();
-                setOfertaSeleccionada({
-                    id: 0,
-                    numeroOferta: 0,
-                    pedido: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
-                    contacto1: '',
-                    contacto2: '',
-                    contacto3: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putOfertas(ofertaSeleccionada);
+
+        var ofertaModificada = data;
+        ofertaModificada.map(oferta => {
+            if (oferta.id === ofertaSeleccionada.id) {
+                oferta = ofertaSeleccionada
+            }
+        });
+        getOferta();
+        abrirCerrarModalEditar();
+        setOfertaSeleccionada({
+            id: 0,
+            numeroOferta: 0,
+            pedido: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            descripcion: '',
+            fechaInicio: '',
+            fechaFinalizacion: '',
+            contacto1: '',
+            contacto2: '',
+            contacto3: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+        
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("/ofertasclientes/" + OfertaEliminar[i], token)
-                .then(response => {
-                    getOfertas();
-                    abrirCerrarModalEliminar();
-                    setOfertaSeleccionada({
-                        id: 0,
-                        numeroOferta: 0,
-                        pedido: 0,
-                        codigoCliente: 0,
-                        nombreCliente: '',
-                        descripcion: '',
-                        fechaInicio: '',
-                        fechaFinalizacion: '',
-                        contacto1: '',
-                        contacto2: '',
-                        contacto3: '',
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteOfertas(OfertaEliminar[i].id);
+
+            getOferta();
+            abrirCerrarModalEliminar();
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: '',
+                fechaFinalizacion: '',
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
+
         }
     }
 

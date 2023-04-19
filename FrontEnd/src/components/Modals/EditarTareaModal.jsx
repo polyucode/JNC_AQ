@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getAnalisis, getClientes, getElementos, getOfertas, getOperarios } from '../../api/apiBackend';
+import { getAnalisis, getClientes, getElementos, getOfertas } from '../../api/apiBackend';
 import MenuItem from '@mui/material/MenuItem';
 
 import Snackbar from '@mui/material/Snackbar';
@@ -20,6 +20,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { ModalLayout } from "../ModalLayout";
 import { InsertarDetalleModal } from './InsertarDetalleModal';
 import { EditarDetalleModal } from './EditarDetalleModal';
+import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId } from '../../api';
+import { getUsuarios } from '../../api';
 
 const token = {
     headers: {
@@ -154,9 +156,10 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     ];
 
     const peticionGet = async () => {
-        axios.get("/parametrosanalisisplanta", token).then(response => {
-            setData(response.data.data.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis))
-        })
+
+        const resp = await getParametrosAnalisisPlanta();
+        setData(resp.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis));
+
     }
 
     useEffect(() => {
@@ -181,7 +184,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 setAnalisis(analisis)
             })
 
-        getOperarios()
+        getUsuarios()
             .then(operarios => {
                 setOperarios(operarios)
             })
@@ -348,131 +351,126 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         analisisSeleccionado.analisis = tareaSeleccionada.analisis;
         analisisSeleccionado.pedido = tareaSeleccionada.pedido;
         analisisSeleccionado.elemento = tareaSeleccionada.elemento;
-        await axios.post("/parametrosanalisisplanta", analisisSeleccionado, token)
-            .then(response => {
-                peticionGet();
-                abrirCerrarModalInsertar();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    oferta: 0,
-                    pedido: 0,
-                    elemento: 0,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
-                    observaciones: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+        peticionGet();
+        abrirCerrarModalInsertar();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            oferta: 0,
+            pedido: 0,
+            elemento: 0,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            recogido: false,
+            fechaRecogido: null,
+            realizado: false,
+            fechaRealizado: null,
+            operario: '',
+            protocolo: '',
+            observaciones: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPut = async () => {
-        /*if (analisisSeleccionado.recogido === true) {
-            peticionPostEntrega();
-        }*/
-        await axios.put("/parametrosanalisisplanta?id=" + analisisSeleccionado.id, analisisSeleccionado, token)
-            .then(response => {
-                var analisisSeleccionado = data;
-                analisisSeleccionado.map(analisis => {
-                    if (analisis.id === analisisSeleccionado.id) {
-                        analisis = analisisSeleccionado
-                    }
-                });
-                peticionGet();
-                abrirCerrarModalEditar();
-                setAnalisisSeleccionado({
-                    id: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    oferta: 0,
-                    pedido: 0,
-                    elemento: 0,
-                    periodo: '',
-                    analisis: 0,
-                    fecha: null,
-                    recogido: false,
-                    fechaRecogido: null,
-                    realizado: false,
-                    fechaRealizado: null,
-                    operario: '',
-                    protocolo: '',
-                    observaciones: '',
-                    facturado: false,
-                    numeroFacturado: '',
-                    cancelado: false,
-                    comentarios: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+        
+        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        var analisisSeleccionado = data;
+        analisisSeleccionado.map(analisis => {
+            if (analisis.id === analisisSeleccionado.id) {
+                analisis = analisisSeleccionado
+            }
+        });
+        peticionGet();
+        abrirCerrarModalEditar();
+        setAnalisisSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            oferta: 0,
+            pedido: 0,
+            elemento: 0,
+            periodo: '',
+            analisis: 0,
+            fecha: null,
+            recogido: false,
+            fechaRecogido: null,
+            realizado: false,
+            fechaRealizado: null,
+            operario: '',
+            protocolo: '',
+            observaciones: '',
+            facturado: false,
+            numeroFacturado: '',
+            cancelado: false,
+            comentarios: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < AnalisisEliminar.length) {
-            await axios.delete("/parametrosanalisisplanta/" + AnalisisEliminar[i], token)
-                .then(response => {
-                    peticionGet();
-                    abrirCerrarModalEliminar();
-                    setAnalisisSeleccionado({
-                        id: 0,
-                        codigoCliente: 0,
-                        nombreCliente: '',
-                        oferta: 0,
-                        pedido: 0,
-                        elemento: 0,
-                        periodo: '',
-                        analisis: 0,
-                        fecha: null,
-                        recogido: false,
-                        fechaRecogido: null,
-                        realizado: false,
-                        fechaRealizado: null,
-                        operario: '',
-                        protocolo: '',
-                        observaciones: '',
-                        facturado: false,
-                        numeroFacturado: '',
-                        cancelado: false,
-                        comentarios: '',
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteParametrosAnalisisPlanta(AnalisisEliminar[i]);
+
+            peticionGet();
+            abrirCerrarModalEliminar();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                oferta: 0,
+                pedido: 0,
+                elemento: 0,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                operario: '',
+                protocolo: '',
+                observaciones: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
         }
     }

@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import './OfertasClientes.css';
 import { MainLayout } from "../layout/MainLayout";
+import { deleteOfertas, deleteOfertasProductos, getClientes, getOfertas, getOfertasProductos, getProductos, postOfertas, postOfertasProductos, putOfertas, putOfertasProductos } from "../api";
 
 const token = {
     headers: {
@@ -279,43 +280,48 @@ function OfertasClientes() {
         { title: 'Portes', field: 'portes', filterPlaceholder: "Filtrar por Portes" },
     ];
 
-    const getOfertasProductos = async () => {
-        axios.get("/ofertasproductos", token).then(response => {
-            setDataDet(response.data.data)
-        })
+    const getOfertasProducto = async () => {
+
+        const resp = await getOfertasProductos();
+        setDataDet(resp);
+
     }
 
     const getOfertasProductosDet = async () => {
-        axios.get("/ofertasproductos", token).then(response => {
-            setDataProducto(response.data.data.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-        })
+
+        const resp = await getOfertasProductos();
+        setDataProducto(resp.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
+
     }
 
-    const getProductos = async () => {
-        axios.get("/productos", token).then(response => {
-            const producto = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setProductos(producto);
-        }, [])
+    const getProducto = async () => {
+
+        const resp = await getProductos();
+        setProductos(resp);
+
     }
 
-    const getContactos = async () => {
-        axios.get("/clientescontactos", token).then(response => {
-            const contacto = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setContactos(contacto);
-        }, [])
+    const getContacto = async () => {
+
+        const resp = await getContactos();
+        const contacto = Object.entries(resp).map(([key, value]) => (key, value))
+        setContactos(contacto);
+
     }
 
-    const getOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            setData(response.data.data)
-        })
+    const getOferta = async () => {
+
+        const resp = await getOfertas();
+        setData(resp);
+
     }
 
-    const getClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
+    const getCliente = async () => {
+
+        const resp = await getClientes();
+        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
+        setClientes(cliente);
+
     }
 
     useEffect(() => {
@@ -325,11 +331,11 @@ function OfertasClientes() {
     }, [number, productoSeleccionado.consumidos])
 
     useEffect(() => {
-        getContactos();
-        getProductos();
-        getOfertas();
-        getClientes();
-        getOfertasProductos();
+        getContacto();
+        getProducto();
+        getOferta();
+        getCliente();
+        getOfertasProducto();
         getOfertasProductosDet();
     }, [])
 
@@ -340,217 +346,218 @@ function OfertasClientes() {
     }, [clientes])
 
     const peticionPost = async () => {
+
         ofertaSeleccionada.id = null;
-        await axios.post("/ofertasclientes", ofertaSeleccionada, token)
-            .then(response => {
-                abrirCerrarModalInsertar();
-                getOfertas();
-                setOfertaSeleccionada({
-                    id: 0,
-                    numeroOferta: 0,
-                    pedido: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
-                    contacto1: '',
-                    contacto2: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postOfertas(ofertaSeleccionada);
+
+        abrirCerrarModalInsertar();
+        getOferta();
+        setOfertaSeleccionada({
+            id: 0,
+            numeroOferta: 0,
+            pedido: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            descripcion: '',
+            fechaInicio: '',
+            fechaFinalizacion: '',
+            contacto1: '',
+            contacto2: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        });
+
     }
 
     const peticionPut = async () => {
-        await axios.put("/ofertasclientes?id=" + ofertaSeleccionada.id, ofertaSeleccionada, token)
-            .then(response => {
-                var ofertaModificada = data;
-                ofertaModificada.map(oferta => {
-                    if (oferta.id === ofertaSeleccionada.id) {
-                        oferta = ofertaSeleccionada
-                    }
-                });
-                getOfertas();
-                abrirCerrarModalEditar();
-                setOfertaSeleccionada({
-                    id: 0,
-                    numeroOferta: 0,
-                    pedido: 0,
-                    codigoCliente: 0,
-                    nombreCliente: '',
-                    descripcion: '',
-                    fechaInicio: '',
-                    fechaFinalizacion: '',
-                    contacto1: '',
-                    contacto2: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putOfertas();
+
+        var ofertaModificada = data;
+        ofertaModificada.map(oferta => {
+            if (oferta.id === ofertaSeleccionada.id) {
+                oferta = ofertaSeleccionada
+            }
+        });
+        getOferta();
+        abrirCerrarModalEditar();
+        setOfertaSeleccionada({
+            id: 0,
+            numeroOferta: 0,
+            pedido: 0,
+            codigoCliente: 0,
+            nombreCliente: '',
+            descripcion: '',
+            fechaInicio: '',
+            fechaFinalizacion: '',
+            contacto1: '',
+            contacto2: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+
     }
 
     const peticionDelete = async () => {
+
         var i = 0;
         while (i < OfertaEliminar.length) {
-            await axios.delete("/ofertasclientes/" + OfertaEliminar[i].id, token)
-                .then(response => {
-                    getOfertas();
-                    abrirCerrarModalEliminar();
-                    setOfertaSeleccionada({
-                        id: 0,
-                        numeroOferta: 0,
-                        pedido: 0,
-                        codigoCliente: 0,
-                        nombreCliente: '',
-                        descripcion: '',
-                        fechaInicio: '',
-                        fechaFinalizacion: '',
-                        contacto1: '',
-                        contacto2: '',
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteOfertas(OfertaEliminar[i].id);
+
+            getOferta();
+            abrirCerrarModalEliminar();
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: '',
+                fechaFinalizacion: '',
+                contacto1: '',
+                contacto2: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
             i++;
+
         }
     }
 
     const peticionPostProducto = async () => {
+
         productoSeleccionado.id = 0;
         productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta;
         productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente;
         productoSeleccionado.entregar = resta
-        await axios.post("/ofertasproductos", productoSeleccionado, token)
-            .then(response => {
-                abrirCerrarModalInsertarProducto();
-                getOfertasProductosDet();
-                getOfertasProductos();
-                setProductoSeleccionado({
-                    id: 0,
-                    codigoCliente: 0,
-                    oferta: 0,
-                    producto: '',
-                    descripcionProducto: '',
-                    cantidad: 0,
-                    precio: 0,
-                    stockMin: 0,
-                    stockMax: 0,
-                    consumidos: 0,
-                    entregar: 0,
-                    adr: '',
-                    portes: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-                setNumber({ cantidad: 0, consumidos: 0 })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await postOfertasProductos(productoSeleccionado);
+
+        abrirCerrarModalInsertarProducto();
+        getOfertasProductosDet();
+        getOfertasProducto();
+        setProductoSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            oferta: 0,
+            producto: '',
+            descripcionProducto: '',
+            cantidad: 0,
+            precio: 0,
+            stockMin: 0,
+            stockMax: 0,
+            consumidos: 0,
+            entregar: 0,
+            adr: '',
+            portes: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+        setNumber({ cantidad: 0, consumidos: 0 })
+
     }
 
     const peticionPutProducto = async () => {
+
         productoSeleccionado.entregar = resta2
-        await axios.put("/ofertasproductos?id=" + productoSeleccionado.id, productoSeleccionado, token)
-            .then(response => {
-                var productoModificado = dataProducto;
-                productoModificado.map(producto => {
-                    if (producto.id === productoSeleccionado.id) {
-                        producto = productoSeleccionado
-                    }
-                });
-                getOfertasProductosDet();
-                getOfertasProductos();
-                abrirCerrarModalEditarProducto();
-                setProductoSeleccionado({
-                    id: 0,
-                    codigoCliente: 0,
-                    oferta: 0,
-                    producto: '',
-                    descripcionProducto: '',
-                    cantidad: 0,
-                    precio: 0,
-                    stockMin: 0,
-                    stockMax: 0,
-                    consumidos: 0,
-                    entregar: 0,
-                    adr: '',
-                    portes: '',
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
-                setNumber({ cantidad: 0, consumidos: 0 })
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putOfertasProductos(productoSeleccionado);
+
+        var productoModificado = dataProducto;
+        productoModificado.map(producto => {
+            if (producto.id === productoSeleccionado.id) {
+                producto = productoSeleccionado
+            }
+        });
+        getOfertasProductosDet();
+        getOfertasProducto();
+        abrirCerrarModalEditarProducto();
+        setProductoSeleccionado({
+            id: 0,
+            codigoCliente: 0,
+            oferta: 0,
+            producto: '',
+            descripcionProducto: '',
+            cantidad: 0,
+            precio: 0,
+            stockMin: 0,
+            stockMax: 0,
+            consumidos: 0,
+            entregar: 0,
+            adr: '',
+            portes: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+        setNumber({ cantidad: 0, consumidos: 0 })
+
     }
 
     const peticionDeleteProducto = async () => {
+
         var i = 0;
         while (i < productoEliminar.length) {
-            await axios.delete("/ofertasproductos/" + productoEliminar[i].id, token)
-                .then(response => {
-                    getOfertasProductosDet();
-                    getOfertasProductos();
-                    abrirCerrarModalEliminarProducto();
-                    setProductoSeleccionado({
-                        id: 0,
-                        codigoCliente: 0,
-                        oferta: 0,
-                        producto: '',
-                        descripcionProducto: '',
-                        cantidad: 0,
-                        precio: 0,
-                        stockMin: 0,
-                        stockMax: 0,
-                        consumidos: 0,
-                        entregar: 0,
-                        adr: '',
-                        portes: '',
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
-                    setNumber({ cantidad: 0, consumidos: 0 })
-                }).catch(error => {
-                    console.log(error);
-                })
+
+            const resp = await deleteOfertasProductos(productoEliminar[i].id);
+
+            getOfertasProductosDet();
+            getOfertasProducto();
+            abrirCerrarModalEliminarProducto();
+            setProductoSeleccionado({
+                id: 0,
+                codigoCliente: 0,
+                oferta: 0,
+                producto: '',
+                descripcionProducto: '',
+                cantidad: 0,
+                precio: 0,
+                stockMin: 0,
+                stockMax: 0,
+                consumidos: 0,
+                entregar: 0,
+                adr: '',
+                portes: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setNumber({ cantidad: 0, consumidos: 0 });
+
             i++;
+            
         }
     }
 
@@ -886,7 +893,7 @@ function OfertasClientes() {
 
                 onRowClick={((evt, productoSeleccionado) => {
                     setProductoSeleccionado(productoSeleccionado);
-                    getOfertasProductos();
+                    getOfertasProducto();
                     setProductoEditar(productos.filter(producto => producto.codigoProducto === productoSeleccionado.producto))
                     abrirCerrarModalEditarProducto();
                 })}
@@ -1178,7 +1185,7 @@ function OfertasClientes() {
                         console.log(ofertaSeleccionada)
                         setOfertaSeleccionada(ofertaSeleccionada);
                         setDataProducto(dataDet.filter(producto => producto.oferta === ofertaSeleccionada.numeroOferta))
-                        getOfertasProductos();
+                        getOfertasProducto();
                         setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente));
                         setClientesNombreEditar(clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente));
                         setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.contacto1))

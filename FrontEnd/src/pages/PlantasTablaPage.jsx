@@ -12,14 +12,13 @@ import { useLocation } from "react-router-dom";
 import { getAnalisis, getClientes, putParametrosElementoPlantaCliente } from '../api/apiBackend';
 import {
     getConfNivelesPlantasCliente,
-    getConfParametrosElementoPlantaCliente,
     getElementos, getOfertas, getParametros,
     getParametrosAnalisisPlanta,
-    getParametrosPlanta,
     getConfAnalisisNivelesPlantasCliente
 } from '../api/apiBackend';
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
+import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros } from '../api';
 
 const token = {
     headers: {
@@ -269,7 +268,7 @@ export const PlantasTablaPage = () => {
         getParametrosAnalisisPlanta()
             .then( resp => setParametrosAnalisisPlanta(resp) );
         
-        getConfParametrosElementoPlantaCliente()
+        getParametrosElementoPlantaCliente()
             .then( resp => setParametrosElementoPlanta(resp) );
 
         getConfNivelesPlantasCliente()
@@ -428,28 +427,6 @@ export const PlantasTablaPage = () => {
 
     }
 
-    // const editarPlantilla = async () => {
-
-    //     tipoParametros.map(parametro => {
-
-    //         if (parametro.activo == true) {
-    //             axios.put("/parametroselementoplantacliente?id=" + parametro.id, parametro, token)
-    //                 .then(response => {
-    //                     var parametrosModificado = parametrosElementoPlanta;
-    //                     parametrosModificado.map(param => {
-    //                         if (param.id === parametro.id) {
-    //                             param = parametro
-    //                         }
-    //                     });
-    //                     getConfParametrosElementoPlantaCliente();
-    //                 }).catch(error => {
-    //                     console.log(error);
-    //                 })
-    //         }
-    //     })
-
-    // }
-
     async function valorParametros() {
 
         tipoParametros.map((parametro) => {
@@ -473,20 +450,17 @@ export const PlantasTablaPage = () => {
                     delIdUser: null,
                     deleted: null
                 }
-                axios.post("/valorparametros", param2, token)
-                    .then(response => {
-                        return response
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+
+                const resp = postValorParametros(param2);
+                return resp;
+            
             }
         })
     }
 
     const abrirPlantilla = async () => {
 
-        const resp = await getParametrosPlanta(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
+        const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         //let tipoParametrosActualizados = tipoParametros;
 

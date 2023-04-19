@@ -20,6 +20,7 @@ import MaterialTable from "@material-table/core";
 
 import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
+import { getAnalisisNivelesPlantasCliente, getClientes, getElementosPlanta, getOfertas, getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros } from "../api";
 
 
 const token = {
@@ -596,38 +597,36 @@ function PlantasTabla() {
         setValue(newValue);
     };
 
-    const GetClientes = async () => {
-        axios.get("/cliente", token).then(response => {
-            const cliente = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setClientes(cliente);
-        }, [])
+    const GetCliente = async () => {
+
+        const resp = await getClientes();
+        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
+        setClientes(cliente);
+
     }
 
-    const GetOfertas = async () => {
-        axios.get("/ofertasclientes", token).then(response => {
-            const oferta = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setOferta(oferta);
-        }, [])
+    const GetOferta = async () => {
+
+        const resp = await getOfertas();
+        const oferta = Object.entries(resp).map(([key, value]) => (key, value))
+        setOferta(oferta);
+
     }
 
     const GetConfAnalisisNivelesPlantasCliente = async () => {
-        axios.get("/analisisnivelesplantascliente", token).then(response => {
-            const analisisNiveles = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setConfAnalisisNivelesPlantasCliente(analisisNiveles);
-        })
-    }
 
-    const GetConfParametrosElementoPlantaCliente = async () => {
-        axios.get("/parametroselementoplantacliente", token).then(response => {
-            setData2(response.data.data)
-        })
+        const resp = await getAnalisisNivelesPlantasCliente();
+        const analisisNiveles = Object.entries(resp).map(([key, value]) => (key, value))
+        setConfAnalisisNivelesPlantasCliente(analisisNiveles);
+
     }
 
     const GetElementos = async () => {
-        axios.get("/elementosplanta", token).then(response => {
-            const elemento = Object.entries(response.data.data).map(([key, value]) => (key, value))
-            setElementos(elemento);
-        }, [])
+
+        const resp = await getElementosPlanta();
+        const elemento = Object.entries(resp).map(([key, value]) => (key, value))
+        setElementos(elemento);
+
     }
 
     async function guardarElementos() {
@@ -637,37 +636,31 @@ function PlantasTabla() {
         parametrosBack.oferta = valores.ofertas;
         parametrosBack.elemento = valores.elemento;
 
-        await axios.post("/parametroselementoplantacliente", parametrosBack, token)
-            .then(response => {
-                return response
-            }).catch(error => {
-                console.log(error);
-            })
+        const resp = await postParametrosElementoPlantaCliente(parametrosBack);
+        return resp;
 
-        //handleObject()
     }
 
     const editarPlantilla = async () => {
-        await axios.put("/parametroselementoplantacliente?id=" + parametrosBack.id, parametrosBack, token)
-            .then(response => {
-                var parametrosModificado = data2;
-                parametrosModificado.map(parametro => {
-                    if (parametro.id === parametrosBack.id) {
-                        parametro = parametrosBack
-                    }
-                });
-                GetConfParametrosElementoPlantaCliente();
-            }).catch(error => {
-                console.log(error);
-            })
+
+        const resp = await putParametrosElementoPlantaCliente(parametrosBack);
+
+        var parametrosModificado = data2;
+        parametrosModificado.map(parametro => {
+            if (parametro.id === parametrosBack.id) {
+                parametro = parametrosBack
+            }
+        });
+        getParametrosElementoPlantaCliente();
+
     }
 
     const GetParametros = async () => {
 
-        const url = "/parametroselementoplantacliente/parametros/?CodigoCliente=" + parametrosSeleccionado.codigoCliente + "&Oferta=" + parametrosSeleccionado.oferta + "&Elemento=" + parametrosSeleccionado.elemento
-        const response = await axios.get(url, token)
+        const { codigoCliente, oferta, elemento } = parametrosSeleccionado;
 
-        setDatosParametrosFront(response.data.data)
+        const resp = await getParametrosElementoPlantaClienteConFiltros(codigoCliente, oferta, elemento, '');
+        setDatosParametrosFront(resp)
 
     }
 
@@ -675,9 +668,9 @@ function PlantasTabla() {
     useEffect(() => {
         //FiltrarData();
         GetElementos();
-        GetConfParametrosElementoPlantaCliente();
-        GetOfertas();
-        GetClientes();
+        getParametrosElementoPlantaCliente();
+        GetOferta();
+        GetCliente();
         GetConfAnalisisNivelesPlantasCliente();
     }, [])
 
