@@ -9,7 +9,7 @@ export const getOfertas = async () => {
 
 export const putOfertas = async ( cliente ) => {
 
-    const resp = await instance.post(`/ofertasclientes?id=${ cliente.id }`, cliente);
+    const resp = await instance.put(`/ofertasclientes?id=${ cliente.id }`, cliente);
     return resp;
 
 }
@@ -23,7 +23,7 @@ export const postOfertas = async ( cliente ) => {
 
 export const deleteOfertas = async ( idOferta ) => {
 
-    const resp = await instance.post(`/ofertasclientes/${ idOferta }`);
+    const resp = await instance.delete(`/ofertasclientes/${ idOferta }`);
     return resp;
 
 }

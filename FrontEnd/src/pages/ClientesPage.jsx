@@ -150,9 +150,6 @@ export const ClientesPage = () => {
   // Llamadas a las APIs
   useEffect(() => {
     peticionGet();
-
-    // peticionGetContacto();
-    //GetPerfiles();
     GetPoblacion();
     GetProvincia();
   }, []);

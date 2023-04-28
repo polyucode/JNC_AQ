@@ -124,6 +124,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     const peticionPostContacto = async () => {
 
         contactoSeleccionado.id = null;
+        contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
 
         const resp = await postContactos( contactoSeleccionado );
 

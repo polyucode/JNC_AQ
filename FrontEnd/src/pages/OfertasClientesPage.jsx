@@ -126,8 +126,6 @@ export const OfertasClientesPage = () => {
 
     }
 
-    console.log(ofertaSeleccionada)
-
     useEffect(() => {
         getOferta();
         getCliente();
@@ -233,7 +231,7 @@ export const OfertasClientesPage = () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
 
-            const resp = await deleteOfertas(OfertaEliminar[i].id);
+            const resp = await deleteOfertas(OfertaEliminar[i]);
 
             getOferta();
             abrirCerrarModalEliminar();

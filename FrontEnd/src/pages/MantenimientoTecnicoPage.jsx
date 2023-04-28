@@ -87,15 +87,20 @@ export const MantenimientoTecnicoPage = () => {
 
     const GetConfNivelesPlantasCliente = async () => {
 
-        const resp = getConfNivelesPlantasCliente();
+        const resp = await getConfNivelesPlantasCliente();
         const niveles = Object.entries(resp).map(([key, value]) => (key, value))
         setConfNivelesPlantasCliente(niveles);
 
     }
 
-    console.log(usuarioActual)
-
     /*** EFECTOS ***/
+
+    useEffect(() => {
+        setParametrosSeleccionado( prevState => ({
+            ...prevState,
+            idOperario: usuarioActual.id
+        }))
+    }, [usuarioActual])
 
     // Peticiones a la api
     useEffect(() => {
@@ -129,6 +134,8 @@ export const MantenimientoTecnicoPage = () => {
 
         GetConfNivelesPlantasCliente();
     }, [])
+
+    console.log(confNivelesPlantasCliente)
 
     // Filtramos elementos para el desplegable
     useEffect(() => {
@@ -627,7 +634,7 @@ export const MantenimientoTecnicoPage = () => {
                                         sx={{ width: '100%' }}
                                         id="fecha"
                                         options={parametrosAnalisisPlanta.sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
-                                        filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado)}
+                                        filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado).sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         getOptionLabel={option => option.fecha}
                                         renderInput={(params) => <TextField {...params} label="Fecha" name="fecha" />}
                                         onChange={(event, value) => setParametrosSeleccionado(prevState => ({

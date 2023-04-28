@@ -950,7 +950,7 @@ export const VisualizacionPage = () => {
 
     const GetParametrosAnalisisPlanta = async () => {
 
-        const resp = getParametrosAnalisisPlanta();
+        const resp = await getParametrosAnalisisPlanta();
         setData(resp);
 
     }

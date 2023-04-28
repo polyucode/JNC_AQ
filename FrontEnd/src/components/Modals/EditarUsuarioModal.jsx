@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, estadoCliente, usuarioSeleccionado, handleFile, setUsuarioSeleccionado, perfilUsuario }) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, estadoCliente, usuarioSeleccionado, handleFile, setUsuarioSeleccionado, perfilUsuario, clienteUsuario }) => {
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -67,6 +67,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
                     disableClearable={true}
                     disabled={estadoCliente}
                     id="CboClientes"
+                    defaultValue={clienteUsuario[0]}
                     options={clientes}
                     getOptionLabel={option => option.razonSocial}
                     renderInput={params => <TextField {...params} label="Clientes" name="idCliente" />}

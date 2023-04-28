@@ -330,6 +330,7 @@ export const TareasPage = () => {
 
     const response = await postTareas(tareaSeleccionada);
 
+    console.log(response)
     //Creamos los detalles
     var date = new Date(tareaSeleccionada.fecha);
 
@@ -337,18 +338,18 @@ export const TareasPage = () => {
       for (let i = 0; i < 12; i++) {
 
         analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.codigoCliente = response.codigoCliente;
+        analisisSeleccionado.nombreCliente = response.nombreCliente;
+        analisisSeleccionado.oferta = response.oferta;
+        analisisSeleccionado.pedido = response.pedido;
+        analisisSeleccionado.elemento = response.elemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.data.data.analisis;
+        analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
         analisisSeleccionado.recogido = false;
         analisisSeleccionado.realizado = false;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
+        analisisSeleccionado.operario = response.operario;
+        analisisSeleccionado.protocolo = response.protocolo;
         analisisSeleccionado.observaciones = "";
         analisisSeleccionado.facturado = false;
         analisisSeleccionado.numeroFacturado = "";
@@ -362,20 +363,20 @@ export const TareasPage = () => {
       for (let i = 0; i < 6; i++) {
 
         analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.codigoCliente = response.codigoCliente;
+        analisisSeleccionado.nombreCliente = response.nombreCliente;
+        analisisSeleccionado.oferta = response.oferta;
+        analisisSeleccionado.pedido = response.pedido;
+        analisisSeleccionado.elemento = response.elemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.data.data.analisis;
+        analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
         analisisSeleccionado.recogido = false;
         analisisSeleccionado.fechaRecogido = null;
         analisisSeleccionado.realizado = false;
         analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
+        analisisSeleccionado.operario = response.operario;
+        analisisSeleccionado.protocolo = response.protocolo;
         analisisSeleccionado.observaciones = "";
         analisisSeleccionado.facturado = false;
         analisisSeleccionado.numeroFacturado = "";
@@ -389,20 +390,20 @@ export const TareasPage = () => {
       for (let i = 0; i < 4; i++) {
 
         analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.codigoCliente = response.codigoCliente;
+        analisisSeleccionado.nombreCliente = response.nombreCliente;
+        analisisSeleccionado.oferta = response.oferta;
+        analisisSeleccionado.pedido = response.pedido;
+        analisisSeleccionado.elemento = response.elemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.data.data.analisis;
+        analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
         analisisSeleccionado.recogido = false;
         analisisSeleccionado.fechaRecogido = null;
         analisisSeleccionado.realizado = false;
         analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
+        analisisSeleccionado.operario = response.operario;
+        analisisSeleccionado.protocolo = response.protocolo;
         analisisSeleccionado.observaciones = "";
         analisisSeleccionado.facturado = false;
         analisisSeleccionado.numeroFacturado = "";
@@ -416,20 +417,20 @@ export const TareasPage = () => {
       for (let i = 0; i < 2; i++) {
 
         analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.codigoCliente = response.codigoCliente;
+        analisisSeleccionado.nombreCliente = response.nombreCliente;
+        analisisSeleccionado.oferta = response.oferta;
+        analisisSeleccionado.pedido = response.pedido;
+        analisisSeleccionado.elemento = response.elemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.data.data.analisis;
+        analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
         analisisSeleccionado.recogido = false;
         analisisSeleccionado.fechaRecogido = null;
         analisisSeleccionado.realizado = false;
         analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
+        analisisSeleccionado.operario = response.operario;
+        analisisSeleccionado.protocolo = response.protocolo;
         analisisSeleccionado.observaciones = "";
         analisisSeleccionado.facturado = false;
         analisisSeleccionado.numeroFacturado = "";
@@ -442,20 +443,20 @@ export const TareasPage = () => {
     if (tareaSeleccionada.tipo === 5) {
       for (let i = 0; i < 1; i++) {
         analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.codigoCliente = response.codigoCliente;
+        analisisSeleccionado.nombreCliente = response.nombreCliente;
+        analisisSeleccionado.oferta = response.oferta;
+        analisisSeleccionado.pedido = response.pedido;
+        analisisSeleccionado.elemento = response.elemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.data.data.analisis;
+        analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
         analisisSeleccionado.recogido = false;
         analisisSeleccionado.fechaRecogido = null;
         analisisSeleccionado.realizado = false;
         analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
+        analisisSeleccionado.operario = response.operario;
+        analisisSeleccionado.protocolo = response.protocolo;
         analisisSeleccionado.observaciones = "";
         analisisSeleccionado.facturado = false;
         analisisSeleccionado.numeroFacturado = "";
@@ -525,8 +526,8 @@ export const TareasPage = () => {
 
     const resp = await putTareas(tareaSeleccionada);
 
-    var tareaSeleccionada = data;
-    tareaSeleccionada.map(tarea => {
+    var tareaModificada = data;
+    tareaModificada.map(tarea => {
       if (tarea.id === tareaSeleccionada.id) {
         tarea = tareaSeleccionada
       }

@@ -71,7 +71,7 @@ export const UsuariosPage = () => {
   const [modalEliminar, setModalEliminar] = useState(false);
   const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
   const [perfilUsuarioEditar, setPerfilUsuarioEditar] = useState([]);
-  const [clienteUsuarioEditar, setclienteUsuarioEditar] = useState([]);
+  const [clienteUsuarioEditar, setClienteUsuarioEditar] = useState([]);
   const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
   const [data, setData] = useState([]);
   const [fileChange, setFileChange] = useState(null);
@@ -144,7 +144,7 @@ export const UsuariosPage = () => {
   const peticionGet = async () => {
 
     const resp = await getUsuarios();
-    setData(resp);
+    setUsuarios(resp);
 
   }
 
@@ -212,7 +212,7 @@ export const UsuariosPage = () => {
     const resp = await putUsuarios(usuarioSeleccionado);
 
     subirImagen();
-    var usuarioModificado = data;
+    var usuarioModificado = usuarios;
     usuarioModificado.map(usuario => {
       if (usuario.id === usuarioSeleccionado.id) {
         usuario = usuarioSeleccionado
@@ -247,7 +247,6 @@ export const UsuariosPage = () => {
   const peticionDelete = async () => {
 
     var i = 0;
-    console.log(UsuarioEliminar[i])
     while (i < UsuarioEliminar.length) {
 
       const resp = await deleteUsuarios(UsuarioEliminar[i]);
@@ -397,7 +396,7 @@ export const UsuariosPage = () => {
   const handleSelectRow = (ids) => {
 
     if (ids.length > 0) {
-      setUsuarioSeleccionado(data.filter(usuario => usuario.id === ids[0])[0]);
+      setUsuarioSeleccionado(usuarios.filter(usuario => usuario.id === ids[0])[0]);
     } else {
       setUsuarioSeleccionado(usuarioSeleccionado);
     }
@@ -480,7 +479,7 @@ export const UsuariosPage = () => {
               onRowClick={(usuarioSeleccionado, evt) => {
                 setUsuarioSeleccionado(usuarioSeleccionado.row)
                 setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
-                setclienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.row.idCliente))
+                setClienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.row.idCliente))
                 abrirCerrarModalEditar();
               }}
             />
@@ -521,6 +520,7 @@ export const UsuariosPage = () => {
               handleFile={handleFile}
               setUsuarioSeleccionado={setUsuarioSeleccionado}
               perfilUsuario={perfilUsuarioEditar}
+              clienteUsuario={clienteUsuarioEditar}
             />}
           botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
             abrirCerrarModalEditar()
