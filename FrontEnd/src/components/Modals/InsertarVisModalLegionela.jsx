@@ -45,7 +45,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado }) => {
+export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -55,6 +55,14 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
             setOperarios(operarios);
         })
     }, [])
+
+    useEffect(() => {
+
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            analisis: analisisid
+        }))
+    }, [analisisSeleccionado])
 
     return (
         <>

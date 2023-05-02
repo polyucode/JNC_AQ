@@ -45,7 +45,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado }) => {
+export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -57,6 +57,14 @@ export const InsertarVisModalOperario = ({ change: handleChangeInput, analisisSe
             })
     }, [])
 
+    useEffect(() => {
+
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            analisis: analisisid
+        }))
+    }, [analisisSeleccionado])
+    
     return (
         <>
             <Grid item xs={3} md={4}>

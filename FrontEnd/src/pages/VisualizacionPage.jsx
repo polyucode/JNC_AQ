@@ -1657,8 +1657,6 @@ export const VisualizacionPage = () => {
         }))
     }
 
-    console.log(analisisSeleccionado)
-
     const onChangeOferta = (e, value, name) => {
 
         if (e.target.textContent !== "") {
@@ -2099,6 +2097,11 @@ export const VisualizacionPage = () => {
                                                                 rows={rows1}
                                                                 columns={columnas1}
                                                                 pageSize={12}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 rowsPerPageOptions={[12]}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
@@ -2265,6 +2268,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow2(ids)}
@@ -2288,6 +2296,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -2427,6 +2436,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow3(ids)}
@@ -2450,6 +2464,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -2589,6 +2604,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow4(ids)}
@@ -2612,6 +2632,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -2751,6 +2772,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow5(ids)}
@@ -2774,6 +2800,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -2913,6 +2940,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow6(ids)}
@@ -2936,6 +2968,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -3075,6 +3108,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnasAerobios}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow7(ids)}
@@ -3098,6 +3136,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModalAerobio
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}                                                        
                                                         />
                                                     }
@@ -3239,6 +3278,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnasLegionela}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow8(ids)}
@@ -3262,6 +3306,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModalLegionela
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -3403,6 +3448,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow9(ids)}
@@ -3426,6 +3476,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -3567,6 +3618,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow10(ids)}
@@ -3592,6 +3648,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             analisisAutocomplete={analisisAutocomplete}
+                                                            analisisid={analisi.id}
                                                             analisisEditar={analisisEditar}
                                                         />
                                                     }
@@ -3733,6 +3790,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas1}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow11(ids)}
@@ -3756,6 +3818,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal1
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -3895,6 +3958,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow12(ids)}
@@ -3918,6 +3986,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4059,6 +4128,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow13(ids)}
@@ -4082,6 +4156,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4223,6 +4298,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow14(ids)}
@@ -4246,6 +4326,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4387,6 +4468,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow15(ids)}
@@ -4410,6 +4496,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4551,6 +4638,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow16(ids)}
@@ -4574,6 +4666,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4715,6 +4808,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow17(ids)}
@@ -4738,6 +4836,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }
@@ -4879,6 +4978,11 @@ export const VisualizacionPage = () => {
                                                                 columns={columnas}
                                                                 pageSize={12}
                                                                 rowsPerPageOptions={[12]}
+                                                                initialState={{
+                                                                    sorting: {
+                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    }
+                                                                }}
                                                                 checkboxSelection
                                                                 disableSelectionOnClick
                                                                 onSelectionModelChange={(ids) => handleSelectRow18(ids)}
@@ -4902,6 +5006,7 @@ export const VisualizacionPage = () => {
                                                         <InsertarVisModal
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
+                                                            analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                         />
                                                     }

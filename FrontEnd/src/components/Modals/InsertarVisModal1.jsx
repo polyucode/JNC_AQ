@@ -56,6 +56,14 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
         })
     }, [])
 
+    useEffect(() => {
+
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            analisis: analisisid
+        }))
+    }, [analisisSeleccionado])
+
     return (
         <>
             <Grid item xs={3} md={4}>
@@ -75,7 +83,7 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisid} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
             </Grid>
 
             <Grid item xs={12} md={6}>

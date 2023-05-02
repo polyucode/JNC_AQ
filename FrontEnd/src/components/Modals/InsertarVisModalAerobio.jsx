@@ -45,7 +45,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado }) => {
+export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -55,6 +55,14 @@ export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSel
             setOperarios(operarios);
         })
     }, [])
+
+    useEffect(() => {
+
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            analisis: analisisid
+        }))
+    }, [analisisSeleccionado])
 
     return (
         <>
