@@ -105,8 +105,24 @@ export const OfertasClientesPage = () => {
         { headerName: 'Pedido', field: 'pedido', width: 150 },
         { headerName: 'CodigoCliente', field: 'codigoCliente', width: 150 },
         { headerName: 'NombreCliente', field: 'nombreCliente', width: 250 },      
-        { headerName: 'Fecha de Inicio', field: 'fechaInicio', type: "date", width: 200 },
-        { headerName: 'Fecha de Finalizacion', field: 'fechaFinalizacion', type: "date", width: 200 },
+        { 
+            headerName: 'Fecha de Inicio', 
+            field: 'fechaInicio', 
+            width: 200,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
+        { 
+            headerName: 'Fecha de Finalizacion', 
+            field: 'fechaFinalizacion',  
+            width: 200,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
         { headerName: 'Contacto1', field: 'contacto1', width: 200 },
         { headerName: 'Contacto2', field: 'contacto2', width: 200 },
         { headerName: 'Contacto3', field: 'contacto3', width: 200 }

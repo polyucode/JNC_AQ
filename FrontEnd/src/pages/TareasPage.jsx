@@ -158,12 +158,53 @@ export const TareasPage = () => {
   const columns = [
     { headerName: 'Cliente', field: 'codigoCliente', width: 120 },
     { headerName: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
-    { headerName: 'Operario', field: 'operario', width: 200 },
-    { headerName: 'Elemento', field: 'elemento', width: 200 },
-    { headerName: 'Analisis', field: 'analisis', width: 200 },
-    { headerName: 'Oferta', field: 'oferta', width: 100 },
-    { headerName: 'Tipo', field: 'tipo', lookup: tiposTable, width: 100 },
-    { headerName: 'Fecha', field: 'fecha', type: 'date', width: 220 }
+    { 
+      headerName: 'Operario', 
+      field: 'operario', 
+      width: 300,
+      valueFormatter: (params) => {
+        const oper = operarios.find((operario) => operario.id === params.value);
+        return oper ? oper.nombre + ' ' + oper.apellidos : '';
+      }
+    },
+    { 
+      headerName: 'Elemento', 
+      field: 'elemento', 
+      width: 250,
+      valueFormatter: (params) => {
+        const elemento = elementosplanta.find((elemento) => elemento.id === params.value);
+        return elemento ? elemento.nombre + ' ' + elemento.numero : '';
+      }
+    },
+    { 
+      headerName: 'Analisis', 
+      field: 'analisis', 
+      width: 250,
+      valueFormatter: (params) => {
+        const analisi = analisis.find((analisi) => analisi.id === params.value);
+        return analisi ? analisi.nombre : '';
+      }
+    },
+    { headerName: 'Oferta', field: 'oferta', width: 150 },
+    { 
+      headerName: 'Tipo', 
+      field: 'tipo', 
+      width: 150,
+      valueFormatter: (params) => {
+        const type = tipos.find((type) => type.id === params.value);
+        return type ? type.nombre : '';
+      }
+    },
+    { 
+      headerName: 'Fecha', 
+      field: 'fecha',  
+      width: 250,
+      valueFormatter: (params) => {
+        const date = new Date(params.value);
+        return date.toLocaleDateString();
+      }
+    }
+
   ];
 
   //peticiones API

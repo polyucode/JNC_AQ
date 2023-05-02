@@ -145,7 +145,15 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const columns = [
         //visibles
         { headerName: 'Periodo', field: 'periodo' },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150},
+        { 
+            headerName: 'Fecha', 
+            field: 'fecha', 
+            width: 150,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
         //{ headerName: 'Protocolo', field: 'protocolo', width: 220 },

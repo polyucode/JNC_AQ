@@ -324,17 +324,64 @@ export const VisualizacionPage = () => {
     const columnas = [
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha', 
+            field: 'fecha',  
+            width: 150,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha Recogido', 
+            field: 'fechaRecogido', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            } 
+        },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 120 },
+        { 
+            headerName: 'Fecha Realizado', 
+            field: 'fechaRealizado',
+            width: 120,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'PDF', field: 'pdf', width: 150 },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha PDF', 
+            field: 'fechaPdf', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -343,9 +390,30 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 200 },
+        { 
+            headerName: 'Fecha', 
+            field: 'fecha', 
+            width: 200,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { headerName: 'Fecha Realizado', field: 'fechaRealizado', typeof: 'date', width: 200 },
+        { 
+            headerName: 'Fecha Realizado', 
+            field: 'fechaRealizado', 
+            width: 200,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            } 
+        },
         { headerName: 'Observaciones', field: 'observaciones', width: 300 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
@@ -357,18 +425,65 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha', 
+            field: 'fecha',
+            width: 150,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            } 
+        },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha Recogido', 
+            field: 'fechaRecogido', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha Realizado', 
+            field: 'fechaRealizado',
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
         { headerName: 'PDF', field: 'pdf', width: 150 },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha PDF', 
+            field: 'fechaPdf', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -377,18 +492,65 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha', 
+            field: 'fecha',
+            width: 150,
+            valueFormatter: (params) => {
+                const date = new Date(params.value);
+                return date.toLocaleDateString();
+            }
+        },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha Recogido', field: 'fechaRecogido', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha Recogido', 
+            field: 'fechaRecogido',
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { headerName: 'Fecha Realizado', field: 'fechaRealizado', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha Realizado', 
+            field: 'fechaRealizado',
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
         { headerName: 'PDF', field: 'pdf', width: 150 },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { headerName: 'Fecha PDF', field: 'fechaPdf', type: 'date', width: 150 },
+        { 
+            headerName: 'Fecha PDF', 
+            field: 'fechaPdf',
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
