@@ -135,8 +135,6 @@ export const MantenimientoTecnicoPage = () => {
         GetConfNivelesPlantasCliente();
     }, [])
 
-    console.log(confNivelesPlantasCliente)
-
     // Filtramos elementos para el desplegable
     useEffect(() => {
 
@@ -635,7 +633,7 @@ export const MantenimientoTecnicoPage = () => {
                                         id="fecha"
                                         options={parametrosAnalisisPlanta.sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado).sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
-                                        getOptionLabel={option => option.fecha}
+                                        getOptionLabel={option => new Date(option.fecha).toLocaleDateString()}
                                         renderInput={(params) => <TextField {...params} label="Fecha" name="fecha" />}
                                         onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                             ...prevState,
