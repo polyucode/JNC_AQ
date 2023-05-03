@@ -55,7 +55,9 @@ export const PlantasPage = () => {
 
     /** HOOKS **/
     const navigate = useNavigate();
-    const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
+    const [ nodos, setNodos ] = useState([]);
+    const [ lados, setLados ] = useState([]);
+    const { nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
 
     /** EFECTOS **/
 
@@ -127,14 +129,14 @@ export const PlantasPage = () => {
 
         getConfPlantaClientePorClienteOferta( confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta )
             .then( res => {
-
-                console.log(res)
-
                 if( res == null ) {
                     setCrearPlanta(true);
                 } else {
                     setCrearPlanta(false);
-                    setConfPlantaCliente( prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }))
+                    setConfPlantaCliente( prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
+                    const datosDiagrama = JSON.parse( res.diagrama );
+                    setNodos(datosDiagrama.nodos)
+                    setLados(datosDiagrama.lados)  
                 }
 
             });

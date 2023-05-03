@@ -65,11 +65,11 @@ export const useLoginForm = () => {
             const data = await postToken(loginValues);
 
             // Seteamos el token en el localStorage
-            localStorage.setItem( 'token', data.token );
-            localStorage.setItem( 'usuarioActual', JSON.stringify( data.item2 ) );
+            localStorage.setItem( 'token', data.data.token );
+            localStorage.setItem( 'usuarioActual', JSON.stringify( data.data.item2 ) );
             
             // Despachamos la acción
-            login( data.item2 );
+            login( data.data.item2 );
 
             // Redireccionamos al usuario
             navigate('/', {

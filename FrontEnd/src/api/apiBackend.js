@@ -12,7 +12,7 @@ export const instance = axios.create({
 export const postToken = async ( token ) => {
 
     const resp = instance.post('/token', token);
-    return resp.data.data;
+    return resp;
 
 }
 

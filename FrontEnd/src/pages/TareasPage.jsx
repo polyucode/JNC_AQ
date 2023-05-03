@@ -370,8 +370,6 @@ export const TareasPage = () => {
     tareaSeleccionada.id = null;
 
     const response = await postTareas(tareaSeleccionada);
-
-    console.log(response)
     //Creamos los detalles
     var date = new Date(tareaSeleccionada.fecha);
 

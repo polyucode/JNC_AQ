@@ -11,7 +11,7 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { getAnalisis, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros } from '../api';
+import { getAnalisis, getClientes, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros } from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
@@ -25,6 +25,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 const HomeCliente = () => {
 
     // Guardado de datos
+    const [ clientes, setClientes ] = useState([]);
     const [ ofertas, setOfertas ] = useState([]);
     const [ parametros, setParametros ] = useState([]);
     const [ tareas, setTareas ] = useState([]);
@@ -33,6 +34,12 @@ const HomeCliente = () => {
     const [ tareasFiltradas, setTareasFiltradas ] = useState([]);
     const [ parametrosAnalisisFiltrados, setParametrosAnalisisFiltrados ] = useState([]);
     const [ plantaActiva, setPlantaActiva ] = useState({});
+
+    const [ clienteSeleccionado, setClienteSeleccionado ] = useState({
+        id: 0,
+        codigoCliente: 0,
+        oferta: 0
+    })
 
     // Variables para el diagrama
     const [ nodos, setNodos ] = useState([]);
@@ -45,6 +52,9 @@ const HomeCliente = () => {
 
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
+
+        getClientes()
+            .then( resp => setClientes( resp ));
 
         getOfertas()
             .then( resp => setOfertas( resp ));
@@ -83,6 +93,8 @@ const HomeCliente = () => {
 
     }, [ plantaActiva ]);
     
+    console.log(plantaActiva)
+    
     // Efecto que filtra las tareas al cambiar los datos de planta activa
     useEffect(() => {
         if( plantaActiva.codigoCliente ) {
@@ -112,7 +124,7 @@ const HomeCliente = () => {
 
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
-        getConfPlantaClientePorClienteOferta( user.idCliente , ofertaSeleccionada )
+        getConfPlantaClientePorClienteOferta( clienteSeleccionado.codigoCliente , ofertaSeleccionada )
             .then( res => res ? setPlantaActiva( res ) : setPlantaActiva({}) );
 
     }
@@ -137,7 +149,7 @@ const HomeCliente = () => {
                                         }
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={ 4 }> 
+                                <Grid item xs={ 2 }> 
                                     {
                                         plantaActiva.descripcion && (
                                             <Typography>{ plantaActiva.descripcion }</Typography>
@@ -147,8 +159,23 @@ const HomeCliente = () => {
                                 <Grid item xs={ 2 }>
                                     <Autocomplete
                                         disableClearable={ true }
+                                        id="clientes"
+                                        options={ clientes }
+                                        getOptionLabel={ option => option.codigo }
+                                        renderInput={ params => <TextField {...params} label="Código Cliente" name="codigoCliente" /> }
+                                        onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                                            ...prevState,
+                                            codigoCliente: parseInt(value.codigo),
+                                            oferta: ''
+                                        }))}
+                                    />
+                                </Grid>
+                                <Grid item xs={ 2 }>
+                                    <Autocomplete
+                                        disableClearable={ true }
                                         id="ofertas"
                                         options={ ofertas }
+                                        filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === clienteSeleccionado.codigoCliente)}
                                         getOptionLabel={ option => option.numeroOferta }
                                         renderInput={ params => <TextField {...params} label="Código oferta" name="codigoOferta" /> }
                                         onChange={ handleSeleccionOferta }
