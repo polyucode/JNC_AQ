@@ -864,7 +864,7 @@ export const PlantasPage = () => {
 
                 {/* APARTADO DE DIAGRAMA */}
                 <Grid item xs={ 12 }>
-                    <Card sx={{ p: 2, height: '400px', display: 'flex', flexDirection: 'column' }}>
+                    <Card sx={{ p: 2, height: '800px' }}>
 
                         <Typography variant="h6">Diagrama de la planta</Typography>
                         <ReactFlow
