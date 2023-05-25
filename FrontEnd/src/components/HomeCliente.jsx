@@ -48,7 +48,7 @@ const HomeCliente = () => {
 
     // Variables de contexto
     const { user } = useContext(AuthContext);
-    const { elementoActivo, parametroActivo, valoresParametros, handleSeleccionarParametro } = useContext(DashboardContext);
+    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
 
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
@@ -105,8 +105,7 @@ const HomeCliente = () => {
         }
     }, [plantaActiva, elementoActivo]);
 
-    console.log(elementoActivo, "ELEMENTO ACTIVO")
-    console.log(parametrosAnalisisFiltrados, "PARAMETROS ANALISIS FILTRADOS")
+    console.log(analisisActivo, "ANALISIS")
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -199,7 +198,7 @@ const HomeCliente = () => {
                                 <Grid item xs={12}>
                                     <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
                                 </Grid>
-                                <Grid item xs={12} sx={{ height: 950 }}>
+                                <Grid item xs={12} sx={{ height: 850 }}>
                                     <ReactFlow
                                         nodes={nodos}
                                         edges={lados}
@@ -247,7 +246,7 @@ const HomeCliente = () => {
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    // Mapeamos todos los parametros
+                                                    // Mapeav  todos los parametros
                                                     analisis.map(row => {
 
                                                         // row -> id, nombre
@@ -334,7 +333,7 @@ const HomeCliente = () => {
 
                             <Grid containter spacing={2}>
 
-                                <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
+                                <Grid container spacing={2} sx={{ mb: 3, justifyContent: 'space-between' }}>
                                     {
                                         elementoActivo.nombre ? (
                                             <>
@@ -389,8 +388,6 @@ const HomeCliente = () => {
 
                                                         if (valoresPorTarea.length > 0) {
 
-                                                            console.log({ valoresPorTarea });
-
                                                             // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
                                                             valoresPorTarea.map(val => {
 
@@ -408,8 +405,6 @@ const HomeCliente = () => {
                                                                     }
                                                                 }
 
-                                                                console.log({ fechas })
-
                                                             });
 
                                                         }
@@ -423,7 +418,7 @@ const HomeCliente = () => {
                                                                 >
                                                                     <TableCell>
                                                                         <Tooltip title="Ver parametros del elemento" placement="right">
-                                                                            <IconButton>
+                                                                            <IconButton onClick={() => handleSeleccionarAnalisis( row.id )}>
                                                                                 <TimelineIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
@@ -474,13 +469,13 @@ const HomeCliente = () => {
 
                             <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
                                 {
-                                    elementoActivo.nombre ? (
+                                    analisisActivo.nombre ? (
                                         <>
                                             <Grid item>
                                                 <Typography variant='h6'>Parámetros del Análisis</Typography>
                                             </Grid>
                                             <Grid item>
-                                                <Chip label={elementoActivo.nombre} color="primary" />
+                                                <Chip label={analisisActivo.nombre} color="primary" />
                                             </Grid>
                                         </>
                                     ) : (
@@ -491,7 +486,7 @@ const HomeCliente = () => {
                                 }
                             </Grid>
                             {
-                                elementoActivo.nombre && (
+                                analisisActivo.nombre && (
                                     <TableContainer component={Paper}>
                                         <Table sx={{ minWidth: 650 }}>
                                             <TableHead>
