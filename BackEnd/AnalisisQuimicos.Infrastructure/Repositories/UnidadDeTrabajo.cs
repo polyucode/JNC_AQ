@@ -41,6 +41,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<Parametros> _parametrosRepository;
         private readonly IFilesRepository _elementosFiles;
 
+        private readonly IRepository<Files> _filesRepository;
+
         public UnidadDeTrabajo(YucodeDevelopmentJNC_AQContext context)
         {
             _context = context;
@@ -90,7 +92,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<Elementos> ElementosRepository => _elementosRepository ?? new BaseRepository<Elementos>(_context);
         public IRepository<Parametros> ParametrosRepository => _parametrosRepository ?? new BaseRepository<Parametros>(_context);
         public IFilesRepository FilesRepository => _elementosFiles ?? new FilesRepository(_context);
-
+        public IRepository<Files> FilesRepository2 => _filesRepository ?? new BaseRepository<Files>(_context);
+        
         public void Dispose()
         {
             if(_context != null){

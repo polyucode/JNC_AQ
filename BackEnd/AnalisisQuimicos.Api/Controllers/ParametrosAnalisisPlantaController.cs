@@ -33,7 +33,9 @@ namespace AnalisisQuimicos.Api.Controllers
         {
             var analisis = _parametrosAnalisisPlantaService.GetAll();
             var analisisDto = _mapper.Map<IEnumerable<ParametrosAnalisisPlantaDTO>>(analisis);
-            var response = new ApiResponses<IEnumerable<ParametrosAnalisisPlantaDTO>>(analisisDto);
+            var listaOrdenada = analisisDto.OrderBy(p => p.Fecha);
+            //var response = new ApiResponses<IEnumerable<ParametrosAnalisisPlantaDTO>>(analisisDto);
+            var response = new ApiResponses<IEnumerable<ParametrosAnalisisPlantaDTO>>(listaOrdenada);
             return Ok(response);
         }
 

@@ -11,5 +11,9 @@ namespace AnalisisQuimicos.Core.Interfaces
         Task<Files> Download(int id);
 
         Task<int> Upload(Files file);
+
+        //IEnumerable<Files> GetAll();
+
+        //Task<Files> GetById(int id);
     }
 }

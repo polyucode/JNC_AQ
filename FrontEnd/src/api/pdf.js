@@ -57,3 +57,17 @@ export const subirPdf = async ( id, archivo ) => {
     return resp;
     
 }
+
+export const getFicheros = async () => {
+
+    const resp = await instance.get('/files');
+    return resp.data.data;
+
+}
+
+export const getFicherosById = async ( pdf ) => {
+
+    const resp = await instance.get(`/files/?Id=${ pdf }`)
+    return resp.data.data;
+    
+}
