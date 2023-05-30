@@ -71,7 +71,7 @@ const HomeCliente = () => {
 
     // Variables de contexto
     const { user } = useContext(AuthContext);
-    const { elementoActivo, parametroActivo, valoresParametros, handleSeleccionarParametro } = useContext(DashboardContext);
+    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
 
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
@@ -179,6 +179,7 @@ const HomeCliente = () => {
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
     };
+
     //Prova Pestanyes David
 
     return (
@@ -416,13 +417,13 @@ const HomeCliente = () => {
                                                                 >
                                                                     <TableCell>
                                                                         <Tooltip title="Ver parametros del elemento" placement="right">
-                                                                            <IconButton>
-                                                                                <TimelineIcon />
+                                                                            <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>
+                                                                                <TimelineIcon/>
                                                                             </IconButton>
                                                                         </Tooltip>
                                                                     </TableCell>
                                                                     <TableCell aligh="left" component="th" scope="row">
-                                                                        {row.nombre} - {row.id}
+                                                                        {row.nombre}
                                                                     </TableCell>
                                                                     {
                                                                         fechas.map((fecha, index) => (
@@ -468,13 +469,13 @@ const HomeCliente = () => {
 
                             <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
                                 {
-                                    elementoActivo.nombre ? (
+                                    analisisActivo.nombre ? (
                                         <>
                                             <Grid item>
                                                 <Typography variant='h6'>Parámetros del Análisis</Typography>
                                             </Grid>
                                             <Grid item>
-                                                <Chip label={elementoActivo.nombre} color="primary" />
+                                                <Chip label={analisisActivo.nombre} color="primary" />
                                             </Grid>
                                         </>
                                     ) : (
@@ -485,7 +486,7 @@ const HomeCliente = () => {
                                 }
                             </Grid>
                             {
-                                elementoActivo.nombre && (
+                                analisisActivo.nombre && (
                                     <TableContainer component={Paper}>
                                         <Table sx={{ minWidth: 650 }}>
                                             <TableHead>

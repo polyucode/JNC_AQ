@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { getElementoPorId, getValorParametros } from "../api";
+import { getAnalisisId, getElementoPorId, getValorParametros } from "../api";
 
 export const DashboardContext = createContext();
 
@@ -12,6 +12,7 @@ export const DashboardProvider = ({ children }) => {
     // Valores activos
     const [elementoActivo, setElementoActivo] = useState({});
     const [parametroActivo, setParametroActivo] = useState({});
+    const [analisisActivo, setAnalisisActivo] = useState({});
 
     /*** EFECTOS ***/
 
@@ -37,6 +38,15 @@ export const DashboardProvider = ({ children }) => {
 
     }
 
+    const handleSeleccionarAnalisis = async ( id ) => {
+        
+        const analisi = await getAnalisisId( id );
+
+        setAnalisisActivo( prev => ({ ...prev, nombre: analisi.nombre , id }));
+        //setValoresParametros(listaParametros.filter( param => param.id_Elemento === id ));
+
+    }
+
     const handleSeleccionarParametro = (datos) => {
 
         setParametroActivo( datos );
@@ -47,9 +57,11 @@ export const DashboardProvider = ({ children }) => {
         <DashboardContext.Provider value={{
             elementoActivo,
             parametroActivo,
+            analisisActivo,
             valoresParametros,
             handleSeleccionarElemento,
-            handleSeleccionarParametro
+            handleSeleccionarParametro,
+            handleSeleccionarAnalisis
         }}>
             { children }
         </DashboardContext.Provider>
