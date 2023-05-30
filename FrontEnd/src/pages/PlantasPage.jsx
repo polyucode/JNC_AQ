@@ -55,9 +55,9 @@ export const PlantasPage = () => {
 
     /** HOOKS **/
     const navigate = useNavigate();
-    const [ nodos, setNodos ] = useState([]);
-    const [ lados, setLados ] = useState([]);
-    const { nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
+    //const [ nodos, setNodos ] = useState([]);
+    //const [ lados, setLados ] = useState([]);
+    const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
 
     /** EFECTOS **/
 
@@ -134,9 +134,9 @@ export const PlantasPage = () => {
                 } else {
                     setCrearPlanta(false);
                     setConfPlantaCliente( prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
-                    const datosDiagrama = JSON.parse( res.diagrama );
-                    setNodos(datosDiagrama.nodos)
-                    setLados(datosDiagrama.lados)  
+                    //const datosDiagrama = JSON.parse( res.diagrama );
+                    //setNodos(datosDiagrama.nodos)
+                    //setLados(datosDiagrama.lados)  
                 }
 
             });
@@ -864,7 +864,7 @@ export const PlantasPage = () => {
 
                 {/* APARTADO DE DIAGRAMA */}
                 <Grid item xs={ 12 }>
-                    <Card sx={{ p: 2, height: '400px', display: 'flex', flexDirection: 'column' }}>
+                    <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
 
                         <Typography variant="h6">Diagrama de la planta</Typography>
                         <ReactFlow
