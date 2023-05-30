@@ -105,8 +105,6 @@ const HomeCliente = () => {
         }
     }, [plantaActiva, elementoActivo]);
 
-    console.log(analisisActivo, "ANALISIS")
-
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
             <ChartCategoryAxis>

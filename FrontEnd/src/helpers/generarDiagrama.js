@@ -23,12 +23,15 @@ export const useDiagrama = () => {
 
     const generarDiagrama = ( numNiveles, elementosPlanta ) => {
 
-        // Preparamos las variables necesarias
-        const anchoNodoHijo = 144;
-        const altoNodoHijo = 30;
-        const anchoNodoPadre = 160;
+        console.log(numNiveles, "NUM NIVELESS")
+        console.log(elementosPlanta, "ELEMENTOS PLANTA")
 
-        const espacioNombreNivel = 30;
+        // Preparamos las variables necesarias
+        const anchoNodoHijo = 120;
+        const altoNodoHijo = 40;
+        const anchoNodoPadre = 120;
+
+        const espacioNombreNivel = 40;
         const separacion = 8;
 
         let posXPadre = 0;
