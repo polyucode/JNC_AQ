@@ -4,13 +4,8 @@ using System.Text;
 
 namespace AnalisisQuimicos.Core.Entities
 {
-    public class Files
+    public partial class Files : BaseEntity
     {
-        public Files()
-        {
-        }
-
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Format { get; set; }
         public string Path { get; set; }
