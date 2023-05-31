@@ -9,15 +9,18 @@ import Swal from 'sweetalert2';
 import { camelCase } from 'lodash';
 import ReactFlow, { Background } from "react-flow-renderer";
 import { MainLayout } from "../layout/MainLayout";
-import { getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente, 
-    getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente, 
-    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos 
+import {
+    getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente,
+    getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente,
+    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente
 } from "../api";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
 import { useDiagrama } from "../helpers/generarDiagrama";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate } from 'react-router-dom';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const PlantasPage = () => {
 
@@ -55,41 +58,42 @@ export const PlantasPage = () => {
 
     /** HOOKS **/
     const navigate = useNavigate();
-    //const [ nodos, setNodos ] = useState([]);
-    //const [ lados, setLados ] = useState([]);
+    const [nodos2, setNodos2] = useState([]);
+    const [lados2, setLados2] = useState([]);
     const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
+
 
     /** EFECTOS **/
 
     // Obtenemos todos los datos necesarios de la base de datos
     useEffect(() => {
-        
+
         getClientes()
-            .then( resp => { setClientes(resp) });
+            .then(resp => { setClientes(resp) });
 
         getOfertas()
-            .then( resp => { setOfertas(resp) });
+            .then(resp => { setOfertas(resp) });
 
         getAnalisis()
-            .then( resp => { setAnalisis(resp) });
+            .then(resp => { setAnalisis(resp) });
 
         getParametros()
-            .then( resp => { setParametros(resp) });
+            .then(resp => { setParametros(resp) });
 
     }, []);
 
     // Setea el nombre del cliente cada vez que se selecciona un código de cliente
     useEffect(() => {
 
-        if( confPlantaCliente.CodigoCliente != 0 ) {
-            const clienteSeleccionado = clientes.filter( cliente => cliente.codigo === confPlantaCliente.CodigoCliente )[0];
+        if (confPlantaCliente.CodigoCliente != 0) {
+            const clienteSeleccionado = clientes.filter(cliente => cliente.codigo === confPlantaCliente.CodigoCliente)[0];
             setConfPlantaCliente({
                 ...confPlantaCliente,
                 NombreCliente: clienteSeleccionado.razonSocial
             });
         }
 
-    },[confPlantaCliente.CodigoCliente]);
+    }, [confPlantaCliente.CodigoCliente]);
 
     // Convierte los datos del diagrama en un string para almacenar en la base de datos
     useEffect(() => {
@@ -104,44 +108,41 @@ export const PlantasPage = () => {
             Diagrama: JSON.stringify(datosDiagrama)
         });
 
-    },[ nodos, lados]);
+    }, [nodos, lados]);
 
     // Efecto que oculta el mensaje pasados unos segundos
     useEffect(() => {
 
-        if( snackData.open ) {
+        if (snackData.open) {
 
             setTimeout(() => {
                 document.getElementById('snack').classList.add('animate__flipOutX');
             }, 2000);
 
             setTimeout(() => {
-                setSnackData( prevSnackData => ({ ...prevSnackData, open: false }));
+                setSnackData(prevSnackData => ({ ...prevSnackData, open: false }));
                 document.getElementById('snack').classList.remove('animate__flipOutX');
             }, 2800);
-            
+
         }
 
-    },[snackData.open]);
+    }, [snackData.open]);
 
     // Acemos una petición automáticamente para saber si existe la planta o no
     useEffect(() => {
 
-        getConfPlantaClientePorClienteOferta( confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta )
-            .then( res => {
-                if( res == null ) {
+        getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta)
+            .then(res => {
+                if (res == null) {
                     setCrearPlanta(true);
                 } else {
                     setCrearPlanta(false);
-                    setConfPlantaCliente( prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
-                    //const datosDiagrama = JSON.parse( res.diagrama );
-                    //setNodos(datosDiagrama.nodos)
-                    //setLados(datosDiagrama.lados)  
+                    setConfPlantaCliente(prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
                 }
 
             });
 
-    },[ confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta ]);
+    }, [confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta]);
 
     // Actualizamos el contador (por si se crean mas elementos)
     useEffect(() => {
@@ -149,13 +150,13 @@ export const PlantasPage = () => {
         let contadorLocal = {};
 
         // Solo generamos el contador si no existe ninguno
-        if( Object.entries(contadorElemento).length === 0 ) {
+        if (Object.entries(contadorElemento).length === 0) {
 
-            elementosPlanta.map( elemento => {
+            elementosPlanta.map(elemento => {
 
                 const texto = elemento.nombre;
-    
-                if ( contadorLocal[texto] ) {
+
+                if (contadorLocal[texto]) {
                     contadorLocal = {
                         ...contadorLocal,
                         [texto]: contadorLocal[texto] + 1
@@ -166,14 +167,14 @@ export const PlantasPage = () => {
                         [texto]: 1
                     }
                 }
-    
+
             });
-    
+
             setContadorElemento({ ...contadorLocal });
 
         }
 
-    },[ elementosPlanta ]);
+    }, [elementosPlanta]);
 
     // FUNCIONES
 
@@ -182,14 +183,14 @@ export const PlantasPage = () => {
         let numNivelesInt = 0;
 
         // Comprobamos el valor del número de niveles
-        if( confPlantaCliente.NumNiveles === '') {
+        if (confPlantaCliente.NumNiveles === '') {
             numNivelesInt = 0;
         } else {
-            numNivelesInt = parseInt( confPlantaCliente.NumNiveles, 10 );
+            numNivelesInt = parseInt(confPlantaCliente.NumNiveles, 10);
         }
 
         // Comprobamos para que no hayan errores
-        if ( numNivelesInt > 5 ) {
+        if (numNivelesInt > 5) {
 
             // Avisamos al usuario
             Swal.fire({
@@ -208,10 +209,10 @@ export const PlantasPage = () => {
             });
             return;
 
-            
+
 
         } else if (confPlantaCliente.CodigoCliente == null || confPlantaCliente.Oferta == null || numNivelesInt <= 0 || numNivelesInt == null) {
-            
+
             // Avisamos al usuario
             Swal.fire({
                 position: 'center',
@@ -230,39 +231,45 @@ export const PlantasPage = () => {
             return;
 
         } else {
-            
+
             // Comprobamos si se debe crear o cargar la planta
-            if( crearPlanta ) {
+            if (crearPlanta) {
 
                 // Petición para crear la planta
                 const resp = await postConfPlantaCliente({ ...confPlantaCliente, NumNiveles: numNivelesInt });
-                setConfPlantaCliente( prevState => ({ ...prevState, Id: resp.id }));
+                setConfPlantaCliente(prevState => ({ ...prevState, Id: resp.id }));
 
                 // Indicamos que la planta ha sido creada
                 setPlantaCreada(true);
-                
+
                 // Generamos los niveles según lo indicado por el usuario
-                for( let i = 0; i < confPlantaCliente.NumNiveles; i++ ) {
-                    setNiveles( prevState => [ ...prevState, i + 1 ]);
+                for (let i = 0; i < confPlantaCliente.NumNiveles; i++) {
+                    setNiveles(prevState => [...prevState, i + 1]);
                 }
 
             } else {
 
                 // Obtener los datos de la planta
-                const respPlanta = await getConfPlantaClientePorClienteOferta( confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta );
+                const respPlanta = await getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta);
+
+                console.log(respPlanta, "RESP PLANTAA")
+
+                const datosDiagrama = JSON.parse(respPlanta.diagrama);
+                setNodos2(datosDiagrama.nodos)
+                setLados2(datosDiagrama.lados)
 
                 // Actualizamos los datos de la planta
-                setConfPlantaCliente( prevState => ({ ...prevState, Id: respPlanta.id, NumNiveles: respPlanta.numNiveles }));
+                setConfPlantaCliente(prevState => ({ ...prevState, Id: respPlanta.id, NumNiveles: respPlanta.numNiveles }));
                 setPlantaCreada(true);
 
                 // Generamos los niveles según lo indicado por el usuario
-                for( let i = 0; i < respPlanta.numNiveles; i++ ) {
-                    setNiveles( prevState => [ ...prevState, i + 1 ]);
+                for (let i = 0; i < respPlanta.numNiveles; i++) {
+                    setNiveles(prevState => [...prevState, i + 1]);
                 }
 
                 // Obtenemos todos los niveles
-                const respNiveles = await getConfNivelesPlantasClientePorPlanta( respPlanta.id )
-                setConfNivelesPlantaCliente( respNiveles );
+                const respNiveles = await getConfNivelesPlantasClientePorPlanta(respPlanta.id)
+                setConfNivelesPlantaCliente(respNiveles);
 
                 // Obtenemos todos los registros de analisis - elemento (nivel)
                 const respAnalisis = await getAnalisisNivelesPlantasCliente();
@@ -271,25 +278,26 @@ export const PlantasPage = () => {
 
                 // Recorremos cada nivel para obtener los datos del elemento
                 const nivelesPromise = await Promise.all(
-                    respNiveles.map( async (nivel) => {
+                    respNiveles.map(async (nivel) => {
 
                         // Obtenemos los datos del elemento
-                        const resp = await getElementoPorId( nivel.id_Elemento );
+                        const resp = await getElementoPorId(nivel.id_Elemento);
 
                         // Obtenemos los analisis por este elemento
-                        const analisisFiltro = respAnalisis.filter( anali => anali.id_NivelesPlanta === nivel.id )
-                        
+                        const analisisFiltro = respAnalisis.filter(anali => anali.id_NivelesPlanta === nivel.id)
+
+                        console.log(analisisFiltro, "ANALISIS FILTRO")
                         // Preparamos el objeto de analisis
                         let analisisObjeto = {}
 
                         // Recorremos la lista de analisis para crear un objeto coherente
-                        analisisFiltro.map( an => {
+                        analisisFiltro.map(an => {
 
                             // Evaluamos si este elemento está desmarcado (para no añadirlo al objeto)
-                            if( !an.deleted ) {
-                                
+                            if (!an.deleted) {
+
                                 // Preparamos el nombre del analisis
-                                const nombreAnalisis = camelCase( analisis.filter( anali => anali.id === an.id_Analisis )[0].nombre );
+                                const nombreAnalisis = camelCase(analisis.filter(anali => anali.id === an.id_Analisis)[0].nombre);
 
                                 // Añadimos el análisis al objeto
                                 analisisObjeto = { ...analisisObjeto, [nombreAnalisis]: true };
@@ -297,9 +305,9 @@ export const PlantasPage = () => {
                             }
 
                         });
-                        
+
                         // Creamos el objecto con los datos
-                        if( resp != null ) {
+                        if (resp != null) {
 
                             niveles.push({
                                 id: resp.id,
@@ -315,7 +323,7 @@ export const PlantasPage = () => {
                 );
 
                 // Añadimos el elemento al estado
-                setElementosPlanta([ ...niveles ]);
+                setElementosPlanta([...niveles]);
 
             }
 
@@ -323,9 +331,9 @@ export const PlantasPage = () => {
 
     }
 
-    const handleConfPlantaClienteChange = ( event ) => {
+    const handleConfPlantaClienteChange = (event) => {
 
-        switch( event.target.tagName) {
+        switch (event.target.tagName) {
 
             case 'LI':
 
@@ -353,7 +361,7 @@ export const PlantasPage = () => {
 
     }
 
-    const handleAnalisis = ( event ) => {
+    const handleAnalisis = (event) => {
 
         setElementoSeleccionado({
             ...elementoSeleccionado,
@@ -365,15 +373,15 @@ export const PlantasPage = () => {
 
     }
 
-    const handleSeleccionarElemento = ( elemento ) => {
-        setElementoSeleccionado( elemento );
+    const handleSeleccionarElemento = (elemento) => {
+        setElementoSeleccionado(elemento);
     }
 
     const handleGuardarAnalisisElemento = () => {
 
-        const elementosActualizados = elementosPlanta.map( elemento => {
+        const elementosActualizados = elementosPlanta.map(elemento => {
 
-            if( elemento.id === elementoSeleccionado.id ) {
+            if (elemento.id === elementoSeleccionado.id) {
                 return { ...elemento, analisis: { ...elementoSeleccionado.analisis } }
             } else {
                 return elemento
@@ -383,17 +391,17 @@ export const PlantasPage = () => {
 
         setElementosPlanta(elementosActualizados);
         setSnackData({ open: true, msg: 'Analisis del elemento guardado correctamente', severity: 'success' });
-    
+
     }
 
     const handleSnackClose = (event, reason) => {
 
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-    
+
         setSnackData({ open: false, msg: '', severity: 'info' });
-    
+
     };
 
     const handleGuardarDatos = async () => {
@@ -401,12 +409,12 @@ export const PlantasPage = () => {
         let niveles = [];
 
         // Guardamos los datos de la planta
-        await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt( confPlantaCliente.NumNiveles, 10 ) });
+        await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
 
         // Guardamos los registros de los elementos de la planta para obtener sus IDs
         let elementosActualizados = [];
 
-        await Promise.all(elementosPlanta.map( async (elemento) => {
+        await Promise.all(elementosPlanta.map(async (elemento) => {
 
             let idElementoActualizado = 0;
 
@@ -428,7 +436,7 @@ export const PlantasPage = () => {
             }
 
             // Realizamos la petición según si tiene id o no y obtenemos el ID
-            if( elemento.id > 0) {
+            if (elemento.id > 0) {
 
                 // El elemento ya existe. Añadimos ID y actualizamos
                 postElemento = {
@@ -437,13 +445,13 @@ export const PlantasPage = () => {
                 }
 
                 // Hacemos un PUT
-                await putElementos( postElemento );
+                await putElementos(postElemento);
 
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel });
                 idElementoActualizado = elemento.id;
 
-                console.log( elementosActualizados );
+                console.log(elementosActualizados);
 
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
@@ -454,12 +462,12 @@ export const PlantasPage = () => {
             } else {
 
                 // El elemento no existe. Hacemos POST
-                const respElemento = await postElementos( postElemento );
+                const respElemento = await postElementos(postElemento);
 
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
                 idElementoActualizado = respElemento.id;
-                console.log( elementosActualizados );
+                console.log(elementosActualizados);
 
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
@@ -468,43 +476,43 @@ export const PlantasPage = () => {
                 }
 
                 // Recorremos los parámetros para crear sus registros corespondientes
-            await parametros.map( async (parametro, index) => {
+                await parametros.map(async (parametro, index) => {
 
-                // Preparamos el cuerpo de la petición
-                const postParametro = {
-                    Activo: false,
-                    CodigoCliente: confPlantaCliente.CodigoCliente,
-                    EsPlantilla: true,
-                    Id_Elemento: respElemento.id,
-                    LimInf: 0,
-                    LimSup: 0,
-                    NombreCliente: confPlantaCliente.NombreCliente,
-                    Oferta: confPlantaCliente.Oferta,
-                    Parametro: parametro.id,
-                    Unidades: parametro.unidad,
-                    VerInspector: false,
-                    addDate: null,
-                    addIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                    modDate: null,
-                    modIdUser: null
-                }
+                    // Preparamos el cuerpo de la petición
+                    const postParametro = {
+                        Activo: false,
+                        CodigoCliente: confPlantaCliente.CodigoCliente,
+                        EsPlantilla: true,
+                        Id_Elemento: respElemento.id,
+                        LimInf: 0,
+                        LimSup: 0,
+                        NombreCliente: confPlantaCliente.NombreCliente,
+                        Oferta: confPlantaCliente.Oferta,
+                        Parametro: parametro.id,
+                        Unidades: parametro.unidad,
+                        VerInspector: false,
+                        addDate: null,
+                        addIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                        modDate: null,
+                        modIdUser: null
+                    }
 
-                // Realizamos la petición POST para crear el registro
-                const resp = await postParametrosElementoPlantaCliente( postParametro );
+                    // Realizamos la petición POST para crear el registro
+                    const resp = await postParametrosElementoPlantaCliente(postParametro);
 
 
-            });
+                });
 
             }
 
             // Filtramos la lista de niveles para comprobar si existe un registro
-            const registroNivel = confNivelesPlantaCliente.filter( nivel => nivel.id_Elemento === elemento.id );
+            const registroNivel = confNivelesPlantaCliente.filter(nivel => nivel.id_Elemento === elemento.id);
 
             // Si existe un registro, añadimos su ID para actualizar
-            if( registroNivel.length > 0) {
+            if (registroNivel.length > 0) {
 
                 postNivelesPlanta = {
                     ...postNivelesPlanta,
@@ -512,38 +520,38 @@ export const PlantasPage = () => {
                 }
 
                 // Hacemos la petición PUT
-                await putConfNivelesPlantasCliente( postNivelesPlanta );
-                niveles.push( postNivelesPlanta );
+                await putConfNivelesPlantasCliente(postNivelesPlanta);
+                niveles.push(postNivelesPlanta);
 
             } else {
 
                 // El registro no existe. Realizamos un POST y obtenemos el ID
-                const respNiveles = await postConfNivelesPlantasCliente( postNivelesPlanta );
-                niveles.push( respNiveles );
+                const respNiveles = await postConfNivelesPlantasCliente(postNivelesPlanta);
+                niveles.push(respNiveles);
 
             }
 
             // Comprobamos si el elemento tiene analisis
-            if(elemento.analisis) {
+            if (elemento.analisis) {
 
-                console.log( idElementoActualizado );
-                console.log( niveles.filter( nivel => nivel.id_Elemento === idElementoActualizado ) )
+                console.log(idElementoActualizado);
+                console.log(niveles.filter(nivel => nivel.id_Elemento === idElementoActualizado))
 
                 // Obtenemos el id del nivel de la planta relacionada al elemento y obtenemos sus registros
-                const idNivelPlanta = niveles.filter( nivel => nivel.id_Elemento === idElementoActualizado )[0].id;
-                const respNivelesAnalisis = await getAnalisisNivelesPlantasClientePorIdNivel( idNivelPlanta );
+                const idNivelPlanta = niveles.filter(nivel => nivel.id_Elemento === idElementoActualizado)[0].id;
+                const respNivelesAnalisis = await getAnalisisNivelesPlantasClientePorIdNivel(idNivelPlanta);
 
                 // Recorremos los parametros del objeto de analisis
-                for( const anali in elemento.analisis) {
+                for (const anali in elemento.analisis) {
 
                     // Obtenemos el ID del análisis y nivel
-                    const idAnalisis = analisis.filter( analisis => camelCase(analisis.nombre) === anali )[0].id;
-  
-                    // Comprobamos si el registro existe en la base de datos
-                    const registros = respNivelesAnalisis.filter( nivel => nivel.id_Analisis === idAnalisis );
+                    const idAnalisis = analisis.filter(analisis => camelCase(analisis.nombre) === anali)[0].id;
 
-                    if( registros.length > 0) {
-                        
+                    // Comprobamos si el registro existe en la base de datos
+                    const registros = respNivelesAnalisis.filter(nivel => nivel.id_Analisis === idAnalisis);
+
+                    if (registros.length > 0) {
+
                         // Preparamos el cuerpo de la petición
                         let putAnalisis = {
                             Id: registros[0].id,
@@ -552,7 +560,7 @@ export const PlantasPage = () => {
                         }
 
                         // El registro existe en BD. Debemos hacer una actualización
-                        if( elemento.analisis[anali] ) {
+                        if (elemento.analisis[anali]) {
 
                             // El analisis está marcado como Actido. Aplicamos cambios sobre el registro
                             putAnalisis = { ...putAnalisis, deleted: null }
@@ -571,17 +579,17 @@ export const PlantasPage = () => {
                     } else {
 
                         // El registro no existe en la BD. Creamos el registro
-                        if(elemento.analisis[anali]) {
+                        if (elemento.analisis[anali]) {
 
                             // Preparamos el cuerpo de la petición
                             const postAnalisis = {
                                 Id_NivelesPlanta: idNivelPlanta,
                                 Id_Analisis: idAnalisis
                             }
-    
+
                             // Añadimos a la base de datos los analisis activados
                             const respAnalisis = await postAnalisisNivelesPlantasCliente(postAnalisis);
-    
+
                         }
                     }
                 }
@@ -590,15 +598,15 @@ export const PlantasPage = () => {
         }));
 
         // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
-        setElementosPlanta( elementosActualizados );
-        setDatosGuardados( true );
+        setElementosPlanta(elementosActualizados);
+        setDatosGuardados(true);
 
         // Avisamos al usuario
         Swal.fire({
             position: 'center',
             icon: 'info',
             title: 'Planta guardada',
-            text: `Los datos de la planta ${ confPlantaCliente.NombreCliente } han sido guardados`,
+            text: `Los datos de la planta ${confPlantaCliente.NombreCliente} han sido guardados`,
             showConfirmButton: false,
             timer: 2000,
             showClass: {
@@ -614,15 +622,15 @@ export const PlantasPage = () => {
     const handleGuardarDiagrama = async () => {
 
         // Guardamos los datos de la planta
-        await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt( confPlantaCliente.NumNiveles, 10 ) });
-        setDiagramaGuardado( true );
+        await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
+        setDiagramaGuardado(true);
 
         // Avisamos al usuario
         Swal.fire({
             position: 'center',
             icon: 'info',
             title: 'Diagrama guardado',
-            text: `Los datos del diagrama de la planta ${ confPlantaCliente.NombreCliente } han sido guardados`,
+            text: `Los datos del diagrama de la planta ${confPlantaCliente.NombreCliente} han sido guardados`,
             showConfirmButton: false,
             timer: 2000,
             showClass: {
@@ -635,6 +643,20 @@ export const PlantasPage = () => {
 
     };
 
+
+    const eliminarPlanta = async ( id ) => {
+        
+        //await deleteConfPlantaCliente(id);
+        
+        for (let i = 0; i < confNivelesPlantaCliente.length; i++ ){
+
+            console.log(confNivelesPlantaCliente[i], "CONF NIVELES I")
+            //await deleteConfNivelesPlantasCliente(confNivelesPlantaCliente[i].id);
+
+        }
+
+    }
+
     return (
         <MainLayout title="Plantas">
 
@@ -643,63 +665,63 @@ export const PlantasPage = () => {
                 {/* APARTADO DE DATOS DE PLANTA */}
                 <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex' }}>
-                        <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
+                        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
                             {/* Código de Cliente */}
-                            <Grid item xs={ 4 }>
+                            <Grid item xs={4}>
                                 <Autocomplete
-                                    disabled={ plantaCreada }
-                                    disableClearable={ true }
+                                    disabled={plantaCreada}
+                                    disableClearable={true}
                                     id="CodigoCliente"
-                                    options={ clientes }
-                                    getOptionLabel={ option => option.codigo.toString() }
-                                    renderInput={ params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" /> }
-                                    onChange={ handleConfPlantaClienteChange }
+                                    options={clientes}
+                                    getOptionLabel={option => option.codigo.toString()}
+                                    renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
+                                    onChange={handleConfPlantaClienteChange}
                                 />
                             </Grid>
 
                             {/* Número de Oferta */}
-                            <Grid item xs={ 4 }>
+                            <Grid item xs={4}>
                                 <Autocomplete
-                                    disabled={ plantaCreada }
-                                    disableClearable={ true }
+                                    disabled={plantaCreada}
+                                    disableClearable={true}
                                     id="Oferta"
-                                    options={ ofertas }
+                                    options={ofertas}
                                     filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
-                                    getOptionLabel={ option => option.numeroOferta.toString() }
-                                    renderInput={ params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
-                                    onChange={ handleConfPlantaClienteChange }
+                                    getOptionLabel={option => option.numeroOferta.toString()}
+                                    renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                    onChange={handleConfPlantaClienteChange}
                                 />
                             </Grid>
 
                             {/* Número de niveles */}
-                            <Grid item xs={ 2 }>
-                                <TextField disabled={ !crearPlanta || plantaCreada } sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={ handleConfPlantaClienteChange } value={ confPlantaCliente.NumNiveles } />
+                            <Grid item xs={2}>
+                                <TextField disabled={!crearPlanta || plantaCreada} sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={handleConfPlantaClienteChange} value={confPlantaCliente.NumNiveles} />
                             </Grid>
 
                             {/* Botón para crear */}
-                            <Grid item xs={ 2 }>
+                            <Grid item xs={2}>
                                 {
                                     crearPlanta
                                         ? (
                                             <Button
-                                                disabled={ plantaCreada }
+                                                disabled={plantaCreada}
                                                 sx={{ width: '100%' }}
                                                 color='success'
                                                 variant='contained'
                                                 startIcon={<AddIcon />}
-                                                onClick={ handleCrearCargarPlanta }
+                                                onClick={handleCrearCargarPlanta}
                                             >
                                                 Crear
                                             </Button>
                                         ) : (
                                             <Button
-                                                disabled={ plantaCreada }
+                                                disabled={plantaCreada}
                                                 sx={{ width: '100%' }}
                                                 color='success'
                                                 variant='contained'
                                                 startIcon={<DownloadIcon />}
-                                                onClick={ handleCrearCargarPlanta }
+                                                onClick={handleCrearCargarPlanta}
                                             >
                                                 Cargar
                                             </Button>
@@ -712,56 +734,56 @@ export const PlantasPage = () => {
                 </Grid>
 
                 {/* APARTADO DE NIVELES */}
-                <Grid item xs={ 12 }>
-                    <Grid container spacing={ 2 }>
+                <Grid item xs={12}>
+                    <Grid container spacing={2}>
                         {
-                            niveles.map( nivel => (
+                            niveles.map(nivel => (
                                 <NivelPlanta
-                                    key={ nivel }
-                                    nivel={ nivel }
-                                    contadorElemento={ contadorElemento }
-                                    setContadorElemento={ setContadorElemento }
-                                    elementosPlanta={ elementosPlanta }
-                                    setElementosPlanta={ setElementosPlanta }
-                                    indiceElemento={ indiceElemento }
-                                    setIndiceElemento={ setIndiceElemento }
-                                /> 
+                                    key={nivel}
+                                    nivel={nivel}
+                                    contadorElemento={contadorElemento}
+                                    setContadorElemento={setContadorElemento}
+                                    elementosPlanta={elementosPlanta}
+                                    setElementosPlanta={setElementosPlanta}
+                                    indiceElemento={indiceElemento}
+                                    setIndiceElemento={setIndiceElemento}
+                                />
                             ))
                         }
                     </Grid>
                 </Grid>
 
                 {/* APARTADO DE LISTADO DE ELEMENTOS */}
-                <Grid item xs={ 4 }>
+                <Grid item xs={4}>
                     <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
 
                         <Typography variant="h6" sx={{ width: '100%' }}>Listado de elementos</Typography>
                         {
-                            ( elementosPlanta.length > 0 )
-                            ? (
-                                <List>
-                                    {
-                                        elementosPlanta.map( elemento => (
-                                            <ListItemButton
-                                                key={ elemento.id }
-                                                selected={ elementoSeleccionado.id === elemento.id }
-                                                onClick={ () => handleSeleccionarElemento( elemento ) }
-                                            >
-                                                <ListItemText primary={ elemento.nombre+' '+elemento.numero } />
-                                            </ListItemButton>
-                                        ))
-                                    }
-                                </List>
-                            ) : (
-                                <Typography>Ningún elemento añadido</Typography>
-                            )
+                            (elementosPlanta.length > 0)
+                                ? (
+                                    <List>
+                                        {
+                                            elementosPlanta.map(elemento => (
+                                                <ListItemButton
+                                                    key={elemento.id}
+                                                    selected={elementoSeleccionado.id === elemento.id}
+                                                    onClick={() => handleSeleccionarElemento(elemento)}
+                                                >
+                                                    <ListItemText primary={elemento.nombre + ' ' + elemento.numero} />
+                                                </ListItemButton>
+                                            ))
+                                        }
+                                    </List>
+                                ) : (
+                                    <Typography>Ningún elemento añadido</Typography>
+                                )
                         }
-                        
+
                     </Card>
                 </Grid>
 
                 {/* APARTADO DE ANALISIS POR ELEMENTO */}
-                <Grid item xs={ 8 }>
+                <Grid item xs={8}>
                     <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
 
                         <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
@@ -772,7 +794,7 @@ export const PlantasPage = () => {
 
                             <Grid item>
                                 <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
-                                    <Button color="primary" startIcon={ <SaveIcon /> } variant="outlined" onClick={ handleGuardarAnalisisElemento }>
+                                    <Button color="primary" startIcon={<SaveIcon />} variant="outlined" onClick={handleGuardarAnalisisElemento}>
                                         Guardar
                                     </Button>
                                 </Tooltip>
@@ -782,7 +804,7 @@ export const PlantasPage = () => {
 
                         {/* Mensaje de feedback al guardar tipos de analisis del elemento */}
                         <Grid container>
-                            <Grid item xs={ 12 }>
+                            <Grid item xs={12}>
                                 <Alert id="snack" className="animate__animated animate__flipInX" onClose={handleSnackClose} severity={snackData.severity} sx={{
                                     width: '100%',
                                     display: snackData.open ? 'flex' : 'none'
@@ -791,24 +813,24 @@ export const PlantasPage = () => {
                                 </Alert>
                             </Grid>
                         </Grid>
-                        
+
                         {/* Listado de checkboxs para marcar los analisis */}
-                        <Grid container spacing={ 2 }>
+                        <Grid container spacing={2}>
                             {/* <FormGroup> */}
-                                {
-                                    analisis.map( analisis => (
-                                        <Grid item xs={ 6 } key={ analisis.id }>
-                                            <CheckBoxAnalisis
-                                                label={ analisis.nombre }
-                                                name={ camelCase(analisis.nombre) }
-                                                onChange={ handleAnalisis }
-                                                elementoSeleccionado={ elementoSeleccionado }
-                                                elementosPlanta={ elementosPlanta }
-                                            />
-                                        </Grid>
-                                    )
-                                    )
-                                }
+                            {
+                                analisis.map(analisis => (
+                                    <Grid item xs={6} key={analisis.id}>
+                                        <CheckBoxAnalisis
+                                            label={analisis.nombre}
+                                            name={camelCase(analisis.nombre)}
+                                            onChange={handleAnalisis}
+                                            elementoSeleccionado={elementoSeleccionado}
+                                            elementosPlanta={elementosPlanta}
+                                        />
+                                    </Grid>
+                                )
+                                )
+                            }
                             {/* </FormGroup> */}
                         </Grid>
 
@@ -816,15 +838,24 @@ export const PlantasPage = () => {
                 </Grid>
 
                 {/* BOTONES DE ACCIONES */}
-                <Grid item xs={ 12 }>
+                <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-
                         <Button
-                            disabled={ !plantaCreada }
+                            disabled={!plantaCreada}
+                            color='error'
+                            variant='contained'
+                            startIcon={<DeleteIcon />}
+                            onClick={() => eliminarPlanta(confPlantaCliente.Id)}
+                        >
+                            Eliminar Planta
+                        </Button>
+                        <Button
+                            sx={{ ml: 2 }}
+                            disabled={!plantaCreada}
                             color='success'
                             variant='contained'
-                            startIcon={ <SaveIcon /> }
-                            onClick={ handleGuardarDatos }
+                            startIcon={<SaveIcon />}
+                            onClick={handleGuardarDatos}
                         >
                             Guardar datos
                         </Button>
@@ -833,9 +864,9 @@ export const PlantasPage = () => {
                             sx={{ ml: 2 }}
                             color='primary'
                             variant='contained'
-                            startIcon={ <AccountTreeIcon /> }
-                            disabled={ !datosGuardados || diagramaGenerado }
-                            onClick={ () => generarDiagrama( confPlantaCliente.NumNiveles, elementosPlanta ) }>
+                            startIcon={<AccountTreeIcon />}
+                            disabled={!datosGuardados || diagramaGenerado}
+                            onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
                             Generar diagrama
                         </Button>
 
@@ -843,9 +874,9 @@ export const PlantasPage = () => {
                             sx={{ ml: 2 }}
                             color='success'
                             variant='contained'
-                            startIcon={ <AccountTreeIcon /> }
-                            disabled={ !datosGuardados || !diagramaGenerado }
-                            onClick={ handleGuardarDiagrama }>
+                            startIcon={<AccountTreeIcon />}
+                            disabled={!datosGuardados || !diagramaGenerado}
+                            onClick={handleGuardarDiagrama}>
                             Guardar diagrama
                         </Button>
 
@@ -853,9 +884,9 @@ export const PlantasPage = () => {
                             sx={{ ml: 2 }}
                             color='primary'
                             variant='contained'
-                            endIcon={ <NavigateNextIcon /> }
-                            disabled={ !diagramaGuardado }
-                            onClick={ () => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); } }>
+                            endIcon={<NavigateNextIcon />}
+                            disabled={!diagramaGuardado}
+                            onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
                             Siguiente
                         </Button>
 
@@ -863,20 +894,32 @@ export const PlantasPage = () => {
                 </Grid>
 
                 {/* APARTADO DE DIAGRAMA */}
-                <Grid item xs={ 12 }>
+                <Grid item xs={12}>
                     <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
 
                         <Typography variant="h6">Diagrama de la planta</Typography>
-                        <ReactFlow
-                            nodes={nodos}
-                            edges={lados}
-                            onEdgesChange={onEdgesChange}
-                            onConnect={onConnect}
-                            nodeTypes={ nodeTypes }
-                            fitView
-                        >
-                            <Background />
-                        </ReactFlow>
+                        {nodos2.length > 0 ?
+                            <ReactFlow
+                                nodes={nodos2}
+                                edges={lados2}
+                                onEdgesChange={onEdgesChange}
+                                onConnect={onConnect}
+                                nodeTypes={nodeTypes}
+                                fitView
+                            >
+                                <Background />
+                            </ReactFlow> :
+                            <ReactFlow
+                                nodes={nodos}
+                                edges={lados}
+                                onEdgesChange={onEdgesChange}
+                                onConnect={onConnect}
+                                nodeTypes={nodeTypes}
+                                fitView
+                            >
+                                <Background />
+                            </ReactFlow>
+                        }
                     </Card>
                 </Grid>
 

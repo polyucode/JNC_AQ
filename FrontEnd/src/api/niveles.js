@@ -28,3 +28,9 @@ export const postConfNivelesPlantasCliente = async ( nivel ) => {
     return resp.data.data;
 
 }
+
+export const deleteConfNivelesPlantasCliente = async ( id ) => {
+    
+    const resp = await instance.delete(`/confnivelesplantascliente/${ id }`);
+    
+}

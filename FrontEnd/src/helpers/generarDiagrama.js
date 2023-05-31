@@ -21,7 +21,7 @@ export const useDiagrama = () => {
         setLados( (eds) => addEdge(params, eds) )
     },[]);
 
-    const generarDiagrama = ( numNiveles, elementosPlanta ) => {
+    const generarDiagrama = ( numNiveles, elementosPlanta, setNodos2, setLados2 ) => {
 
         // Preparamos las variables necesarias
         const anchoNodoHijo = 144;
@@ -109,6 +109,8 @@ export const useDiagrama = () => {
 
         // Seteamos todos los nodos en el estado principal
         setNodos([ ...nodosNiveles, ...nodosElementos ]);
+        setNodos2([]);
+        setLados2([]);
         setDiagramaGenerado(true);
 
     }

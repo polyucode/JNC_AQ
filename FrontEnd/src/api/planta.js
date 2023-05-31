@@ -26,3 +26,9 @@ export const putConfPlantaCliente = async ( confPlantaCliente ) => {
     const resp = await instance.put('/confplantascliente', confPlantaCliente);
 
 }
+
+export const deleteConfPlantaCliente = async ( id ) => {
+    
+    const resp = await instance.delete(`/confplantascliente/${ id }`);
+    
+}
