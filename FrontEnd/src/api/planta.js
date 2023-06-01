@@ -28,7 +28,17 @@ export const putConfPlantaCliente = async ( confPlantaCliente ) => {
 }
 
 export const deleteConfPlantaCliente = async ( id ) => {
-    
-    const resp = await instance.delete(`/confplantascliente/${ id }`);
+
+    try {
+
+        const resp = await instance.delete(`/confplantascliente/${ id }`);
+        return true;
+
+    } catch( error ) {
+
+        const { status, title } = error.response.data;
+        console.error(`Ha habido un error:\n${ status } - ${ title }`);
+        return false;
+    }
     
 }

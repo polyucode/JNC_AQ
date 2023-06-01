@@ -12,7 +12,7 @@ import { MainLayout } from "../layout/MainLayout";
 import {
     getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente,
     getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente,
-    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente
+    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente, deleteAnalisisNivelesPlantasCliente, getElementosPlanta, deleteElementosPlanta
 } from "../api";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
@@ -53,6 +53,7 @@ export const PlantasPage = () => {
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
+    const [analisisNiveles, setAnalisisNiveles] = useState([]);
     const [datosGuardados, setDatosGuardados] = useState(false);
     const [diagramaGuardado, setDiagramaGuardado] = useState(false);
 
@@ -286,7 +287,6 @@ export const PlantasPage = () => {
                         // Obtenemos los analisis por este elemento
                         const analisisFiltro = respAnalisis.filter(anali => anali.id_NivelesPlanta === nivel.id)
 
-                        console.log(analisisFiltro, "ANALISIS FILTRO")
                         // Preparamos el objeto de analisis
                         let analisisObjeto = {}
 
@@ -643,18 +643,73 @@ export const PlantasPage = () => {
 
     };
 
+    const eliminarPlanta = async (id) => {
 
-    const eliminarPlanta = async ( id ) => {
-        
-        //await deleteConfPlantaCliente(id);
-        
-        for (let i = 0; i < confNivelesPlantaCliente.length; i++ ){
+        const respAnalisis = await getAnalisisNivelesPlantasCliente();
 
-            console.log(confNivelesPlantaCliente[i], "CONF NIVELES I")
-            //await deleteConfNivelesPlantasCliente(confNivelesPlantaCliente[i].id);
+        const respElementos = await getElementosPlanta();
 
+        confNivelesPlantaCliente.map(async (nivel) => {
+
+            const resp2 = await deleteConfNivelesPlantasCliente(nivel.id);
+
+            const analisisFiltro = respAnalisis.filter(anali => anali.id_NivelesPlanta === nivel.id)
+
+            analisisFiltro.map(async (an) => {
+
+                const resp = await deleteAnalisisNivelesPlantasCliente(an.id);
+            })
+
+            const elementoFiltro = respElementos.filter(elem => elem.id === nivel.id_Elemento)
+
+            elementoFiltro.map(async (el) => {
+
+                const resp = await deleteElementosPlanta(el.id);
+
+            })
+
+        })
+
+        const resp = await deleteConfPlantaCliente(id);
+
+        if (resp) {
+            // Avisamos al usuario
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Planta eliminada',
+                text: `Los datos de la planta de ${confPlantaCliente.NombreCliente} han sido eliminados`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000)
+
+        } else {
+            // Avisamos al usuario
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error borrado planta',
+                text: `Fallo al borrar la planta de  ${confPlantaCliente.NombreCliente}`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
-
     }
 
     return (

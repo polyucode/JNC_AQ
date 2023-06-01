@@ -19,7 +19,8 @@ namespace AnalisisQuimicos.Core.Services
 
         public async Task Delete(int id)
         {
-            await _unidadDeTrabajo.ComarcaRepository.Delete(id);
+            //await _unidadDeTrabajo.ComarcaRepository.Delete(id);
+            await _unidadDeTrabajo.ConfNivelesPlantasClienteRepository.Delete(id);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
