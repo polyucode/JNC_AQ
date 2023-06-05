@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 //import { Grid, Card, CardContent, TextField, Typography, Autocomplete, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Tooltip } from '@mui/material';
-import { Grid, Tab, Tabs, Card, CardContent, TextField, Typography, Autocomplete, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Tooltip } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Tab, Tabs, Card, CardContent, TextField, Typography, Autocomplete, Chip, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Tooltip } from '@mui/material';
 
 import {
     Chart,
@@ -12,7 +12,7 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { bajarPdf, getFicheros, getAnalisis, getClientes, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros, bajarPdfNoFQ } from '../api';
+import { bajarPdf, getFicheros, getAnalisis, getClientes, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros, bajarPdfNoFQ, bajarPdfDashBoard } from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
@@ -26,6 +26,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ErrorIcon from '@mui/icons-material/Error';
 //Icono para descargar PDF
 import DownloadPDF_Icon from '@mui/icons-material/FileDownload';
+//Iconos para sumar / restar contador año para Calendario Tareas
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+//Icono para subir al principio de la pagina
+import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 
 //David pestanyes
 const TabPanel = ({ children, value, index }) => {
@@ -37,8 +42,9 @@ const TabPanel = ({ children, value, index }) => {
 };
 //David pestanyes
 
-const HomeCliente = () => {
 
+const HomeCliente = () => {
+    
     // Guardado de datos
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
@@ -169,18 +175,124 @@ const HomeCliente = () => {
         getConfPlantaClientePorClienteOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
             .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
 
+        //Llamamos a la funcion para calcular inicio oferta
+        buscarFechaInicioOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
     }
 
+    
     console.log(parametrosAnalisisFiltrados, "PARAM FILTRADOS")
 
-    //Prova Pestanyes David
+        
+    //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
+    const buscaNombreFicheroPorId = (pdf) => {
+        const ficheroEncontrado = ficherosAll.find(row => row.id === pdf);
+        return ficheroEncontrado ? ficheroEncontrado.name : '';
+    }
+    //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
+
+    //Contador para mover o simular desplazamiento año en calendario y parametros análisis, inicializando al año fecha sistema (2 Contadores)
+    //Contador1 para Calendario Tareas
+    const [contadorYear, setCount] = useState(new Date().getFullYear());
+
+    const handleIncrementarContador = () => {
+        setCount(contadorYear + 1);
+    };
+
+    const handleDecrementarContador = () => {
+        if (contadorYear > 0) {
+            setCount(contadorYear - 1);
+        }
+    };
+
+    const handleInicializarContador = (yearInicioOferta) => {
+        // contadorYear = yearInicioOferta    
+        setCount(yearInicioOferta);
+    };
+    //Contador2 para Parametros del Anaálisis
+    const [contadorYear2, setCount2] = useState(new Date().getFullYear());
+
+    const handleIncrementarContador2 = () => {
+        setCount2(contadorYear2 + 1);
+    };
+
+    const handleDecrementarContador2 = () => {
+        if (contadorYear2 > 0) {
+            setCount2(contadorYear2 - 1);
+        }
+    };
+
+    const handleInicializarContador2 = (yearInicioOferta) => {
+        // contadorYear2 = yearInicioOferta    
+        setCount2(yearInicioOferta);
+    };
+    //Contador para mover o simular desplazamiento año en calendario y parametros análisis, inicializando al año fecha sistema (2 Contadores)
+
+    //Buscar fecha inicio Oferta
+    const buscarFechaInicioOferta = (clienteSeleccionado, ofertaSeleccionada) =>{
+        const oferta = ofertas.find(row => row.codigoCliente === clienteSeleccionado && row.numeroOferta === ofertaSeleccionada)
+        
+        const fechaInicioOferta = new Date(oferta.fechaInicio)
+    
+        // Modificamos contador año segun el año inicio Oferta
+        //handleInicializarContador(fechaInicioOferta.getFullYear())        
+    }
+    //Buscar fecha inicio Oferta
+
+    //Pestanyes David
     const [activeTab, setActiveTab] = useState(0);
 
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
     };
 
-    //Prova Pestanyes David
+    const handleTabClick = (tabIndex, nombre, datos) => {
+        setActiveTab(tabIndex)
+        
+        {console.log("NOMBRE: ", nombre)}
+        {console.log("Datos fechas: ", datos)}
+        
+        handleSeleccionarParametro({nombre: nombre, datos:datos})
+    }
+    //Pestanyes David
+
+    //PopUp David per mostrar incidencia   
+    const [open, setOpen] = useState(false);
+
+    const handleOpenClosePopUp =()=>{
+        setOpen(!open);
+    }
+
+    const Popup = ({ open, onClose, incidencia }) =>{
+        return (
+            <Dialog 
+                open={open} 
+                maxWidth="sm"
+                fullWidth
+                onClose={onClose}
+            >
+                <DialogTitle>Incidéncia</DialogTitle>
+                    <DialogContent> 
+                        <TextField
+                            multiline
+                            rows={6}
+                            value={incidencia}
+                            fullWidth 
+                        />
+                    </DialogContent>
+                <DialogActions>
+                    <Button onClick={()=>handleOpenClosePopUp()}>CERRAR</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+    //PopUp David per mostrar incidencia
+
+    //Posicionar al principio página al hacer clic en botón
+    const handleInicioPagina = () =>{
+        //posiciona la página al principio
+        window.scroll(0,0);
+    }
+    //Posicionar al principio página al hacer clic en botón
 
     return (
         <>
@@ -232,8 +344,7 @@ const HomeCliente = () => {
                                         renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
                                         onChange={handleSeleccionOferta}
                                     />
-                                </Grid>
-
+                                </Grid>                                
                             </Grid>
                         </CardContent>
                     </Card>
@@ -247,7 +358,8 @@ const HomeCliente = () => {
                                 <Grid item xs={12}>
                                     <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
                                 </Grid>
-                                <Grid item xs={12} sx={{ height: 950 }}>
+                                {/* <Grid item xs={12} sx={{ height: 950 }}> */}
+                                <Grid item xs={12} sx={{ height: 600 }}>
                                     <ReactFlow
                                         nodes={nodos}
                                         edges={lados}
@@ -292,18 +404,20 @@ const HomeCliente = () => {
                                                         return(
                                                         <TableRow>
                                                             <TableCell>
-                                                                <Tooltip title="Ver tarea" placement="right">
-                                                                    <IconButton onClick={() => alert("Abrir Mantenimiento")}>
+                                                                {/* <Tooltip title="Ver tarea" placement="right"> */}
+                                                                    {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
+                                                                    <IconButton onClick={handleOpenClosePopUp}>
+                                                                        <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} />
                                                                         <ErrorIcon />
                                                                     </IconButton>
-                                                                </Tooltip>
+                                                                {/* </Tooltip> */}
                                                             </TableCell>
                                                             <TableCell>
                                                                 {new Date(row.fecha).toLocaleDateString()}
                                                             </TableCell>
                                                             <TableCell>
-                                                                {row.observaciones}
-                                                            </TableCell>        
+                                                                {row.observaciones}                                                                
+                                                            </TableCell>
                                                         </TableRow>
                                                         )    
                                                     }
@@ -334,6 +448,15 @@ const HomeCliente = () => {
                                             <>
                                                 <Grid item>
                                                     <Typography variant="h6">Calendario de tareas</Typography>
+                                                        <IconButton onClick={handleDecrementarContador}>
+                                                            <NavigateBeforeIcon/>
+                                                        </IconButton>
+
+                                                        <span>{contadorYear}</span>
+                                                    
+                                                        <IconButton onClick={handleIncrementarContador}>
+                                                            <NavigateNextIcon/>
+                                                        </IconButton>                                                    
                                                 </Grid>
                                                 <Grid item>
                                                     <Chip label={elementoActivo.nombre} color="primary" />
@@ -342,6 +465,15 @@ const HomeCliente = () => {
                                         ) : (
                                             <Grid item>
                                                 <Typography variant="h6">Calendario de tareas</Typography>
+                                                    <IconButton onClick={handleDecrementarContador}>
+                                                        <NavigateBeforeIcon/>
+                                                    </IconButton>
+
+                                                    <span>{new Date().getFullYear()}</span>
+                                                    
+                                                    <IconButton onClick={handleIncrementarContador}>
+                                                            <NavigateNextIcon/>
+                                                    </IconButton>                                   
                                             </Grid>
                                         )
                                     }
@@ -392,7 +524,8 @@ const HomeCliente = () => {
                                                                 const fecha = new Date(val.fecha);
 
                                                                 // Contamos solo si los registros son de este año
-                                                                if (fecha.getFullYear() === currentTime.getFullYear()) {
+                                                                //if (fecha.getFullYear() === currentTime.getFullYear()) {
+                                                                if (fecha.getFullYear() === contadorYear) {
                                                                     for (let i = 0; i < 12; i++) {
                                                                         if (fecha.getMonth() === i) {
                                                                             val.realizado
@@ -402,7 +535,7 @@ const HomeCliente = () => {
                                                                     }
                                                                 }
 
-                                                                console.log({ fechas })
+                                                                console.log("FECHAS: ", { fechas })
 
                                                             });
 
@@ -473,6 +606,15 @@ const HomeCliente = () => {
                                         <>
                                             <Grid item>
                                                 <Typography variant='h6'>Parámetros del Análisis</Typography>
+                                                    <IconButton onClick={handleDecrementarContador2}>
+                                                        <NavigateBeforeIcon/>
+                                                    </IconButton>
+
+                                                    <span>{contadorYear2}</span>
+                                                    
+                                                    <IconButton onClick={handleIncrementarContador2}>
+                                                            <NavigateNextIcon/>
+                                                    </IconButton>  
                                             </Grid>
                                             <Grid item>
                                                 <Chip label={analisisActivo.nombre} color="primary" />
@@ -481,6 +623,15 @@ const HomeCliente = () => {
                                     ) : (
                                         <Grid item>
                                             <Typography variant='h6'>Selecciona un análisis del calendario</Typography>
+                                                <IconButton onClick={handleDecrementarContador2}>
+                                                    <NavigateBeforeIcon/>
+                                                </IconButton>
+
+                                                <span>{new Date().getFullYear()}</span>
+                                                    
+                                                <IconButton onClick={handleIncrementarContador2}>
+                                                    <NavigateNextIcon/>
+                                                </IconButton>     
                                         </Grid>
                                     )
                                 }
@@ -520,7 +671,15 @@ const HomeCliente = () => {
                                                         valoresPorParametro.map(val => {
 
                                                             const fecha = new Date(val.fecha);
-
+                                                        
+                                                            // if (fecha.getFullYear() === {contadorYear2}) 
+                                                            // {
+                                                            //     for (let i = 0; i < 12; i++) {
+                                                            //         if (fecha.getMonth() === i) {
+                                                            //             fechas[i] = val.valor;
+                                                            //         }
+                                                            //     }
+                                                            // }
                                                             for (let i = 0; i < 12; i++) {
                                                                 if (fecha.getMonth() === i) {
                                                                     fechas[i] = val.valor;
@@ -538,7 +697,9 @@ const HomeCliente = () => {
                                                                 >
                                                                     <TableCell>
                                                                         <Tooltip title="Ver en la gráfica" placement="right">
-                                                                            <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}>
+                                                                            {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
+                                                                            {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
+                                                                            <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>    
                                                                                 <TimelineIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
@@ -654,6 +815,7 @@ const HomeCliente = () => {
                 */}
 
 
+                {console.log(activeTab, "TAB ACTIVO")}
                 
                 {/* APARTAT PESTANYES */}
                 <Grid item xs={6}>
@@ -691,28 +853,33 @@ const HomeCliente = () => {
                                                             <TableContainer component={Paper}>
                                                                 <Table sx={{ minWidth: 650 }}>
                                                                     <TableHead>
-                                                                        <TableRow>
+                                                                        <TableRow>                                                                            
                                                                             <TableCell width="50px;"></TableCell>
-                                                                            <TableCell align="left">PDF</TableCell>                                                    
+                                                                            <TableCell align="left" width="100px;">Fecha</TableCell>
+                                                                            <TableCell>PDF</TableCell>                                                 
                                                                         </TableRow>
                                                                     </TableHead>
                                                                     <TableBody>
                                                                         {
-                                                                            // Mapeamos todos los parametros
-                                                                            
+                                                                            // Mapeamos todos los parametros                                                                            
                                                                             //ficherosAnalisis.map(row => {
                                                                             parametrosPDF.map(row => {
                                                                                 return(
                                                                                 <TableRow>
                                                                                     <TableCell>
                                                                                         <Tooltip title="Descargar PDF" placement="right">
-                                                                                            <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}>
+                                                                                            {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
+                                                                                            <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
                                                                                                 <DownloadPDF_Icon/>
                                                                                             </IconButton>
                                                                                         </Tooltip>
                                                                                     </TableCell>
                                                                                     <TableCell>
-                                                                                        {row.pdf}
+                                                                                        {new Date(row.fecha).toLocaleDateString()}  
+                                                                                    </TableCell>        
+                                                                                    <TableCell>
+                                                                                        {/* {row.pdf} */}
+                                                                                        {buscaNombreFicheroPorId(row.pdf)}
                                                                                     </TableCell>        
                                                                                 </TableRow>
                                                                                 )    
@@ -768,6 +935,14 @@ const HomeCliente = () => {
                         
                         </CardContent>
                     </Card>
+                </Grid>
+                
+                <Grid container justify="flex-end">
+                    <Grid item>
+                        <IconButton onClick={() => handleInicioPagina()}>                              
+                            <OpenInBrowserIcon/>
+                        </IconButton>
+                    </Grid>
                 </Grid>
                 
 
