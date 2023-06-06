@@ -13,7 +13,7 @@ import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
 import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros, 
     getConfNivelesPlantasCliente, getElementos, getOfertas, getParametros, getParametrosAnalisisPlanta, getAnalisisNivelesPlantasCliente,
-    getAnalisis, getClientes, putParametrosElementoPlantaCliente
+    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente
 } from '../api';
 
 const token = {
@@ -515,7 +515,7 @@ export const PlantasTablaPage = () => {
             }
 
             // TODO: PUT
-            const resp = await putParametrosElementoPlantaCliente( param );
+            const resp = await postParametrosElementoPlantaCliente( param );
 
         });
 

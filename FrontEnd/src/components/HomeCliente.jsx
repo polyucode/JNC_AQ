@@ -77,7 +77,7 @@ const HomeCliente = () => {
 
     // Variables de contexto
     const { user } = useContext(AuthContext);
-    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
+    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, analisisParametros, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
 
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
@@ -664,7 +664,7 @@ const HomeCliente = () => {
                                                     parametros.map(row => {
 
                                                         // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorParametro = valoresParametros.filter(param => param.parametro === row.id);
+                                                        const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
                                                         let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
                                                         // Mapeamos los valores en un array, y si no hay datos seteamos un 0
@@ -672,20 +672,14 @@ const HomeCliente = () => {
 
                                                             const fecha = new Date(val.fecha);
                                                         
-                                                            // if (fecha.getFullYear() === {contadorYear2}) 
-                                                            // {
-                                                            //     for (let i = 0; i < 12; i++) {
-                                                            //         if (fecha.getMonth() === i) {
-                                                            //             fechas[i] = val.valor;
-                                                            //         }
-                                                            //     }
-                                                            // }
-                                                            for (let i = 0; i < 12; i++) {
-                                                                if (fecha.getMonth() === i) {
-                                                                    fechas[i] = val.valor;
-                                                                }
+                                                            if (fecha.getFullYear() === contadorYear2) 
+                                                            {
+                                                                 for (let i = 0; i < 12; i++) {
+                                                                     if (fecha.getMonth() === i) {
+                                                                         fechas[i] = val.valor;
+                                                                     }
+                                                                 }
                                                             }
-
                                                         });
 
                                                         // Devolvemos los valores

@@ -8,6 +8,7 @@ export const DashboardProvider = ({ children }) => {
 
     const [listaParametros, setListaParametros] = useState([]);
     const [valoresParametros, setValoresParametros] = useState([]);
+    const [analisisParametros, setAnalisisParametros] = useState([]);
 
     // Valores activos
     const [elementoActivo, setElementoActivo] = useState({});
@@ -43,7 +44,7 @@ export const DashboardProvider = ({ children }) => {
         const analisi = await getAnalisisId( id );
 
         setAnalisisActivo( prev => ({ ...prev, nombre: analisi.nombre , id }));
-        //setValoresParametros(listaParametros.filter( param => param.id_Elemento === id ));
+        setAnalisisParametros(valoresParametros.filter( param => param.id_Analisis === id ));
 
     }
 
@@ -59,6 +60,7 @@ export const DashboardProvider = ({ children }) => {
             parametroActivo,
             analisisActivo,
             valoresParametros,
+            analisisParametros,
             handleSeleccionarElemento,
             handleSeleccionarParametro,
             handleSeleccionarAnalisis
