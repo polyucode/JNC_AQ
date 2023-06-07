@@ -39,9 +39,10 @@ namespace AnalisisQuimicos.Core.Services
 
             ElementosPlanta elemplanta = _unidadDeTrabajo.ElementosPlantaRepository.GetById((int)valoresSorted[0].Id_Elemento).Result;
 
-            ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
+            //ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
 
-            Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetUsuariosByClient(cliente.Id).Result;
+            //Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetUsuariosByClient(cliente.Id).Result;
+            Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetById(3009).Result;
 
             ParametrosElementoQueryFilter filtro = new ParametrosElementoQueryFilter
             {
@@ -205,7 +206,7 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@DOMI", cliente.Direccion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@POBL", cliente.Poblacion);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@TEL", cliente.Telefono);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
+            //PaginaHTML_Texto = PaginaHTML_Texto.Replace("@CONT", contactos.Nombre);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ANA", analisis.Nombre);
 
             string pathFirma = "";
