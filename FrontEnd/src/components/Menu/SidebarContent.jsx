@@ -33,7 +33,7 @@ export const SidebarContent = () => {
 
                         <ListItem key={ key } disablePadding>
                             <ListItemButton
-                                onClick={ () => navigate( path, { replace: true } ) }
+                                onClick={ () => navigate( path, { replace: false } ) }
                             >
                                 <ListItemIcon>
                                     { icon }

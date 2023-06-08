@@ -35,16 +35,16 @@ import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 //David pestanyes
 const TabPanel = ({ children, value, index }) => {
     return (
-      <div role="tabpanel" hidden={value !== index}>
-        {value === index && <div>{children}</div>}
-      </div>
+        <div role="tabpanel" hidden={value !== index}>
+            {value === index && <div>{children}</div>}
+        </div>
     );
 };
 //David pestanyes
 
 
 const HomeCliente = () => {
-    
+
     // Guardado de datos
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
@@ -77,15 +77,22 @@ const HomeCliente = () => {
 
     // Variables de contexto
     const { user } = useContext(AuthContext);
-    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, analisisParametros, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
+    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, analisisParametros, parametrosFiltrados, setElementoActivo, setAnalisisActivo, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
 
+    useEffect(() => {
+        
+        
+
+        setElementoActivo({})
+        setAnalisisActivo({})
+
+    }, [])
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
 
-        //
         getFicheros()
-            .then(resp=>setFicheros(resp))
-    
+            .then(resp => setFicheros(resp))
+
         getClientes()
             .then(resp => setClientes(resp));
 
@@ -105,8 +112,6 @@ const HomeCliente = () => {
             .then(resp => setParametrosAnalisis(resp));
 
     }, []);
-
-    console.log (ficherosAll, "FICHEROS")
 
     // Efecto que carga el diagrama cada vez que se cambia de planta
     useEffect(() => {
@@ -131,25 +136,22 @@ const HomeCliente = () => {
     useEffect(() => {
         if (plantaActiva.codigoCliente) {
             setTareasFiltradas(tareas.filter(tarea => tarea.codigoCliente === plantaActiva.codigoCliente && tarea.oferta === plantaActiva.oferta && parseInt(tarea.elemento, 10) === elementoActivo.id));
-            setParametrosAnalisisFiltrados(parametrosAnalisis.filter(parametro => parametro.codigoCliente === plantaActiva.codigoCliente && parametro.oferta === plantaActiva.oferta && parametro.elemento === elementoActivo.id));
-
-            //Aqui filtramos los prametrosAnalisisFiltrados que tengan Observaciones
-            setIncidencias(parametrosAnalisisFiltrados.filter(inc => inc.observaciones !== ""));
-
-            //Aqui filtramos los prametrosAnalisisFiltrados que tengan Observaciones
-            setPDF_Analisis(parametrosAnalisisFiltrados.filter(pdf => pdf.pdf !== null));
         }
 
         if (elementoActivo.nombre) {
             const scroll = document.getElementById("scroll");
-            scroll.scrollIntoView({ behavior: "smooth" });
+            scroll.scrollIntoView({ behavior: "smooth" });   
         }
-    }, [plantaActiva, elementoActivo]);
 
-    console.log(elementoActivo, "ELEMENTO ACTIVO")
-    console.log(parametrosAnalisisFiltrados, "PARAMETROS ANALISIS FILTRADOS")
+        setIncidencias(parametrosFiltrados.filter(inc => inc.observaciones !== ""));
 
-    console.log(parametrosIncidencias, "INCIDENCIAS")
+        //Aqui filtramos los prametrosAnalisisFiltrados que tengan Observaciones
+        setPDF_Analisis(parametrosFiltrados.filter(pdf => pdf.pdf !== null));
+
+        
+
+
+    }, [plantaActiva, elementoActivo, parametrosFiltrados ]);
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -177,12 +179,15 @@ const HomeCliente = () => {
 
         //Llamamos a la funcion para calcular inicio oferta
         buscarFechaInicioOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
+
     }
 
     
+
+
     console.log(parametrosAnalisisFiltrados, "PARAM FILTRADOS")
 
-        
+
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
     const buscaNombreFicheroPorId = (pdf) => {
         const ficheroEncontrado = ficherosAll.find(row => row.id === pdf);
@@ -228,11 +233,11 @@ const HomeCliente = () => {
     //Contador para mover o simular desplazamiento año en calendario y parametros análisis, inicializando al año fecha sistema (2 Contadores)
 
     //Buscar fecha inicio Oferta
-    const buscarFechaInicioOferta = (clienteSeleccionado, ofertaSeleccionada) =>{
+    const buscarFechaInicioOferta = (clienteSeleccionado, ofertaSeleccionada) => {
         const oferta = ofertas.find(row => row.codigoCliente === clienteSeleccionado && row.numeroOferta === ofertaSeleccionada)
-        
+
         const fechaInicioOferta = new Date(oferta.fechaInicio)
-    
+
         // Modificamos contador año segun el año inicio Oferta
         //handleInicializarContador(fechaInicioOferta.getFullYear())        
     }
@@ -247,40 +252,37 @@ const HomeCliente = () => {
 
     const handleTabClick = (tabIndex, nombre, datos) => {
         setActiveTab(tabIndex)
-        
-        {console.log("NOMBRE: ", nombre)}
-        {console.log("Datos fechas: ", datos)}
-        
-        handleSeleccionarParametro({nombre: nombre, datos:datos})
+
+        handleSeleccionarParametro({ nombre: nombre, datos: datos })
     }
     //Pestanyes David
 
     //PopUp David per mostrar incidencia   
     const [open, setOpen] = useState(false);
 
-    const handleOpenClosePopUp =()=>{
+    const handleOpenClosePopUp = () => {
         setOpen(!open);
     }
 
-    const Popup = ({ open, onClose, incidencia }) =>{
+    const Popup = ({ open, onClose, incidencia }) => {
         return (
-            <Dialog 
-                open={open} 
+            <Dialog
+                open={open}
                 maxWidth="sm"
                 fullWidth
                 onClose={onClose}
             >
                 <DialogTitle>Incidéncia</DialogTitle>
-                    <DialogContent> 
-                        <TextField
-                            multiline
-                            rows={6}
-                            value={incidencia}
-                            fullWidth 
-                        />
-                    </DialogContent>
+                <DialogContent>
+                    <TextField
+                        multiline
+                        rows={6}
+                        value={incidencia}
+                        fullWidth
+                    />
+                </DialogContent>
                 <DialogActions>
-                    <Button onClick={()=>handleOpenClosePopUp()}>CERRAR</Button>
+                    <Button onClick={() => handleOpenClosePopUp()}>CERRAR</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -288,9 +290,9 @@ const HomeCliente = () => {
     //PopUp David per mostrar incidencia
 
     //Posicionar al principio página al hacer clic en botón
-    const handleInicioPagina = () =>{
+    const handleInicioPagina = () => {
         //posiciona la página al principio
-        window.scroll(0,0);
+        window.scroll(0, 0);
     }
     //Posicionar al principio página al hacer clic en botón
 
@@ -344,7 +346,7 @@ const HomeCliente = () => {
                                         renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
                                         onChange={handleSeleccionOferta}
                                     />
-                                </Grid>                                
+                                </Grid>
                             </Grid>
                         </CardContent>
                     </Card>
@@ -392,39 +394,39 @@ const HomeCliente = () => {
                                                 <TableRow>
                                                     <TableCell width="50px;"></TableCell>
                                                     <TableCell align="left" width="100px;">Fecha</TableCell>
-                                                    <TableCell>Incidéncia</TableCell>                                                    
+                                                    <TableCell>Incidéncia</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {
                                                     // Mapeamos todos los parametros
-                                                    
+                                                    elementoActivo.nombre &&
                                                     // parametrosAnalisisFiltrados.map(row => {
                                                     parametrosIncidencias.map(row => {
-                                                        return(
-                                                        <TableRow>
-                                                            <TableCell>
-                                                                {/* <Tooltip title="Ver tarea" placement="right"> */}
+                                                        return (
+                                                            <TableRow>
+                                                                <TableCell>
+                                                                    {/* <Tooltip title="Ver tarea" placement="right"> */}
                                                                     {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
                                                                     <IconButton onClick={handleOpenClosePopUp}>
                                                                         <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} />
                                                                         <ErrorIcon />
                                                                     </IconButton>
-                                                                {/* </Tooltip> */}
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {new Date(row.fecha).toLocaleDateString()}
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {row.observaciones}                                                                
-                                                            </TableCell>
-                                                        </TableRow>
-                                                        )    
+                                                                    {/* </Tooltip> */}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {new Date(row.fecha).toLocaleDateString()}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {row.observaciones}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
                                                     }
                                                     )
-                                                    
-                                                }                                
-                                            </TableBody>                                            
+
+                                                }
+                                            </TableBody>
                                         </Table>
                                     </TableContainer>
                                 </Grid>
@@ -433,7 +435,7 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
-                                                
+
 
                 {/* APARTADO CALENDARIO DE TAREAS POR ELEMENTO */}
                 <Grid item xs={6}>
@@ -448,15 +450,15 @@ const HomeCliente = () => {
                                             <>
                                                 <Grid item>
                                                     <Typography variant="h6">Calendario de tareas</Typography>
-                                                        <IconButton onClick={handleDecrementarContador}>
-                                                            <NavigateBeforeIcon/>
-                                                        </IconButton>
+                                                    <IconButton onClick={handleDecrementarContador}>
+                                                        <NavigateBeforeIcon />
+                                                    </IconButton>
 
-                                                        <span>{contadorYear}</span>
-                                                    
-                                                        <IconButton onClick={handleIncrementarContador}>
-                                                            <NavigateNextIcon/>
-                                                        </IconButton>                                                    
+                                                    <span>{contadorYear}</span>
+
+                                                    <IconButton onClick={handleIncrementarContador}>
+                                                        <NavigateNextIcon />
+                                                    </IconButton>
                                                 </Grid>
                                                 <Grid item>
                                                     <Chip label={elementoActivo.nombre} color="primary" />
@@ -465,15 +467,15 @@ const HomeCliente = () => {
                                         ) : (
                                             <Grid item>
                                                 <Typography variant="h6">Calendario de tareas</Typography>
-                                                    <IconButton onClick={handleDecrementarContador}>
-                                                        <NavigateBeforeIcon/>
-                                                    </IconButton>
+                                                <IconButton onClick={handleDecrementarContador}>
+                                                    <NavigateBeforeIcon />
+                                                </IconButton>
 
-                                                    <span>{new Date().getFullYear()}</span>
-                                                    
-                                                    <IconButton onClick={handleIncrementarContador}>
-                                                            <NavigateNextIcon/>
-                                                    </IconButton>                                   
+                                                <span>{new Date().getFullYear()}</span>
+
+                                                <IconButton onClick={handleIncrementarContador}>
+                                                    <NavigateNextIcon />
+                                                </IconButton>
                                             </Grid>
                                         )
                                     }
@@ -503,6 +505,7 @@ const HomeCliente = () => {
                                             <TableBody>
                                                 {
                                                     // Mapeamos todos los parametros
+                                                    elementoActivo.nombre &&
                                                     analisis.map(row => {
 
                                                         // row -> id, nombre
@@ -510,7 +513,7 @@ const HomeCliente = () => {
                                                         var currentTime = new Date();
 
                                                         // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorTarea = parametrosAnalisisFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
+                                                        const valoresPorTarea = parametrosFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
                                                         let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
 
                                                         if (valoresPorTarea.length > 0) {
@@ -551,7 +554,7 @@ const HomeCliente = () => {
                                                                     <TableCell>
                                                                         <Tooltip title="Ver parametros del elemento" placement="right">
                                                                             <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>
-                                                                                <TimelineIcon/>
+                                                                                <TimelineIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
                                                                     </TableCell>
@@ -593,8 +596,8 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
-                
-                
+
+
                 {/* APARTADO TABLA DE PARAMETROS */}
                 <Grid item xs={6}>
                     <Card style={{ height: '600px', overflowY: 'auto' }}>
@@ -606,15 +609,15 @@ const HomeCliente = () => {
                                         <>
                                             <Grid item>
                                                 <Typography variant='h6'>Parámetros del Análisis</Typography>
-                                                    <IconButton onClick={handleDecrementarContador2}>
-                                                        <NavigateBeforeIcon/>
-                                                    </IconButton>
+                                                <IconButton onClick={handleDecrementarContador2}>
+                                                    <NavigateBeforeIcon />
+                                                </IconButton>
 
-                                                    <span>{contadorYear2}</span>
-                                                    
-                                                    <IconButton onClick={handleIncrementarContador2}>
-                                                            <NavigateNextIcon/>
-                                                    </IconButton>  
+                                                <span>{contadorYear2}</span>
+
+                                                <IconButton onClick={handleIncrementarContador2}>
+                                                    <NavigateNextIcon />
+                                                </IconButton>
                                             </Grid>
                                             <Grid item>
                                                 <Chip label={analisisActivo.nombre} color="primary" />
@@ -623,15 +626,15 @@ const HomeCliente = () => {
                                     ) : (
                                         <Grid item>
                                             <Typography variant='h6'>Selecciona un análisis del calendario</Typography>
-                                                <IconButton onClick={handleDecrementarContador2}>
-                                                    <NavigateBeforeIcon/>
-                                                </IconButton>
+                                            <IconButton onClick={handleDecrementarContador2}>
+                                                <NavigateBeforeIcon />
+                                            </IconButton>
 
-                                                <span>{new Date().getFullYear()}</span>
-                                                    
-                                                <IconButton onClick={handleIncrementarContador2}>
-                                                    <NavigateNextIcon/>
-                                                </IconButton>     
+                                            <span>{new Date().getFullYear()}</span>
+
+                                            <IconButton onClick={handleIncrementarContador2}>
+                                                <NavigateNextIcon />
+                                            </IconButton>
                                         </Grid>
                                     )
                                 }
@@ -671,14 +674,13 @@ const HomeCliente = () => {
                                                         valoresPorParametro.map(val => {
 
                                                             const fecha = new Date(val.fecha);
-                                                        
-                                                            if (fecha.getFullYear() === contadorYear2) 
-                                                            {
-                                                                 for (let i = 0; i < 12; i++) {
-                                                                     if (fecha.getMonth() === i) {
-                                                                         fechas[i] = val.valor;
-                                                                     }
-                                                                 }
+
+                                                            if (fecha.getFullYear() === contadorYear2) {
+                                                                for (let i = 0; i < 12; i++) {
+                                                                    if (fecha.getMonth() === i) {
+                                                                        fechas[i] = val.valor;
+                                                                    }
+                                                                }
                                                             }
                                                         });
 
@@ -693,7 +695,7 @@ const HomeCliente = () => {
                                                                         <Tooltip title="Ver en la gráfica" placement="right">
                                                                             {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
                                                                             {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
-                                                                            <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>    
+                                                                            <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
                                                                                 <TimelineIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
@@ -720,7 +722,7 @@ const HomeCliente = () => {
                 </Grid>
 
 
-               
+
                 {/* ------ APARTADO GRÁFICO ------
                 <Grid item xs={6}>
                     <Card style={{ height: '600px', overflowY: 'auto' }}>
@@ -810,7 +812,7 @@ const HomeCliente = () => {
 
 
                 {console.log(activeTab, "TAB ACTIVO")}
-                
+
                 {/* APARTAT PESTANYES */}
                 <Grid item xs={6}>
                     <Card style={{ height: '600px', overflowY: 'auto' }}>
@@ -823,10 +825,10 @@ const HomeCliente = () => {
                                         onChange={handleTabChange}
                                         indicatorColor="primary"
                                         textColor="primary"
-                                        /*centered*/
-                                        >
+                                    /*centered*/
+                                    >
                                         <Tab label="Documentos" />
-                                        <Tab label="Gráfico" />                                    
+                                        <Tab label="Gráfico" />
                                     </Tabs>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -847,10 +849,10 @@ const HomeCliente = () => {
                                                             <TableContainer component={Paper}>
                                                                 <Table sx={{ minWidth: 650 }}>
                                                                     <TableHead>
-                                                                        <TableRow>                                                                            
+                                                                        <TableRow>
                                                                             <TableCell width="50px;"></TableCell>
                                                                             <TableCell align="left" width="100px;">Fecha</TableCell>
-                                                                            <TableCell>PDF</TableCell>                                                 
+                                                                            <TableCell>PDF</TableCell>
                                                                         </TableRow>
                                                                     </TableHead>
                                                                     <TableBody>
@@ -858,30 +860,30 @@ const HomeCliente = () => {
                                                                             // Mapeamos todos los parametros                                                                            
                                                                             //ficherosAnalisis.map(row => {
                                                                             parametrosPDF.map(row => {
-                                                                                return(
-                                                                                <TableRow>
-                                                                                    <TableCell>
-                                                                                        <Tooltip title="Descargar PDF" placement="right">
-                                                                                            {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
-                                                                                            <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
-                                                                                                <DownloadPDF_Icon/>
-                                                                                            </IconButton>
-                                                                                        </Tooltip>
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        {new Date(row.fecha).toLocaleDateString()}  
-                                                                                    </TableCell>        
-                                                                                    <TableCell>
-                                                                                        {/* {row.pdf} */}
-                                                                                        {buscaNombreFicheroPorId(row.pdf)}
-                                                                                    </TableCell>        
-                                                                                </TableRow>
-                                                                                )    
+                                                                                return (
+                                                                                    <TableRow>
+                                                                                        <TableCell>
+                                                                                            <Tooltip title="Descargar PDF" placement="right">
+                                                                                                {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
+                                                                                                <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
+                                                                                                    <DownloadPDF_Icon />
+                                                                                                </IconButton>
+                                                                                            </Tooltip>
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            {new Date(row.fecha).toLocaleDateString()}
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            {/* {row.pdf} */}
+                                                                                            {buscaNombreFicheroPorId(row.pdf)}
+                                                                                        </TableCell>
+                                                                                    </TableRow>
+                                                                                )
                                                                             }
                                                                             )
-                                                                            
-                                                                        }                                
-                                                                    </TableBody>                                            
+
+                                                                        }
+                                                                    </TableBody>
                                                                 </Table>
                                                             </TableContainer>
                                                         </Grid>
@@ -892,7 +894,7 @@ const HomeCliente = () => {
                                             </Card>
                                         </Grid>
                                     </TabPanel>
-                                    
+
                                     <TabPanel value={activeTab} index={1}>
                                         {/* Contingut del grid Gràfics */}
                                         <Grid item xs={12}>
@@ -923,26 +925,26 @@ const HomeCliente = () => {
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                    </TabPanel>                                                                   
+                                    </TabPanel>
                                 </Grid>
                             </Grid>
-                        
+
                         </CardContent>
                     </Card>
                 </Grid>
-                
+
                 <Grid container justify="flex-end">
                     <Grid item>
-                        <IconButton onClick={() => handleInicioPagina()}>                              
-                            <OpenInBrowserIcon/>
+                        <IconButton onClick={() => handleInicioPagina()}>
+                            <OpenInBrowserIcon />
                         </IconButton>
                     </Grid>
                 </Grid>
-                
 
-             
 
-            </Grid>            
+
+
+            </Grid>
         </>
     );
 

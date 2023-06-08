@@ -11,9 +11,10 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import { useLocation } from "react-router-dom";
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
-import { getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros, 
+import {
+    getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros,
     getConfNivelesPlantasCliente, getElementos, getOfertas, getParametros, getParametrosAnalisisPlanta, getAnalisisNivelesPlantasCliente,
-    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente
+    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente, getValorParametros
 } from '../api';
 
 const token = {
@@ -227,7 +228,11 @@ export const PlantasTablaPage = () => {
         Campo8Activo: false,
         Campo8VerInspector: false,
     });
-    
+
+    const [valoresParametros, setValoresParametros] = useState([]);
+
+    const [parametrosFiltrados, setParametrosFiltrados] = useState([]);
+
     /*** HOOKS ***/
     const { state } = useLocation();
     const { valores } = useContext(ThemeContext);
@@ -238,41 +243,46 @@ export const PlantasTablaPage = () => {
 
     // Efecto que comprueba si se reciben parametros de la página anterior y los setea
     useEffect(() => {
-        if( state != null ) {
-            setParametrosSeleccionado( prevParam => ({ ...prevParam, codigoCliente: state.codigoCliente, oferta: state.codigoOferta }) );
+        if (state != null) {
+            setParametrosSeleccionado(prevParam => ({ ...prevParam, codigoCliente: state.codigoCliente, oferta: state.codigoOferta }));
         }
-    },[]);
+    }, []);
 
     // Peticiones al backend
     useEffect(() => {
-        
+
         getClientes()
-            .then( resp => setClientes(resp) );
-        
+            .then(resp => setClientes(resp));
+
         getOfertas()
-            .then( resp => setOferta(resp) );
-        
+            .then(resp => setOferta(resp));
+
         getElementos()
-            .then( resp => setElementos(resp) );
-        
+            .then(resp => setElementos(resp));
+
         getParametros()
-            .then( resp => setParametros(resp) );
+            .then(resp => setParametros(resp));
 
         getAnalisis()
-            .then( resp => setAnalisis(resp));
+            .then(resp => setAnalisis(resp));
 
         getParametrosAnalisisPlanta()
-            .then( resp => setParametrosAnalisisPlanta(resp) );
-        
+            .then(resp => setParametrosAnalisisPlanta(resp));
+
         getParametrosElementoPlantaCliente()
-            .then( resp => setParametrosElementoPlanta(resp) );
+            .then(resp => setParametrosElementoPlanta(resp));
 
         getConfNivelesPlantasCliente()
-            .then( resp => setConfNivelesPlantasCliente(resp) );
+            .then(resp => setConfNivelesPlantasCliente(resp));
 
         getAnalisisNivelesPlantasCliente()
-            .then( resp => setConfAnalisisNivelesPlantasCliente(resp));
+            .then(resp => setConfAnalisisNivelesPlantasCliente(resp));
+
+        getValorParametros()
+            .then(resp => setValoresParametros(resp));
     }, []);
+
+    console.log(valoresParametros)
 
     // Efecto que selecciona el nombre del cliente cuando cambia el código
     useEffect(() => {
@@ -293,34 +303,34 @@ export const PlantasTablaPage = () => {
         opcionesFiltradas = [];
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta);
-        lista.map( elemento => {
-            opcionesFiltradas.push(elementos.filter( elem => elem.id === elemento.id_Elemento )[0]);
+        lista.map(elemento => {
+            opcionesFiltradas.push(elementos.filter(elem => elem.id === elemento.id_Elemento)[0]);
         });
 
-        setElementosAutocomplete( opcionesFiltradas );
+        setElementosAutocomplete(opcionesFiltradas);
 
-    },[parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, confNivelesPlantasCliente ]);
+    }, [parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, confNivelesPlantasCliente]);
 
     useEffect(() => {
 
         opcionesFiltradasAnalisis = [];
         opcionesNombreFiltradasAnalisis = [];
-    
+
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta && planta.id_Elemento === parametrosSeleccionado.idElemento);
-    
+
         lista.map(analisis => {
-          opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
+            opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
         })
-    
+
         opcionesFiltradasAnalisis.map(nomAnalisis => {
-          nomAnalisis.map(anal => {
-            opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
-          })
+            nomAnalisis.map(anal => {
+                opcionesNombreFiltradasAnalisis.push(analisis.filter(an => an.id === anal.id_Analisis)[0])
+            })
         })
-    
+
         setAnalisisAutocomplete(opcionesNombreFiltradasAnalisis)
-    
-      }, [parametrosSeleccionado.idElemento])
+
+    }, [parametrosSeleccionado.idElemento])
 
     // Revisar si sirve o no
     useEffect(() => {
@@ -339,7 +349,7 @@ export const PlantasTablaPage = () => {
         const { name, value } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros( prev => (prev.map( parametro => {
+        setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
                 return { ...parametro, limInf: value };
@@ -352,12 +362,12 @@ export const PlantasTablaPage = () => {
     }
 
     const handleLimitSuperior = (e) => {
-        
+
         // Extraemos los datos necesarios
         const { name, value } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros( prev => (prev.map( parametro => {
+        setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
                 return { ...parametro, limSup: value };
@@ -375,7 +385,7 @@ export const PlantasTablaPage = () => {
         const { name, value } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros( prev => (prev.map( parametro => {
+        setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
                 return { ...parametro, unidades: value };
@@ -393,7 +403,7 @@ export const PlantasTablaPage = () => {
         const { name, checked } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros( prev => (prev.map( parametro => {
+        setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
                 return { ...parametro, activo: checked };
@@ -411,7 +421,7 @@ export const PlantasTablaPage = () => {
         const { name, checked } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros( prev => (prev.map( parametro => {
+        setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
                 return { ...parametro, verInspector: checked };
@@ -424,6 +434,7 @@ export const PlantasTablaPage = () => {
     }
 
     async function valorParametros() {
+
 
         tipoParametros.map((parametro) => {
             if (parametro.activo == true) {
@@ -447,9 +458,14 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
-                const resp = postValorParametros(param2);
-                return resp;
-            
+                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
+
+                console.log(valorFiltrado, "VALOR FILTRADO")
+
+                if(valorFiltrado.length == 0){
+                    const resp = postValorParametros(param2);
+                    return resp;
+                }
             }
         })
     }
@@ -460,7 +476,7 @@ export const PlantasTablaPage = () => {
 
         //let tipoParametrosActualizados = tipoParametros;
 
-        const datosMapeados = resp.map( datos => {
+        const datosMapeados = resp.map(datos => {
 
             // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
             const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
@@ -480,7 +496,7 @@ export const PlantasTablaPage = () => {
         });
 
         // Una vez mapeado, seteamos los datos en el estado
-        setTipoParametros([ ...datosMapeados ]);
+        setTipoParametros([...datosMapeados]);
 
     }
 
@@ -488,53 +504,110 @@ export const PlantasTablaPage = () => {
 
         valorParametros()
 
-        await tipoParametros.map( async (parametro) => {
+        const resp = await tipoParametros.map(async (parametro) => {
 
-            // Mapeamos el registro a actualizar en la base de datos
-            const param = {
-                id: parametro.dbId,
-                Parametro: parametro.id,
-                CodigoCliente: parametrosSeleccionado.codigoCliente,
-                NombreCliente: parametrosSeleccionado.nombreCliente,
-                Oferta: parametrosSeleccionado.oferta,
-                Id_Elemento: parametrosSeleccionado.idElemento,
-                Id_Analisis: parametrosSeleccionado.idAnalisis,
-                EsPlantilla: true,
-                LimInf: parseInt(parametro.limInf, 10),
-                LimSup: parseInt(parametro.limSup, 10),
-                Unidades: parametro.unidades,
-                Activo: parametro.activo,
-                VerInspector: parametro.verInspector,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null
+            if(parametro.dbId){
+                const param = {
+                    id: parametro.dbId,
+                    Parametro: parametro.id,
+                    CodigoCliente: parametrosSeleccionado.codigoCliente,
+                    NombreCliente: parametrosSeleccionado.nombreCliente,
+                    Oferta: parametrosSeleccionado.oferta,
+                    Id_Elemento: parametrosSeleccionado.idElemento,
+                    Id_Analisis: parametrosSeleccionado.idAnalisis,
+                    EsPlantilla: true,
+                    LimInf: parseInt(parametro.limInf, 10),
+                    LimSup: parseInt(parametro.limSup, 10),
+                    Unidades: parametro.unidades,
+                    Activo: parametro.activo,
+                    VerInspector: parametro.verInspector,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+
+                await putParametrosElementoPlantaCliente(param)
+
+            } else{
+
+                const param = {
+                    Parametro: parametro.id,
+                    CodigoCliente: parametrosSeleccionado.codigoCliente,
+                    NombreCliente: parametrosSeleccionado.nombreCliente,
+                    Oferta: parametrosSeleccionado.oferta,
+                    Id_Elemento: parametrosSeleccionado.idElemento,
+                    Id_Analisis: parametrosSeleccionado.idAnalisis,
+                    EsPlantilla: true,
+                    LimInf: parseInt(parametro.limInf, 10),
+                    LimSup: parseInt(parametro.limSup, 10),
+                    Unidades: parametro.unidades,
+                    Activo: parametro.activo,
+                    VerInspector: parametro.verInspector,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+
+                await postParametrosElementoPlantaCliente(param);
             }
-
-            // TODO: PUT
-            const resp = await postParametrosElementoPlantaCliente( param );
+          
 
         });
 
-        // Avisamos al usuario
-        Swal.fire({
-            position: 'center',
-            icon: 'info',
-            title: 'Parámetros guardados',
-            text: `Los parámetros del elemento han sido guardados`,
-            showConfirmButton: false,
-            timer: 2000,
-            showClass: {
-                popup: 'animate__animated animate__bounceIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__bounceOut'
-            }
-        });
+        if(resp){
 
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Parámetros guardados',
+                text: `Los parámetros del elemento han sido guardados`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+
+        } else{
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error al guardar',
+                text: `Error al guardar los parametros del elemento`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
+    }
+
+    const onChangeAnalisis = (e, value, name) => {
+
+        if (e.target.innerText !== "") {
+            setParametrosFiltrados(parametrosElementoPlanta.filter(parametro => parametro.codigoCliente === parametrosSeleccionado.codigoCliente && parametro.oferta === parametrosSeleccionado.oferta && parametro.id_Elemento === parametrosSeleccionado.idElemento && parametro.id_Analisis === value.id))
+        }
+
+        setParametrosSeleccionado(prevState => ({
+            ...prevState,
+            idAnalisis: value.id,
+            nombreAnalisis: e.target.innerText
+        }))
     }
 
     return (
@@ -543,17 +616,17 @@ export const PlantasTablaPage = () => {
             <Grid container spacing={2}>
 
                 {/* SELECCIÓN DE CLIENTE Y OFERTA */}
-                <Grid item xs={ 12 }>
+                <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex' }}>
-                        <Grid container spacing={ 2 } sx={{ alignItems: 'center' }}>
+                        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
-                            <Grid item xs={ 2 }>
+                            <Grid item xs={2}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="codigoCliente"
                                     inputValue={parametrosSeleccionado.codigoCliente.toString()}
                                     options={clientes}
-                                    getOptionLabel={ option => option.codigo.toString() }
+                                    getOptionLabel={option => option.codigo.toString()}
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
@@ -562,46 +635,46 @@ export const PlantasTablaPage = () => {
                                 />
                             </Grid>
 
-                            <Grid item xs={ 3 }>
+                            <Grid item xs={3}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="CboClientes"
                                     inputValue={parametrosSeleccionado.nombreCliente.toString()}
                                     options={clientes}
                                     filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
-                                    getOptionLabel={ option => option.razonSocial }
-                                    renderInput={ (params) => <TextField {...params} name="nombreCliente" label="Nombre" /> }
+                                    getOptionLabel={option => option.razonSocial}
+                                    renderInput={(params) => <TextField {...params} name="nombreCliente" label="Nombre" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
                                         nombreCliente: value.razonSocial
                                     }))}
-                                />    
+                                />
                             </Grid>
 
-                            <Grid item xs={ 2 }>
+                            <Grid item xs={2}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="Oferta"
                                     inputValue={parametrosSeleccionado.oferta.toString()}
                                     options={oferta}
                                     filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
-                                    getOptionLabel={ option => option.numeroOferta.toString() }
+                                    getOptionLabel={option => option.numeroOferta.toString()}
                                     renderInput={(params) => <TextField {...params} name="oferta" label="Código oferta" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
                                         oferta: parseInt(value.numeroOferta),
                                         elemento: ''
                                     }))}
-                                />   
+                                />
                             </Grid>
 
-                            <Grid item xs={ 2 }>
+                            <Grid item xs={2}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="elemento"
-                                    inputValue={ parametrosSeleccionado.nombreElemento }
-                                    options={ elementosAutocomplete }
-                                    getOptionLabel={option => ( option.nombre+' '+option.numero )}
+                                    inputValue={parametrosSeleccionado.nombreElemento}
+                                    options={elementosAutocomplete}
+                                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                                     renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
                                     onChange={(event, value) => {
                                         setParametrosSeleccionado(prevState => ({
@@ -615,22 +688,16 @@ export const PlantasTablaPage = () => {
                                 />
                             </Grid>
 
-                            <Grid item xs={ 3 }>
+                            <Grid item xs={3}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="analisis"
-                                    inputValue={ parametrosSeleccionado.nombreAnalisis }
-                                    options={ analisisAutocomplete }
+                                    inputValue={parametrosSeleccionado.nombreAnalisis}
+                                    options={analisisAutocomplete}
                                     filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11)}
                                     getOptionLabel={option => option.nombre}
                                     renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
-                                    onChange={(event, value) => {
-                                        setParametrosSeleccionado(prevState => ({
-                                            ...prevState,
-                                            idAnalisis: value.id,
-                                            nombreAnalisis: event.target.innerText
-                                        }))
-                                    }}
+                                    onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}
                                 />
                             </Grid>
 
@@ -639,67 +706,60 @@ export const PlantasTablaPage = () => {
                 </Grid>
 
                 {/* BOTONES DE ACCIONES */}
-                <Grid item xs={ 12 }>
+                <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Grid container spacing={ 2 } sx={{ justifyContent: 'flex-end' }}>
-                            {
-                                valores.codigo ? (
-                                    <Grid item>
-                                        <Button
-                                            color='success'
-                                            variant='contained'
-                                            startIcon={ <NoteAddIcon /> }
-                                            onClick={ guardarPlantilla }
-                                        >
-                                            Guardar plantilla
-                                        </Button>
-                                    </Grid>
-                                ) : (
-                                    <>
-                                        <Grid item>
-                                            <Button
-                                                color='primary'
-                                                variant='contained'
-                                                startIcon={ <TaskIcon /> }
-                                                onClick={ abrirPlantilla }
-                                            >
-                                                Abrir plantilla
-                                            </Button>
-                                        </Grid>
+                        <Grid container spacing={2} sx={{ justifyContent: 'flex-end' }}>
+                            <>
+                                {
+                                    parametrosFiltrados.length > 0 ?
+                                        <>
+                                            <Grid item>
+                                                <Button
+                                                    color='primary'
+                                                    variant='contained'
+                                                    startIcon={<TaskIcon />}
+                                                    onClick={abrirPlantilla}
+                                                >
+                                                    Abrir plantilla
+                                                </Button>
+                                            </Grid>
+
+                                            <Grid item>
+                                                <Button
+                                                    color='success'
+                                                    variant='contained'
+                                                    startIcon={<NoteAddIcon />}
+                                                    onClick={guardarPlantilla}
+                                                >
+                                                    Guardar plantilla
+                                                </Button>
+                                            </Grid>
+                                        </>
+                                        :
 
                                         <Grid item>
                                             <Button
                                                 color='success'
                                                 variant='contained'
-                                                startIcon={ <NoteAddIcon /> }
-                                                onClick={ guardarPlantilla }
+                                                startIcon={<NoteAddIcon />}
+                                                onClick={guardarPlantilla}
                                             >
                                                 Guardar plantilla
                                             </Button>
                                         </Grid>
 
-                                        {/* <Grid item>
-                                            <Button
-                                                //sx={{ ml: 2 }}
-                                                color='warning'
-                                                variant='contained'
-                                                startIcon={ <CreateIcon /> }
-                                                onClick={ editarPlantilla }
-                                            >
-                                                Editar plantilla
-                                            </Button>
-                                        </Grid> */}
-                                    </>
-                                )
-                            }
+                                }
+
+
+                            </>
                         </Grid>
                     </Card>
                 </Grid>
 
                 {/* TABLA DE PARAMETRIZACIÓN */}
-                <Grid item xs={ 12 }>
+                <Grid item xs={12}>
                     <Card sx={{ p: 2 }}>
-                        <Grid container spacing={ 2 } sx={{ flexDirection: 'column' }}>
+                        <Grid container spacing={2} sx={{ flexDirection: 'column' }}>
 
                             <Grid item>
                                 <Typography variant="h6">Parámetros</Typography>
@@ -722,16 +782,16 @@ export const PlantasTablaPage = () => {
 
                                         <TableBody>
                                             {
-                                                tipoParametros.map( (parametro, index) => (
+                                                tipoParametros.map((parametro, index) => (
                                                     <LineaParametro
-                                                        key={ index }
-                                                        parametros={ tipoParametros }
-                                                        indice={ index }
-                                                        limInf={ handleLimitInferior }
-                                                        limSup={ handleLimitSuperior }
-                                                        unidades={ handleUnidad }
-                                                        activar={ handleActivo }
-                                                        verInsp={ handleVerInspector }
+                                                        key={index}
+                                                        parametros={tipoParametros}
+                                                        indice={index}
+                                                        limInf={handleLimitInferior}
+                                                        limSup={handleLimitSuperior}
+                                                        unidades={handleUnidad}
+                                                        activar={handleActivo}
+                                                        verInsp={handleVerInspector}
                                                     />
                                                 ))
                                             }

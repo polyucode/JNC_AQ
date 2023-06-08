@@ -31,7 +31,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
                 if (sel.ToArray().Length == 0)
                 {
-                    sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis);
+                    sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Id_Elemento == filtro.Id_Elemento && x.Id_Analisis == filtro.Id_Analisis && x.Fecha == null);
                 }
             }
 

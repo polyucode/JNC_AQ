@@ -32,6 +32,6 @@ export const postValorParametros = async ( parametro ) => {
 export const putValorParametros = async ( parametro ) => {
 
     const resp = await instance.put('/valorparametros', parametro);
-    return resp.data.data;
+    return resp;
 
 }
