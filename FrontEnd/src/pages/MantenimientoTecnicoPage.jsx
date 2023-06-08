@@ -561,6 +561,7 @@ export const MantenimientoTecnicoPage = () => {
         }
 
     }
+    console.log(tareaAnalisisPlanta)
 
     return (
         <MainLayout title='Mantenimiento técnico'>
@@ -695,7 +696,7 @@ export const MantenimientoTecnicoPage = () => {
                 <Grid item xs={12}>
                     <Card>
                         {
-                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) ?
+                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) && tareaAnalisisPlanta.codigoCliente ?
                                 (<CardContent style={{ padding: '30px', margin: '15px' }}>
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>
