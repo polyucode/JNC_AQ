@@ -295,14 +295,9 @@ export const MantenimientoTecnicoPage = () => {
 
         setValoresParametros([])
 
-        const fecha = new Date(value.fecha)
-        const fechaFormat = fecha.toISOString()
-
-        console.log(fechaFormat)
-
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
-            [name]: fechaFormat,
+            [name]: value.fecha,
         }))
     }
 
