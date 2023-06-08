@@ -30,6 +30,7 @@ export const DashboardProvider = ({ children }) => {
         getParametrosAnalisisPlanta()
             .then(resp => setParametrosAnalisis(resp));
 
+
     }, []);
 
     /*** FUNCIONES ***/
@@ -44,10 +45,24 @@ export const DashboardProvider = ({ children }) => {
         setElementoActivo(prev => ({ ...prev, nombre: elemento.nombre + ' ' + elemento.numero, id }));
         setValoresParametros(listaParametros.filter(param => param.id_Elemento === id));
 
-        setParametrosFiltrados(parametrosAnalisis.filter(an => an.elemento === id));
+        //parametros Analisisi Ordenados por fecha descendente 
+        setParametrosFiltrados(parametrosAnalisis
+            .filter(an => an.elemento === id)
+            .sort((a,b) => {
+                const valorA = new Date(a.fecha);
+                const valorB = new Date(b.fecha);
+
+                if (valorA < valorB) {
+                    return parametrosAnalisis ? 1 : -1;
+                }
+                if (valorA > valorB) {
+                    return parametrosAnalisis ? -1 : 1;                    
+                }
+            }
+            )
+        );
 
         setAnalisisActivo({})
-
     }
 
     const handleSeleccionarAnalisis = async (id) => {

@@ -31,6 +31,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 //Icono para subir al principio de la pagina
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { isNull } from 'lodash';
 
 //David pestanyes
 const TabPanel = ({ children, value, index }) => {
@@ -44,7 +47,7 @@ const TabPanel = ({ children, value, index }) => {
 
 
 const HomeCliente = () => {
-
+  
     // Guardado de datos
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
@@ -81,15 +84,15 @@ const HomeCliente = () => {
 
     useEffect(() => {
         
-        
-
         setElementoActivo({})
         setAnalisisActivo({})
 
     }, [])
+
     // Efecto que realiza las peticiones al cargar la página
     useEffect(() => {
 
+        //
         getFicheros()
             .then(resp => setFicheros(resp))
 
@@ -111,7 +114,12 @@ const HomeCliente = () => {
         getParametrosAnalisisPlanta()
             .then(resp => setParametrosAnalisis(resp));
 
+        setElementoActivo({})       
+        
+
     }, []);
+
+    console.log(ficherosAll, "FICHEROS")
 
     // Efecto que carga el diagrama cada vez que se cambia de planta
     useEffect(() => {
@@ -148,10 +156,11 @@ const HomeCliente = () => {
         //Aqui filtramos los prametrosAnalisisFiltrados que tengan Observaciones
         setPDF_Analisis(parametrosFiltrados.filter(pdf => pdf.pdf !== null));
 
-        
-
 
     }, [plantaActiva, elementoActivo, parametrosFiltrados ]);
+
+    console.log(elementoActivo, "ELEMENTO ACTIVO")
+    console.log(parametrosAnalisisFiltrados, "PARAMETROS ANALISIS FILTRADOS")
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -175,18 +184,10 @@ const HomeCliente = () => {
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
         getConfPlantaClientePorClienteOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
-            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
-
-        //Llamamos a la funcion para calcular inicio oferta
-        buscarFechaInicioOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
-
+            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));      
     }
 
-    
-
-
     console.log(parametrosAnalisisFiltrados, "PARAM FILTRADOS")
-
 
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
     const buscaNombreFicheroPorId = (pdf) => {
@@ -209,39 +210,23 @@ const HomeCliente = () => {
         }
     };
 
-    const handleInicializarContador = (yearInicioOferta) => {
-        // contadorYear = yearInicioOferta    
-        setCount(yearInicioOferta);
-    };
     //Contador2 para Parametros del Anaálisis
     const [contadorYear2, setCount2] = useState(new Date().getFullYear());
 
     const handleIncrementarContador2 = () => {
         setCount2(contadorYear2 + 1);
+        //Reactivamos pestaña PDF
+        setActiveTab(0)
     };
 
     const handleDecrementarContador2 = () => {
         if (contadorYear2 > 0) {
             setCount2(contadorYear2 - 1);
+            //Reactivamos pestaña PDF
+            setActiveTab(0)
         }
     };
-
-    const handleInicializarContador2 = (yearInicioOferta) => {
-        // contadorYear2 = yearInicioOferta    
-        setCount2(yearInicioOferta);
-    };
     //Contador para mover o simular desplazamiento año en calendario y parametros análisis, inicializando al año fecha sistema (2 Contadores)
-
-    //Buscar fecha inicio Oferta
-    const buscarFechaInicioOferta = (clienteSeleccionado, ofertaSeleccionada) => {
-        const oferta = ofertas.find(row => row.codigoCliente === clienteSeleccionado && row.numeroOferta === ofertaSeleccionada)
-
-        const fechaInicioOferta = new Date(oferta.fechaInicio)
-
-        // Modificamos contador año segun el año inicio Oferta
-        //handleInicializarContador(fechaInicioOferta.getFullYear())        
-    }
-    //Buscar fecha inicio Oferta
 
     //Pestanyes David
     const [activeTab, setActiveTab] = useState(0);
@@ -250,9 +235,12 @@ const HomeCliente = () => {
         setActiveTab(newValue);
     };
 
-    const handleTabClick = (tabIndex, nombre, datos) => {
+    const handleTabClick = (tabIndex, nombre, datos) => { //Activa penstaña Grafico
         setActiveTab(tabIndex)
 
+        // { console.log("NOMBRE: ", nombre) }
+        // { console.log("Datos fechas: ", datos) }
+        
         handleSeleccionarParametro({ nombre: nombre, datos: datos })
     }
     //Pestanyes David
@@ -295,6 +283,73 @@ const HomeCliente = () => {
         window.scroll(0, 0);
     }
     //Posicionar al principio página al hacer clic en botón
+
+    //Posicionar al final página al hacer clic en botón
+    const handleScrollToBottom = () => {
+        window.scrollTo(0, document.body.scrollHeight);
+    };
+    //Posicionar al final página al hacer clic en botón
+
+
+    //Ordenacion por columnas (Apartado Incidencias)
+    const [ordenColumnaIncidencias, setOrdenColumnaIncidencia] = useState(null);
+    const [ordenAscendenteIncidencia, setOrdenAscendenteIncidencia] = useState(true);
+ 
+    const manejarOrdenColumnaIncidencia = (nombreColumna) => {
+        if (ordenColumnaIncidencias === nombreColumna) {
+            setOrdenAscendenteIncidencia(!ordenAscendenteIncidencia);
+        }
+        else {
+            setOrdenColumnaIncidencia(nombreColumna);
+            setOrdenAscendenteIncidencia(true);
+        }
+    };
+ 
+    // Ordenar los datos según la columna seleccionada fecha y el orden ascendente/descendente
+    const datosOrdenadosIncdencias = ordenColumnaIncidencias
+        ? parametrosIncidencias.sort((a, b) => {
+            const valorA = a[ordenColumnaIncidencias];
+            const valorB = b[ordenColumnaIncidencias];
+            if (valorA < valorB) {
+                return ordenAscendenteIncidencia ? -1 : 1;
+            }
+            if (valorA > valorB) {
+                return ordenAscendenteIncidencia ? 1 : -1;
+            }
+            return 0;
+        })
+        : parametrosIncidencias;
+    //Ordenacion por columnas (Apartado Incidencias)
+ 
+    //Ordenacion por columnas (Apartado PDF'S)
+    const [ordenColumnaPDF, setOrdenColumnaPDF] = useState(null);
+    const [ordenAscendentePDF, setOrdenAscendentePDF] = useState(true);
+    
+    const manejarOrdenColumnaPDF = (nombreColumna) => {
+        if (ordenColumnaPDF === nombreColumna) {
+            setOrdenAscendentePDF(!ordenAscendentePDF);
+        }
+        else {
+            setOrdenColumnaPDF(nombreColumna);
+            setOrdenAscendentePDF(true);
+        }
+    };
+ 
+    // Ordenar los datos según la columna seleccionada fecha y el orden ascendente/descendente
+    const datosOrdenadosPDF = ordenColumnaPDF
+        ? parametrosPDF.sort((a, b) => {
+            const valorA = a[ordenColumnaPDF];
+            const valorB = b[ordenColumnaPDF];
+            if (valorA < valorB) {
+                return ordenAscendentePDF ? -1 : 1;
+            }
+            if (valorA > valorB) {
+                return ordenAscendentePDF ? 1 : -1;
+            }
+            return 0;
+        })
+        : parametrosPDF;
+    //Ordenacion por columnas (Apartado PDF'S)
 
     return (
         <>
@@ -376,6 +431,11 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
+                {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+                <Grid item id='scroll' xs={12}></Grid>
+                <Grid item xs={12}></Grid>
+                {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+
                 {/*Apartado incidencias */}
                 <Grid item xs={6} id='scroll'>
                     <Card style={{ height: '600px', overflowY: 'auto' }}>
@@ -393,23 +453,29 @@ const HomeCliente = () => {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell width="50px;"></TableCell>
-                                                    <TableCell align="left" width="100px;">Fecha</TableCell>
+                                                    {/* <TableCell align="left" width="100px;">Fecha</TableCell> */}
+                                                    <TableCell onClick={() => manejarOrdenColumnaIncidencia('fecha')} align="left" width="100px;">
+                                                        Fecha
+                                                        {ordenColumnaIncidencias === 'fecha' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                    </TableCell>
                                                     <TableCell>Incidéncia</TableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    // Mapeamos todos los parametros
+                                                    
                                                     elementoActivo.nombre &&
                                                     // parametrosAnalisisFiltrados.map(row => {
-                                                    parametrosIncidencias.map(row => {
+                                                    // parametrosIncidencias.map(row => {
+                                                    datosOrdenadosIncdencias.map(row => {
                                                         return (
                                                             <TableRow>
                                                                 <TableCell>
                                                                     {/* <Tooltip title="Ver tarea" placement="right"> */}
                                                                     {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
-                                                                    <IconButton onClick={handleOpenClosePopUp}>
-                                                                        <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} />
+                                                                    {/* <IconButton onClick={handleOpenClosePopUp}> */}
+                                                                    {/* <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} /> */}
+                                                                    <IconButton className='' onClick={() => alert(row.observaciones)}>
                                                                         <ErrorIcon />
                                                                     </IconButton>
                                                                     {/* </Tooltip> */}
@@ -504,8 +570,8 @@ const HomeCliente = () => {
                                             </TableHead>
                                             <TableBody>
                                                 {
-                                                    // Mapeamos todos los parametros
                                                     elementoActivo.nombre &&
+                                                    // Mapeamos todos los parametros
                                                     analisis.map(row => {
 
                                                         // row -> id, nombre
@@ -553,7 +619,7 @@ const HomeCliente = () => {
                                                                 >
                                                                     <TableCell>
                                                                         <Tooltip title="Ver parametros del elemento" placement="right">
-                                                                            <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>
+                                                                            <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>                                                                            
                                                                                 <TimelineIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
@@ -596,6 +662,17 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
+                
+                <Grid container align="right">
+                    <Grid item xs={12}>
+                        <IconButton onClick={() => handleScrollToBottom()}>
+                            <ArrowDownwardIcon fontSize="large" />
+                        </IconButton>
+                        <IconButton onClick={() => handleInicioPagina()}>
+                            <ArrowUpwardIcon fontSize="large" />
+                        </IconButton>
+                    </Grid>
+                </Grid>
 
 
                 {/* APARTADO TABLA DE PARAMETROS */}
@@ -682,6 +759,7 @@ const HomeCliente = () => {
                                                                     }
                                                                 }
                                                             }
+
                                                         });
 
                                                         // Devolvemos los valores
@@ -835,7 +913,7 @@ const HomeCliente = () => {
                                     <TabPanel value={activeTab} index={0}>
                                         {/* Contingut del grid PDF'S */}
                                         {/*Apartado PDF'S */}
-                                        <Grid item xs={12} id='scroll'>
+                                        <Grid item xs={12}>
                                             <Card style={{ height: '600px', overflowY: 'auto' }}>
                                                 <CardContent sx={{ p: 2 }}>
 
@@ -851,15 +929,20 @@ const HomeCliente = () => {
                                                                     <TableHead>
                                                                         <TableRow>
                                                                             <TableCell width="50px;"></TableCell>
-                                                                            <TableCell align="left" width="100px;">Fecha</TableCell>
+                                                                            <TableCell onClick={() => manejarOrdenColumnaPDF('fecha')} align="left" width="100px;">
+                                                                                Fecha
+                                                                                {ordenColumnaPDF === 'fecha' && (ordenAscendentePDF ? ' ▲' : ' ▼')}
+                                                                            </TableCell>
                                                                             <TableCell>PDF</TableCell>
                                                                         </TableRow>
                                                                     </TableHead>
                                                                     <TableBody>
                                                                         {
+                                                                            elementoActivo.nombre &&
                                                                             // Mapeamos todos los parametros                                                                            
                                                                             //ficherosAnalisis.map(row => {
-                                                                            parametrosPDF.map(row => {
+                                                                            //parametrosPDF.map(row => {
+                                                                            datosOrdenadosPDF.map(row => {
                                                                                 return (
                                                                                     <TableRow>
                                                                                         <TableCell>
@@ -933,16 +1016,13 @@ const HomeCliente = () => {
                     </Card>
                 </Grid>
 
-                <Grid container justify="flex-end">
-                    <Grid item>
+                <Grid container align="right">
+                    <Grid item xs={12}>
                         <IconButton onClick={() => handleInicioPagina()}>
-                            <OpenInBrowserIcon />
+                            <ArrowUpwardIcon fontSize="large" />
                         </IconButton>
                     </Grid>
                 </Grid>
-
-
-
 
             </Grid>
         </>
