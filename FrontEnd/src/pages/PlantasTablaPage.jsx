@@ -282,8 +282,6 @@ export const PlantasTablaPage = () => {
             .then(resp => setValoresParametros(resp));
     }, []);
 
-    console.log(valoresParametros)
-
     // Efecto que selecciona el nombre del cliente cuando cambia el código
     useEffect(() => {
 

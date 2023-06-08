@@ -561,7 +561,6 @@ export const MantenimientoTecnicoPage = () => {
         }
 
     }
-    console.log(tareaAnalisisPlanta)
 
     return (
         <MainLayout title='Mantenimiento técnico'>
