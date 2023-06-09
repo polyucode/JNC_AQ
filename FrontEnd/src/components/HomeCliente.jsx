@@ -12,7 +12,7 @@ import {
 import "hammerjs";
 
 import '@progress/kendo-theme-default/dist/all.css';
-import { bajarPdf, getFicheros, getAnalisis, getClientes, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros, bajarPdfNoFQ, bajarPdfDashBoard } from '../api';
+import { bajarPdf, getUsuarios, getFicheros, getAnalisis, getClientes, getConfPlantaClientePorClienteOferta, getOfertas, getParametros, getParametrosAnalisisPlanta, getTareas, getValorParametros, bajarPdfNoFQ, bajarPdfDashBoard } from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { useDiagrama } from '../helpers/generarDiagrama';
 import ReactFlow, { Background } from 'react-flow-renderer';
@@ -62,6 +62,10 @@ const HomeCliente = () => {
     // David
     // ficherosAnalisis hace peticion get y devuelve todos los registros de las tabla GES_Ficheros
     const [ficherosAll, setFicheros] = useState([]);
+
+    // operarios hace peticion get y devuelve todos los usuarios de la tabla SYS_Usuarios
+    const [operarios, setOperarios] = useState([]);
+
     //parametrosIncidencias son solo los parametrosAnalisisFiltrados donde el campo Observaciones tiene contenido
     const [parametrosIncidencias, setIncidencias] = useState([]); //parametrosIncidencias son solo los parametrosAnalisisFiltrados donde el campo Observaciones tiene contenido
     const [parametrosPDF, setPDF_Analisis] = useState([]); //parametrosPDF son solo los parametrosAnalisisFiltrados donde el campo pdf es <> 0 o diferente null
@@ -93,6 +97,9 @@ const HomeCliente = () => {
     useEffect(() => {
 
         //
+        getUsuarios()
+            .then(resp => setOperarios(resp))
+
         getFicheros()
             .then(resp => setFicheros(resp))
 
@@ -195,6 +202,13 @@ const HomeCliente = () => {
         return ficheroEncontrado ? ficheroEncontrado.name : '';
     }
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
+
+    //Buscar nombre operario tabla SYS_Usuarios segun id operario en Analisis
+    const buscaNombreOperario = (operarioId) => {
+        const operarioEncontrado = operarios.find(row => row.id === operarioId);
+        return operarioEncontrado ? operarioEncontrado.nombre + ' ' + operarioEncontrado.apellidos : '';
+    }
+    //Buscar nombre operario tabla SYS_Usuarios segun id operario en Analisis
 
     //Contador para mover o simular desplazamiento año en calendario y parametros análisis, inicializando al año fecha sistema (2 Contadores)
     //Contador1 para Calendario Tareas
@@ -458,6 +472,11 @@ const HomeCliente = () => {
                                                         Fecha
                                                         {ordenColumnaIncidencias === 'fecha' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
                                                     </TableCell>
+                                                    <TableCell onClick={() => manejarOrdenColumnaIncidencia('fechaRealizado')} align="left" width="110px;">
+                                                        Realizado
+                                                        {ordenColumnaIncidencias === 'fechaRealizado' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                    </TableCell>
+                                                    <TableCell>Operario</TableCell>
                                                     <TableCell>Incidéncia</TableCell>
                                                 </TableRow>
                                             </TableHead>
@@ -482,6 +501,12 @@ const HomeCliente = () => {
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     {new Date(row.fecha).toLocaleDateString()}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {new Date(row.fechaRealizado).toLocaleDateString()}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {buscarNombreOperario(row.operario)}
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     {row.observaciones}
