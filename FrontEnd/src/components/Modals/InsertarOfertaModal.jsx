@@ -45,7 +45,10 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                     renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
-                        codigoCliente: parseInt(value.codigo)
+                        codigoCliente: parseInt(value.codigo),
+                        contacto1: '',
+                        contacto2: '',
+                        contacto3: ''
                     }))}
                 />
             </Grid>

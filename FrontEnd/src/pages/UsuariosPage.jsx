@@ -30,7 +30,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { deleteUsuarios, getClientes, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
+import { deleteUsuarios, getClientes, getFicheros, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
 
 const token = {
   headers: {
@@ -84,6 +84,7 @@ export const UsuariosPage = () => {
   const [perfiles, setPerfiles] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [ficheros, setFicheros] = useState([]);
   const [clientesTable, setClientesTable] = useState({});
   const styles = useStyles();
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
@@ -115,9 +116,35 @@ export const UsuariosPage = () => {
     { headerName: 'Telefono', field: 'telefono', width: 200 },
     { headerName: 'Usuario', field: 'usuario', width: 200 },
     { headerName: 'Activo', field: 'activo', type: 'boolean', width: 180 },
-    { headerName: 'Firma', field: 'firma', width: 200 },
-    { headerName: 'Perfil', field: 'idPerfil', type: 'numeric', lookup: { 1: "Administrador", 2: "Cliente", 3: "Informador", 4: "Inspector", 1004: "Técnico" }, width: 200 },
-    { headerName: 'Cliente', field: 'idCliente', type: 'numeric', lookup: clientesTable, width: 200 },
+    {
+      headerName: 'Firma',
+      field: 'firma',
+      width: 200,
+      valueFormatter: (params) => {
+        const fichero = ficheros.find((fich) => fich.id === params.value)
+        return fichero ? fichero.name : "";
+      }
+    },
+    {
+      headerName: 'Perfil',
+      field: 'idPerfil',
+      type: 'numeric',
+      valueFormatter: (params) => {
+        const perfil = perfiles.find((perf) => perf.id === params.value);
+        return perfil ? perfil.nombre : '';
+      },
+      width: 200
+    },
+    { 
+      headerName: 'Cliente', 
+      field: 'idCliente', 
+      type: 'numeric',
+      width: 200,
+      valueFormatter: (params) => {
+        const cliente = clientes.find((clien) => clien.codigo === params.value);
+        return cliente ? cliente.razonSocial : '';
+      },
+    },
 
   ];
 
@@ -134,7 +161,7 @@ export const UsuariosPage = () => {
   const GetPerfil = async () => {
 
     const resp = await getPerfiles();
-    
+
     const perfil = Object.entries(resp).map(([key, value]) => (key, value))
     setPerfiles(perfil);
 
@@ -153,6 +180,10 @@ export const UsuariosPage = () => {
     peticionGet();
     GetCliente();
     GetPerfil();
+
+    getFicheros()
+      .then(resp => setFicheros(resp))
+
   }, [])
 
   useEffect(() => {
@@ -275,7 +306,7 @@ export const UsuariosPage = () => {
       });
 
       i++;
-      
+
     }
   }
 
@@ -517,7 +548,8 @@ export const UsuariosPage = () => {
               change={handleChange}
               handleChangePerfil={handleChangePerfil}
               estadoCliente={estadoCboCliente}
-              handleFile={handleFile}
+              handlePdf={handleFile}
+              fileChange={fileChange}
               setUsuarioSeleccionado={setUsuarioSeleccionado}
               perfilUsuario={perfilUsuarioEditar}
               clienteUsuario={clienteUsuarioEditar}

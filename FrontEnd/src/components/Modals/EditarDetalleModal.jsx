@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
+
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 import MenuItem from '@mui/material/MenuItem';
 import { getUsuarios } from '../../api';
@@ -48,7 +52,7 @@ const protocolos = [
     }
 ]
 
-export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado }) => {
+export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheckbox, handlePdf, fileChange }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -59,6 +63,22 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 setOperarios(operarios);
             })
     }, [])
+
+    function formateandofechas(fecha) {
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
+
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
+    }
+
+    console.log(fileChange)
 
     return (
         <>
@@ -78,54 +98,123 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} />
             </Grid>
 
-            <Grid item xs={12} md={6}>
-                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeDet} />
+            <Grid item xs={12} md={3}>
+                <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeDet} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={8} md={9}>
-                <TextField sx={{ width: '100%' }} name="fecha" type="date" onChange={handleChangeDet} />
-            </Grid>
 
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <Typography>Fecha Prevista</Typography>
+            </Grid>
+            <Grid item xs={12} md={7}>
+                <TextField
+                    id="fecha"
+                    type="date"
+                    name="fecha"
                     sx={{ width: '100%' }}
-                    id="Operarios"
-                    options={operarios}
-                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
-                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                        ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
-                    }))}
+                    onChange={handleChangeDet}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fecha)}
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={7}>
                 <TextField
-                    //disabled={estadoProtocolo}
+                    id="fechaRecogido"
+                    type="date"
+                    name="fechaRecogido"
                     sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
                     onChange={handleChangeDet}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
+                />
+            </Grid>
+            
+
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={tareaSeleccionada.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <TextField
+                    id="fechaRealizado"
+                    type="date"
+                    name="fechaRealizado"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeDet}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                    name="observaciones"
+                    onChange={handleChangeDet}
+                    defaultValue={analisisSeleccionado.observaciones}
+                />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="observaciones" name="observaciones" onChange={handleChangeDet} />
+            <Grid item xs={8} md={5}>
+            <div class="file-select" id="src-file" >
+                <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf}/>                
+            </div>
+            <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
+
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recibido} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={12} md={3}>
+                <TextField
+                    id="fechaPdf"
+                    type="date"
+                    name="fechaPdf"
+                    sx={{ width: '100%' }}
+                    onChange={handleChangeDet}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaPdf)}
+                />
+            </Grid>
+
+
+            <Grid item xs={6} md={3}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={6} md={8}>
+                <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeDet} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+            </Grid>
+
+            <Grid item xs={6} md={3}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={6} md={8}>
+                <p> Comentario </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                    name="comentarios"
+                    defaultValue={analisisSeleccionado.comentarios}
+                    onChange={handleChangeDet}
+                />
             </Grid>
 
         </>

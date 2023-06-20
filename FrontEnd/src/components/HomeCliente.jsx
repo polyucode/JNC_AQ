@@ -204,7 +204,7 @@ const HomeCliente = () => {
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
 
     //Buscar nombre operario tabla SYS_Usuarios segun id operario en Analisis
-    const buscaNombreOperario = (operarioId) => {
+    const buscarNombreOperario = (operarioId) => {
         const operarioEncontrado = operarios.find(row => row.id === operarioId);
         return operarioEncontrado ? operarioEncontrado.nombre + ' ' + operarioEncontrado.apellidos : '';
     }

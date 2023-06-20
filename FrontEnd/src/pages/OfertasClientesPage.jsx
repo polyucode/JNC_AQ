@@ -370,7 +370,6 @@ export const OfertasClientesPage = () => {
             //[name]: value
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
-        console.log(e.target.type)
     }
 
     const handleChangeFecha = e => {
@@ -520,6 +519,7 @@ export const OfertasClientesPage = () => {
                 contenido={
                     <EditarOfertaModal
                         ofertaSeleccionada={ofertaSeleccionada}
+                        setOfertaSeleccionada={setOfertaSeleccionada}
                         change={handleChange}
                         codigoClienteEditar={clienteCodigoEditar}
                         contacto1Editar={contacto1Editar}

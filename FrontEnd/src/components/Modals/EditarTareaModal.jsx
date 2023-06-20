@@ -140,14 +140,16 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const [analisis, setAnalisis] = useState([]);
     const [operarios, setOperarios] = useState([]);
 
+    const [fileChange, setFileChange] = useState(null);
+
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const columns = [
         //visibles
-        { headerName: 'Periodo', field: 'periodo' },
+        { headerName: 'Periodo', field: 'periodo', width: 150 },
         { 
             headerName: 'Fecha', 
-            field: 'fecha', 
+            field: 'fecha',  
             width: 150,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
@@ -155,12 +157,56 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
             }
         },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
+        { 
+            headerName: 'Fecha Recogido', 
+            field: 'fechaRecogido', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            } 
+        },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        //{ headerName: 'Protocolo', field: 'protocolo', width: 220 },
-        { headerName: 'Observaciones', field: 'observaciones', width: 300 },
+        { 
+            headerName: 'Fecha Realizado', 
+            field: 'fechaRealizado',
+            width: 120,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
+        { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
-        { headerName: 'Numero Facturado', field: 'numeroFactura', width: 200 },
-        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 }
+        { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
+        { 
+            headerName: 'Fecha PDF', 
+            field: 'fechaPdf', 
+            width: 150,
+            valueFormatter: (params) => {
+                if(params.value != null){
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else{
+                    const date = "";
+                    return date;
+                }
+            }
+        },
+        { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
+        { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
 
     const peticionGet = async () => {
@@ -234,6 +280,18 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
             ...prevState,
             [name]: value
         }));
+    }
+
+    const handleChangeCheckbox = e => {
+        const { name, value, checked } = e.target
+        setAnalisisSeleccionado(prevState => ({
+            ...prevState,
+            [name]: checked
+        }))
+    }
+
+    const handlePdf = e => {
+        setFileChange(e.target.files[0])
     }
 
     //modal insertar detalle
@@ -521,7 +579,11 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         codigoCliente: parseInt(value.codigo),
                         oferta: '',
                         pedido: '',
-                        elementoPlanta: ''
+                        elemento: 0,
+                        nombreElemento: '',
+                        analisis: 0,
+                        nombreAnalisis: '',
+                        fecha: ''
                     }))}
                 />
             </Grid>
@@ -595,7 +657,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={6} md={6}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -612,7 +674,8 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={5} style={{ display: 'flex' }}>
+                <h3 style={{ width: '30%' }}> Fecha </h3>
                 <TextField
                     id="fecha"
                     type="date"
@@ -750,6 +813,9 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         analisisSeleccionado={analisisSeleccionado}
                         change={handleChangeDet}
                         handleChangeFecha={handleChangeDetFecha}
+                        handleChangeCheckbox={handleChangeCheckbox}
+                        fileChange={fileChange}
+                        handlePdf={handlePdf}
                     />}
                 botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                     abrirCerrarModalEditar()

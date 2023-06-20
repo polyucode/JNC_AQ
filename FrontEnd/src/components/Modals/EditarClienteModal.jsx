@@ -298,11 +298,11 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
     return (
         <>
-            <Grid item xs={3} md={3}>
+            <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
             </Grid>
 
@@ -318,15 +318,15 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                 <TextField sx={{ width: '100%' }} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6} md={6}>
                 <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={6} md={9}>
                 <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
             </Grid>
 
-            <Grid item xs={4} md={3}>
+            <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
             </Grid>
 
@@ -351,15 +351,9 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
             {/* Deplegable de Poblaciones */}
 
-            <Grid item xs={12} md={8}>
+            <Grid item xs={6} md={8}>
                 <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
-
-            {/*<Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                        {snackData.msg}
-                    </Alert>
-                </Snackbar>*/}
 
             <Grid container spacing={2}>
 

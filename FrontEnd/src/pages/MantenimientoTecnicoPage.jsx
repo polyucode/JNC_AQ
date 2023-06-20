@@ -76,6 +76,7 @@ export const MantenimientoTecnicoPage = () => {
         idOperario: 0,
         realizado: false,
         fecha: null,
+        fechaIso: null,
         parametro: 0,
         unidad: '',
         valor: 0
@@ -250,10 +251,12 @@ export const MantenimientoTecnicoPage = () => {
             ...prevState,
             [name]: value.codigo,
             oferta: '',
-            idElemento: '',
+            idElemento: 0,
             nombreElemento: '',
-            idAnalisis: '',
-            nombreAnalisis: ''
+            idAnalisis: 0,
+            nombreAnalisis: '',
+            fecha: null,
+            fechaIso: ''
         }))
 
     }
@@ -263,10 +266,12 @@ export const MantenimientoTecnicoPage = () => {
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.numeroOferta,
-            idElemento: '',
+            idElemento: 0,
             nombreElemento: '',
-            idAnalisis: '',
-            nombreAnalisis: ''
+            idAnalisis: 0,
+            nombreAnalisis: '',
+            fecha: null,
+            fechaIso: ''
         }))
 
     }
@@ -277,8 +282,10 @@ export const MantenimientoTecnicoPage = () => {
             ...prevState,
             [name]: value.id,
             nombreElemento: e.target.textContent,
-            idAnalisis: '',
-            nombreAnalisis: ""
+            idAnalisis: 0,
+            nombreAnalisis: "",
+            fecha: null,
+            fechaIso: ''
         }))
     }
 
@@ -287,17 +294,22 @@ export const MantenimientoTecnicoPage = () => {
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.id,
-            nombreAnalisis: e.target.textContent
+            nombreAnalisis: e.target.textContent,
+            fecha: null,
+            fechaIso: ''
         }))
     }
 
     const onChangeFecha = (e, value, name) => {
+
+        console.log(e)
 
         setValoresParametros([])
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.fecha,
+            fechaIso: e.target.textContent 
         }))
     }
 
@@ -673,15 +685,17 @@ export const MantenimientoTecnicoPage = () => {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={3}>
+                                <Grid item xs={3} style={{ display: 'flex' }}>
+                                    <h3 style={{ width: '40%' }}> Fecha </h3>
                                     <Autocomplete
                                         disableClearable={true}
                                         sx={{ width: '100%' }}
                                         id="fecha"
+                                        inputValue={parametrosSeleccionado.fechaIso}
                                         options={parametrosAnalisisPlanta.sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado).sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         getOptionLabel={option => new Date(option.fecha).toLocaleDateString()}
-                                        renderInput={(params) => <TextField {...params} label="Fecha" name="fecha" />}
+                                        renderInput={(params) => <TextField {...params} name="fecha" />}
                                         onChange={(event, value) => onChangeFecha(event, value, "fecha")}
                                     />
                                 </Grid>

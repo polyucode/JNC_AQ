@@ -57,6 +57,8 @@ export const PlantasPage = () => {
     const [datosGuardados, setDatosGuardados] = useState(false);
     const [diagramaGuardado, setDiagramaGuardado] = useState(false);
 
+    const [estadoEliminarPlanta, setEstadoEliminarPlanta] = useState(false);
+
     /** HOOKS **/
     const navigate = useNavigate();
     const [nodos2, setNodos2] = useState([]);
@@ -253,7 +255,9 @@ export const PlantasPage = () => {
                 // Obtener los datos de la planta
                 const respPlanta = await getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta);
 
-                console.log(respPlanta, "RESP PLANTAA")
+                if(respPlanta){
+                    setEstadoEliminarPlanta(true)
+                }
 
                 const datosDiagrama = JSON.parse(respPlanta.diagrama);
                 setNodos2(datosDiagrama.nodos)
@@ -467,7 +471,6 @@ export const PlantasPage = () => {
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
                 idElementoActualizado = respElemento.id;
-                console.log(elementosActualizados);
 
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
@@ -896,7 +899,7 @@ export const PlantasPage = () => {
                 <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
                         <Button
-                            disabled={!plantaCreada}
+                            disabled={!estadoEliminarPlanta}
                             color='error'
                             variant='contained'
                             startIcon={<DeleteIcon />}

@@ -289,8 +289,6 @@ export const PlantasTablaPage = () => {
         (nombre.length > 0) && setParametrosSeleccionado({
             ...parametrosSeleccionado,
             nombreCliente: nombre[0].razonSocial,
-            oferta: '',
-            elemento: ''
         })
 
     }, [parametrosSeleccionado.codigoCliente, clientes]);
@@ -460,7 +458,7 @@ export const PlantasTablaPage = () => {
 
                 console.log(valorFiltrado, "VALOR FILTRADO")
 
-                if(valorFiltrado.length == 0){
+                if (valorFiltrado.length == 0) {
                     const resp = postValorParametros(param2);
                     return resp;
                 }
@@ -504,7 +502,7 @@ export const PlantasTablaPage = () => {
 
         const resp = await tipoParametros.map(async (parametro) => {
 
-            if(parametro.dbId){
+            if (parametro.dbId) {
                 const param = {
                     id: parametro.dbId,
                     Parametro: parametro.id,
@@ -530,7 +528,7 @@ export const PlantasTablaPage = () => {
 
                 await putParametrosElementoPlantaCliente(param)
 
-            } else{
+            } else {
 
                 const param = {
                     Parametro: parametro.id,
@@ -556,11 +554,11 @@ export const PlantasTablaPage = () => {
 
                 await postParametrosElementoPlantaCliente(param);
             }
-          
+
 
         });
 
-        if(resp){
+        if (resp) {
 
             Swal.fire({
                 position: 'center',
@@ -577,7 +575,7 @@ export const PlantasTablaPage = () => {
                 }
             });
 
-        } else{
+        } else {
             Swal.fire({
                 position: 'center',
                 icon: 'error',
@@ -608,6 +606,14 @@ export const PlantasTablaPage = () => {
         }))
     }
 
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setParametrosSeleccionado(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+        }));
+    }
+
     return (
         <MainLayout title="Parametrización de planta">
 
@@ -628,24 +634,24 @@ export const PlantasTablaPage = () => {
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
-                                        codigoCliente: parseInt(value.codigo)
+                                        codigoCliente: parseInt(value.codigo),
+                                        oferta: '',
+                                        idElemento: 0,
+                                        nombreElemento: '',
+                                        idAnalisis: 0,
+                                        nombreAnalisis: ''
                                     }))}
                                 />
                             </Grid>
 
                             <Grid item xs={3}>
-                                <Autocomplete
-                                    disableClearable={true}
-                                    id="CboClientes"
-                                    inputValue={parametrosSeleccionado.nombreCliente.toString()}
-                                    options={clientes}
-                                    filterOptions={options => clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)}
-                                    getOptionLabel={option => option.razonSocial}
-                                    renderInput={(params) => <TextField {...params} name="nombreCliente" label="Nombre" />}
-                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                        ...prevState,
-                                        nombreCliente: value.razonSocial
-                                    }))}
+                                <TextField
+                                    id='nombreCliente'
+                                    label="Nombre Cliente"
+                                    sx={{ width: '100%' }}
+                                    value={parametrosSeleccionado && parametrosSeleccionado.nombreCliente}
+                                    name="nombreCliente"
+                                    onChange={handleChange}
                                 />
                             </Grid>
 
@@ -661,7 +667,10 @@ export const PlantasTablaPage = () => {
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
                                         oferta: parseInt(value.numeroOferta),
-                                        elemento: ''
+                                        idElemento: 0,
+                                        nombreElemento: '',
+                                        idAnalisis: 0,
+                                        nombreAnalisis: ''
                                     }))}
                                 />
                             </Grid>
@@ -679,7 +688,7 @@ export const PlantasTablaPage = () => {
                                             ...prevState,
                                             idElemento: value.id,
                                             nombreElemento: event.target.innerText,
-                                            idAnalisis: '',
+                                            idAnalisis: 0,
                                             nombreAnalisis: ''
                                         }))
                                     }}

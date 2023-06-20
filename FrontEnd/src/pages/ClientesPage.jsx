@@ -33,6 +33,7 @@ import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { useForm } from '../hooks/useForm';
 import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
+import { EditarClienteModal2 } from '../components/Modals/EditarClienteModal2';
 
 
 const token = {
@@ -119,7 +120,7 @@ export const ClientesPage = () => {
 
   // Columnas de la tabla
   const columns = [
-    { field: 'codigo', headerName: 'Código', width: 100 },
+    { field: 'codigo', headerName: 'Código', width: 175 },
     { field: 'cif', headerName: 'CIF', width: 150 },
     { field: 'razonSocial', headerName: 'Razón social', width: 250 },
     { field: 'direccion', headerName: 'Dirección', width: 320 },
@@ -470,7 +471,7 @@ export const ClientesPage = () => {
   };
 
   return (
-    <MainLayout title='Clientes'>
+    <MainLayout key="clientes" title='Clientes'>
 
       <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
         <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
@@ -543,6 +544,7 @@ export const ClientesPage = () => {
 
         {/* Agregar cliente */}
         <ModalLayout
+          key="clienteañadir"
           titulo="Agregar nuevo cliente"
           contenido={
             <InsertarClienteModal clienteSeleccionado={clienteSeleccionado} change={handleChange} autocompleteChange={handleAutocompleteChange} />
@@ -568,6 +570,7 @@ export const ClientesPage = () => {
       {/* Modal Editar Cliente*/}
 
       <ModalLayout
+        key="clienteeditar"
         titulo="Editar cliente"
         contenido={
           <EditarClienteModal
@@ -591,6 +594,7 @@ export const ClientesPage = () => {
 
       {/* Eliminar cliente */}
       <ModalLayout
+        key="clienteeliminar"
         titulo="Eliminar cliente"
         contenido={
           <>

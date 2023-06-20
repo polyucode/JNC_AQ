@@ -219,7 +219,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
             </Grid>*/}
 
             <Grid item xs={4} md={8} style={{ display: 'flex' }}>
-                <p style={{ width: '30%' }}> Fecha </p>
+                <h3 style={{ width: '30%' }}> Fecha </h3>
                 <TextField
                     id="fecha"
                     type="date"

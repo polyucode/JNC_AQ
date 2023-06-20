@@ -48,15 +48,18 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
-                    id="CodigoCliente"
+                    id="CboClientes"
                     options={clientes}
-                    defaultValue={codigoClienteEditar[0]}
                     getOptionLabel={option => option.codigo}
+                    defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                    renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
-                        codigoCliente: parseInt(value.codigo)
+                        codigoCliente: parseInt(value.codigo),
+                        contacto1: '',
+                        contacto2: '',
+                        contacto3: ''
                     }))}
                 />
             </Grid>
@@ -72,7 +75,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 />
             </Grid>
 
-            <Grid item xs={7} md={5}>
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <p> Fecha inicio </p>
+            </Grid>
+            <Grid item xs={12} md={9}>
                 <TextField
                     id="fechainicio"
                     type="date"
@@ -86,7 +92,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 />
             </Grid>
 
-            <Grid item xs={6} md={5}>
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <p> Fecha Finalización </p>
+            </Grid>
+            <Grid item xs={12} md={9}>
                 <TextField
                     id="fechafinalizacion"
                     type="date"
@@ -110,14 +119,14 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto1" />}
+                    renderInput={(params) => <TextField {...params} name="contacto1" label="Contacto 1" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         contacto1: value.nombre
                     }))}
                 />
             </Grid>
-            
+
             <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
@@ -128,7 +137,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto2" />}
+                    renderInput={(params) => <TextField {...params} name="contacto2" label="Contacto 2" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         contacto2: value.nombre
@@ -147,7 +156,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
                     getOptionLabel={option => option.nombre}
                     sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto3" />}
+                    renderInput={(params) => <TextField {...params} name="contacto3" label="Contacto 3" />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         contacto3: value.nombre
