@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getUsuarios } from '../../api';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
+import { getAnalisis, getUsuarios } from '../../api';
 
 const protocolos = [
     {
@@ -45,28 +46,37 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid }) => {
+export const InsertarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid, analisis }) => {
 
     const [operarios, setOperarios] = useState([]);
+    const [nombreAnalisis, setNombreAnalisis] = useState([]);
 
     useEffect(() => {
 
         getUsuarios(operarios => {
             setOperarios(operarios);
         })
+
     }, [])
 
     useEffect(() => {
 
+        const analisi = analisis.find((an) => an.id === analisisid)
+        setNombreAnalisis(analisi.nombre)
+
+    }, [analisis])
+
+    useEffect(() => {
+        
         setAnalisisSeleccionado(prevState => ({
             ...prevState,
             analisis: analisisid
         }))
-    }, [analisisSeleccionado])
+    }, [nombreAnalisis])
 
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
             </Grid>
 
@@ -74,22 +84,25 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreCliente} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={2}>
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.elemento} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreElemento} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.analisis} />
+            <Grid item xs={6} md={6}>
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={nombreAnalisis} />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
+            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+                <Typography> Fecha </Typography>
+            </Grid>
             <Grid item xs={8} md={9}>
                 <TextField
                     id="fecha"
@@ -103,7 +116,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            {/* <Grid item xs={6} md={5}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -117,7 +130,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                         operario: value.nombre + ' ' + value.apellidos
                     }))}
                 />
-            </Grid>
+            </Grid> */}
 
             {/*<Grid item xs={12} md={6}>
                 <TextField
@@ -136,8 +149,15 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 </TextField>
             </Grid>*/}
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="observaciones" name="observaciones" onChange={handleChangeInput} />
+            <Grid item xs={12} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                    name="observaciones"
+                    onChange={handleChangeInput}
+                />
             </Grid>
 
         </>

@@ -11,7 +11,8 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import CategoryIcon from '@mui/icons-material/Category';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export const SlidebarData = [
+export const SlidebarDataAdmin = [
+    
     {
         title: 'Inicio',
         path: '/',

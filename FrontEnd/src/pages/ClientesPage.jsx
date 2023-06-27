@@ -29,11 +29,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
-import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
+import { EditarClienteModal2 } from '../components/Modals/EditarClienteModal2';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { useForm } from '../hooks/useForm';
 import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
-import { EditarClienteModal2 } from '../components/Modals/EditarClienteModal2';
 
 
 const token = {
@@ -306,7 +305,7 @@ export const ClientesPage = () => {
       })
 
       i++;
-      
+
     }
   }
 
@@ -489,11 +488,11 @@ export const ClientesPage = () => {
               (rowsIds.length > 0) ?
                 (
                   <Grid item>
-                    <Button 
-                      sx={{ mr: 2 }} 
-                      color='error' 
-                      variant='contained' 
-                      startIcon={<DeleteIcon />} 
+                    <Button
+                      sx={{ mr: 2 }}
+                      color='error'
+                      variant='contained'
+                      startIcon={<DeleteIcon />}
                       onClick={(event, rowData) => {
                         setClienteEliminar(rowsIds)
                         abrirCerrarModalEliminar()
@@ -540,40 +539,42 @@ export const ClientesPage = () => {
           </Card>
         </Grid>
 
-        {/* LISTA DE MODALS */}
-
-        {/* Agregar cliente */}
-        <ModalLayout
-          key="clienteañadir"
-          titulo="Agregar nuevo cliente"
-          contenido={
-            <InsertarClienteModal clienteSeleccionado={clienteSeleccionado} change={handleChange} autocompleteChange={handleAutocompleteChange} />
-          }
-          botones={[
-            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-              abrirCerrarModalInsertar();
-
-              if (peticionPost()) {
-                setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
-              } else {
-                setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
-              }
-
-            }, 'success')
-          ]}
-          open={modalInsertar}
-          onClose={abrirCerrarModalInsertar}
-        />
-
       </Grid>
+
+      {/* LISTA DE MODALS */}
+
+      {/* Agregar cliente */}
+      <ModalLayout
+        key={`cliente-añadir-${clienteSeleccionado.id}`}
+        titulo="Agregar nuevo cliente"
+        contenido={
+          <InsertarClienteModal clienteSeleccionado={clienteSeleccionado} change={handleChange} autocompleteChange={handleAutocompleteChange} />
+        }
+        botones={[
+          insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+            abrirCerrarModalInsertar();
+
+            if (peticionPost()) {
+              setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
+            } else {
+              setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
+            }
+
+          }, 'success')
+        ]}
+        open={modalInsertar}
+        onClose={abrirCerrarModalInsertar}
+      />
+
+
 
       {/* Modal Editar Cliente*/}
 
       <ModalLayout
-        key="clienteeditar"
+        key={`cliente-editar-${clienteSeleccionado.id}`}
         titulo="Editar cliente"
         contenido={
-          <EditarClienteModal
+          <EditarClienteModal2
             clienteSeleccionado={clienteSeleccionado}
             change={handleChange}
             autocompleteChange={handleAutocompleteChange}
@@ -594,7 +595,7 @@ export const ClientesPage = () => {
 
       {/* Eliminar cliente */}
       <ModalLayout
-        key="clienteeliminar"
+        key={`cliente-eliminar-${clienteSeleccionado.id}`}
         titulo="Eliminar cliente"
         contenido={
           <>

@@ -89,6 +89,7 @@ export const TareasPage = () => {
     oferta: 0,
     pedido: 0,
     elemento: 0,
+    nombreElemento: '',
     periodo: '',
     analisis: 0,
     fecha: null,
@@ -370,6 +371,7 @@ export const TareasPage = () => {
     tareaSeleccionada.id = null;
 
     const response = await postTareas(tareaSeleccionada);
+
     //Creamos los detalles
     var date = new Date(tareaSeleccionada.fecha);
 
@@ -382,6 +384,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.oferta;
         analisisSeleccionado.pedido = response.pedido;
         analisisSeleccionado.elemento = response.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
         analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -407,6 +410,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.oferta;
         analisisSeleccionado.pedido = response.pedido;
         analisisSeleccionado.elemento = response.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
         analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -434,6 +438,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.oferta;
         analisisSeleccionado.pedido = response.pedido;
         analisisSeleccionado.elemento = response.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
         analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -461,6 +466,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.oferta;
         analisisSeleccionado.pedido = response.pedido;
         analisisSeleccionado.elemento = response.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
         analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -487,6 +493,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.oferta;
         analisisSeleccionado.pedido = response.pedido;
         analisisSeleccionado.elemento = response.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
         analisisSeleccionado.analisis = response.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -513,6 +520,7 @@ export const TareasPage = () => {
         analisisSeleccionado.oferta = response.data.data.oferta;
         analisisSeleccionado.pedido = response.data.data.pedido;
         analisisSeleccionado.elemento = response.data.data.elemento;
+        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
         analisisSeleccionado.periodo = "";
         analisisSeleccionado.analisis = response.data.data.analisis;
         analisisSeleccionado.fecha = date.toJSON();
@@ -534,8 +542,8 @@ export const TareasPage = () => {
 
     abrirCerrarModalInsertar();
     peticionGet();
-    setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-    { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); }
+    /* setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
+    { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); } */
     setTareaSeleccionada({
       id: 0,
       codigoCliente: 0,

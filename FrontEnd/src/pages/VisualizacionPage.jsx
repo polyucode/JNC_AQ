@@ -37,7 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf } from "../api";
+import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros } from "../api";
 
 const token = {
     headers: {
@@ -210,6 +210,8 @@ export const VisualizacionPage = () => {
         periodo: '',
         analisis: 0,
         fecha: null,
+        recogido: false,
+        fechaRecogido: null,
         realizado: false,
         fechaRealizado: null,
         observaciones: '',
@@ -307,6 +309,7 @@ export const VisualizacionPage = () => {
 
     const [elementos, setElementos] = useState([]);
     const [operarios, setOperarios] = useState([]);
+    const [ficheros, setFicheros] = useState([]);
 
     const [analisisNivelesPlantasCliente, setAnalisisNivelesPlantasCliente] = useState([]);
 
@@ -352,7 +355,7 @@ export const VisualizacionPage = () => {
         { 
             headerName: 'Fecha Realizado', 
             field: 'fechaRealizado',
-            width: 120,
+            width: 150,
             valueFormatter: (params) => {
                 if(params.value != null){
                     const date = new Date(params.value);
@@ -366,7 +369,15 @@ export const VisualizacionPage = () => {
         { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { 
+            headerName: 'PDF', 
+            field: 'pdf', 
+            width: 700 ,
+            valueFormatter: (params) => {
+                const fich = ficheros.find((fichero) => fichero.id === params.value)
+                return fich ? fich.name : '';
+            }
+        },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { 
             headerName: 'Fecha PDF', 
@@ -417,6 +428,15 @@ export const VisualizacionPage = () => {
         { headerName: 'Observaciones', field: 'observaciones', width: 300 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
+        { 
+            headerName: 'PDF', 
+            field: 'pdf', 
+            width: 700 ,
+            valueFormatter: (params) => {
+                const fich = ficheros.find((fichero) => fichero.id === params.value)
+                return fich ? fich.name : '';
+            }
+        },
         { headerName: 'Cancelado', field: 'cancelado', type: 'boolean', width: 100 },
         { headerName: 'Comentario', field: 'comentario', width: 200 }
     ];
@@ -468,7 +488,15 @@ export const VisualizacionPage = () => {
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
-        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { 
+            headerName: 'PDF', 
+            field: 'pdf', 
+            width: 700 ,
+            valueFormatter: (params) => {
+                const fich = ficheros.find((fichero) => fichero.id === params.value)
+                return fich ? fich.name : '';
+            }
+        },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { 
             headerName: 'Fecha PDF', 
@@ -535,7 +563,15 @@ export const VisualizacionPage = () => {
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
-        { headerName: 'PDF', field: 'pdf', width: 150 },
+        { 
+            headerName: 'PDF', 
+            field: 'pdf', 
+            width: 700 ,
+            valueFormatter: (params) => {
+                const fich = ficheros.find((fichero) => fichero.id === params.value)
+                return fich ? fich.name : '';
+            }
+        },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
         { 
             headerName: 'Fecha PDF', 
@@ -701,6 +737,12 @@ export const VisualizacionPage = () => {
         }
 
     }, [data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15, data16, data17, data18]);
+
+    useEffect(() => {
+
+        getFicheros()
+            .then(resp => setFicheros(resp))
+    }, [])
 
     const handleChangeInput = e => {
         const { name, value } = e.target;
@@ -1339,7 +1381,7 @@ export const VisualizacionPage = () => {
 
     const peticionPost = async () => {
 
-        analisisSeleccionado.id = null;
+        analisisSeleccionado.id = 0;
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
@@ -1366,6 +1408,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1389,7 +1433,7 @@ export const VisualizacionPage = () => {
 
     const peticionPost1 = async () => {
 
-        analisisSeleccionado.id = null;
+        analisisSeleccionado.id = 0;
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
@@ -1414,6 +1458,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1437,7 +1483,7 @@ export const VisualizacionPage = () => {
 
     const peticionPostAerobio = async () => {
 
-        analisisSeleccionado.id = null;
+        analisisSeleccionado.id = 0;
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
@@ -1455,6 +1501,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1478,7 +1526,7 @@ export const VisualizacionPage = () => {
 
     const peticionPostLegionela = async () => {
 
-        analisisSeleccionado.id = null;
+        analisisSeleccionado.id = 0;
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
@@ -1496,6 +1544,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1553,6 +1603,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1604,6 +1656,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1652,6 +1706,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1700,6 +1756,8 @@ export const VisualizacionPage = () => {
             periodo: '',
             analisis: 0,
             fecha: null,
+            recogido: false,
+            fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
             observaciones: '',
@@ -1724,9 +1782,10 @@ export const VisualizacionPage = () => {
     const peticionDelete = async () => {
 
         var i = 0;
+
         while (i < analisisEliminar.length) {
 
-            const resp = await deleteParametrosAnalisisPlanta(analisisEliminar[i].id);
+            const resp = await deleteParametrosAnalisisPlanta(analisisEliminar[i]);
 
             FisicoQuimicoTorre();
             FisicoQuimicoAporte();
@@ -1760,6 +1819,8 @@ export const VisualizacionPage = () => {
                 periodo: '',
                 analisis: 0,
                 fecha: null,
+                recogido: false,
+                fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
@@ -2290,7 +2351,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             analisisid={analisi.id}
-                                                            analisis="Físico-Químico Torre"
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -2460,6 +2521,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -2628,6 +2690,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -2796,6 +2859,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -2964,6 +3028,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -3132,6 +3197,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -3299,7 +3365,8 @@ export const VisualizacionPage = () => {
                                                             change={handleChangeInput}
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}                                                        
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado} 
+                                                            analisis={analisis}                                                       
                                                         />
                                                     }
                                                     botones={[
@@ -3470,6 +3537,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -3640,6 +3708,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -3811,7 +3880,7 @@ export const VisualizacionPage = () => {
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                             analisisAutocomplete={analisisAutocomplete}
                                                             analisisid={analisi.id}
-                                                            analisisEditar={analisisEditar}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -3982,6 +4051,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -4150,6 +4220,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -4320,6 +4391,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -4490,6 +4562,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -4660,6 +4733,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -4830,6 +4904,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -5000,6 +5075,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[
@@ -5170,6 +5246,7 @@ export const VisualizacionPage = () => {
                                                             analisisSeleccionado={analisisSeleccionado}
                                                             analisisid={analisi.id}
                                                             setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            analisis={analisis}
                                                         />
                                                     }
                                                     botones={[

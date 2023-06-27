@@ -418,6 +418,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
             </Grid>
 
             <ModalLayout
+                key={`contacto-añadir-${contactoSeleccionado.id}`}
                 titulo="Agregar nuevo contacto"
                 contenido={
                     <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
@@ -440,6 +441,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
             {/* Modal Editar Cliente*/}
 
             <ModalLayout
+                key={`contacto-editar-${contactoSeleccionado.id}`}
                 titulo="Editar contacto"
                 contenido={
                     <EditarContactoModal
@@ -462,6 +464,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
 
             {/* Eliminar cliente */}
             <ModalLayout
+                key={`contacto-eliminar-${contactoSeleccionado.id}`}
                 titulo="Eliminar contacto"
                 contenido={
                     <>
