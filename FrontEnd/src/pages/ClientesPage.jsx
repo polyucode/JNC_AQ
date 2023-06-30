@@ -527,7 +527,7 @@ export const ClientesPage = () => {
               rows={rows}
               columns={columns}
               pageSize={9}
-              rowsPerPageOptions={[9]}
+              //rowsPerPageOptions={[1000]}
               checkboxSelection
               disableSelectionOnClick
               onSelectionModelChange={(ids) => handleSelectRow(ids)}

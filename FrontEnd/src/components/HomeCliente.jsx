@@ -35,6 +35,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { isNull } from 'lodash';
 
+import { useUsuarioActual } from '../hooks/useUsuarioActual';
+
 //David pestanyes
 const TabPanel = ({ children, value, index }) => {
     return (
@@ -47,7 +49,7 @@ const TabPanel = ({ children, value, index }) => {
 
 
 const HomeCliente = () => {
-  
+
     // Guardado de datos
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
@@ -86,8 +88,9 @@ const HomeCliente = () => {
     const { user } = useContext(AuthContext);
     const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, analisisParametros, parametrosFiltrados, setElementoActivo, setAnalisisActivo, handleSeleccionarParametro, handleSeleccionarAnalisis } = useContext(DashboardContext);
 
+
     useEffect(() => {
-        
+
         setElementoActivo({})
         setAnalisisActivo({})
 
@@ -121,12 +124,10 @@ const HomeCliente = () => {
         getParametrosAnalisisPlanta()
             .then(resp => setParametrosAnalisis(resp));
 
-        setElementoActivo({})       
-        
+        setElementoActivo({})
+
 
     }, []);
-
-    console.log(ficherosAll, "FICHEROS")
 
     // Efecto que carga el diagrama cada vez que se cambia de planta
     useEffect(() => {
@@ -155,7 +156,7 @@ const HomeCliente = () => {
 
         if (elementoActivo.nombre) {
             const scroll = document.getElementById("scroll");
-            scroll.scrollIntoView({ behavior: "smooth" });   
+            scroll.scrollIntoView({ behavior: "smooth" });
         }
 
         setIncidencias(parametrosFiltrados.filter(inc => inc.observaciones !== ""));
@@ -164,10 +165,7 @@ const HomeCliente = () => {
         setPDF_Analisis(parametrosFiltrados.filter(pdf => pdf.pdf !== null));
 
 
-    }, [plantaActiva, elementoActivo, parametrosFiltrados ]);
-
-    console.log(elementoActivo, "ELEMENTO ACTIVO")
-    console.log(parametrosAnalisisFiltrados, "PARAMETROS ANALISIS FILTRADOS")
+    }, [plantaActiva, elementoActivo, parametrosFiltrados]);
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -191,10 +189,16 @@ const HomeCliente = () => {
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
         getConfPlantaClientePorClienteOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
-            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));      
+            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
     }
 
-    console.log(parametrosAnalisisFiltrados, "PARAM FILTRADOS")
+    const handleSeleccionOferta2 = (e) => {
+
+        const ofertaSeleccionada = parseInt(e.target.textContent);
+
+        getConfPlantaClientePorClienteOferta(user.idCliente, ofertaSeleccionada)
+            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
+    }
 
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
     const buscaNombreFicheroPorId = (pdf) => {
@@ -252,9 +256,6 @@ const HomeCliente = () => {
     const handleTabClick = (tabIndex, nombre, datos) => { //Activa penstaña Grafico
         setActiveTab(tabIndex)
 
-        // { console.log("NOMBRE: ", nombre) }
-        // { console.log("Datos fechas: ", datos) }
-        
         handleSeleccionarParametro({ nombre: nombre, datos: datos })
     }
     //Pestanyes David
@@ -308,7 +309,7 @@ const HomeCliente = () => {
     //Ordenacion por columnas (Apartado Incidencias)
     const [ordenColumnaIncidencias, setOrdenColumnaIncidencia] = useState(null);
     const [ordenAscendenteIncidencia, setOrdenAscendenteIncidencia] = useState(true);
- 
+
     const manejarOrdenColumnaIncidencia = (nombreColumna) => {
         if (ordenColumnaIncidencias === nombreColumna) {
             setOrdenAscendenteIncidencia(!ordenAscendenteIncidencia);
@@ -318,7 +319,7 @@ const HomeCliente = () => {
             setOrdenAscendenteIncidencia(true);
         }
     };
- 
+
     // Ordenar los datos según la columna seleccionada fecha y el orden ascendente/descendente
     const datosOrdenadosIncdencias = ordenColumnaIncidencias
         ? parametrosIncidencias.sort((a, b) => {
@@ -334,11 +335,11 @@ const HomeCliente = () => {
         })
         : parametrosIncidencias;
     //Ordenacion por columnas (Apartado Incidencias)
- 
+
     //Ordenacion por columnas (Apartado PDF'S)
     const [ordenColumnaPDF, setOrdenColumnaPDF] = useState(null);
     const [ordenAscendentePDF, setOrdenAscendentePDF] = useState(true);
-    
+
     const manejarOrdenColumnaPDF = (nombreColumna) => {
         if (ordenColumnaPDF === nombreColumna) {
             setOrdenAscendentePDF(!ordenAscendentePDF);
@@ -348,7 +349,7 @@ const HomeCliente = () => {
             setOrdenAscendentePDF(true);
         }
     };
- 
+
     // Ordenar los datos según la columna seleccionada fecha y el orden ascendente/descendente
     const datosOrdenadosPDF = ordenColumnaPDF
         ? parametrosPDF.sort((a, b) => {
@@ -367,689 +368,1178 @@ const HomeCliente = () => {
 
     return (
         <>
-            <Grid container spacing={2}>
+            {user.idPerfil !== 2 ?
+                <Grid container spacing={2}>
 
-                {/* APARTADO INICIAL, SELECCIÓN DE PLANTA */}
-                <Grid item xs={12}>
-                    <Card>
-                        <CardContent>
-                            <Grid container sx={{ alignItems: 'center' }}>
+                    {/* APARTADO INICIAL, SELECCIÓN DE PLANTA */}
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Grid container sx={{ alignItems: 'center' }}>
 
-                                <Grid item xs={6}>
-                                    <Typography variant="h6">
+                                    <Grid item xs={6}>
+                                        <Typography variant="h6">
+                                            {
+                                                plantaActiva.nombreCliente
+                                                    ? plantaActiva.nombreCliente
+                                                    : 'Selecciona un código de oferta'
+                                            }
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2}>
                                         {
-                                            plantaActiva.nombreCliente
-                                                ? plantaActiva.nombreCliente
-                                                : 'Selecciona un código de oferta'
+                                            plantaActiva.descripcion && (
+                                                <Typography>{plantaActiva.descripcion}</Typography>
+                                            )
                                         }
-                                    </Typography>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="clientes"
+                                            options={clientes}
+                                            getOptionLabel={option => option.codigo}
+                                            renderInput={params => <TextField {...params} label="Código Cliente" name="codigoCliente" />}
+                                            onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                                                ...prevState,
+                                                codigoCliente: parseInt(value.codigo),
+                                                oferta: ''
+                                            }))}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="ofertas"
+                                            options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === clienteSeleccionado.codigoCliente)}
+                                            getOptionLabel={option => option.numeroOferta}
+                                            renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
+                                            onChange={handleSeleccionOferta}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    {
-                                        plantaActiva.descripcion && (
-                                            <Typography>{plantaActiva.descripcion}</Typography>
-                                        )
-                                    }
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <Autocomplete
-                                        disableClearable={true}
-                                        id="clientes"
-                                        options={clientes}
-                                        getOptionLabel={option => option.codigo}
-                                        renderInput={params => <TextField {...params} label="Código Cliente" name="codigoCliente" />}
-                                        onChange={(event, value) => setClienteSeleccionado(prevState => ({
-                                            ...prevState,
-                                            codigoCliente: parseInt(value.codigo),
-                                            oferta: ''
-                                        }))}
-                                    />
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <Autocomplete
-                                        disableClearable={true}
-                                        id="ofertas"
-                                        options={ofertas}
-                                        filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === clienteSeleccionado.codigoCliente)}
-                                        getOptionLabel={option => option.numeroOferta}
-                                        renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
-                                        onChange={handleSeleccionOferta}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                {/* APARTADO DEL DIAGRAMA */}
-                <Grid item xs={12}>
-                    <Card>
-                        <CardContent sx={{ p: 0 }}>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
+                    {/* APARTADO DEL DIAGRAMA */}
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent sx={{ p: 0 }}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
+                                    </Grid>
+                                    {/* <Grid item xs={12} sx={{ height: 950 }}> */}
+                                    <Grid item xs={12} sx={{ height: 600 }}>
+                                        <ReactFlow
+                                            nodes={nodos}
+                                            edges={lados}
+                                            nodeTypes={nodeTypesDashboard}
+                                            fitView
+                                        >
+                                            <Background />
+                                        </ReactFlow>
+                                    </Grid>
                                 </Grid>
-                                {/* <Grid item xs={12} sx={{ height: 950 }}> */}
-                                <Grid item xs={12} sx={{ height: 600 }}>
-                                    <ReactFlow
-                                        nodes={nodos}
-                                        edges={lados}
-                                        nodeTypes={nodeTypesDashboard}
-                                        fitView
-                                    >
-                                        <Background />
-                                    </ReactFlow>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
-                <Grid item id='scroll' xs={12}></Grid>
-                <Grid item xs={12}></Grid>
-                {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+                    {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+                    <Grid item id='scroll' xs={12}></Grid>
+                    <Grid item xs={12}></Grid>
+                    {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
 
-                {/*Apartado incidencias */}
-                <Grid item xs={6} id='scroll'>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent sx={{ p: 2 }}>
+                    {/*Apartado incidencias */}
+                    <Grid item xs={6} id='scroll'>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
 
-                            <Grid containter spacing={2}>
+                                <Grid containter spacing={2}>
 
-                                <Grid item xs={12} sx={{ pb: 2 }}>
-                                    <Typography variant="h6">Incidéncias</Typography>
-                                </Grid>
+                                    <Grid item xs={12} sx={{ pb: 2 }}>
+                                        <Typography variant="h6">Incidéncias</Typography>
+                                    </Grid>
 
-                                <Grid item xs={12}>
-                                    <TableContainer component={Paper}>
-                                        <Table sx={{ minWidth: 650 }}>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell width="50px;"></TableCell>
-                                                    {/* <TableCell align="left" width="100px;">Fecha</TableCell> */}
-                                                    <TableCell onClick={() => manejarOrdenColumnaIncidencia('fecha')} align="left" width="100px;">
-                                                        Fecha
-                                                        {ordenColumnaIncidencias === 'fecha' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
-                                                    </TableCell>
-                                                    <TableCell onClick={() => manejarOrdenColumnaIncidencia('fechaRealizado')} align="left" width="110px;">
-                                                        Realizado
-                                                        {ordenColumnaIncidencias === 'fechaRealizado' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
-                                                    </TableCell>
-                                                    <TableCell>Operario</TableCell>
-                                                    <TableCell>Incidéncia</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {
-                                                    
-                                                    elementoActivo.nombre &&
-                                                    // parametrosAnalisisFiltrados.map(row => {
-                                                    // parametrosIncidencias.map(row => {
-                                                    datosOrdenadosIncdencias.map(row => {
-                                                        return (
-                                                            <TableRow>
-                                                                <TableCell>
-                                                                    {/* <Tooltip title="Ver tarea" placement="right"> */}
-                                                                    {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
-                                                                    {/* <IconButton onClick={handleOpenClosePopUp}> */}
-                                                                    {/* <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} /> */}
-                                                                    <IconButton className='' onClick={() => alert(row.observaciones)}>
-                                                                        <ErrorIcon />
-                                                                    </IconButton>
-                                                                    {/* </Tooltip> */}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {new Date(row.fecha).toLocaleDateString()}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {new Date(row.fechaRealizado).toLocaleDateString()}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {buscarNombreOperario(row.operario)}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {row.observaciones}
-                                                                </TableCell>
-                                                            </TableRow>
+                                    <Grid item xs={12}>
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell width="50px;"></TableCell>
+                                                        {/* <TableCell align="left" width="100px;">Fecha</TableCell> */}
+                                                        <TableCell onClick={() => manejarOrdenColumnaIncidencia('fecha')} align="left" width="100px;">
+                                                            Fecha
+                                                            {ordenColumnaIncidencias === 'fecha' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                        </TableCell>
+                                                        <TableCell onClick={() => manejarOrdenColumnaIncidencia('fechaRealizado')} align="left" width="110px;">
+                                                            Realizado
+                                                            {ordenColumnaIncidencias === 'fechaRealizado' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                        </TableCell>
+                                                        <TableCell>Operario</TableCell>
+                                                        <TableCell>Incidéncia</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+
+                                                        elementoActivo.nombre &&
+                                                        // parametrosAnalisisFiltrados.map(row => {
+                                                        // parametrosIncidencias.map(row => {
+                                                        datosOrdenadosIncdencias.map(row => {
+                                                            return (
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        {/* <Tooltip title="Ver tarea" placement="right"> */}
+                                                                        {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
+                                                                        {/* <IconButton onClick={handleOpenClosePopUp}> */}
+                                                                        {/* <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} /> */}
+                                                                        <IconButton className='' onClick={() => alert(row.observaciones)}>
+                                                                            <ErrorIcon />
+                                                                        </IconButton>
+                                                                        {/* </Tooltip> */}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.fecha !== null ? new Date(row.fecha).toLocaleDateString() : ""}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.fechaRealizado !== null ? new Date(row.fechaRealizado).toLocaleDateString() : ""}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {buscarNombreOperario(row.operario)}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.observaciones}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        }
                                                         )
+
                                                     }
-                                                    )
-
-                                                }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
 
 
-                {/* APARTADO CALENDARIO DE TAREAS POR ELEMENTO */}
-                <Grid item xs={6}>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent sx={{ p: 2 }}>
+                    {/* APARTADO CALENDARIO DE TAREAS POR ELEMENTO */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
 
-                            <Grid containter spacing={2}>
+                                <Grid containter spacing={2}>
 
-                                <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
-                                    {
-                                        elementoActivo.nombre ? (
-                                            <>
+                                    <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
+                                        {
+                                            elementoActivo.nombre ? (
+                                                <>
+                                                    <Grid item>
+                                                        <Typography variant="h6">Calendario de tareas</Typography>
+                                                        <IconButton onClick={handleDecrementarContador}>
+                                                            <NavigateBeforeIcon />
+                                                        </IconButton>
+
+                                                        <span>{contadorYear}</span>
+
+                                                        <IconButton onClick={handleIncrementarContador}>
+                                                            <NavigateNextIcon />
+                                                        </IconButton>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Chip label={elementoActivo.nombre} color="primary" />
+                                                    </Grid>
+                                                </>
+                                            ) : (
                                                 <Grid item>
                                                     <Typography variant="h6">Calendario de tareas</Typography>
                                                     <IconButton onClick={handleDecrementarContador}>
                                                         <NavigateBeforeIcon />
                                                     </IconButton>
 
-                                                    <span>{contadorYear}</span>
+                                                    <span>{new Date().getFullYear()}</span>
 
                                                     <IconButton onClick={handleIncrementarContador}>
                                                         <NavigateNextIcon />
                                                     </IconButton>
                                                 </Grid>
+                                            )
+                                        }
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell></TableCell>
+                                                        <TableCell align="left">Tipo de análisis</TableCell>
+                                                        <TableCell>Ene</TableCell>
+                                                        <TableCell>Feb</TableCell>
+                                                        <TableCell>Mar</TableCell>
+                                                        <TableCell>Abr</TableCell>
+                                                        <TableCell>May</TableCell>
+                                                        <TableCell>Jun</TableCell>
+                                                        <TableCell>Jul</TableCell>
+                                                        <TableCell>Ago</TableCell>
+                                                        <TableCell>Sep</TableCell>
+                                                        <TableCell>Oct</TableCell>
+                                                        <TableCell>Nov</TableCell>
+                                                        <TableCell>Dic</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        elementoActivo.nombre &&
+                                                        // Mapeamos todos los parametros
+                                                        analisis.map(row => {
+
+                                                            // row -> id, nombre
+                                                            // tareasFiltradas -> analisis, elemento
+                                                            var currentTime = new Date();
+
+                                                            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                            const valoresPorTarea = parametrosFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
+                                                            let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+
+                                                            if (valoresPorTarea.length > 0) {
+
+                                                                console.log({ valoresPorTarea });
+
+                                                                // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                                                                valoresPorTarea.map(val => {
+
+                                                                    // Convertimos la fecha del registro en un objeto de fecha
+                                                                    const fecha = new Date(val.fecha);
+
+                                                                    // Contamos solo si los registros son de este año
+                                                                    //if (fecha.getFullYear() === currentTime.getFullYear()) {
+                                                                    if (fecha.getFullYear() === contadorYear) {
+                                                                        for (let i = 0; i < 12; i++) {
+                                                                            if (fecha.getMonth() === i) {
+                                                                                val.realizado
+                                                                                    ? fechas[i] = 1
+                                                                                    : fechas[i] = 0
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    console.log("FECHAS: ", { fechas })
+
+                                                                });
+
+                                                            }
+
+                                                            // Devolvemos los valores
+                                                            return (
+                                                                valoresPorTarea.length > 0 && (
+                                                                    <TableRow
+                                                                        key={row.id}
+                                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                    >
+                                                                        <TableCell>
+                                                                            <Tooltip title="Ver parametros del elemento" placement="right">
+                                                                                <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>
+                                                                                    <TimelineIcon />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                        </TableCell>
+                                                                        <TableCell aligh="left" component="th" scope="row">
+                                                                            {row.nombre}
+                                                                        </TableCell>
+                                                                        {
+                                                                            fechas.map((fecha, index) => (
+                                                                                <TableCell key={index}>
+                                                                                    <IconButton
+                                                                                        onClick={() => { }}
+                                                                                        color={fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success'}
+                                                                                        disabled={fecha === -1 ? true : false}
+                                                                                    >
+                                                                                        {
+                                                                                            fecha === -1
+                                                                                                ? <RemoveIcon />
+                                                                                                : fecha === 0
+                                                                                                    ? <ClearIcon />
+                                                                                                    : <CheckIcon />
+                                                                                        }
+                                                                                    </IconButton>
+                                                                                </TableCell>
+                                                                            ))
+                                                                        }
+                                                                    </TableRow>
+                                                                )
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Grid>
+
+                                </Grid>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+                    <Grid container align="right">
+                        <Grid item xs={12}>
+                            <IconButton onClick={() => handleScrollToBottom()}>
+                                <ArrowDownwardIcon fontSize="large" />
+                            </IconButton>
+                            <IconButton onClick={() => handleInicioPagina()}>
+                                <ArrowUpwardIcon fontSize="large" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+
+
+                    {/* APARTADO TABLA DE PARAMETROS */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent>
+
+                                <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
+                                    {
+                                        analisisActivo.nombre ? (
+                                            <>
                                                 <Grid item>
-                                                    <Chip label={elementoActivo.nombre} color="primary" />
+                                                    <Typography variant='h6'>Parámetros del Análisis</Typography>
+                                                    <IconButton onClick={handleDecrementarContador2}>
+                                                        <NavigateBeforeIcon />
+                                                    </IconButton>
+
+                                                    <span>{contadorYear2}</span>
+
+                                                    <IconButton onClick={handleIncrementarContador2}>
+                                                        <NavigateNextIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Chip label={analisisActivo.nombre} color="primary" />
                                                 </Grid>
                                             </>
                                         ) : (
                                             <Grid item>
-                                                <Typography variant="h6">Calendario de tareas</Typography>
-                                                <IconButton onClick={handleDecrementarContador}>
+                                                <Typography variant='h6'>Selecciona un análisis del calendario</Typography>
+                                                <IconButton onClick={handleDecrementarContador2}>
                                                     <NavigateBeforeIcon />
                                                 </IconButton>
 
                                                 <span>{new Date().getFullYear()}</span>
 
-                                                <IconButton onClick={handleIncrementarContador}>
+                                                <IconButton onClick={handleIncrementarContador2}>
                                                     <NavigateNextIcon />
                                                 </IconButton>
                                             </Grid>
                                         )
                                     }
                                 </Grid>
+                                {
+                                    analisisActivo.nombre && (
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell></TableCell>
+                                                        <TableCell align="left">Parámetro</TableCell>
+                                                        <TableCell>Ene</TableCell>
+                                                        <TableCell>Feb</TableCell>
+                                                        <TableCell>Mar</TableCell>
+                                                        <TableCell>Abr</TableCell>
+                                                        <TableCell>May</TableCell>
+                                                        <TableCell>Jun</TableCell>
+                                                        <TableCell>Jul</TableCell>
+                                                        <TableCell>Ago</TableCell>
+                                                        <TableCell>Sep</TableCell>
+                                                        <TableCell>Oct</TableCell>
+                                                        <TableCell>Nov</TableCell>
+                                                        <TableCell>Dic</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        // Mapeamos todos los parametros
+                                                        parametros.map(row => {
 
-                                <Grid item xs={12}>
-                                    <TableContainer component={Paper}>
-                                        <Table sx={{ minWidth: 650 }}>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell></TableCell>
-                                                    <TableCell align="left">Tipo de análisis</TableCell>
-                                                    <TableCell>Ene</TableCell>
-                                                    <TableCell>Feb</TableCell>
-                                                    <TableCell>Mar</TableCell>
-                                                    <TableCell>Abr</TableCell>
-                                                    <TableCell>May</TableCell>
-                                                    <TableCell>Jun</TableCell>
-                                                    <TableCell>Jul</TableCell>
-                                                    <TableCell>Ago</TableCell>
-                                                    <TableCell>Sep</TableCell>
-                                                    <TableCell>Oct</TableCell>
-                                                    <TableCell>Nov</TableCell>
-                                                    <TableCell>Dic</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {
-                                                    elementoActivo.nombre &&
-                                                    // Mapeamos todos los parametros
-                                                    analisis.map(row => {
+                                                            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                            const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
+                                                            let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-                                                        // row -> id, nombre
-                                                        // tareasFiltradas -> analisis, elemento
-                                                        var currentTime = new Date();
+                                                            // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                                                            valoresPorParametro.map(val => {
 
-                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorTarea = parametrosFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
-                                                        let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
-
-                                                        if (valoresPorTarea.length > 0) {
-
-                                                            console.log({ valoresPorTarea });
-
-                                                            // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
-                                                            valoresPorTarea.map(val => {
-
-                                                                // Convertimos la fecha del registro en un objeto de fecha
                                                                 const fecha = new Date(val.fecha);
 
-                                                                // Contamos solo si los registros son de este año
-                                                                //if (fecha.getFullYear() === currentTime.getFullYear()) {
-                                                                if (fecha.getFullYear() === contadorYear) {
+                                                                if (fecha.getFullYear() === contadorYear2) {
                                                                     for (let i = 0; i < 12; i++) {
                                                                         if (fecha.getMonth() === i) {
-                                                                            val.realizado
-                                                                                ? fechas[i] = 1
-                                                                                : fechas[i] = 0
+                                                                            fechas[i] = val.valor;
                                                                         }
                                                                     }
                                                                 }
 
-                                                                console.log("FECHAS: ", { fechas })
-
                                                             });
 
-                                                        }
-
-                                                        // Devolvemos los valores
-                                                        return (
-                                                            valoresPorTarea.length > 0 && (
-                                                                <TableRow
-                                                                    key={row.id}
-                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                                >
-                                                                    <TableCell>
-                                                                        <Tooltip title="Ver parametros del elemento" placement="right">
-                                                                            <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>                                                                            
-                                                                                <TimelineIcon />
-                                                                            </IconButton>
-                                                                        </Tooltip>
-                                                                    </TableCell>
-                                                                    <TableCell aligh="left" component="th" scope="row">
-                                                                        {row.nombre}
-                                                                    </TableCell>
-                                                                    {
-                                                                        fechas.map((fecha, index) => (
-                                                                            <TableCell key={index}>
-                                                                                <IconButton
-                                                                                    onClick={() => { }}
-                                                                                    color={fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success'}
-                                                                                    disabled={fecha === -1 ? true : false}
-                                                                                >
-                                                                                    {
-                                                                                        fecha === -1
-                                                                                            ? <RemoveIcon />
-                                                                                            : fecha === 0
-                                                                                                ? <ClearIcon />
-                                                                                                : <CheckIcon />
-                                                                                    }
+                                                            // Devolvemos los valores
+                                                            return (
+                                                                valoresPorParametro.length > 0 && (
+                                                                    <TableRow
+                                                                        key={row.id}
+                                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                    >
+                                                                        <TableCell>
+                                                                            <Tooltip title="Ver en la gráfica" placement="right">
+                                                                                {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
+                                                                                {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
+                                                                                <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
+                                                                                    <TimelineIcon />
                                                                                 </IconButton>
-                                                                            </TableCell>
-                                                                        ))
-                                                                    }
-                                                                </TableRow>
+                                                                            </Tooltip>
+                                                                        </TableCell>
+                                                                        <TableCell aligh="left" component="th" scope="row">
+                                                                            {row.nombre}
+                                                                        </TableCell>
+                                                                        {
+                                                                            fechas.map((fecha, index) => <TableCell key={index}>{fecha}</TableCell>)
+                                                                        }
+                                                                    </TableRow>
+                                                                )
                                                             )
-                                                        )
-                                                    })
-                                                }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    )
+                                }
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+                    {/* APARTAT PESTANYES */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
+
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <Tabs
+                                            value={activeTab}
+                                            onChange={handleTabChange}
+                                            indicatorColor="primary"
+                                            textColor="primary"
+                                        /*centered*/
+                                        >
+                                            <Tab label="Documentos" />
+                                            <Tab label="Gráfico" />
+                                        </Tabs>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TabPanel value={activeTab} index={0}>
+                                            {/* Contingut del grid PDF'S */}
+                                            {/*Apartado PDF'S */}
+                                            <Grid item xs={12}>
+                                                <Card style={{ height: '600px', overflowY: 'auto' }}>
+                                                    <CardContent sx={{ p: 2 }}>
+
+                                                        <Grid containter spacing={2}>
+
+                                                            <Grid item xs={12} sx={{ pb: 2 }}>
+                                                                <Typography variant="h6">PDF'S</Typography>
+                                                            </Grid>
+
+                                                            <Grid item xs={12}>
+                                                                <TableContainer component={Paper}>
+                                                                    <Table sx={{ minWidth: 650 }}>
+                                                                        <TableHead>
+                                                                            <TableRow>
+                                                                                <TableCell width="50px;"></TableCell>
+                                                                                <TableCell onClick={() => manejarOrdenColumnaPDF('fecha')} align="left" width="100px;">
+                                                                                    Fecha
+                                                                                    {ordenColumnaPDF === 'fecha' && (ordenAscendentePDF ? ' ▲' : ' ▼')}
+                                                                                </TableCell>
+                                                                                <TableCell>PDF</TableCell>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                        <TableBody>
+                                                                            {
+                                                                                elementoActivo.nombre &&
+                                                                                // Mapeamos todos los parametros                                                                            
+                                                                                //ficherosAnalisis.map(row => {
+                                                                                //parametrosPDF.map(row => {
+                                                                                datosOrdenadosPDF.map(row => {
+                                                                                    return (
+                                                                                        <TableRow>
+                                                                                            <TableCell>
+                                                                                                <Tooltip title="Descargar PDF" placement="right">
+                                                                                                    {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
+                                                                                                    <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
+                                                                                                        <DownloadPDF_Icon />
+                                                                                                    </IconButton>
+                                                                                                </Tooltip>
+                                                                                            </TableCell>
+                                                                                            <TableCell>
+                                                                                                {new Date(row.fecha).toLocaleDateString()}
+                                                                                            </TableCell>
+                                                                                            <TableCell>
+                                                                                                {/* {row.pdf} */}
+                                                                                                {buscaNombreFicheroPorId(row.pdf)}
+                                                                                            </TableCell>
+                                                                                        </TableRow>
+                                                                                    )
+                                                                                }
+                                                                                )
+
+                                                                            }
+                                                                        </TableBody>
+                                                                    </Table>
+                                                                </TableContainer>
+                                                            </Grid>
+
+                                                        </Grid>
+
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </TabPanel>
+
+                                        <TabPanel value={activeTab} index={1}>
+                                            {/* Contingut del grid Gràfics */}
+                                            <Grid item xs={12}>
+                                                <Card style={{ height: '600px', overflowY: 'auto' }}>
+                                                    <CardContent sx={{ p: 2 }}>
+
+                                                        <Grid container spacing={6} sx={{ mb: 2, justifyContent: 'space-between' }}>
+                                                            {
+                                                                parametroActivo.nombre ? (
+                                                                    <>
+                                                                        <Grid item>
+                                                                            <Typography variant='h6'>Vista gráfica del parámetro</Typography>
+                                                                        </Grid>
+                                                                        <Grid item>
+                                                                            <Chip label={parametroActivo.nombre} color="primary" />
+                                                                        </Grid>
+                                                                    </>
+                                                                ) : (
+                                                                    <Grid item>
+                                                                        <Typography variant='h6'>Selecciona un parámetro de la tabla</Typography>
+                                                                    </Grid>
+                                                                )
+                                                            }
+                                                        </Grid>
+
+                                                        <ChartContainer />
+
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </TabPanel>
+                                    </Grid>
                                 </Grid>
 
-                            </Grid>
-
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                
-                <Grid container align="right">
-                    <Grid item xs={12}>
-                        <IconButton onClick={() => handleScrollToBottom()}>
-                            <ArrowDownwardIcon fontSize="large" />
-                        </IconButton>
-                        <IconButton onClick={() => handleInicioPagina()}>
-                            <ArrowUpwardIcon fontSize="large" />
-                        </IconButton>
+                            </CardContent>
+                        </Card>
                     </Grid>
-                </Grid>
+
+                    <Grid container align="right">
+                        <Grid item xs={12}>
+                            <IconButton onClick={() => handleInicioPagina()}>
+                                <ArrowUpwardIcon fontSize="large" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+
+                </Grid> :
+                <Grid container spacing={2}>
+
+                    {/* APARTADO INICIAL, SELECCIÓN DE PLANTA */}
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Grid container sx={{ alignItems: 'center' }}>
+
+                                    <Grid item xs={6}>
+                                        <Typography variant="h6">
+                                            {
+                                                plantaActiva.nombreCliente
+                                                    ? plantaActiva.nombreCliente
+                                                    : 'Selecciona un código de oferta'
+                                            }
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        {
+                                            plantaActiva.descripcion && (
+                                                <Typography>{plantaActiva.descripcion}</Typography>
+                                            )
+                                        }
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="ofertas"
+                                            options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === user.idCliente)}
+                                            getOptionLabel={option => option.numeroOferta}
+                                            renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
+                                            onChange={handleSeleccionOferta2}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    {/* APARTADO DEL DIAGRAMA */}
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent sx={{ p: 0 }}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
+                                    </Grid>
+                                    {/* <Grid item xs={12} sx={{ height: 950 }}> */}
+                                    <Grid item xs={12} sx={{ height: 600 }}>
+                                        <ReactFlow
+                                            nodes={nodos}
+                                            edges={lados}
+                                            nodeTypes={nodeTypesDashboard}
+                                            fitView
+                                        >
+                                            <Background />
+                                        </ReactFlow>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+                    <Grid item id='scroll' xs={12}></Grid>
+                    <Grid item xs={12}></Grid>
+                    {/* Trampilla para posicionar pantalla al hacer clic en elemento del diagrama */}
+
+                    {/*Apartado incidencias */}
+                    <Grid item xs={6} id='scroll'>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
+
+                                <Grid containter spacing={2}>
+
+                                    <Grid item xs={12} sx={{ pb: 2 }}>
+                                        <Typography variant="h6">Incidéncias</Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell width="50px;"></TableCell>
+                                                        {/* <TableCell align="left" width="100px;">Fecha</TableCell> */}
+                                                        <TableCell onClick={() => manejarOrdenColumnaIncidencia('fecha')} align="left" width="100px;">
+                                                            Fecha
+                                                            {ordenColumnaIncidencias === 'fecha' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                        </TableCell>
+                                                        <TableCell onClick={() => manejarOrdenColumnaIncidencia('fechaRealizado')} align="left" width="110px;">
+                                                            Realizado
+                                                            {ordenColumnaIncidencias === 'fechaRealizado' && (ordenAscendenteIncidencia ? ' ▲' : ' ▼')}
+                                                        </TableCell>
+                                                        <TableCell>Operario</TableCell>
+                                                        <TableCell>Incidéncia</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+
+                                                        elementoActivo.nombre &&
+                                                        // parametrosAnalisisFiltrados.map(row => {
+                                                        // parametrosIncidencias.map(row => {
+                                                        datosOrdenadosIncdencias.map(row => {
+                                                            return (
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        {/* <Tooltip title="Ver tarea" placement="right"> */}
+                                                                        {/* <IconButton onClick={() => alert("Abrir Mantenimiento")}> */}
+                                                                        {/* <IconButton onClick={handleOpenClosePopUp}> */}
+                                                                        {/* <Popup open={open} onClose={handleOpenClosePopUp} incidencia={row.observaciones} /> */}
+                                                                        <IconButton className='' onClick={() => alert(row.observaciones)}>
+                                                                            <ErrorIcon />
+                                                                        </IconButton>
+                                                                        {/* </Tooltip> */}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.fecha !== null ? new Date(row.fecha).toLocaleDateString() : ""}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.fechaRealizado !== null ? new Date(row.fechaRealizado).toLocaleDateString() : ""}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {buscarNombreOperario(row.operario)}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {row.observaciones}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        }
+                                                        )
+
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
 
-                {/* APARTADO TABLA DE PARAMETROS */}
-                <Grid item xs={6}>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent>
 
-                            <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
-                                {
-                                    analisisActivo.nombre ? (
-                                        <>
+                    {/* APARTADO CALENDARIO DE TAREAS POR ELEMENTO */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
+
+                                <Grid containter spacing={2}>
+
+                                    <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
+                                        {
+                                            elementoActivo.nombre ? (
+                                                <>
+                                                    <Grid item>
+                                                        <Typography variant="h6">Calendario de tareas</Typography>
+                                                        <IconButton onClick={handleDecrementarContador}>
+                                                            <NavigateBeforeIcon />
+                                                        </IconButton>
+
+                                                        <span>{contadorYear}</span>
+
+                                                        <IconButton onClick={handleIncrementarContador}>
+                                                            <NavigateNextIcon />
+                                                        </IconButton>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Chip label={elementoActivo.nombre} color="primary" />
+                                                    </Grid>
+                                                </>
+                                            ) : (
+                                                <Grid item>
+                                                    <Typography variant="h6">Calendario de tareas</Typography>
+                                                    <IconButton onClick={handleDecrementarContador}>
+                                                        <NavigateBeforeIcon />
+                                                    </IconButton>
+
+                                                    <span>{new Date().getFullYear()}</span>
+
+                                                    <IconButton onClick={handleIncrementarContador}>
+                                                        <NavigateNextIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                            )
+                                        }
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell></TableCell>
+                                                        <TableCell align="left">Tipo de análisis</TableCell>
+                                                        <TableCell>Ene</TableCell>
+                                                        <TableCell>Feb</TableCell>
+                                                        <TableCell>Mar</TableCell>
+                                                        <TableCell>Abr</TableCell>
+                                                        <TableCell>May</TableCell>
+                                                        <TableCell>Jun</TableCell>
+                                                        <TableCell>Jul</TableCell>
+                                                        <TableCell>Ago</TableCell>
+                                                        <TableCell>Sep</TableCell>
+                                                        <TableCell>Oct</TableCell>
+                                                        <TableCell>Nov</TableCell>
+                                                        <TableCell>Dic</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        elementoActivo.nombre &&
+                                                        // Mapeamos todos los parametros
+                                                        analisis.map(row => {
+
+                                                            // row -> id, nombre
+                                                            // tareasFiltradas -> analisis, elemento
+                                                            var currentTime = new Date();
+
+                                                            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                            const valoresPorTarea = parametrosFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
+                                                            let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
+
+                                                            if (valoresPorTarea.length > 0) {
+
+                                                                console.log({ valoresPorTarea });
+
+                                                                // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
+                                                                valoresPorTarea.map(val => {
+
+                                                                    // Convertimos la fecha del registro en un objeto de fecha
+                                                                    const fecha = new Date(val.fecha);
+
+                                                                    // Contamos solo si los registros son de este año
+                                                                    //if (fecha.getFullYear() === currentTime.getFullYear()) {
+                                                                    if (fecha.getFullYear() === contadorYear) {
+                                                                        for (let i = 0; i < 12; i++) {
+                                                                            if (fecha.getMonth() === i) {
+                                                                                val.realizado
+                                                                                    ? fechas[i] = 1
+                                                                                    : fechas[i] = 0
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    console.log("FECHAS: ", { fechas })
+
+                                                                });
+
+                                                            }
+
+                                                            // Devolvemos los valores
+                                                            return (
+                                                                valoresPorTarea.length > 0 && (
+                                                                    <TableRow
+                                                                        key={row.id}
+                                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                    >
+                                                                        <TableCell>
+                                                                            <Tooltip title="Ver parametros del elemento" placement="right">
+                                                                                <IconButton onClick={() => handleSeleccionarAnalisis(row.id)}>
+                                                                                    <TimelineIcon />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                        </TableCell>
+                                                                        <TableCell aligh="left" component="th" scope="row">
+                                                                            {row.nombre}
+                                                                        </TableCell>
+                                                                        {
+                                                                            fechas.map((fecha, index) => (
+                                                                                <TableCell key={index}>
+                                                                                    <IconButton
+                                                                                        onClick={() => { }}
+                                                                                        color={fecha === -1 ? 'primary' : fecha === 0 ? 'error' : 'success'}
+                                                                                        disabled={fecha === -1 ? true : false}
+                                                                                    >
+                                                                                        {
+                                                                                            fecha === -1
+                                                                                                ? <RemoveIcon />
+                                                                                                : fecha === 0
+                                                                                                    ? <ClearIcon />
+                                                                                                    : <CheckIcon />
+                                                                                        }
+                                                                                    </IconButton>
+                                                                                </TableCell>
+                                                                            ))
+                                                                        }
+                                                                    </TableRow>
+                                                                )
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </Grid>
+
+                                </Grid>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+
+                    <Grid container align="right">
+                        <Grid item xs={12}>
+                            <IconButton onClick={() => handleScrollToBottom()}>
+                                <ArrowDownwardIcon fontSize="large" />
+                            </IconButton>
+                            <IconButton onClick={() => handleInicioPagina()}>
+                                <ArrowUpwardIcon fontSize="large" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+
+
+                    {/* APARTADO TABLA DE PARAMETROS */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent>
+
+                                <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
+                                    {
+                                        analisisActivo.nombre ? (
+                                            <>
+                                                <Grid item>
+                                                    <Typography variant='h6'>Parámetros del Análisis</Typography>
+                                                    <IconButton onClick={handleDecrementarContador2}>
+                                                        <NavigateBeforeIcon />
+                                                    </IconButton>
+
+                                                    <span>{contadorYear2}</span>
+
+                                                    <IconButton onClick={handleIncrementarContador2}>
+                                                        <NavigateNextIcon />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Chip label={analisisActivo.nombre} color="primary" />
+                                                </Grid>
+                                            </>
+                                        ) : (
                                             <Grid item>
-                                                <Typography variant='h6'>Parámetros del Análisis</Typography>
+                                                <Typography variant='h6'>Selecciona un análisis del calendario</Typography>
                                                 <IconButton onClick={handleDecrementarContador2}>
                                                     <NavigateBeforeIcon />
                                                 </IconButton>
 
-                                                <span>{contadorYear2}</span>
+                                                <span>{new Date().getFullYear()}</span>
 
                                                 <IconButton onClick={handleIncrementarContador2}>
                                                     <NavigateNextIcon />
                                                 </IconButton>
                                             </Grid>
-                                            <Grid item>
-                                                <Chip label={analisisActivo.nombre} color="primary" />
-                                            </Grid>
-                                        </>
-                                    ) : (
-                                        <Grid item>
-                                            <Typography variant='h6'>Selecciona un análisis del calendario</Typography>
-                                            <IconButton onClick={handleDecrementarContador2}>
-                                                <NavigateBeforeIcon />
-                                            </IconButton>
+                                        )
+                                    }
+                                </Grid>
+                                {
+                                    analisisActivo.nombre && (
+                                        <TableContainer component={Paper}>
+                                            <Table sx={{ minWidth: 650 }}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell></TableCell>
+                                                        <TableCell align="left">Parámetro</TableCell>
+                                                        <TableCell>Ene</TableCell>
+                                                        <TableCell>Feb</TableCell>
+                                                        <TableCell>Mar</TableCell>
+                                                        <TableCell>Abr</TableCell>
+                                                        <TableCell>May</TableCell>
+                                                        <TableCell>Jun</TableCell>
+                                                        <TableCell>Jul</TableCell>
+                                                        <TableCell>Ago</TableCell>
+                                                        <TableCell>Sep</TableCell>
+                                                        <TableCell>Oct</TableCell>
+                                                        <TableCell>Nov</TableCell>
+                                                        <TableCell>Dic</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        // Mapeamos todos los parametros
+                                                        parametros.map(row => {
 
-                                            <span>{new Date().getFullYear()}</span>
+                                                            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                            const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
+                                                            let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-                                            <IconButton onClick={handleIncrementarContador2}>
-                                                <NavigateNextIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    )
-                                }
-                            </Grid>
-                            {
-                                analisisActivo.nombre && (
-                                    <TableContainer component={Paper}>
-                                        <Table sx={{ minWidth: 650 }}>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell></TableCell>
-                                                    <TableCell align="left">Parámetro</TableCell>
-                                                    <TableCell>Ene</TableCell>
-                                                    <TableCell>Feb</TableCell>
-                                                    <TableCell>Mar</TableCell>
-                                                    <TableCell>Abr</TableCell>
-                                                    <TableCell>May</TableCell>
-                                                    <TableCell>Jun</TableCell>
-                                                    <TableCell>Jul</TableCell>
-                                                    <TableCell>Ago</TableCell>
-                                                    <TableCell>Sep</TableCell>
-                                                    <TableCell>Oct</TableCell>
-                                                    <TableCell>Nov</TableCell>
-                                                    <TableCell>Dic</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {
-                                                    // Mapeamos todos los parametros
-                                                    parametros.map(row => {
+                                                            // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                                                            valoresPorParametro.map(val => {
 
-                                                        // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                        const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
-                                                        let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                                                                const fecha = new Date(val.fecha);
 
-                                                        // Mapeamos los valores en un array, y si no hay datos seteamos un 0
-                                                        valoresPorParametro.map(val => {
-
-                                                            const fecha = new Date(val.fecha);
-
-                                                            if (fecha.getFullYear() === contadorYear2) {
-                                                                for (let i = 0; i < 12; i++) {
-                                                                    if (fecha.getMonth() === i) {
-                                                                        fechas[i] = val.valor;
+                                                                if (fecha.getFullYear() === contadorYear2) {
+                                                                    for (let i = 0; i < 12; i++) {
+                                                                        if (fecha.getMonth() === i) {
+                                                                            fechas[i] = val.valor;
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
 
-                                                        });
+                                                            });
 
-                                                        // Devolvemos los valores
-                                                        return (
-                                                            valoresPorParametro.length > 0 && (
-                                                                <TableRow
-                                                                    key={row.id}
-                                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                                >
-                                                                    <TableCell>
-                                                                        <Tooltip title="Ver en la gráfica" placement="right">
-                                                                            {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
-                                                                            {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
-                                                                            <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
-                                                                                <TimelineIcon />
-                                                                            </IconButton>
-                                                                        </Tooltip>
-                                                                    </TableCell>
-                                                                    <TableCell aligh="left" component="th" scope="row">
-                                                                        {row.nombre}
-                                                                    </TableCell>
-                                                                    {
-                                                                        fechas.map((fecha, index) => <TableCell key={index}>{fecha}</TableCell>)
-                                                                    }
-                                                                </TableRow>
+                                                            // Devolvemos los valores
+                                                            return (
+                                                                valoresPorParametro.length > 0 && (
+                                                                    <TableRow
+                                                                        key={row.id}
+                                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                    >
+                                                                        <TableCell>
+                                                                            <Tooltip title="Ver en la gráfica" placement="right">
+                                                                                {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
+                                                                                {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
+                                                                                <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
+                                                                                    <TimelineIcon />
+                                                                                </IconButton>
+                                                                            </Tooltip>
+                                                                        </TableCell>
+                                                                        <TableCell aligh="left" component="th" scope="row">
+                                                                            {row.nombre}
+                                                                        </TableCell>
+                                                                        {
+                                                                            fechas.map((fecha, index) => <TableCell key={index}>{fecha}</TableCell>)
+                                                                        }
+                                                                    </TableRow>
+                                                                )
                                                             )
-                                                        )
-                                                    })
-                                                }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                )
-                            }
-
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-
-
-                {/* ------ APARTADO GRÁFICO ------
-                <Grid item xs={6}>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent sx={{ p: 2 }}>
-
-                            <Grid container spacing={6} sx={{ mb: 2, justifyContent: 'space-between' }}>
-                                {
-                                    parametroActivo.nombre ? (
-                                        <>
-                                            <Grid item>
-                                                <Typography variant='h6'>Vista gráfica del parámetro</Typography>
-                                            </Grid>
-                                            <Grid item>
-                                                <Chip label={parametroActivo.nombre} color="primary" />
-                                            </Grid>
-                                        </>
-                                    ) : (
-                                        <Grid item>
-                                            <Typography variant='h6'>Selecciona un parámetro de la tabla</Typography>
-                                        </Grid>
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
                                     )
                                 }
-                            </Grid>
 
-                            <ChartContainer />
-
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-
-                ------ Apartado PDF'S ------
-                <Grid item xs={6} id='scroll'>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent sx={{ p: 2 }}>
-
-                            <Grid containter spacing={2}>
-
-                                <Grid item xs={12} sx={{ pb: 2 }}>
-                                    <Typography variant="h6">PDF'S</Typography>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TableContainer component={Paper}>
-                                        <Table sx={{ minWidth: 650 }}>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell width="50px;"></TableCell>
-                                                    <TableCell align="left">PDF</TableCell>                                                    
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {
-                                                    // Mapeamos todos los parametros
-                                                    
-                                                    //ficherosAnalisis.map(row => {
-                                                    parametrosPDF.map(row => {
-                                                        return(
-                                                        <TableRow>
-                                                            <TableCell>
-                                                                <Tooltip title="Descargar PDF" placement="right">
-                                                                    <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}>
-                                                                        <DownloadPDF_Icon/>
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {row.pdf}
-                                                            </TableCell>        
-                                                        </TableRow>
-                                                        )    
-                                                    }
-                                                    )
-                                                    
-                                                }                                
-                                            </TableBody>                                            
-                                        </Table>
-                                    </TableContainer>
-                                </Grid>
-
-                            </Grid>
-
-                        </CardContent>
-                    </Card>
-                </Grid>
-                */}
-
-
-                {console.log(activeTab, "TAB ACTIVO")}
-
-                {/* APARTAT PESTANYES */}
-                <Grid item xs={6}>
-                    <Card style={{ height: '600px', overflowY: 'auto' }}>
-                        <CardContent sx={{ p: 2 }}>
-
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Tabs
-                                        value={activeTab}
-                                        onChange={handleTabChange}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                    /*centered*/
-                                    >
-                                        <Tab label="Documentos" />
-                                        <Tab label="Gráfico" />
-                                    </Tabs>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TabPanel value={activeTab} index={0}>
-                                        {/* Contingut del grid PDF'S */}
-                                        {/*Apartado PDF'S */}
-                                        <Grid item xs={12}>
-                                            <Card style={{ height: '600px', overflowY: 'auto' }}>
-                                                <CardContent sx={{ p: 2 }}>
-
-                                                    <Grid containter spacing={2}>
-
-                                                        <Grid item xs={12} sx={{ pb: 2 }}>
-                                                            <Typography variant="h6">PDF'S</Typography>
-                                                        </Grid>
-
-                                                        <Grid item xs={12}>
-                                                            <TableContainer component={Paper}>
-                                                                <Table sx={{ minWidth: 650 }}>
-                                                                    <TableHead>
-                                                                        <TableRow>
-                                                                            <TableCell width="50px;"></TableCell>
-                                                                            <TableCell onClick={() => manejarOrdenColumnaPDF('fecha')} align="left" width="100px;">
-                                                                                Fecha
-                                                                                {ordenColumnaPDF === 'fecha' && (ordenAscendentePDF ? ' ▲' : ' ▼')}
-                                                                            </TableCell>
-                                                                            <TableCell>PDF</TableCell>
-                                                                        </TableRow>
-                                                                    </TableHead>
-                                                                    <TableBody>
-                                                                        {
-                                                                            elementoActivo.nombre &&
-                                                                            // Mapeamos todos los parametros                                                                            
-                                                                            //ficherosAnalisis.map(row => {
-                                                                            //parametrosPDF.map(row => {
-                                                                            datosOrdenadosPDF.map(row => {
-                                                                                return (
-                                                                                    <TableRow>
-                                                                                        <TableCell>
-                                                                                            <Tooltip title="Descargar PDF" placement="right">
-                                                                                                {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
-                                                                                                <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
-                                                                                                    <DownloadPDF_Icon />
-                                                                                                </IconButton>
-                                                                                            </Tooltip>
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            {new Date(row.fecha).toLocaleDateString()}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            {/* {row.pdf} */}
-                                                                                            {buscaNombreFicheroPorId(row.pdf)}
-                                                                                        </TableCell>
-                                                                                    </TableRow>
-                                                                                )
-                                                                            }
-                                                                            )
-
-                                                                        }
-                                                                    </TableBody>
-                                                                </Table>
-                                                            </TableContainer>
-                                                        </Grid>
-
-                                                    </Grid>
-
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </TabPanel>
-
-                                    <TabPanel value={activeTab} index={1}>
-                                        {/* Contingut del grid Gràfics */}
-                                        <Grid item xs={12}>
-                                            <Card style={{ height: '600px', overflowY: 'auto' }}>
-                                                <CardContent sx={{ p: 2 }}>
-
-                                                    <Grid container spacing={6} sx={{ mb: 2, justifyContent: 'space-between' }}>
-                                                        {
-                                                            parametroActivo.nombre ? (
-                                                                <>
-                                                                    <Grid item>
-                                                                        <Typography variant='h6'>Vista gráfica del parámetro</Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Chip label={parametroActivo.nombre} color="primary" />
-                                                                    </Grid>
-                                                                </>
-                                                            ) : (
-                                                                <Grid item>
-                                                                    <Typography variant='h6'>Selecciona un parámetro de la tabla</Typography>
-                                                                </Grid>
-                                                            )
-                                                        }
-                                                    </Grid>
-
-                                                    <ChartContainer />
-
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </TabPanel>
-                                </Grid>
-                            </Grid>
-
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid container align="right">
-                    <Grid item xs={12}>
-                        <IconButton onClick={() => handleInicioPagina()}>
-                            <ArrowUpwardIcon fontSize="large" />
-                        </IconButton>
+                            </CardContent>
+                        </Card>
                     </Grid>
-                </Grid>
 
-            </Grid>
+                    {/* APARTAT PESTANYES */}
+                    <Grid item xs={6}>
+                        <Card style={{ height: '600px', overflowY: 'auto' }}>
+                            <CardContent sx={{ p: 2 }}>
+
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <Tabs
+                                            value={activeTab}
+                                            onChange={handleTabChange}
+                                            indicatorColor="primary"
+                                            textColor="primary"
+                                        /*centered*/
+                                        >
+                                            <Tab label="Documentos" />
+                                            <Tab label="Gráfico" />
+                                        </Tabs>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TabPanel value={activeTab} index={0}>
+                                            {/* Contingut del grid PDF'S */}
+                                            {/*Apartado PDF'S */}
+                                            <Grid item xs={12}>
+                                                <Card style={{ height: '600px', overflowY: 'auto' }}>
+                                                    <CardContent sx={{ p: 2 }}>
+
+                                                        <Grid containter spacing={2}>
+
+                                                            <Grid item xs={12} sx={{ pb: 2 }}>
+                                                                <Typography variant="h6">PDF'S</Typography>
+                                                            </Grid>
+
+                                                            <Grid item xs={12}>
+                                                                <TableContainer component={Paper}>
+                                                                    <Table sx={{ minWidth: 650 }}>
+                                                                        <TableHead>
+                                                                            <TableRow>
+                                                                                <TableCell width="50px;"></TableCell>
+                                                                                <TableCell onClick={() => manejarOrdenColumnaPDF('fecha')} align="left" width="100px;">
+                                                                                    Fecha
+                                                                                    {ordenColumnaPDF === 'fecha' && (ordenAscendentePDF ? ' ▲' : ' ▼')}
+                                                                                </TableCell>
+                                                                                <TableCell>PDF</TableCell>
+                                                                            </TableRow>
+                                                                        </TableHead>
+                                                                        <TableBody>
+                                                                            {
+                                                                                elementoActivo.nombre &&
+                                                                                // Mapeamos todos los parametros                                                                            
+                                                                                //ficherosAnalisis.map(row => {
+                                                                                //parametrosPDF.map(row => {
+                                                                                datosOrdenadosPDF.map(row => {
+                                                                                    return (
+                                                                                        <TableRow>
+                                                                                            <TableCell>
+                                                                                                <Tooltip title="Descargar PDF" placement="right">
+                                                                                                    {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
+                                                                                                    <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
+                                                                                                        <DownloadPDF_Icon />
+                                                                                                    </IconButton>
+                                                                                                </Tooltip>
+                                                                                            </TableCell>
+                                                                                            <TableCell>
+                                                                                                {new Date(row.fecha).toLocaleDateString()}
+                                                                                            </TableCell>
+                                                                                            <TableCell>
+                                                                                                {/* {row.pdf} */}
+                                                                                                {buscaNombreFicheroPorId(row.pdf)}
+                                                                                            </TableCell>
+                                                                                        </TableRow>
+                                                                                    )
+                                                                                }
+                                                                                )
+
+                                                                            }
+                                                                        </TableBody>
+                                                                    </Table>
+                                                                </TableContainer>
+                                                            </Grid>
+
+                                                        </Grid>
+
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </TabPanel>
+
+                                        <TabPanel value={activeTab} index={1}>
+                                            {/* Contingut del grid Gràfics */}
+                                            <Grid item xs={12}>
+                                                <Card style={{ height: '600px', overflowY: 'auto' }}>
+                                                    <CardContent sx={{ p: 2 }}>
+
+                                                        <Grid container spacing={6} sx={{ mb: 2, justifyContent: 'space-between' }}>
+                                                            {
+                                                                parametroActivo.nombre ? (
+                                                                    <>
+                                                                        <Grid item>
+                                                                            <Typography variant='h6'>Vista gráfica del parámetro</Typography>
+                                                                        </Grid>
+                                                                        <Grid item>
+                                                                            <Chip label={parametroActivo.nombre} color="primary" />
+                                                                        </Grid>
+                                                                    </>
+                                                                ) : (
+                                                                    <Grid item>
+                                                                        <Typography variant='h6'>Selecciona un parámetro de la tabla</Typography>
+                                                                    </Grid>
+                                                                )
+                                                            }
+                                                        </Grid>
+
+                                                        <ChartContainer />
+
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </TabPanel>
+                                    </Grid>
+                                </Grid>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid container align="right">
+                        <Grid item xs={12}>
+                            <IconButton onClick={() => handleInicioPagina()}>
+                                <ArrowUpwardIcon fontSize="large" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            }
+
         </>
     );
 

@@ -23,11 +23,14 @@ export const AuthProvider = ({ children }) => {
         const action = { type: types.login, payload: user };
         dispatch( action );
 
+        window.location.reload();
+
     }
 
     const logout = () => {
 
         localStorage.removeItem('usuarioActual');
+        localStorage.removeItem('token');
 
         const action = { type: types.logout };
         dispatch( action );

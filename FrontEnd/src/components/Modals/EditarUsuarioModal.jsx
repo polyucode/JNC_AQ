@@ -7,6 +7,8 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
 
+    console.log(perfilUsuario)
+
     useEffect(() => {
 
         getPerfiles()
@@ -20,6 +22,16 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
                 setClientes(clientes);
             })
     }, []);
+
+    useEffect(() => {
+
+        if(perfilUsuario[0].id === 2){
+            console.log("ENTRA IF")
+        } else{
+            console.log("ENTRA ELSE")
+        }
+
+    }, [perfilUsuario])
 
     return (
         <>
@@ -73,7 +85,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
                     renderInput={params => <TextField {...params} label="Clientes" name="idCliente" />}
                     onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
                         ...prevState,
-                        idCliente: value.id
+                        idCliente: value.codigo
                     }))}
                 />
             </Grid>

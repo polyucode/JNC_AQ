@@ -458,6 +458,8 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
         
         const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
+        console.log(resp)
+        
         var analisisSeleccionado = data;
         analisisSeleccionado.map(analisis => {
             if (analisis.id === analisisSeleccionado.id) {
@@ -763,7 +765,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                                 sorting: {
                                   sortModel: [{ field: 'fecha', sort: 'asc'}]
                                 }
-                              }}
+                            }}
                             pageSize={12}
                             rowsPerPageOptions={[12]}
                             checkboxSelection
@@ -816,6 +818,8 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         handleChangeCheckbox={handleChangeCheckbox}
                         fileChange={fileChange}
                         handlePdf={handlePdf}
+                        analisis={analisis}
+                        elementos={elementos}
                     />}
                 botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
                     abrirCerrarModalEditar()

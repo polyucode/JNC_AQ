@@ -904,9 +904,8 @@ export const TareasPage = () => {
               }}
               rows={rows}
               columns={columns}
-              
-              pageSize={9}
-              rowsPerPageOptions={[9]}
+              pageSize={100}
+              rowsPerPageOptions={[10, 20, 50, 100]}
               checkboxSelection
               disableSelectionOnClick
               onSelectionModelChange={(ids) => handleSelectRow(ids)}

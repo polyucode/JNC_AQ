@@ -85,7 +85,6 @@ export const UsuariosPage = () => {
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [ficheros, setFicheros] = useState([]);
-  const [clientesTable, setClientesTable] = useState({});
   const styles = useStyles();
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
@@ -193,14 +192,6 @@ export const UsuariosPage = () => {
     }
 
   }, [usuarios]);
-
-  useEffect(() => {
-
-    const lookupClientes = {};
-    clientes.map(fila => lookupClientes[fila.id] = fila.nombreComercial);
-    setClientesTable(lookupClientes);
-
-  }, [clientes])
 
   const subirImagen = async () => {
     await subirFirma(usuarioSeleccionado.id, fileChange)
@@ -510,7 +501,8 @@ export const UsuariosPage = () => {
               onRowClick={(usuarioSeleccionado, evt) => {
                 setUsuarioSeleccionado(usuarioSeleccionado.row)
                 setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
-                setClienteUsuarioEditar(clientes.filter(cliente => cliente.id === usuarioSeleccionado.row.idCliente))
+                setClienteUsuarioEditar(clientes.filter(cliente => cliente.codigo === usuarioSeleccionado.row.idCliente));
+
                 abrirCerrarModalEditar();
               }}
             />

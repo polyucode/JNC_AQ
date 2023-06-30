@@ -80,7 +80,7 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
                     renderInput={ params => <TextField {...params} label="Clientes" name="idCliente"/> }
                     onChange={ (event, value) => setUsuarioSeleccionado(prevState=>({
                        ...prevState,
-                       idCliente: value.id
+                       idCliente: value.codigo
                     }))}
                 />
             </Grid>

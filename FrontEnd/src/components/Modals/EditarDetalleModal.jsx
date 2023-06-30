@@ -52,9 +52,11 @@ const protocolos = [
     }
 ]
 
-export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheckbox, handlePdf, fileChange }) => {
+export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheckbox, handlePdf, fileChange, analisis, elementos }) => {
 
     const [operarios, setOperarios] = useState([]);
+    const [nombreAnalisis, setNombreAnalisis] = useState([]);
+    const [nombreElemento, setNombreElemento] = useState([]);
 
     useEffect(() => {
 
@@ -63,6 +65,16 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 setOperarios(operarios);
             })
     }, [])
+
+    useEffect(() => {
+
+        const analisi = analisis.find((an) => an.id === tareaSeleccionada.analisis)
+        setNombreAnalisis(analisi.nombre)
+
+        const elemento = elementos.find((el) => el.id === tareaSeleccionada.elemento)
+        setNombreElemento(elemento.nombre + ' ' + elemento.numero)
+
+    }, [analisis, elementos])
 
     function formateandofechas(fecha) {
         if(fecha !== null){
@@ -77,8 +89,6 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             return null
         }       
     }
-
-    console.log(fileChange)
 
     return (
         <>
@@ -95,11 +105,11 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={nombreElemento} />
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={nombreAnalisis} />
             </Grid>
 
             <Grid item xs={12} md={3}>
