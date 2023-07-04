@@ -38,6 +38,7 @@ import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobi
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros } from "../api";
+import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 const token = {
     headers: {
@@ -327,9 +328,9 @@ export const VisualizacionPage = () => {
     const columnas = [
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { 
-            headerName: 'Fecha', 
-            field: 'fecha',  
+        {
+            headerName: 'Fecha',
+            field: 'fecha',
             width: 150,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
@@ -337,30 +338,30 @@ export const VisualizacionPage = () => {
             }
         },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha Recogido', 
-            field: 'fechaRecogido', 
+        {
+            headerName: 'Fecha Recogido',
+            field: 'fechaRecogido',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
-            } 
+            }
         },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha Realizado', 
+        {
+            headerName: 'Fecha Realizado',
             field: 'fechaRealizado',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -369,25 +370,25 @@ export const VisualizacionPage = () => {
         { headerName: 'Observaciones', field: 'observaciones', width: 250 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { 
-            headerName: 'PDF', 
-            field: 'pdf', 
-            width: 700 ,
+        {
+            headerName: 'PDF',
+            field: 'pdf',
+            width: 700,
             valueFormatter: (params) => {
                 const fich = ficheros.find((fichero) => fichero.id === params.value)
                 return fich ? fich.name : '';
             }
         },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha PDF', 
-            field: 'fechaPdf', 
+        {
+            headerName: 'Fecha PDF',
+            field: 'fechaPdf',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -401,9 +402,9 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { 
-            headerName: 'Fecha', 
-            field: 'fecha', 
+        {
+            headerName: 'Fecha',
+            field: 'fecha',
             width: 200,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
@@ -411,27 +412,27 @@ export const VisualizacionPage = () => {
             }
         },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { 
-            headerName: 'Fecha Realizado', 
-            field: 'fechaRealizado', 
+        {
+            headerName: 'Fecha Realizado',
+            field: 'fechaRealizado',
             width: 200,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
-            } 
+            }
         },
         { headerName: 'Observaciones', field: 'observaciones', width: 300 },
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
-        { 
-            headerName: 'PDF', 
-            field: 'pdf', 
-            width: 700 ,
+        {
+            headerName: 'PDF',
+            field: 'pdf',
+            width: 700,
             valueFormatter: (params) => {
                 const fich = ficheros.find((fichero) => fichero.id === params.value)
                 return fich ? fich.name : '';
@@ -445,40 +446,40 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { 
-            headerName: 'Fecha', 
+        {
+            headerName: 'Fecha',
             field: 'fecha',
             width: 150,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
                 return date.toLocaleDateString();
-            } 
+            }
         },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha Recogido', 
-            field: 'fechaRecogido', 
+        {
+            headerName: 'Fecha Recogido',
+            field: 'fechaRecogido',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
             }
         },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 120 },
-        { 
-            headerName: 'Fecha Realizado', 
+        {
+            headerName: 'Fecha Realizado',
             field: 'fechaRealizado',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -488,25 +489,25 @@ export const VisualizacionPage = () => {
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
-        { 
-            headerName: 'PDF', 
-            field: 'pdf', 
-            width: 700 ,
+        {
+            headerName: 'PDF',
+            field: 'pdf',
+            width: 700,
             valueFormatter: (params) => {
                 const fich = ficheros.find((fichero) => fichero.id === params.value)
                 return fich ? fich.name : '';
             }
         },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha PDF', 
-            field: 'fechaPdf', 
+        {
+            headerName: 'Fecha PDF',
+            field: 'fechaPdf',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -520,8 +521,8 @@ export const VisualizacionPage = () => {
 
         //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
-        { 
-            headerName: 'Fecha', 
+        {
+            headerName: 'Fecha',
             field: 'fecha',
             width: 150,
             valueFormatter: (params) => {
@@ -530,30 +531,30 @@ export const VisualizacionPage = () => {
             }
         },
         { headerName: 'Recogido', field: 'recogido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha Recogido', 
+        {
+            headerName: 'Fecha Recogido',
             field: 'fechaRecogido',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
             }
         },
         { headerName: 'Realizado', field: 'realizado', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha Realizado', 
+        {
+            headerName: 'Fecha Realizado',
             field: 'fechaRealizado',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -563,25 +564,25 @@ export const VisualizacionPage = () => {
         { headerName: 'Facturado', field: 'facturado', type: 'boolean', width: 100 },
         { headerName: 'Numero Factura', field: 'numeroFacturado', width: 150 },
         { headerName: 'Resultado', field: 'resultado', width: 120 },
-        { 
-            headerName: 'PDF', 
-            field: 'pdf', 
-            width: 700 ,
+        {
+            headerName: 'PDF',
+            field: 'pdf',
+            width: 700,
             valueFormatter: (params) => {
                 const fich = ficheros.find((fichero) => fichero.id === params.value)
                 return fich ? fich.name : '';
             }
         },
         { headerName: 'PDF Recibido', field: 'recibido', type: 'boolean', width: 100 },
-        { 
-            headerName: 'Fecha PDF', 
+        {
+            headerName: 'Fecha PDF',
             field: 'fechaPdf',
             width: 150,
             valueFormatter: (params) => {
-                if(params.value != null){
+                if (params.value != null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
-                } else{
+                } else {
                     const date = "";
                     return date;
                 }
@@ -621,6 +622,8 @@ export const VisualizacionPage = () => {
     const stylesParagraph = useStylesParagraph();
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+    const { usuarioActual } = useUsuarioActual();
 
     useEffect(() => {
 
@@ -1119,7 +1122,7 @@ export const VisualizacionPage = () => {
     const GetCliente = async () => {
 
         const resp = await getClientes();
-        
+
         const cliente = Object.entries(resp).map(([key, value]) => (key, value))
         setClientes(cliente);
 
@@ -1188,7 +1191,7 @@ export const VisualizacionPage = () => {
 
         const resp = await getParametrosAnalisisPlanta();
         setData1(resp.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-        
+
     }
 
     const FisicoQuimicoAporte = async () => {
@@ -1319,11 +1322,11 @@ export const VisualizacionPage = () => {
 
     const descargarPdf = async () => {
 
-        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type': 'application/pdf' } });
     }
 
     const descargarPdfNoFQ = async () => {
-        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' +  elementoTareaEditar[0].numero) , analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type' : 'application/pdf' }});
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type': 'application/pdf' } });
     }
 
     function FiltrarData() {
@@ -1521,7 +1524,7 @@ export const VisualizacionPage = () => {
             delIdUser: null,
             deleted: null,
         });
-        
+
     }
 
     const peticionPostLegionela = async () => {
@@ -1577,7 +1580,7 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if(fileChange != null){
+        if (fileChange != null) {
             subirArchivo()
         }
         AguasResiduales();
@@ -1689,7 +1692,7 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if(fileChange != null){
+        if (fileChange != null) {
             subirArchivo()
         }
         Aerobios();
@@ -1739,7 +1742,7 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if(fileChange != null){
+        if (fileChange != null) {
             subirArchivo()
         }
         Legionela();
@@ -1841,7 +1844,7 @@ export const VisualizacionPage = () => {
             });
 
             i++;
-            
+
         }
     }
 
@@ -2193,3143 +2196,4721 @@ export const VisualizacionPage = () => {
     };
 
     return (
-        <MainLayout title="Visualización">
+        <>
+            {usuarioActual.idPerfil === 1 ?
+                <MainLayout title="Visualización">
 
-            <div className="home-container">
-                <h4> Visualizacion de datos </h4>
-                <div className="datos">
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Cliente"
-                        name="codigoCliente"
-                        options={clientes}
-                        getOptionLabel={option => option.codigo}
-                        sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
-                        onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
-                    />
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Oferta"
-                        options={oferta}
-                        inputValue={analisisSeleccionado.oferta}
-                        getOptionLabel={option => option.numeroOferta}
-                        filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
-                        sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
-                        onChange={(event, value) => onChangeOferta(event, value, "oferta")}
-                    />
-                    <Autocomplete
-                        disableClearable={true}
-                        id="Elemento"
-                        options={elementosAutocomplete}
-                        inputValue={analisisSeleccionado.nombreElemento}
-                        getOptionLabel={option => (option.nombre + ' ' + option.numero)}
-                        sx={{ width: 250 }}
-                        renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
-                        onChange={(event, value) => onChangeElemento(event, value, "elemento")}
-                    />
-                </div>
-                <div className="datos">
-                    <TextField
-                        id='nombreCliente'
-                        label="Nombre Cliente"
-                        sx={{ width: 250 }}
-                        style={{ marginRight: "20px"}}
-                        value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
-                        name="nombreCliente"
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            nombreCliente: value.razonSocial
-                        }))}
-                    />
+                    <div className="home-container">
+                        <h4> Visualizacion de datos </h4>
+                        <div className="datos">
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Cliente"
+                                name="codigoCliente"
+                                options={clientes}
+                                getOptionLabel={option => option.codigo}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                                onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
+                            />
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Oferta"
+                                options={oferta}
+                                inputValue={analisisSeleccionado.oferta}
+                                getOptionLabel={option => option.numeroOferta}
+                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
+                                onChange={(event, value) => onChangeOferta(event, value, "oferta")}
+                            />
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Elemento"
+                                options={elementosAutocomplete}
+                                inputValue={analisisSeleccionado.nombreElemento}
+                                getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
+                                onChange={(event, value) => onChangeElemento(event, value, "elemento")}
+                            />
+                        </div>
+                        <div className="datos">
+                            <TextField
+                                id='nombreCliente'
+                                label="Nombre Cliente"
+                                sx={{ width: 250 }}
+                                style={{ marginRight: "20px" }}
+                                value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
+                                name="nombreCliente"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    nombreCliente: value.razonSocial
+                                }))}
+                            />
 
-                    <TextField
-                        id='pedido'
-                        sx={{ width: 250 }}
-                        label="Pedido"
-                        value={analisisSeleccionado && analisisSeleccionado.pedido}
-                        name="pedido"
-                        onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                            ...prevState,
-                            pedido: value.pedido
-                        }))}
-                    />
-                </div>
-                <br />
-                <div className='home-container-elements'>
-                    <div className="visualizacion">
-                        <div className="visualizacion-tablas">
-                            {dataTablas.map((analisi, index) => {
-                                switch (analisi.id) {
-                                    case 1:
-                                        return (
-                                            <>
+                            <TextField
+                                id='pedido'
+                                sx={{ width: 250 }}
+                                label="Pedido"
+                                value={analisisSeleccionado && analisisSeleccionado.pedido}
+                                name="pedido"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    pedido: value.pedido
+                                }))}
+                            />
+                        </div>
+                        <br />
+                        <div className='home-container-elements'>
+                            <div className="visualizacion">
+                                <div className="visualizacion-tablas">
+                                    {dataTablas.map((analisi, index) => {
+                                        switch (analisi.id) {
+                                            case 1:
+                                                return (
+                                                    <>
 
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
 
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Torre</Typography>
-                                                            {
-                                                                (rowsIds1.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds1)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows1}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
-                                                                    }
-                                                                }}
-                                                                rowsPerPageOptions={[12]}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow1(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        }),
-
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
                                                             <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 2:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Aporte</Typography>
-                                                            {
-                                                                (rowsIds2.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds2)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows2}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Torre</Typography>
+                                                                    {
+                                                                        (rowsIds1.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds1)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow2(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf()
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                </Card>
                                                             </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
 
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows1}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow1(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    analisis={analisis}
+                                                                />
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
 
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 3:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Alimentación</Typography>
-                                                            {
-                                                                (rowsIds3.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds3)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows3}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow3(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                        {/* Modal Editar Tarea*/}
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
 
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 4:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Rechazo</Typography>
-                                                            {
-                                                                (rowsIds4.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds4)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows4}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow4(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
+                                                                }),
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 5:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Condensados</Typography>
-                                                            {
-                                                                (rowsIds5.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds5)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows5}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow5(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                    </>
+                                                )
+                                            case 2:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
                                                             <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 6:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Caldera</Typography>
-                                                            {
-                                                                (rowsIds6.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds6)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows6}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Aporte</Typography>
+                                                                    {
+                                                                        (rowsIds2.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds2)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow6(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
-
-                                                            if (peticionPost1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                </Card>
                                                             </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
 
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows2}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow2(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
 
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 7:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Aerobios</Typography>
-                                                            {
-                                                                (rowsIds7.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds7)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertarAerobio}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows7}
-                                                                columns={columnasAerobios}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow7(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditarAerobio();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModalAerobio
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado} 
-                                                            analisis={analisis}                                                       
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertarAerobio();
 
-                                                            if (peticionPostAerobio()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                        {/* Modal Editar Tarea*/}
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertarAerobio}
-                                                    onClose={abrirCerrarModalInsertarAerobio}
-                                                />
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf()
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
 
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModalAerobio
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditarAerobio()
-
-                                                            if (peticionPutAerobio()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditarAerobio}
-                                                    onClose={abrirCerrarModalEditarAerobio}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 8:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Legionela</Typography>
-                                                            {
-                                                                (rowsIds8.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds8)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertarLegionela}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows8}
-                                                                columns={columnasLegionela}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow8(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditarLegionela();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModalLegionela
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertarLegionela();
 
-                                                            if (peticionPostLegionela()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertarLegionela}
-                                                    onClose={abrirCerrarModalInsertarLegionela}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModalLegionela
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditarLegionela()
-
-                                                            if (peticionPutLegionela()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditarLegionela}
-                                                    onClose={abrirCerrarModalEditarLegionela}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 9:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Aguas Residuales</Typography>
-                                                            {
-                                                                (rowsIds9.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds9)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows9}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow9(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                    </>
+                                                )
+                                            case 3:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
                                                             <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 10:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Desinfecciones</Typography>
-                                                            {
-                                                                (rowsIds10.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds10)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows10}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Alimentación</Typography>
+                                                                    {
+                                                                        (rowsIds3.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds3)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow10(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisid={analisi.id}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
-
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                </Card>
                                                             </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
 
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows3}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow3(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
 
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 11:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Físico-Químico Osmosis</Typography>
-                                                            {
-                                                                (rowsIds11.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds11)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar1}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows11}
-                                                                columns={columnas1}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow11(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar1();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal1
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar1();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                        {/* Modal Editar Tarea*/}
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar1}
-                                                    onClose={abrirCerrarModalInsertar1}
-                                                />
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
 
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal1
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdf();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar1()
-
-                                                            if (peticionPut1()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar1}
-                                                    onClose={abrirCerrarModalEditar1}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 12:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Agua Pozo</Typography>
-                                                            {
-                                                                (rowsIds12.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds12)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows12}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow12(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 13:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Desinfeccion ACS</Typography>
-                                                            {
-                                                                (rowsIds13.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds13)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows13}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow13(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                    </>
+                                                )
+                                            case 4:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
                                                             <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 14:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Mantenimiento Maq Frio</Typography>
-                                                            {
-                                                                (rowsIds14.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds14)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows14}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Rechazo</Typography>
+                                                                    {
+                                                                        (rowsIds4.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds4)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow14(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
-
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                </Card>
                                                             </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
 
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows4}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow4(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
 
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 15:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Mediciones</Typography>
-                                                            {
-                                                                (rowsIds15.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds15)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows15}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow15(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                        {/* Modal Editar Tarea*/}
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
 
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 16:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Control Fuga de Gas</Typography>
-                                                            {
-                                                                (rowsIds16.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds16)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows16}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow16(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 17:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Agua Potable</Typography>
-                                                            {
-                                                                (rowsIds17.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds17)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows17}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow17(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
 
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
                                                         />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
 
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
+                                                    </>
+                                                )
+                                            case 5:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
 
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
                                                             <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
-                                                            </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
-
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                                                    ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
-                                                />
-
-                                            </>
-                                        )
-                                    case 18:
-                                        return (
-                                            <>
-                                                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                        {snackData.msg}
-                                                    </Alert>
-                                                </Snackbar>
-
-                                                <Grid container spacing={2}>
-                                                    {/* Título y botones de opción */}
-                                                    <Grid item xs={12}>
-                                                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                            <Typography variant='h6'>Revisión de Bandeja</Typography>
-                                                            {
-                                                                (rowsIds18.length > 0) ?
-                                                                    (
-                                                                        <Grid item>
-                                                                            <Button
-                                                                                sx={{ mr: 2 }}
-                                                                                color='error'
-                                                                                variant='contained'
-                                                                                startIcon={<DeleteIcon />}
-                                                                                onClick={(event, rowData) => {
-                                                                                    setAnalisisEliminar(rowsIds18)
-                                                                                    abrirCerrarModalEliminar()
-                                                                                }}
-                                                                            >
-                                                                                Eliminar
-                                                                            </Button>
-                                                                        </Grid>
-                                                                    ) : (
-                                                                        <Button
-                                                                            color='success'
-                                                                            variant='contained'
-                                                                            startIcon={<AddIcon />}
-                                                                            onClick={abrirCerrarModalInsertar}
-                                                                        >Añadir</Button>
-                                                                    )
-                                                            }
-                                                        </Card>
-                                                    </Grid>
-
-                                                    {/* Tabla donde se muestran los registros de los clientes */}
-                                                    <Grid item xs={12}>
-                                                        <Card>
-                                                            <DataGrid
-                                                                components={{ Toolbar: GridToolbar }}
-                                                                localeText={DATAGRID_LOCALE_TEXT}
-                                                                sx={{
-                                                                    width: '100%',
-                                                                    height: 700,
-                                                                    backgroundColor: '#FFFFFF'
-                                                                }}
-                                                                rows={rows18}
-                                                                columns={columnas}
-                                                                pageSize={12}
-                                                                rowsPerPageOptions={[12]}
-                                                                initialState={{
-                                                                    sorting: {
-                                                                      sortModel: [{ field: 'fecha', sort: 'asc'}]
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Condensados</Typography>
+                                                                    {
+                                                                        (rowsIds5.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds5)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
                                                                     }
-                                                                }}
-                                                                checkboxSelection
-                                                                disableSelectionOnClick
-                                                                onSelectionModelChange={(ids) => handleSelectRow18(ids)}
-                                                                onRowClick={(analisisSeleccionado, evt) => {
-                                                                    setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                    setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                    setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                    abrirCerrarModalEditar();
-                                                                }}
-                                                            />
-                                                        </Card>
-                                                    </Grid>
-                                                </Grid>
-
-                                                {/* LISTA DE MODALS */}
-
-                                                {/* Agregar tarea */}
-                                                <ModalLayout
-                                                    titulo="Agregar nueva Tarea"
-                                                    contenido={
-                                                        <InsertarVisModal
-                                                            change={handleChangeInput}
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            analisisid={analisi.id}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            analisis={analisis}
-                                                        />
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                            abrirCerrarModalInsertar();
-
-                                                            if (peticionPost()) {
-                                                                setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                            }
-
-                                                        }, 'success')
-                                                    ]}
-                                                    open={modalInsertar}
-                                                    onClose={abrirCerrarModalInsertar}
-                                                />
-
-                                                {/* Modal Editar Tarea*/}
-
-                                                <ModalLayout
-                                                    titulo="Editar tarea"
-                                                    contenido={
-                                                        <EditarVisModal
-                                                            analisisSeleccionado={analisisSeleccionado}
-                                                            change={handleChangeInput}
-                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
-                                                            handleChangeCheckbox={handleChangeCheckbox}
-                                                            analisisAutocomplete={analisisAutocomplete}
-                                                            analisisEditar={analisisEditar}
-                                                            elementoTareaEditar={elementoTareaEditar}
-                                                            elementosAutocomplete={elementosAutocomplete}
-                                                            handlePdf={handlePdf}
-                                                            fileChange={fileChange}
-                                                        />}
-                                                    botones={[
-                                                        insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
-                                                            descargarPdfNoFQ();
-                                                        }),
-                                                        insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                            abrirCerrarModalEditar()
-
-                                                            if (peticionPut()) {
-                                                                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                            }
-                                                        })
-                                                    ]}
-                                                    open={modalEditar}
-                                                    onClose={abrirCerrarModalEditar}
-                                                />
-
-                                                {/* Eliminar tarea */}
-                                                <ModalLayout
-                                                    titulo="Eliminar tarea"
-                                                    contenido={
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                </Card>
                                                             </Grid>
-                                                        </>
-                                                    }
-                                                    botones={[
-                                                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                                            abrirCerrarModalEliminar();
 
-                                                            if (peticionDelete()) {
-                                                                setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
-                                                            } else {
-                                                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows5}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow5(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
                                                             }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
 
-                                                        }, 'error'),
-                                                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 6:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Caldera</Typography>
+                                                                    {
+                                                                        (rowsIds6.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds6)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows6}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow6(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
+
+                                                                    if (peticionPost1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 7:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Aerobios</Typography>
+                                                                    {
+                                                                        (rowsIds7.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds7)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertarAerobio}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows7}
+                                                                        columns={columnasAerobios}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow7(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditarAerobio();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModalAerobio
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertarAerobio();
+
+                                                                    if (peticionPostAerobio()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertarAerobio}
+                                                            onClose={abrirCerrarModalInsertarAerobio}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModalAerobio
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditarAerobio()
+
+                                                                    if (peticionPutAerobio()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditarAerobio}
+                                                            onClose={abrirCerrarModalEditarAerobio}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 8:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Legionela</Typography>
+                                                                    {
+                                                                        (rowsIds8.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds8)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertarLegionela}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows8}
+                                                                        columns={columnasLegionela}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow8(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditarLegionela();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModalLegionela
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertarLegionela();
+
+                                                                    if (peticionPostLegionela()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertarLegionela}
+                                                            onClose={abrirCerrarModalInsertarLegionela}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModalLegionela
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditarLegionela()
+
+                                                                    if (peticionPutLegionela()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditarLegionela}
+                                                            onClose={abrirCerrarModalEditarLegionela}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 9:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Aguas Residuales</Typography>
+                                                                    {
+                                                                        (rowsIds9.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds9)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows9}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow9(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 10:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Desinfecciones</Typography>
+                                                                    {
+                                                                        (rowsIds10.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds10)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows10}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow10(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisid={analisi.id}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 11:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Osmosis</Typography>
+                                                                    {
+                                                                        (rowsIds11.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds11)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar1}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows11}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow11(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal1
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar1();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar1}
+                                                            onClose={abrirCerrarModalInsertar1}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 12:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Agua Pozo</Typography>
+                                                                    {
+                                                                        (rowsIds12.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds12)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows12}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow12(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 13:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Desinfeccion ACS</Typography>
+                                                                    {
+                                                                        (rowsIds13.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds13)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows13}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow13(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 14:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Mantenimiento Maq Frio</Typography>
+                                                                    {
+                                                                        (rowsIds14.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds14)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows14}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow14(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 15:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Mediciones</Typography>
+                                                                    {
+                                                                        (rowsIds15.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds15)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows15}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow15(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 16:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Control Fuga de Gas</Typography>
+                                                                    {
+                                                                        (rowsIds16.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds16)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows16}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow16(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 17:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Agua Potable</Typography>
+                                                                    {
+                                                                        (rowsIds17.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds17)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows17}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow17(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 18:
+                                                return (
+                                                    <>
+                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                                                                {snackData.msg}
+                                                            </Alert>
+                                                        </Snackbar>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Revisión de Bandeja</Typography>
+                                                                    {
+                                                                        (rowsIds18.length > 0) ?
+                                                                            (
+                                                                                <Grid item>
+                                                                                    <Button
+                                                                                        sx={{ mr: 2 }}
+                                                                                        color='error'
+                                                                                        variant='contained'
+                                                                                        startIcon={<DeleteIcon />}
+                                                                                        onClick={(event, rowData) => {
+                                                                                            setAnalisisEliminar(rowsIds18)
+                                                                                            abrirCerrarModalEliminar()
+                                                                                        }}
+                                                                                    >
+                                                                                        Eliminar
+                                                                                    </Button>
+                                                                                </Grid>
+                                                                            ) : (
+                                                                                <Button
+                                                                                    color='success'
+                                                                                    variant='contained'
+                                                                                    startIcon={<AddIcon />}
+                                                                                    onClick={abrirCerrarModalInsertar}
+                                                                                >Añadir</Button>
+                                                                            )
+                                                                    }
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows18}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        checkboxSelection
+                                                                        disableSelectionOnClick
+                                                                        onSelectionModelChange={(ids) => handleSelectRow18(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* LISTA DE MODALS */}
+
+                                                        {/* Agregar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Agregar nueva Tarea"
+                                                            contenido={
+                                                                <InsertarVisModal
+                                                                    change={handleChangeInput}
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    analisisid={analisi.id}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    analisis={analisis}
+                                                                />
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                                                    abrirCerrarModalInsertar();
+
+                                                                    if (peticionPost()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'success')
+                                                            ]}
+                                                            open={modalInsertar}
+                                                            onClose={abrirCerrarModalInsertar}
+                                                        />
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                        {/* Eliminar tarea */}
+                                                        <ModalLayout
+                                                            titulo="Eliminar tarea"
+                                                            contenido={
+                                                                <>
+                                                                    <Grid item xs={12}>
+                                                                        <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            botones={[
+                                                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                                                    abrirCerrarModalEliminar();
+
+                                                                    if (peticionDelete()) {
+                                                                        setSnackData({ open: true, msg: `Tarea eliminada correctamente`, severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                                                                    }
+
+                                                                }, 'error'),
+                                                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                                                            ]}
+                                                            open={modalEliminar}
+                                                            onClose={abrirCerrarModalEliminar}
+                                                        />
+
+                                                    </>
+                                                )
+                                                {/*default:
+                                            return (
+                                                <MaterialTable columns={columnasDet} data={dataOtros}
+                                                    localization={localization}
+                                                    actions={[
+                                                        {
+                                                            icon: () => <AddCircle style={{ fill: "green" }} />,
+                                                            tooltip: "Añadir analisis",
+                                                            isFreeAction: true,
+                                                            onClick: (e, data) => {
+                                                                setAnalisisSeleccionado({
+                                                                    ...analisisSeleccionado,
+                                                                    analisis: analisi.analisis
+                                                                })
+                                                                abrirCerrarModalInsertar1();
+                                                            },
+                                                        },
+                                                        {
+                                                            icon: () => <RemoveCircle style={{ fill: "red" }} />,
+                                                            tooltip: "Eliminar analisis",
+                                                            onClick: (event, rowData) => {
+                                                                setAnalisisEliminar(FilasSeleccionadas1);
+                                                                abrirCerrarModalEliminar();
+                                                            },
+                                                        },
                                                     ]}
-                                                    open={modalEliminar}
-                                                    onClose={abrirCerrarModalEliminar}
+    
+                                                    onRowClick={((evt, analisisSeleccionado) => {
+                                                        setAnalisisSeleccionado(analisisSeleccionado)
+                                                        setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.id));
+                                                        abrirCerrarModalEditar1();
+                                                    })}
+    
+                                                    onSelectionChange={(filas) => {
+                                                        setFilasSeleccionadas1(filas);
+    
+                                                        if (filas.length > 0) {
+                                                            setAnalisisSeleccionado(filas[0]);
+                                                        }
+                                                    }}
+    
+                                                    options={{
+                                                        sorting: true, paging: true, pageSizeOptions: [5, 8, 10, 15, 20], pageSize: 8, filtering: false, search: false, selection: true,
+                                                        columnsButton: false, showSelectAllCheckbox: false,
+                                                        rowStyle: rowData => ({
+                                                            backgroundColor: (analisisSeleccionado === rowData.tableData.id) ? '#EEE' : '#FFF',
+                                                            whiteSpace: "nowrap"
+                                                        }),
+                                                        exportMenu: [{
+                                                            label: 'Export PDF',
+                                                            exportFunc: (cols, datas) => ExportPdf(cols, data1, `Listado de ${analisi.analisis}`)
+                                                        }, {
+                                                            label: 'Export CSV',
+                                                            exportFunc: (cols, datas) => ExportCsv(cols, data1, `Listado de ${analisi.analisis}`)
+                                                        }]
+                                                    }}
+    
+                                                    title={analisi.analisis}
                                                 />
+                                                )*/}
+                                        }
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </MainLayout>
+                :
+                <MainLayout title="Visualización">
 
-                                            </>
-                                        )
-                                        {/*default:
+                    <div className="home-container">
+                        <h4> Visualizacion de datos </h4>
+                        <div className="datos">
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Cliente"
+                                name="codigoCliente"
+                                options={clientes}
+                                getOptionLabel={option => option.codigo}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
+                                onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
+                            />
+                            <TextField
+                                id='nombreCliente'
+                                label="Nombre Cliente"
+                                sx={{ width: 250 }}
+                                style={{ marginRight: "20px" }}
+                                value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
+                                name="nombreCliente"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    nombreCliente: value.razonSocial
+                                }))}
+                            />
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Oferta"
+                                options={oferta}
+                                inputValue={analisisSeleccionado.oferta}
+                                getOptionLabel={option => option.numeroOferta}
+                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
+                                onChange={(event, value) => onChangeOferta(event, value, "oferta")}
+                            />
+                            <TextField
+                                id='pedido'
+                                sx={{ width: 250 }}
+                                label="Pedido"
+                                value={analisisSeleccionado && analisisSeleccionado.pedido}
+                                name="pedido"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    pedido: value.pedido
+                                }))}
+                            />
+                            <Autocomplete
+                                disableClearable={true}
+                                id="Elemento"
+                                options={elementosAutocomplete}
+                                inputValue={analisisSeleccionado.nombreElemento}
+                                getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                                sx={{ width: 250 }}
+                                renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
+                                onChange={(event, value) => onChangeElemento(event, value, "elemento")}
+                            />
+                        </div>
+                        <br />
+                        <div className='home-container-elements'>
+                            <div className="visualizacion">
+                                <div className="visualizacion-tablas">
+                                    {dataTablas.map((analisi, index) => {
+                                        switch (analisi.id) {
+                                            case 1:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Torre</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows1}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow1(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                }),
+
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 2:
+                                                return (
+                                                    <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Aporte</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows2}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow2(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf()
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 3:
+                                                return (
+                                                    <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Alimentación</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows3}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow3(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 4:
+                                                return (
+                                                    <>
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Rechazo</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows4}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow4(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 5:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Condensados</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows5}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow5(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 6:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Caldera</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows6}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow6(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 7:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Aerobios</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows7}
+                                                                        columns={columnasAerobios}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow7(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditarAerobio();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModalAerobio
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditarAerobio()
+
+                                                                    if (peticionPutAerobio()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditarAerobio}
+                                                            onClose={abrirCerrarModalEditarAerobio}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 8:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Legionela</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows8}
+                                                                        columns={columnasLegionela}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow8(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditarLegionela();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModalLegionela
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditarLegionela()
+
+                                                                    if (peticionPutLegionela()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditarLegionela}
+                                                            onClose={abrirCerrarModalEditarLegionela}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 9:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Aguas Residuales</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows9}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow9(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 10:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Desinfecciones</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows10}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow10(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 11:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Físico-Químico Osmosis</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows11}
+                                                                        columns={columnas1}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow11(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar1();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal1
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdf();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar1()
+
+                                                                    if (peticionPut1()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar1}
+                                                            onClose={abrirCerrarModalEditar1}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 12:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Agua Pozo</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows12}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow12(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 13:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Desinfeccion ACS</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows13}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow13(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 14:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Mantenimiento Maq Frio</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows14}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow14(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 15:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Mediciones</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows15}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow15(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 16:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Control Fuga de Gas</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows16}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow16(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 17:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Agua Potable</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows17}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow17(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                            case 18:
+                                                return (
+                                                    <>
+
+                                                        <Grid container spacing={2}>
+                                                            {/* Título y botones de opción */}
+                                                            <Grid item xs={12}>
+                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                                                    <Typography variant='h6'>Revisión de Bandeja</Typography>
+                                                                </Card>
+                                                            </Grid>
+
+                                                            {/* Tabla donde se muestran los registros de los clientes */}
+                                                            <Grid item xs={12}>
+                                                                <Card>
+                                                                    <DataGrid
+                                                                        components={{ Toolbar: GridToolbar }}
+                                                                        localeText={DATAGRID_LOCALE_TEXT}
+                                                                        sx={{
+                                                                            width: '100%',
+                                                                            height: 700,
+                                                                            backgroundColor: '#FFFFFF'
+                                                                        }}
+                                                                        rows={rows18}
+                                                                        columns={columnas}
+                                                                        pageSize={12}
+                                                                        rowsPerPageOptions={[12]}
+                                                                        initialState={{
+                                                                            sorting: {
+                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
+                                                                            }
+                                                                        }}
+                                                                        onSelectionModelChange={(ids) => handleSelectRow18(ids)}
+                                                                        onRowClick={(analisisSeleccionado, evt) => {
+                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
+                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
+                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
+                                                                            abrirCerrarModalEditar();
+                                                                        }}
+                                                                    />
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+
+                                                        {/* Modal Editar Tarea*/}
+
+                                                        <ModalLayout
+                                                            titulo="Editar tarea"
+                                                            contenido={
+                                                                <EditarVisModal
+                                                                    analisisSeleccionado={analisisSeleccionado}
+                                                                    change={handleChangeInput}
+                                                                    setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                                    handleChangeCheckbox={handleChangeCheckbox}
+                                                                    analisisAutocomplete={analisisAutocomplete}
+                                                                    analisisEditar={analisisEditar}
+                                                                    elementoTareaEditar={elementoTareaEditar}
+                                                                    elementosAutocomplete={elementosAutocomplete}
+                                                                    handlePdf={handlePdf}
+                                                                    fileChange={fileChange}
+                                                                />}
+                                                            botones={[
+                                                                insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
+                                                                    descargarPdfNoFQ();
+                                                                }),
+                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                    abrirCerrarModalEditar()
+
+                                                                    if (peticionPut()) {
+                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+                                                                    } else {
+                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+                                                                    }
+                                                                })
+                                                            ]}
+                                                            open={modalEditar}
+                                                            onClose={abrirCerrarModalEditar}
+                                                        />
+
+                                                    </>
+                                                )
+                                                {/*default:
                                         return (
                                             <MaterialTable columns={columnasDet} data={dataOtros}
                                                 localization={localization}
@@ -5389,13 +6970,16 @@ export const VisualizacionPage = () => {
                                                 title={analisi.analisis}
                                             />
                                             )*/}
-                                }
-                            })}
+                                        }
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </MainLayout>
+                </MainLayout>
+            }
+        </>
+
     );
 
 }

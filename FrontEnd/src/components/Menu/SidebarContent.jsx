@@ -27,7 +27,7 @@ export const SidebarContent = () => {
                 }
             </Toolbar>
             <Divider />
-            {usuarioActual.idPerfil === 1 ?
+            {usuarioActual.idPerfil === 1 || usuarioActual.idPerfil === 1004 ?
                 <List>
                     {
                         // Recorremos todos los elementos del array para crear las opciones del menú

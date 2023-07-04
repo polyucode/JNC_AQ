@@ -7,8 +7,6 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
 
-    console.log(perfilUsuario)
-
     useEffect(() => {
 
         getPerfiles()
@@ -22,16 +20,6 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
                 setClientes(clientes);
             })
     }, []);
-
-    useEffect(() => {
-
-        if(perfilUsuario[0].id === 2){
-            console.log("ENTRA IF")
-        } else{
-            console.log("ENTRA ELSE")
-        }
-
-    }, [perfilUsuario])
 
     return (
         <>
@@ -94,9 +82,6 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
                     <input type="file" name="src-file2" aria-label="Archivo" onChange={handlePdf} />
                 </div>
                 <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
-                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
-                    Subir PDF
-                </Button>*/}
             </Grid>
         </>
     )

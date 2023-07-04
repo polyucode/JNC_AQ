@@ -30,6 +30,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos } from "../api";
+import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 const token = {
     headers: {
@@ -97,6 +98,8 @@ export const OfertasClientesPage = () => {
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
+    const { usuarioActual } = useUsuarioActual();
+
     const columns = [
 
         //Visibles
@@ -104,19 +107,19 @@ export const OfertasClientesPage = () => {
         { headerName: 'Descripcion', field: 'descripcion', width: 200 },
         { headerName: 'Pedido', field: 'pedido', width: 150 },
         { headerName: 'CodigoCliente', field: 'codigoCliente', width: 150 },
-        { headerName: 'NombreCliente', field: 'nombreCliente', width: 250 },      
-        { 
-            headerName: 'Fecha de Inicio', 
-            field: 'fechaInicio', 
+        { headerName: 'NombreCliente', field: 'nombreCliente', width: 250 },
+        {
+            headerName: 'Fecha de Inicio',
+            field: 'fechaInicio',
             width: 200,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
                 return date.toLocaleDateString();
             }
         },
-        { 
-            headerName: 'Fecha de Finalizacion', 
-            field: 'fechaFinalizacion',  
+        {
+            headerName: 'Fecha de Finalizacion',
+            field: 'fechaFinalizacion',
             width: 200,
             valueFormatter: (params) => {
                 const date = new Date(params.value);
@@ -149,7 +152,7 @@ export const OfertasClientesPage = () => {
             .then(contactos => {
                 setContactos(contactos);
             })
-        
+
     }, [])
 
     useEffect(() => {
@@ -170,11 +173,11 @@ export const OfertasClientesPage = () => {
 
         const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
         (nombre.length > 0) && setOfertaSeleccionada({
-          ...ofertaSeleccionada,
-          nombreCliente: nombre[0].razonSocial
+            ...ofertaSeleccionada,
+            nombreCliente: nombre[0].razonSocial
         })
-    
-      }, [ofertaSeleccionada.codigoCliente])
+
+    }, [ofertaSeleccionada.codigoCliente])
 
     const peticionPost = async () => {
 
@@ -239,7 +242,7 @@ export const OfertasClientesPage = () => {
             delIdUser: null,
             deleted: null,
         })
-        
+
     }
 
     const peticionDelete = async () => {
@@ -409,166 +412,239 @@ export const OfertasClientesPage = () => {
 
 
     return (
-        <MainLayout title="Ofertas">
-            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                    {snackData.msg}
-                </Alert>
-            </Snackbar>
+        <>
+            {usuarioActual.idPerfil === 1 ?
+                <MainLayout title="Ofertas">
+                    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                            {snackData.msg}
+                        </Alert>
+                    </Snackbar>
 
-            <Grid container spacing={2}>
+                    <Grid container spacing={2}>
 
-                {/* Título y botones de opción */}
-                <Grid item xs={12}>
-                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant='h6'>Listado de ofertas</Typography>
-                        {
-                            (rowsIds.length > 0) ?
-                                (
-                                    <Grid item>
-                                        <Button
-                                            sx={{ mr: 2 }}
-                                            color='error'
-                                            variant='contained'
-                                            startIcon={<DeleteIcon />}
-                                            onClick={(event, rowData) => {
-                                                setOfertaEliminar(rowsIds)
-                                                abrirCerrarModalEliminar()
-                                            }}
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </Grid>
-                                ) : (
-                                    <Button
-                                        color='success'
-                                        variant='contained'
-                                        startIcon={<AddIcon />}
-                                        onClick={abrirCerrarModalInsertar}
-                                    >Añadir</Button>
-                                )
-                        }
-                    </Card>
-                </Grid>
+                        {/* Título y botones de opción */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de ofertas</Typography>
+                                {
+                                    (rowsIds.length > 0) ?
+                                        (
+                                            <Grid item>
+                                                <Button
+                                                    sx={{ mr: 2 }}
+                                                    color='error'
+                                                    variant='contained'
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={(event, rowData) => {
+                                                        setOfertaEliminar(rowsIds)
+                                                        abrirCerrarModalEliminar()
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                            </Grid>
+                                        ) : (
+                                            <Button
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={<AddIcon />}
+                                                onClick={abrirCerrarModalInsertar}
+                                            >Añadir</Button>
+                                        )
+                                }
+                            </Card>
+                        </Grid>
 
-                {/* Tabla donde se muestran los registros de los clientes */}
-                <Grid item xs={12}>
-                    <Card>
-                        <DataGrid
-                            components={{ Toolbar: GridToolbar }}
-                            localeText={DATAGRID_LOCALE_TEXT}
-                            sx={{
-                                width: '100%',
-                                height: 700,
-                                backgroundColor: '#FFFFFF'
-                            }}
-                            rows={rows}
-                            columns={columns}
-                            pageSize={9}
-                            rowsPerPageOptions={[9]}
-                            checkboxSelection
-                            disableSelectionOnClick
-                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                            onRowClick={(ofertaSeleccionada, evt) => {
-                                setOfertaSeleccionada(ofertaSeleccionada.row)
-                                setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
-                                setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
-                                setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
-                                setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
-                                abrirCerrarModalEditar();
-                            }}
-                        />
-                    </Card>
-                </Grid>
+                        {/* Tabla donde se muestran los registros de los clientes */}
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={9}
+                                    rowsPerPageOptions={[9]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(ofertaSeleccionada, evt) => {
+                                        setOfertaSeleccionada(ofertaSeleccionada.row)
+                                        setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
+                                        setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
+                                        setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
+                                        setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
 
-                {/* LISTA DE MODALS */}
+                        {/* LISTA DE MODALS */}
 
-                {/* Agregar Oferta */}
-                <ModalLayout
-                    titulo="Agregar nueva oferta"
-                    contenido={
-                        <InsertarOfertaModal
-                            ofertaSeleccionada={ofertaSeleccionada}
-                            change={handleChange}
-                            handleChangeFecha={handleChangeFecha}
-                            setOfertaSeleccionada={setOfertaSeleccionada}
-                        />
-                    }
-                    botones={[
-                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                            abrirCerrarModalInsertar();
-
-                            if (peticionPost()) {
-                                setSnackData({ open: true, msg: 'Oferta añadida correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al añadir la oferta', severity: 'error' })
+                        {/* Agregar Oferta */}
+                        <ModalLayout
+                            titulo="Agregar nueva oferta"
+                            contenido={
+                                <InsertarOfertaModal
+                                    ofertaSeleccionada={ofertaSeleccionada}
+                                    change={handleChange}
+                                    handleChangeFecha={handleChangeFecha}
+                                    setOfertaSeleccionada={setOfertaSeleccionada}
+                                />
                             }
+                            botones={[
+                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                    abrirCerrarModalInsertar();
 
-                        }, 'success')
-                    ]}
-                    open={modalInsertar}
-                    onClose={abrirCerrarModalInsertar}
-                />
+                                    if (peticionPost()) {
+                                        setSnackData({ open: true, msg: 'Oferta añadida correctamente', severity: 'success' });
+                                    } else {
+                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la oferta', severity: 'error' })
+                                    }
 
-            </Grid>
+                                }, 'success')
+                            ]}
+                            open={modalInsertar}
+                            onClose={abrirCerrarModalInsertar}
+                        />
 
-            {/* Modal Editar Oferta*/}
+                    </Grid>
 
-            <ModalLayout
-                titulo="Editar Oferta"
-                contenido={
-                    <EditarOfertaModal
-                        ofertaSeleccionada={ofertaSeleccionada}
-                        setOfertaSeleccionada={setOfertaSeleccionada}
-                        change={handleChange}
-                        codigoClienteEditar={clienteCodigoEditar}
-                        contacto1Editar={contacto1Editar}
-                        contacto2Editar={contacto2Editar}
-                        contacto3Editar={contacto3Editar}
-                    />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                    abrirCerrarModalEditar()
+                    {/* Modal Editar Oferta*/}
 
-                    if (peticionPut()) {
-                        setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
-                    } else {
-                        setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
-                    }
-                })
-                ]}
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}
-            />
+                    <ModalLayout
+                        titulo="Editar Oferta"
+                        contenido={
+                            <EditarOfertaModal
+                                ofertaSeleccionada={ofertaSeleccionada}
+                                setOfertaSeleccionada={setOfertaSeleccionada}
+                                change={handleChange}
+                                codigoClienteEditar={clienteCodigoEditar}
+                                contacto1Editar={contacto1Editar}
+                                contacto2Editar={contacto2Editar}
+                                contacto3Editar={contacto3Editar}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                            abrirCerrarModalEditar()
 
-            {/* Eliminar oferta */}
-            <ModalLayout
-                titulo="Eliminar oferta"
-                contenido={
-                    <>
-                        <Grid item xs={12}>
-                            <Typography>Estás seguro que deseas eliminar la oferta?</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography><b>{ofertaSeleccionada.numeroOferta}</b></Typography>
-                        </Grid>
-                    </>
-                }
-                botones={[
-                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                        abrirCerrarModalEliminar();
+                            if (peticionPut()) {
+                                setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
+                            }
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
 
-                        if (peticionDelete()) {
-                            setSnackData({ open: true, msg: `Oferta eliminada correctamente: ${ofertaSeleccionada.numeroOferta}`, severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar la oferta', severity: 'error' })
+                    {/* Eliminar oferta */}
+                    <ModalLayout
+                        titulo="Eliminar oferta"
+                        contenido={
+                            <>
+                                <Grid item xs={12}>
+                                    <Typography>Estás seguro que deseas eliminar la oferta?</Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography><b>{ofertaSeleccionada.numeroOferta}</b></Typography>
+                                </Grid>
+                            </>
                         }
+                        botones={[
+                            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                abrirCerrarModalEliminar();
 
-                    }, 'error'),
-                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                ]}
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}
-            />
-        </MainLayout>
+                                if (peticionDelete()) {
+                                    setSnackData({ open: true, msg: `Oferta eliminada correctamente: ${ofertaSeleccionada.numeroOferta}`, severity: 'success' });
+                                } else {
+                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar la oferta', severity: 'error' })
+                                }
+
+                            }, 'error'),
+                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                        ]}
+                        open={modalEliminar}
+                        onClose={abrirCerrarModalEliminar}
+                    />
+                </MainLayout>
+                :
+                <MainLayout title="Ofertas">
+
+                    <Grid container spacing={2}>
+
+                        {/* Título y botones de opción */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de ofertas</Typography>
+                            </Card>
+                        </Grid>
+
+                        {/* Tabla donde se muestran los registros de los clientes */}
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 1000,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(ofertaSeleccionada, evt) => {
+                                        setOfertaSeleccionada(ofertaSeleccionada.row)
+                                        setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
+                                        setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
+                                        setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
+                                        setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    {/* Modal Editar Oferta*/}
+
+                    <ModalLayout
+                        titulo="Editar Oferta"
+                        contenido={
+                            <EditarOfertaModal
+                                ofertaSeleccionada={ofertaSeleccionada}
+                                setOfertaSeleccionada={setOfertaSeleccionada}
+                                change={handleChange}
+                                codigoClienteEditar={clienteCodigoEditar}
+                                contacto1Editar={contacto1Editar}
+                                contacto2Editar={contacto2Editar}
+                                contacto3Editar={contacto3Editar}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                            abrirCerrarModalEditar()
+
+                            if (peticionPut()) {
+                                setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
+                            }
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+
+                </MainLayout>
+            }
+        </>
+
     )
 }

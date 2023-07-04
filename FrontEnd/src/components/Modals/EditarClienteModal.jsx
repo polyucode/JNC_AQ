@@ -17,6 +17,7 @@ import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 import { InsertarContactoModal } from './InsertarContactoModal';
 import { EditarContactoModal } from './EditarContactoModal';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
+import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 
 const token = {
     headers: {
@@ -64,6 +65,8 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
     const [modalEliminar, setModalEliminar] = useState(false);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+    const { usuarioActual } = useUsuarioActual;
 
 
     const columns = [

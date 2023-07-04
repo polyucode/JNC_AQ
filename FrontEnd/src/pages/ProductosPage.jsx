@@ -20,7 +20,8 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
 import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteProductos, postProductos, putProductos } from "../api";
+import { deleteProductos, getProductos, postProductos, putProductos } from "../api";
+import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 
 const token = {
@@ -61,9 +62,13 @@ export const ProductosPage = () => {
 
     const [ProductoEliminar, setProductoEliminar] = useState([]);
 
+    const [productos, setProductos] = useState([]);
+
     const [data, setData] = useState([]);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+    const { usuarioActual } = useUsuarioActual();
 
     const columnas = [
 
@@ -72,8 +77,8 @@ export const ProductosPage = () => {
         { headerName: 'Descripcion', field: 'descripcion', width: 700 }
 
     ];
-
-    const getProductos = async () => {
+    
+    const peticionGet = async () => {
 
         const resp = await getProductos();
         setData(resp);
@@ -81,7 +86,7 @@ export const ProductosPage = () => {
     }
 
     useEffect(() => {
-        getProductos();
+        peticionGet();
     }, [])
 
     useEffect(() => {
@@ -91,6 +96,8 @@ export const ProductosPage = () => {
         }
 
     }, [data]);
+
+    
 
     const peticionPost = async () => {
         productoSeleccionado.id = null;
@@ -130,7 +137,7 @@ export const ProductosPage = () => {
             abrirCerrarModalEliminar();
 
             i++;
-            
+
         }
     }
 
@@ -181,153 +188,218 @@ export const ProductosPage = () => {
 
 
     return (
-        <MainLayout title='Productos'>
+        <>
+            {usuarioActual.idPerfil === 1 ?
+                <MainLayout title='Productos'>
 
-            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                    {snackData.msg}
-                </Alert>
-            </Snackbar>
+                    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                            {snackData.msg}
+                        </Alert>
+                    </Snackbar>
 
-            <Grid container spacing={2}>
+                    <Grid container spacing={2}>
 
-                {/* Título y botones de opción */}
-                <Grid item xs={12}>
-                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant='h6'>Listado de Productos</Typography>
-                        {
-                            (rowsIds.length > 0) ?
-                                (
-                                    <Grid item>
-                                        <Button
-                                            sx={{ mr: 2 }}
-                                            color='error'
-                                            variant='contained'
-                                            startIcon={<DeleteIcon />}
-                                            onClick={(event, rowData) => {
-                                                setProductoEliminar(rowsIds)
-                                                abrirCerrarModalEliminar()
-                                            }}
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </Grid>
-                                ) : (
-                                    <Button
-                                        color='success'
-                                        variant='contained'
-                                        startIcon={<AddIcon />}
-                                        onClick={abrirCerrarModalInsertar}
-                                    >Añadir</Button>
-                                )
-                        }
-                    </Card>
-                </Grid>
+                        {/* Título y botones de opción */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de Productos</Typography>
+                                {
+                                    (rowsIds.length > 0) ?
+                                        (
+                                            <Grid item>
+                                                <Button
+                                                    sx={{ mr: 2 }}
+                                                    color='error'
+                                                    variant='contained'
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={(event, rowData) => {
+                                                        setProductoEliminar(rowsIds)
+                                                        abrirCerrarModalEliminar()
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                            </Grid>
+                                        ) : (
+                                            <Button
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={<AddIcon />}
+                                                onClick={abrirCerrarModalInsertar}
+                                            >Añadir</Button>
+                                        )
+                                }
+                            </Card>
+                        </Grid>
 
-                {/* Tabla donde se muestran los registros de los clientes */}
-                <Grid item xs={12}>
-                    <Card>
-                        <DataGrid
-                            components={{ Toolbar: GridToolbar }}
-                            localeText={DATAGRID_LOCALE_TEXT}
-                            sx={{
-                                width: '100%',
-                                height: 700,
-                                backgroundColor: '#FFFFFF'
-                            }}
-                            rows={rows}
-                            columns={columnas}
-                            pageSize={9}
-                            rowsPerPageOptions={[9]}
-                            checkboxSelection
-                            disableSelectionOnClick
-                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                            onRowClick={(productoSeleccionado, evt) => {
-                                setProductoSeleccionado(productoSeleccionado.row)
-                                abrirCerrarModalEditar();
-                            }}
-                        />
-                    </Card>
-                </Grid>
+                        {/* Tabla donde se muestran los registros de los clientes */}
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columnas}
+                                    pageSize={9}
+                                    rowsPerPageOptions={[9]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(productoSeleccionado, evt) => {
+                                        setProductoSeleccionado(productoSeleccionado.row)
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
 
-                {/* LISTA DE MODALS */}
+                        {/* LISTA DE MODALS */}
 
-                {/* Agregar Producto */}
-                <ModalLayout
-                    titulo="Agregar nuevo producto"
-                    contenido={
-                        <InsertarProductoModal change={handleChange} />
-                    }
-                    botones={[
-                        insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                            abrirCerrarModalInsertar();
-
-                            if (peticionPost()) {
-                                setSnackData({ open: true, msg: 'Producto añadido correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al añadir el producto', severity: 'error' })
+                        {/* Agregar Producto */}
+                        <ModalLayout
+                            titulo="Agregar nuevo producto"
+                            contenido={
+                                <InsertarProductoModal change={handleChange} />
                             }
+                            botones={[
+                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                    abrirCerrarModalInsertar();
 
-                        }, 'success')
-                    ]}
-                    open={modalInsertar}
-                    onClose={abrirCerrarModalInsertar}
-                />
+                                    if (peticionPost()) {
+                                        setSnackData({ open: true, msg: 'Producto añadido correctamente', severity: 'success' });
+                                    } else {
+                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir el producto', severity: 'error' })
+                                    }
 
-            </Grid>
+                                }, 'success')
+                            ]}
+                            open={modalInsertar}
+                            onClose={abrirCerrarModalInsertar}
+                        />
 
-            {/* Modal Editar Producto*/}
+                    </Grid>
 
-            <ModalLayout
-                titulo="Editar producto"
-                contenido={
-                    <EditarProductoModal
-                        productoSeleccionado={productoSeleccionado}
-                        change={handleChange}
-                    />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                    abrirCerrarModalEditar()
+                    {/* Modal Editar Producto*/}
 
-                    if (peticionPut()) {
-                        setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
-                    } else {
-                        setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
-                    }
-                })
-                ]}
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}
-            />
+                    <ModalLayout
+                        titulo="Editar producto"
+                        contenido={
+                            <EditarProductoModal
+                                productoSeleccionado={productoSeleccionado}
+                                change={handleChange}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                            abrirCerrarModalEditar()
 
-            {/* Eliminar producto */}
-            <ModalLayout
-                titulo="Eliminar producto"
-                contenido={
-                    <>
-                        <Grid item xs={12}>
-                            <Typography>Estás seguro que deseas eliminar el producto?</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography><b>{productoSeleccionado.descripcion}</b></Typography>
-                        </Grid>
-                    </>
-                }
-                botones={[
-                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                        abrirCerrarModalEliminar();
+                            if (peticionPut()) {
+                                setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
+                            }
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
 
-                        if (peticionDelete()) {
-                            setSnackData({ open: true, msg: `Producto eliminado correctamente: ${productoSeleccionado.descripcion}`, severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el producto', severity: 'error' })
+                    {/* Eliminar producto */}
+                    <ModalLayout
+                        titulo="Eliminar producto"
+                        contenido={
+                            <>
+                                <Grid item xs={12}>
+                                    <Typography>Estás seguro que deseas eliminar el producto?</Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography><b>{productoSeleccionado.descripcion}</b></Typography>
+                                </Grid>
+                            </>
                         }
+                        botones={[
+                            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                abrirCerrarModalEliminar();
 
-                    }, 'error'),
-                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                ]}
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}
-            />
-        </MainLayout>
+                                if (peticionDelete()) {
+                                    setSnackData({ open: true, msg: `Producto eliminado correctamente: ${productoSeleccionado.descripcion}`, severity: 'success' });
+                                } else {
+                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el producto', severity: 'error' })
+                                }
+
+                            }, 'error'),
+                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                        ]}
+                        open={modalEliminar}
+                        onClose={abrirCerrarModalEliminar}
+                    />
+                </MainLayout>
+                :
+                <MainLayout title='Productos'>
+
+                    <Grid container spacing={2}>
+
+                        {/* Título y botones de opción */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de Productos</Typography>
+                            </Card>
+                        </Grid>
+
+                        {/* Tabla donde se muestran los registros de los clientes */}
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 1000,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columnas}
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(productoSeleccionado, evt) => {
+                                        setProductoSeleccionado(productoSeleccionado.row)
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
+
+                    </Grid>
+
+                    {/* Modal Editar Producto*/}
+
+                    <ModalLayout
+                        titulo="Editar producto"
+                        contenido={
+                            <EditarProductoModal
+                                productoSeleccionado={productoSeleccionado}
+                                change={handleChange}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                            abrirCerrarModalEditar()
+
+                            if (peticionPut()) {
+                                setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
+                            }
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+
+                </MainLayout>
+            }
+        </>
+
     )
 }

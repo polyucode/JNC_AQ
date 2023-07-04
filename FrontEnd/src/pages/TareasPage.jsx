@@ -16,6 +16,7 @@ import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout } from "../components/ModalLayout";
 import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas } from "../api";
+import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 const token = {
   headers: {
@@ -156,30 +157,32 @@ export const TareasPage = () => {
 
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
+  const { usuarioActual } = useUsuarioActual();
+
   const columns = [
     { headerName: 'Cliente', field: 'codigoCliente', width: 120 },
     { headerName: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
-    { 
-      headerName: 'Operario', 
-      field: 'operario', 
+    {
+      headerName: 'Operario',
+      field: 'operario',
       width: 300,
       valueFormatter: (params) => {
         const oper = operarios.find((operario) => operario.id === params.value);
         return oper ? oper.nombre + ' ' + oper.apellidos : '';
       }
     },
-    { 
-      headerName: 'Elemento', 
-      field: 'elemento', 
+    {
+      headerName: 'Elemento',
+      field: 'elemento',
       width: 250,
       valueFormatter: (params) => {
         const elemento = elementosplanta.find((elemento) => elemento.id === params.value);
         return elemento ? elemento.nombre + ' ' + elemento.numero : '';
       }
     },
-    { 
-      headerName: 'Analisis', 
-      field: 'analisis', 
+    {
+      headerName: 'Analisis',
+      field: 'analisis',
       width: 250,
       valueFormatter: (params) => {
         const analisi = analisis.find((analisi) => analisi.id === params.value);
@@ -187,18 +190,18 @@ export const TareasPage = () => {
       }
     },
     { headerName: 'Oferta', field: 'oferta', width: 150 },
-    { 
-      headerName: 'Tipo', 
-      field: 'tipo', 
+    {
+      headerName: 'Tipo',
+      field: 'tipo',
       width: 150,
       valueFormatter: (params) => {
         const type = tipos.find((type) => type.id === params.value);
         return type ? type.nombre : '';
       }
     },
-    { 
-      headerName: 'Fecha', 
-      field: 'fecha',  
+    {
+      headerName: 'Fecha',
+      field: 'fecha',
       width: 250,
       valueFormatter: (params) => {
         const date = new Date(params.value);
@@ -603,7 +606,7 @@ export const TareasPage = () => {
       delIdUser: null,
       deleted: null,
     });
-   
+
   }
 
   const peticionDelete = async () => {
@@ -634,7 +637,7 @@ export const TareasPage = () => {
       delIdUser: null,
       deleted: null,
     });
-    
+
   }
 
 
@@ -680,7 +683,7 @@ export const TareasPage = () => {
       delIdUser: null,
       deleted: null,
     });
-    
+
   }
 
   const handleChange = e => {
@@ -849,196 +852,275 @@ export const TareasPage = () => {
   };
 
   return (
-    <MainLayout title="Tareas">
+    <>
+      {usuarioActual.idPerfil === 1 ?
+        <MainLayout title="Tareas">
 
-      <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-          {snackData.msg}
-        </Alert>
-      </Snackbar>
+          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+              {snackData.msg}
+            </Alert>
+          </Snackbar>
 
-      <Grid container spacing={2}>
-        {/* Título y botones de opción */}
-        <Grid item xs={12}>
-          <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant='h6'>Listado de Tareas</Typography>
-            {
-              (rowsIds.length > 0) ?
-                (
-                  <Grid item>
-                    <Button
-                      sx={{ mr: 2 }}
-                      color='error'
-                      variant='contained'
-                      startIcon={<DeleteIcon />}
-                      onClick={(event, rowData) => {
-                        setTareaEliminar(rowsIds)
-                        abrirCerrarModalEliminar()
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  </Grid>
-                ) : (
-                  <Button
-                    color='success'
-                    variant='contained'
-                    startIcon={<AddIcon />}
-                    onClick={abrirCerrarModalInsertar}
-                  >Añadir</Button>
-                )
-            }
-          </Card>
-        </Grid>
-
-        {/* Tabla donde se muestran los registros de los clientes */}
-        <Grid item xs={12}>
-          <Card>
-            <DataGrid
-              components={{ Toolbar: GridToolbar }}
-              localeText={DATAGRID_LOCALE_TEXT}
-              sx={{
-                width: '100%',
-                height: 700,
-                backgroundColor: '#FFFFFF'
-              }}
-              rows={rows}
-              columns={columns}
-              pageSize={100}
-              rowsPerPageOptions={[10, 20, 50, 100]}
-              checkboxSelection
-              disableSelectionOnClick
-              onSelectionModelChange={(ids) => handleSelectRow(ids)}
-              onRowClick={(tareaSeleccionada, evt) => {
-                setTareaSeleccionada(tareaSeleccionada.row)
-                setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
-                setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
-                setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
-                setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
-                setTecnicoTareaEditar(operarios.filter(operario => operario.id === tareaSeleccionada.row.operario));
-                setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
-
-                /*if (analisisEditar[0].nombre === "Desinfecciones" || analisisEditar[0].nombre === "Desinfeccion ACS" || analisisEditar[0].nombre === "Mantenimiento Maq Frio" || analisisEditar[0].nombre === "Mediciones" || analisisEditar[0].nombre === "Control Fuga Gas" || analisisEditar[0].nombre === "Agua Potable" || analisisEditar[0].nombre === "Revision de Bandeja") {
-                  setEstadoOperario(false)
-                } else {
-                  setEstadoOperario(true)
+          <Grid container spacing={2}>
+            {/* Título y botones de opción */}
+            <Grid item xs={12}>
+              <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant='h6'>Listado de Tareas</Typography>
+                {
+                  (rowsIds.length > 0) ?
+                    (
+                      <Grid item>
+                        <Button
+                          sx={{ mr: 2 }}
+                          color='error'
+                          variant='contained'
+                          startIcon={<DeleteIcon />}
+                          onClick={(event, rowData) => {
+                            setTareaEliminar(rowsIds)
+                            abrirCerrarModalEliminar()
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      </Grid>
+                    ) : (
+                      <Button
+                        color='success'
+                        variant='contained'
+                        startIcon={<AddIcon />}
+                        onClick={abrirCerrarModalInsertar}
+                      >Añadir</Button>
+                    )
                 }
-      
-                if (analisisEditar[0].nombre === "Desinfecciones") {
-                  setEstadoProtocolo(false)
+              </Card>
+            </Grid>
+
+            {/* Tabla donde se muestran los registros de los clientes */}
+            <Grid item xs={12}>
+              <Card>
+                <DataGrid
+                  components={{ Toolbar: GridToolbar }}
+                  localeText={DATAGRID_LOCALE_TEXT}
+                  sx={{
+                    width: '100%',
+                    height: 700,
+                    backgroundColor: '#FFFFFF'
+                  }}
+                  rows={rows}
+                  columns={columns}
+                  pageSize={100}
+                  rowsPerPageOptions={[10, 20, 50, 100]}
+                  checkboxSelection
+                  disableSelectionOnClick
+                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                  onRowClick={(tareaSeleccionada, evt) => {
+                    setTareaSeleccionada(tareaSeleccionada.row)
+                    setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
+                    setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
+                    setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
+                    setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
+                    setTecnicoTareaEditar(operarios.filter(operario => operario.id === tareaSeleccionada.row.operario));
+                    setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
+
+                    abrirCerrarModalEditar();
+                  }}
+                />
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* LISTA DE MODALS */}
+
+          {/* Agregar tarea */}
+          <ModalLayout
+            titulo="Agregar nueva tarea"
+            contenido={
+              <InsertarTareaModal
+                change={handleChange}
+                autocompleteChange={handleAutocompleteChange}
+                tareaSeleccionada={tareaSeleccionada}
+                handleChangeFecha={handleChangeFecha}
+                setTareaSeleccionada={setTareaSeleccionada}
+                handleChangeAnalisis={handleChangeAnalisis}
+                //estadoProtocolo={estadoProtocolo}
+                //estadoOperario={estadoOperario}
+                elementosAutocomplete={elementosAutocomplete}
+                analisisAutocomplete={analisisAutocomplete}
+              />
+            }
+            botones={[
+              insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                abrirCerrarModalInsertar();
+
+                if (peticionPost()) {
+                  setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
                 } else {
-                  setEstadoProtocolo(true)
-                }*/
+                  setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+                }
 
-                abrirCerrarModalEditar();
-              }}
-            />
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* LISTA DE MODALS */}
-
-      {/* Agregar tarea */}
-      <ModalLayout
-        titulo="Agregar nueva tarea"
-        contenido={
-          <InsertarTareaModal
-            change={handleChange}
-            autocompleteChange={handleAutocompleteChange}
-            tareaSeleccionada={tareaSeleccionada}
-            handleChangeFecha={handleChangeFecha}
-            setTareaSeleccionada={setTareaSeleccionada}
-            handleChangeAnalisis={handleChangeAnalisis}
-            //estadoProtocolo={estadoProtocolo}
-            //estadoOperario={estadoOperario}
-            elementosAutocomplete={elementosAutocomplete}
-            analisisAutocomplete={analisisAutocomplete}
+              }, 'success')
+            ]}
+            open={modalInsertar}
+            onClose={abrirCerrarModalInsertar}
           />
-        }
-        botones={[
-          insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-            abrirCerrarModalInsertar();
 
-            if (peticionPost()) {
-              setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-            } else {
-              setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
+          {/* Modal Editar Tarea*/}
+
+          <ModalLayout
+            titulo="Editar tarea"
+            contenido={
+              <EditarTareaModal
+                tareaSeleccionada={tareaSeleccionada}
+                change={handleChange}
+                autocompleteChange={handleAutocompleteChange}
+                handleChangeFecha={handleChangeFecha}
+                setTareaSeleccionada={setTareaSeleccionada}
+                handleChangeAnalisis={handleChangeAnalisis}
+                //estadoProtocolo={estadoProtocolo}
+                //estadoOperario={estadoOperario}
+                codigoClienteEditar={clienteTareaEditar}
+                tipoTareaEditar={tipoTareaEditar}
+                tecnicoTareaEditar={tecnicoTareaEditar}
+                elementosAutocomplete={elementosAutocomplete}
+                analisisAutocomplete={analisisAutocomplete}
+                elementoTareaEditar={elementoTareaEditar}
+                analisisEditar={analisisEditar}
+              />}
+            botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+              abrirCerrarModalEditar()
+
+              if (peticionPut()) {
+                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+              } else {
+                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+              }
+            })
+            ]}
+            open={modalEditar}
+            onClose={abrirCerrarModalEditar}
+          />
+
+          {/* Eliminar tarea */}
+          <ModalLayout
+            titulo="Eliminar tarea"
+            contenido={
+              <>
+                <Grid item xs={12}>
+                  <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography><b>{tareaSeleccionada.nombreCliente}</b></Typography>
+                </Grid>
+              </>
             }
+            botones={[
+              insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                abrirCerrarModalEliminar();
 
-          }, 'success')
-        ]}
-        open={modalInsertar}
-        onClose={abrirCerrarModalInsertar}
-      />
+                if (peticionDelete()) {
+                  setSnackData({ open: true, msg: `Tarea eliminada correctamente: ${tareaSeleccionada.nombreCliente}`, severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
+                }
 
-      {/* Modal Editar Tarea*/}
+              }, 'error'),
+              insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+            ]}
+            open={modalEliminar}
+            onClose={abrirCerrarModalEliminar}
+          />
 
-      <ModalLayout
-        titulo="Editar tarea"
-        contenido={
-          <EditarTareaModal
-            tareaSeleccionada={tareaSeleccionada}
-            change={handleChange}
-            autocompleteChange={handleAutocompleteChange}
-            handleChangeFecha={handleChangeFecha}
-            setTareaSeleccionada={setTareaSeleccionada}
-            handleChangeAnalisis={handleChangeAnalisis}
-            //estadoProtocolo={estadoProtocolo}
-            //estadoOperario={estadoOperario}
-            codigoClienteEditar={clienteTareaEditar}
-            tipoTareaEditar={tipoTareaEditar}
-            tecnicoTareaEditar={tecnicoTareaEditar}
-            elementosAutocomplete={elementosAutocomplete}
-            analisisAutocomplete={analisisAutocomplete}
-            elementoTareaEditar={elementoTareaEditar}
-            analisisEditar={analisisEditar}
-          />}
-        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-          abrirCerrarModalEditar()
+        </MainLayout>
+        :
+        <MainLayout title="Tareas">
 
-          if (peticionPut()) {
-            setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-          } else {
-            setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-          }
-        })
-        ]}
-        open={modalEditar}
-        onClose={abrirCerrarModalEditar}
-      />
+          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+              {snackData.msg}
+            </Alert>
+          </Snackbar>
 
-      {/* Eliminar tarea */}
-      <ModalLayout
-        titulo="Eliminar tarea"
-        contenido={
-          <>
+          <Grid container spacing={2}>
+            {/* Título y botones de opción */}
             <Grid item xs={12}>
-              <Typography>Estás seguro que deseas eliminar la tarea?</Typography>
+              <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant='h6'>Listado de Tareas</Typography>
+              </Card>
             </Grid>
+
+            {/* Tabla donde se muestran los registros de los clientes */}
             <Grid item xs={12}>
-              <Typography><b>{tareaSeleccionada.nombreCliente}</b></Typography>
+              <Card>
+                <DataGrid
+                  components={{ Toolbar: GridToolbar }}
+                  localeText={DATAGRID_LOCALE_TEXT}
+                  sx={{
+                    width: '100%',
+                    height: 700,
+                    backgroundColor: '#FFFFFF'
+                  }}
+                  rows={rows}
+                  columns={columns}
+                  pageSize={100}
+                  rowsPerPageOptions={[10, 20, 50, 100]}
+                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                  onRowClick={(tareaSeleccionada, evt) => {
+                    setTareaSeleccionada(tareaSeleccionada.row)
+                    setNombreClienteEditar(clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente))
+                    setClienteTareaEditar(clientes.filter(cliente => cliente.codigo === tareaSeleccionada.row.codigoCliente));
+                    setElementoTareaEditar(elementosplanta.filter(elemento => elemento.id === tareaSeleccionada.row.elemento));
+                    setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
+                    setTecnicoTareaEditar(operarios.filter(operario => operario.id === tareaSeleccionada.row.operario));
+                    setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
+
+                    abrirCerrarModalEditar();
+                  }}
+                />
+              </Card>
             </Grid>
-          </>
-        }
-        botones={[
-          insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-            abrirCerrarModalEliminar();
+          </Grid>
 
-            if (peticionDelete()) {
-              setSnackData({ open: true, msg: `Tarea eliminada correctamente: ${tareaSeleccionada.nombreCliente}`, severity: 'success' });
-            } else {
-              setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-            }
+          {/* LISTA DE MODALS */}
 
-          }, 'error'),
-          insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-        ]}
-        open={modalEliminar}
-        onClose={abrirCerrarModalEliminar}
-      />
+          {/* Modal Editar Tarea*/}
 
-    </MainLayout>
+          <ModalLayout
+            titulo="Editar tarea"
+            contenido={
+              <EditarTareaModal
+                tareaSeleccionada={tareaSeleccionada}
+                change={handleChange}
+                autocompleteChange={handleAutocompleteChange}
+                handleChangeFecha={handleChangeFecha}
+                setTareaSeleccionada={setTareaSeleccionada}
+                handleChangeAnalisis={handleChangeAnalisis}
+                codigoClienteEditar={clienteTareaEditar}
+                tipoTareaEditar={tipoTareaEditar}
+                tecnicoTareaEditar={tecnicoTareaEditar}
+                elementosAutocomplete={elementosAutocomplete}
+                analisisAutocomplete={analisisAutocomplete}
+                elementoTareaEditar={elementoTareaEditar}
+                analisisEditar={analisisEditar}
+              />}
+            botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+              abrirCerrarModalEditar()
+
+              if (peticionPut()) {
+                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
+              } else {
+                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
+              }
+            })
+            ]}
+            open={modalEditar}
+            onClose={abrirCerrarModalEditar}
+          />
+
+        </MainLayout>
+      }
+    </>
+
   );
 
 }

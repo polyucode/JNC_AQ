@@ -31,6 +31,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { deleteUsuarios, getClientes, getFicheros, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
+import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 const token = {
   headers: {
@@ -76,6 +77,8 @@ export const UsuariosPage = () => {
   const [data, setData] = useState([]);
   const [fileChange, setFileChange] = useState(null);
 
+  const [mostrarBoton, setMostrarBoton] = useState(true);
+
   const [rowsIds, setRowsIds] = useState([]);
   const [rows, setRows] = useState([]);
 
@@ -108,6 +111,8 @@ export const UsuariosPage = () => {
     deleted: null,
   });
 
+  const { usuarioActual } = useUsuarioActual();
+
   const columns = [
     //visibles
     { headerName: 'Nombre', field: 'nombre', width: 200 },
@@ -134,9 +139,9 @@ export const UsuariosPage = () => {
       },
       width: 200
     },
-    { 
-      headerName: 'Cliente', 
-      field: 'idCliente', 
+    {
+      headerName: 'Cliente',
+      field: 'idCliente',
       type: 'numeric',
       width: 200,
       valueFormatter: (params) => {
@@ -182,6 +187,10 @@ export const UsuariosPage = () => {
 
     getFicheros()
       .then(resp => setFicheros(resp))
+
+    if (usuarioActual.idPerfil === 1004) {
+      setMostrarBoton(false)
+    }
 
   }, [])
 
@@ -436,161 +445,252 @@ export const UsuariosPage = () => {
   };
 
   return (
-    <MainLayout title='Usuarios'>
+    <>
+      {usuarioActual.idPerfil === 1 ?
+        <MainLayout title='Usuarios'>
 
-      <Snackbar anchorOrigin={{ vertical: 'bot', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-          {snackData.msg}
-        </Alert>
-      </Snackbar>
+          <Snackbar anchorOrigin={{ vertical: 'bot', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+              {snackData.msg}
+            </Alert>
+          </Snackbar>
 
-      <div>
-        <Grid container spacing={2}>
+          <div>
+            <Grid container spacing={2}>
 
-          {/* Título y botones de opción */}
-          <Grid item xs={12}>
-            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant='h6'>Listado de usuario</Typography>
-              {
-                (rowsIds.length > 0) ?
-                  (
-                    <Grid item>
-                      <Button
-                        sx={{ mr: 2 }}
-                        color='error'
-                        variant='contained'
-                        startIcon={<DeleteIcon />}
-                        onClick={(event, rowData) => {
-                          setUsuarioEliminar(rowsIds)
-                          abrirCerrarModalEliminar()
-                        }} >
-                        Eliminar
-                      </Button>
-                    </Grid>
-                  ) : (
-                    <Button
-                      color='success'
-                      variant='contained'
-                      startIcon={<AddIcon />}
-                      onClick={abrirCerrarModalInsertar}
-                    >Añadir</Button>
-                  )
-              }
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Tabla donde se muestran los registros de los clientes */}
-        <Grid item xs={12}>
-          <Card>
-            <DataGrid
-              components={{ Toolbar: GridToolbar }}
-              localeText={DATAGRID_LOCALE_TEXT}
-              sx={{
-                width: '100%',
-                height: 700,
-                backgroundColor: '#FFFFFF'
-              }}
-              rows={rows}
-              columns={columns}
-              pageSize={9}
-              rowsPerPageOptions={[9]}
-              checkboxSelection
-              disableSelectionOnClick
-              onSelectionModelChange={(ids) => handleSelectRow(ids)}
-              onRowClick={(usuarioSeleccionado, evt) => {
-                setUsuarioSeleccionado(usuarioSeleccionado.row)
-                setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
-                setClienteUsuarioEditar(clientes.filter(cliente => cliente.codigo === usuarioSeleccionado.row.idCliente));
-
-                abrirCerrarModalEditar();
-              }}
-            />
-          </Card>
-        </Grid>
-
-        <ModalLayout
-          titulo="Agregar nuevo usuario"
-          contenido={
-            <InsertarUsuarioModal
-              change={handleChange}
-              handleChangePerfil={handleChangePerfil}
-              estadoCliente={estadoCboCliente}
-              setUsuarioSeleccionado={setUsuarioSeleccionado}
-            />
-          }
-          botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
-            abrirCerrarModalInsertar();
-            if (peticionPost()) {
-              setSnackData({ open: true, msg: 'Usuario añadido correctamente', severity: 'success' });
-            } else {
-              setSnackData({ open: true, msg: 'Ha habido un error al añadir el usuario', severity: 'error' })
-            }
-          })
-          ]}
-          open={modalInsertar}
-          onClose={abrirCerrarModalInsertar}
-        />
-
-        <ModalLayout
-          titulo="Editar usuario"
-          contenido={
-            <EditarUsuarioModal
-              usuarioSeleccionado={usuarioSeleccionado}
-              change={handleChange}
-              handleChangePerfil={handleChangePerfil}
-              estadoCliente={estadoCboCliente}
-              handlePdf={handleFile}
-              fileChange={fileChange}
-              setUsuarioSeleccionado={setUsuarioSeleccionado}
-              perfilUsuario={perfilUsuarioEditar}
-              clienteUsuario={clienteUsuarioEditar}
-            />}
-          botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-            abrirCerrarModalEditar()
-            if (peticionPut()) {
-              setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
-            } else {
-              setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
-            }
-          })
-          ]}
-          open={modalEditar}
-          onClose={abrirCerrarModalEditar}
-        />
-
-        <ModalLayout
-          titulo="Eliminar Usuario"
-          contenido={
-            <>
+              {/* Título y botones de opción */}
               <Grid item xs={12}>
-                <Typography>Estás seguro que deseas eliminar el usuario?</Typography>
+                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6'>Listado de usuario</Typography>
+                  {
+                    (rowsIds.length > 0) ?
+                      (
+                        <Grid item>
+                          <Button
+                            sx={{ mr: 2 }}
+                            color='error'
+                            variant='contained'
+                            startIcon={<DeleteIcon />}
+                            onClick={(event, rowData) => {
+                              setUsuarioEliminar(rowsIds)
+                              abrirCerrarModalEliminar()
+                            }} >
+                            Eliminar
+                          </Button>
+                        </Grid>
+                      ) : (
+                        <Button
+                          color='success'
+                          variant='contained'
+                          startIcon={<AddIcon />}
+                          onClick={abrirCerrarModalInsertar}
+                        >Añadir</Button>
+                      )
+                  }
+                </Card>
               </Grid>
-              <Grid item xs={12}>
-                <Typography><b>{usuarioSeleccionado.nombre}</b></Typography>
-              </Grid>
-            </>
-          }
-          botones={[
-            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+            </Grid>
 
-              peticionDelete();
-              abrirCerrarModalEliminar();
+            {/* Tabla donde se muestran los registros de los clientes */}
+            <Grid item xs={12}>
+              <Card>
+                <DataGrid
+                  components={{ Toolbar: GridToolbar }}
+                  localeText={DATAGRID_LOCALE_TEXT}
+                  sx={{
+                    width: '100%',
+                    height: 1000,
+                    backgroundColor: '#FFFFFF'
+                  }}
+                  rows={rows}
+                  columns={columns}
+                  checkboxSelection
+                  disableSelectionOnClick
+                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                  onRowClick={(usuarioSeleccionado, evt) => {
+                    setUsuarioSeleccionado(usuarioSeleccionado.row)
+                    setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
+                    setClienteUsuarioEditar(clientes.filter(cliente => cliente.codigo === usuarioSeleccionado.row.idCliente));
 
-              if (peticionDelete()) {
-                setSnackData({ open: true, msg: `Usuario eliminado correctamente: ${usuarioSeleccionado.nombre}`, severity: 'success' });
-              } else {
-                setSnackData({ open: true, msg: 'Ha habido un error al eliminar el usuario', severity: 'error' })
+                    abrirCerrarModalEditar();
+                  }}
+                />
+              </Card>
+            </Grid>
+
+            <ModalLayout
+              titulo="Agregar nuevo usuario"
+              contenido={
+                <InsertarUsuarioModal
+                  change={handleChange}
+                  handleChangePerfil={handleChangePerfil}
+                  estadoCliente={estadoCboCliente}
+                  setUsuarioSeleccionado={setUsuarioSeleccionado}
+                />
               }
+              botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                abrirCerrarModalInsertar();
+                if (peticionPost()) {
+                  setSnackData({ open: true, msg: 'Usuario añadido correctamente', severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el usuario', severity: 'error' })
+                }
+              })
+              ]}
+              open={modalInsertar}
+              onClose={abrirCerrarModalInsertar}
+            />
 
-            }, 'error'),
-            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-          ]}
-          open={modalEliminar}
-          onClose={abrirCerrarModalEliminar}
-        />
-      </div>
-    </MainLayout>
+            <ModalLayout
+              titulo="Editar usuario"
+              contenido={
+                <EditarUsuarioModal
+                  usuarioSeleccionado={usuarioSeleccionado}
+                  change={handleChange}
+                  handleChangePerfil={handleChangePerfil}
+                  estadoCliente={estadoCboCliente}
+                  handlePdf={handleFile}
+                  fileChange={fileChange}
+                  setUsuarioSeleccionado={setUsuarioSeleccionado}
+                  perfilUsuario={perfilUsuarioEditar}
+                  clienteUsuario={clienteUsuarioEditar}
+                />}
+              botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                abrirCerrarModalEditar()
+                if (peticionPut()) {
+                  setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
+                }
+              })
+              ]}
+              open={modalEditar}
+              onClose={abrirCerrarModalEditar}
+            />
+
+            <ModalLayout
+              titulo="Eliminar Usuario"
+              contenido={
+                <>
+                  <Grid item xs={12}>
+                    <Typography>Estás seguro que deseas eliminar el usuario?</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography><b>{usuarioSeleccionado.nombre}</b></Typography>
+                  </Grid>
+                </>
+              }
+              botones={[
+                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+
+                  peticionDelete();
+                  abrirCerrarModalEliminar();
+
+                  if (peticionDelete()) {
+                    setSnackData({ open: true, msg: `Usuario eliminado correctamente: ${usuarioSeleccionado.nombre}`, severity: 'success' });
+                  } else {
+                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el usuario', severity: 'error' })
+                  }
+
+                }, 'error'),
+                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+              ]}
+              open={modalEliminar}
+              onClose={abrirCerrarModalEliminar}
+            />
+          </div>
+        </MainLayout> :
+        <MainLayout title='Usuarios'>
+          <div>
+            <Grid container spacing={2}>
+
+              {/* Título y botones de opción */}
+              <Grid item xs={12}>
+                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6'>Listado de usuario</Typography>
+                </Card>
+              </Grid>
+            </Grid>
+
+            {/* Tabla donde se muestran los registros de los clientes */}
+            <Grid item xs={12}>
+              <Card>
+                <DataGrid
+                  components={{ Toolbar: GridToolbar }}
+                  localeText={DATAGRID_LOCALE_TEXT}
+                  sx={{
+                    width: '100%',
+                    height: 1000,
+                    backgroundColor: '#FFFFFF'
+                  }}
+                  rows={rows}
+                  columns={columns}
+                  disableSelectionOnClick
+                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                  onRowClick={(usuarioSeleccionado, evt) => {
+                    setUsuarioSeleccionado(usuarioSeleccionado.row)
+                    setPerfilUsuarioEditar(perfiles.filter(perfil => perfil.id === usuarioSeleccionado.row.idPerfil));
+                    setClienteUsuarioEditar(clientes.filter(cliente => cliente.codigo === usuarioSeleccionado.row.idCliente));
+
+                    abrirCerrarModalEditar();
+                  }}
+                />
+              </Card>
+            </Grid>
+
+            <ModalLayout
+              titulo="Agregar nuevo usuario"
+              contenido={
+                <InsertarUsuarioModal
+                  change={handleChange}
+                  handleChangePerfil={handleChangePerfil}
+                  estadoCliente={estadoCboCliente}
+                  setUsuarioSeleccionado={setUsuarioSeleccionado}
+                />
+              }
+              botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                abrirCerrarModalInsertar();
+                if (peticionPost()) {
+                  setSnackData({ open: true, msg: 'Usuario añadido correctamente', severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el usuario', severity: 'error' })
+                }
+              })
+              ]}
+              open={modalInsertar}
+              onClose={abrirCerrarModalInsertar}
+            />
+
+            <ModalLayout
+              titulo="Editar usuario"
+              contenido={
+                <EditarUsuarioModal
+                  usuarioSeleccionado={usuarioSeleccionado}
+                  change={handleChange}
+                  handleChangePerfil={handleChangePerfil}
+                  estadoCliente={estadoCboCliente}
+                  handlePdf={handleFile}
+                  fileChange={fileChange}
+                  setUsuarioSeleccionado={setUsuarioSeleccionado}
+                  perfilUsuario={perfilUsuarioEditar}
+                  clienteUsuario={clienteUsuarioEditar}
+                />}
+              botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                abrirCerrarModalEditar()
+                if (peticionPut()) {
+                  setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
+                }
+              })
+              ]}
+              open={modalEditar}
+              onClose={abrirCerrarModalEditar}
+            />
+          </div>
+        </MainLayout>
+      }
+    </>
   );
 
 }

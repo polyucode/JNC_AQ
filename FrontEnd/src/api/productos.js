@@ -3,6 +3,7 @@ import { instance } from '.';
 export const getProductos = async () => {
 
     const resp = await instance.get('/productos');
+    console.log(resp)
     return resp.data.data;
 
 }
