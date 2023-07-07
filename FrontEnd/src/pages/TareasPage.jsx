@@ -909,13 +909,12 @@ export const TareasPage = () => {
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
-                    height: 700,
+                    height: 1000,
                     backgroundColor: '#FFFFFF'
                   }}
                   rows={rows}
                   columns={columns}
                   pageSize={100}
-                  rowsPerPageOptions={[10, 20, 50, 100]}
                   checkboxSelection
                   disableSelectionOnClick
                   onSelectionModelChange={(ids) => handleSelectRow(ids)}

@@ -302,8 +302,6 @@ export const MantenimientoTecnicoPage = () => {
 
     const onChangeFecha = (e, value, name) => {
 
-        console.log(e)
-
         setValoresParametros([])
 
         setParametrosSeleccionado((prevState) => ({
@@ -751,7 +749,9 @@ export const MantenimientoTecnicoPage = () => {
                                                         </TableHead>
 
                                                         <TableBody>
+                                                            {console.log(parametrosSeleccionado, "PARAMETROS SELECCIONADO")}
                                                             {
+                                                                parametrosSeleccionado.realizado == true ? (
                                                                 valoresParametros.map((parametro, index) => {
 
                                                                     const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
@@ -767,6 +767,25 @@ export const MantenimientoTecnicoPage = () => {
                                                                         />
                                                                     )
                                                                 })
+                                                                )
+                                                                :
+                                                                (
+                                                                valoresParametros.map((parametro, index) => {
+
+                                                                    const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
+
+                                                                    return (
+                                                                        <ParametroMantenimiento
+                                                                            limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
+                                                                            key={index}
+                                                                            indice={index}
+                                                                            parametros={valoresParametros}
+                                                                            onChange={handleEditarParametro}
+                                                                            nombre={nombreParametro}
+                                                                        />
+                                                                    )
+                                                                })
+                                                                )
                                                             }
                                                         </TableBody>
 

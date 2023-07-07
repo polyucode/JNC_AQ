@@ -526,13 +526,12 @@ export const ClientesPage = () => {
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
-                    height: 700,
+                    height: 1000,
                     backgroundColor: '#FFFFFF'
                   }}
                   rows={rows}
                   columns={columns}
-                  pageSize={9}
-                  //rowsPerPageOptions={[1000]}
+                  pageSize={100}
                   checkboxSelection
                   disableSelectionOnClick
                   onSelectionModelChange={(ids) => handleSelectRow(ids)}

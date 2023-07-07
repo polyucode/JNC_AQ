@@ -53,7 +53,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-            <Grid item xs={6} md={6}>
+            <Grid item xs={6} md={7}>
                 <TextField
                     sx={{ width: '100%' }}
                     label="Nombre del cliente"
@@ -64,10 +64,10 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <p> Fecha inicio </p>
             </Grid>
-            <Grid item xs={12} md={9}>
+            <Grid item xs={12} md={4}>
                 <TextField
                     id="fechainicio"
                     type="date"
@@ -80,10 +80,10 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <p> Fecha Finalización </p>
             </Grid>
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <TextField
                     id="fechafinalizacion"
                     type="date"

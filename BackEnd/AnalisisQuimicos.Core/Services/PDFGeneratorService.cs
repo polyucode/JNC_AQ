@@ -42,7 +42,7 @@ namespace AnalisisQuimicos.Core.Services
             //ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
 
             //Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetUsuariosByClient(cliente.Id).Result;
-            Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetById(3009).Result;
+            Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetById((int)valoresSorted[0].Id_Operario).Result;
 
             ParametrosElementoQueryFilter filtro = new ParametrosElementoQueryFilter
             {

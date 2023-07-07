@@ -5419,7 +5419,7 @@ export const VisualizacionPage = () => {
                                 id='nombreCliente'
                                 label="Nombre Cliente"
                                 sx={{ width: 250 }}
-                                style={{ marginRight: "20px" }}
+                                style={{ marginTop: '15px'}}
                                 value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
                                 name="nombreCliente"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
@@ -5442,6 +5442,7 @@ export const VisualizacionPage = () => {
                                 id='pedido'
                                 sx={{ width: 250 }}
                                 label="Pedido"
+                                style={{ marginTop: '15px'}}
                                 value={analisisSeleccionado && analisisSeleccionado.pedido}
                                 name="pedido"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({

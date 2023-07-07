@@ -79,10 +79,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <p> Fecha inicio </p>
             </Grid>
-            <Grid item xs={12} md={9}>
+            <Grid item xs={12} md={4}>
                 <TextField
                     id="fechainicio"
                     type="date"
@@ -96,10 +96,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <p> Fecha Finalización </p>
             </Grid>
-            <Grid item xs={12} md={9}>
+            <Grid item xs={12} md={4}>
                 <TextField
                     id="fechafinalizacion"
                     type="date"

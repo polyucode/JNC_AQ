@@ -309,13 +309,11 @@ export const ConsumoArticulosPage = () => {
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
-                                        height: 700,
+                                        height: 1000,
                                         backgroundColor: '#FFFFFF'
                                     }}
                                     rows={rows}
                                     columns={columnas}
-                                    pageSize={9}
-                                    rowsPerPageOptions={[9]}
                                     checkboxSelection
                                     disableSelectionOnClick
                                     onSelectionModelChange={(ids) => handleSelectRow(ids)}

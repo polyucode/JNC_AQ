@@ -15,6 +15,7 @@ export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre, l
                     error={ ( parametros[indice].valor > limite.limSup || parametros[indice].valor < limite.limInf ) ? true : false }
                     name="valor"
                     size="small"
+                    sx={{ width: "250px"}}
                     defaultValue={ parametros[indice].valor }
                     onChange={ (e, id) => onChange( e, parametros[indice].parametro ) }
                     InputProps={{
@@ -30,6 +31,7 @@ export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre, l
                             id={ index.toString() }
                             name="valor"
                             type="number"
+                            sx={{ width: "250px"}}
                             size="small"
                             defaultValue = { row }
                             disabled
