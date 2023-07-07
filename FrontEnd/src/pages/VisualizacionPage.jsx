@@ -2213,6 +2213,18 @@ export const VisualizacionPage = () => {
                                 renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                                 onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
                             />
+                            <TextField
+                                id='nombreCliente'
+                                label="Nombre Cliente"
+                                sx={{ width: 250 }}
+                                style={{ marginTop: '15px'}}
+                                value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
+                                name="nombreCliente"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    nombreCliente: value.razonSocial
+                                }))}
+                            />
                             <Autocomplete
                                 disableClearable={true}
                                 id="Oferta"
@@ -2224,6 +2236,18 @@ export const VisualizacionPage = () => {
                                 renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                                 onChange={(event, value) => onChangeOferta(event, value, "oferta")}
                             />
+                            <TextField
+                                id='pedido'
+                                sx={{ width: 250 }}
+                                label="Pedido"
+                                style={{ marginTop: '15px'}}
+                                value={analisisSeleccionado && analisisSeleccionado.pedido}
+                                name="pedido"
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    pedido: value.pedido
+                                }))}
+                            />
                             <Autocomplete
                                 disableClearable={true}
                                 id="Elemento"
@@ -2233,32 +2257,6 @@ export const VisualizacionPage = () => {
                                 sx={{ width: 250 }}
                                 renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                                 onChange={(event, value) => onChangeElemento(event, value, "elemento")}
-                            />
-                        </div>
-                        <div className="datos">
-                            <TextField
-                                id='nombreCliente'
-                                label="Nombre Cliente"
-                                sx={{ width: 250 }}
-                                style={{ marginRight: "20px" }}
-                                value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
-                                name="nombreCliente"
-                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                                    ...prevState,
-                                    nombreCliente: value.razonSocial
-                                }))}
-                            />
-
-                            <TextField
-                                id='pedido'
-                                sx={{ width: 250 }}
-                                label="Pedido"
-                                value={analisisSeleccionado && analisisSeleccionado.pedido}
-                                name="pedido"
-                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                                    ...prevState,
-                                    pedido: value.pedido
-                                }))}
                             />
                         </div>
                         <br />
@@ -2394,7 +2392,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -2564,7 +2562,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf()
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -2733,7 +2731,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -2902,7 +2900,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -3071,7 +3069,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -3240,7 +3238,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -3411,7 +3409,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditarAerobio()
 
                                                                     if (peticionPutAerobio()) {
@@ -3582,7 +3580,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditarLegionela()
 
                                                                     if (peticionPutLegionela()) {
@@ -3753,7 +3751,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -3925,7 +3923,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -4094,7 +4092,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar1()
 
                                                                     if (peticionPut1()) {
@@ -4265,7 +4263,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -4436,7 +4434,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -4607,7 +4605,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -4778,7 +4776,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -4949,7 +4947,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -5120,7 +5118,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {
@@ -5291,7 +5289,7 @@ export const VisualizacionPage = () => {
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
                                                                 }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                                                     abrirCerrarModalEditar()
 
                                                                     if (peticionPut()) {

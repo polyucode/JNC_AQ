@@ -204,8 +204,13 @@ export const TareasPage = () => {
       field: 'fecha',
       width: 250,
       valueFormatter: (params) => {
-        const date = new Date(params.value);
-        return date.toLocaleDateString();
+        if (params.value != null) {
+          const date = new Date(params.value);
+          return date.toLocaleDateString();
+        } else {
+          const date = "";
+          return date;
+        }
       }
     }
 
@@ -987,7 +992,7 @@ export const TareasPage = () => {
                 elementoTareaEditar={elementoTareaEditar}
                 analisisEditar={analisisEditar}
               />}
-            botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
               abrirCerrarModalEditar()
 
               if (peticionPut()) {

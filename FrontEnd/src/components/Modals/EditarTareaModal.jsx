@@ -257,13 +257,17 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
 
 
     function formateandofechas(fecha) {
-        const fecha1 = new Date(fecha)
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
 
-        const fecha2 = fecha1.getFullYear() +
-            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
-            '-' + String(fecha1.getDate()).padStart(2, '0')
-
-        return fecha2
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
     }
 
     const handleChangeDet = e => {
@@ -676,8 +680,11 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 />
             </Grid>
 
-            <Grid item xs={4} md={5} style={{ display: 'flex' }}>
-                <h3 style={{ width: '30%' }}> Fecha </h3>
+
+            <Grid item xs={12} md={1} style={{ display: 'flex' }}>
+                <p> Fecha </p>
+            </Grid>
+            <Grid item xs={4} md={3} style={{ display: 'flex' }}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -821,7 +828,7 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                         analisis={analisis}
                         elementos={elementos}
                     />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                     abrirCerrarModalEditar()
 
                     if (peticionPut()) {

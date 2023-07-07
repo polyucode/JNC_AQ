@@ -2,31 +2,20 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getOfertas, getProductos } from '../../api';
 
-export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar }) => {
-
-    const [ofertas, setOfertas] = useState([]);
-    const [productos, setProductos] = useState([]);
-
-    useEffect(() => {
-
-        getOfertas(ofertas => {
-            setOfertas(ofertas);
-        })
-
-        getProductos(productos => {
-            setProductos(productos);
-        })
-
-    }, [])
+export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, ofertas, productos }) => {
 
     function formateandofechas(fecha) {
-        const fecha1 = new Date(fecha)
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
 
-        const fecha2 = fecha1.getFullYear() +
-            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
-            '-' + String(fecha1.getDate()).padStart(2, '0')
-
-        return fecha2
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
     }
 
     return (
@@ -36,8 +25,8 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     disableClearable={true}
                     sx={{ width: '100%' }}
                     id="Oferta"
-                    inputValue={consumoSeleccionado.oferta}
                     options={ofertas}
+                    defaultValue={ofertaEditar[0]}
                     getOptionLabel={option => option.numeroOferta}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
@@ -47,23 +36,25 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                 />
             </Grid>
 
+            <Grid item xs={3} md={1}>
+                <p> Fecha </p>
+            </Grid>
             <Grid item xs={3} md={4}>
-                <h5> Fecha </h5>
                 <TextField sx={{ width: '100%' }} name="fecha" type="date" onChange={handleChange} value={consumoSeleccionado && formateandofechas(consumoSeleccionado.fecha)} />
             </Grid>
 
             <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
-                    id="codigoProducto"
+                    id="producto"
                     options={productos}
                     getOptionLabel={option => option.descripcion}
                     defaultValue={productoEditar[0]}
                     sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} name="codigoProducto" />}
+                    renderInput={(params) => <TextField {...params} name="producto" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,
-                        codigoProducto: value.descripcion
+                        producto: value.descripcion
                     }))}
                 />
             </Grid>

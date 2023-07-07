@@ -685,8 +685,10 @@ export const MantenimientoTecnicoPage = () => {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={3} style={{ display: 'flex' }}>
-                                    <h3 style={{ width: '40%' }}> Fecha </h3>
+                                <Grid item xs={12} md={1} style={{ display: 'flex', marginTop: '12px' }}>
+                                    <p> Fecha </p>
+                                </Grid>
+                                <Grid item xs={2} style={{ display: 'flex' }}>
                                     <Autocomplete
                                         disableClearable={true}
                                         sx={{ width: '100%' }}

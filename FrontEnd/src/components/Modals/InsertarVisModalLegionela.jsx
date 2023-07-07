@@ -79,15 +79,15 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
                 <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={5}>
                 <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreCliente} />
             </Grid>
 
-            <Grid item xs={6} md={2}>
+            <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreElemento} />
             </Grid>
 
@@ -95,14 +95,14 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
                 <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={nombreAnalisis} />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={2}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <Typography> Fecha </Typography>
             </Grid>
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -115,7 +115,7 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
                 />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
                 <p> Observaciones </p>
                 <TextareaAutosize
                     aria-label="empty textarea"

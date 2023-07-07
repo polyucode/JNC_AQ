@@ -584,7 +584,7 @@ export const ClientesPage = () => {
                 change={handleChange}
                 autocompleteChange={handleAutocompleteChange}
               />}
-            botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
               abrirCerrarModalEditar()
 
               if (peticionPut()) {

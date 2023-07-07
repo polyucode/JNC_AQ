@@ -2,22 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getOfertas, getProductos } from '../../api';
 
-export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccionado }) => {
-
-    const [ofertas, setOfertas] = useState([]);
-    const [productos, setProductos] = useState([]);
-
-    useEffect(() => {
-
-        getOfertas(ofertas => {
-            setOfertas(ofertas);
-        })
-
-        getProductos(productos => {
-            setProductos(productos);
-        })
-
-    }, [])
+export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, ofertas, productos }) => {
 
     return (
         <>
@@ -36,13 +21,26 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                 />
             </Grid>
 
+            <Grid item xs={3} md={1}>
+                <p> Fecha </p>
+            </Grid>
             <Grid item xs={3} md={4}>
-                <h5> Fecha </h5>
                 <TextField sx={{ width: '100%' }} name="fecha" type="date" onChange={handleChange} />
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Producto" name="producto" onChange={handleChange} />
+                <Autocomplete
+                    disableClearable={true}
+                    id="producto"                   
+                    options={productos}
+                    getOptionLabel={option => option.descripcion}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
+                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                        ...prevState,
+                        producto: value.descripcion
+                    }))}
+                />
             </Grid>
 
             <Grid item xs={6} md={3}>

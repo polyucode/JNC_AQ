@@ -451,7 +451,7 @@ export const EditarClienteModal = ({ change: handleChange, autocompleteChange, c
                         contactoSeleccionado={contactoSeleccionado}
                         change={handleChangeContacto}
                     />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                     abrirCerrarModalEditar()
 
                     if (peticionPutContacto()) {

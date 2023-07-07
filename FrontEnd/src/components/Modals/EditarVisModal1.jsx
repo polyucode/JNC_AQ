@@ -60,13 +60,17 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
     }, [])
 
     function formateandofechas(fecha) {
-        const fecha1 = new Date(fecha)
+        if(fecha !== null){
+            const fecha1 = new Date(fecha)
 
-        const fecha2 = fecha1.getFullYear() +
-            '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
-            '-' + String(fecha1.getDate()).padStart(2, '0')
-
-        return fecha2
+            const fecha2 = fecha1.getFullYear() +
+                '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
+                '-' + String(fecha1.getDate()).padStart(2, '0')
+    
+            return fecha2
+        } else{
+            return null
+        }       
     }
 
     return (
@@ -115,8 +119,10 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.periodo} />
             </Grid>
 
-            <Grid item xs={12} md={8} style={{ display: 'flex' }}>
-                <h4 style={{ width: '40%' }}> Fecha Prevista </h4>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
+                <p> Fecha Prevista </p>
+            </Grid>
+            <Grid item xs={12} md={4} style={{ display: 'flex' }}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -130,8 +136,11 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={6} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+            </Grid>
+            <Grid item xs={6} md={4} style={{ display: 'flex' }}>
+                
                 <TextField
                     id="fechaRealizado"
                     type="date"
@@ -145,9 +154,7 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 />
             </Grid>
 
-            <br/>
-
-            <Grid item xs={7} md={6}>
+            <Grid item xs={7} md={12}>
                 <p> Observaciones </p>
                 <TextareaAutosize
                     aria-label="empty textarea"
@@ -167,11 +174,8 @@ export const EditarVisModal1 = ({ change: handleChangeInput, analisisSeleccionad
                 <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
             </Grid>
 
-            <Grid item xs={4} md={5}>
+            <Grid item xs={7} md={12}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
-            </Grid>
-
-            <Grid item xs={7} md={6}>
                 <p> Comentario </p>
                 <TextareaAutosize
                     aria-label="empty textarea"

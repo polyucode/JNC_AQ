@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange }) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange }) => {
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -41,10 +41,11 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, e
 
             <Grid item xs={4}>
                 <FormControlLabel
-                    control={<Checkbox defaultChecked />}
+                    control={<Checkbox />}
+                    checked={usuarioSeleccionado.activo}
                     label="Usuario activo"
                     name="activo"
-                    onChange={handleChange}
+                    onChange={handleChangeCheckbox}
                 />
             </Grid>
 

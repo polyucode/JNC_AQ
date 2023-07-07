@@ -104,11 +104,11 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={nombreElemento} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={5}>
                 <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={nombreAnalisis} />
             </Grid>
 
@@ -117,10 +117,10 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
-                <Typography>Fecha Prevista</Typography>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
+                <p> Fecha Prevista </p>
             </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={4} style={{ display: 'flex' }}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -134,10 +134,13 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={5} style={{ display: 'flex' }}>
+            </Grid>
+
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
             </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={4}>
                 <TextField
                     id="fechaRecogido"
                     type="date"
@@ -150,12 +153,12 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                     value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
                 />
             </Grid>
-            
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={tareaSeleccionada.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={6} md={4} style={{ display: 'flex' }}>
+                
                 <TextField
                     id="fechaRealizado"
                     type="date"
@@ -168,7 +171,8 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                     value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRealizado)}
                 />
             </Grid>
-            <Grid item xs={12} md={6}>
+
+            <Grid item xs={7} md={12}>
                 <p> Observaciones </p>
                 <TextareaAutosize
                     aria-label="empty textarea"
@@ -180,17 +184,21 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={8} md={5}>
-            <div class="file-select" id="src-file" >
-                <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf}/>                
-            </div>
-            <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
-
+            <Grid item xs={8} md={4}>
+                <div class="file-select" id="src-file" >
+                    <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf} />
+                </div>
+                <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
+                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
+                    Subir PDF
+                </Button>*/}
             </Grid>
+
             <Grid item xs={12} md={3}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recibido} label="Resultados Recibidos y pdf publicado" name="recibido" onChange={handleChangeCheckbox} />
             </Grid>
-            <Grid item xs={12} md={3}>
+
+            <Grid item xs={12} md={4} style={{ display: "flex" }}>
                 <TextField
                     id="fechaPdf"
                     type="date"
@@ -204,18 +212,16 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 />
             </Grid>
 
-
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
             </Grid>
-            <Grid item xs={6} md={8}>
+
+            <Grid item xs={4} md={5}>
                 <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeDet} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={7} md={12}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
-            </Grid>
-            <Grid item xs={6} md={8}>
                 <p> Comentario </p>
                 <TextareaAutosize
                     aria-label="empty textarea"

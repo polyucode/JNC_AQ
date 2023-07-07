@@ -294,7 +294,7 @@ export const ProductosPage = () => {
                                 productoSeleccionado={productoSeleccionado}
                                 change={handleChange}
                             />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                             abrirCerrarModalEditar()
 
                             if (peticionPut()) {

@@ -80,15 +80,15 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.codigoCliente} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={5}>
                 <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreCliente} />
             </Grid>
 
-            <Grid item xs={6} md={2}>
+            <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeInput} value={analisisSeleccionado && analisisSeleccionado.nombreElemento} />
             </Grid>
 
@@ -96,14 +96,14 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeInput} value={nombreAnalisis} />
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={2}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={12} md={3} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <Typography> Fecha </Typography>
             </Grid>
-            <Grid item xs={8} md={9}>
+            <Grid item xs={8} md={4}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -116,40 +116,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 />
             </Grid>
 
-            {/* <Grid item xs={6} md={5}>
-                <Autocomplete
-                    disableClearable={true}
-                    sx={{ width: '100%' }}
-                    id="Operarios"
-                    options={operarios}
-                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
-                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                        ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
-                    }))}
-                />
-            </Grid> */}
-
-            {/*<Grid item xs={12} md={6}>
-                <TextField
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChangeInput}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>*/}
-
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
                 <p> Observaciones </p>
                 <TextareaAutosize
                     aria-label="empty textarea"

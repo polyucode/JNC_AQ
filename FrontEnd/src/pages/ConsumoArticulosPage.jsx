@@ -84,7 +84,21 @@ export const ConsumoArticulosPage = () => {
 
         //Visibles
         { headerName: 'Oferta', field: 'oferta', width: 400 },
-        { headerName: 'Fecha', field: 'fecha', type: 'date', width: 400 },
+        {
+            headerName: 'Fecha',
+            field: 'fecha',
+            type: 'date',
+            width: 400,
+            valueFormatter: (params) => {
+                if (params.value != null) {
+                    const date = new Date(params.value);
+                    return date.toLocaleDateString();
+                } else {
+                    const date = "";
+                    return date;
+                }
+            }
+        },
         { headerName: 'Producto', field: 'producto', width: 400 },
         { headerName: 'Cantidad', field: 'cantidad', width: 400 }
     ];
@@ -97,24 +111,19 @@ export const ConsumoArticulosPage = () => {
 
     }
 
-    const getProducto = async () => {
-
-        const resp = await getProductos();
-        setProductos(resp);
-
-    }
-
-    const getOferta = async () => {
-
-        const resp = await getOfertas();
-        setOfertas(resp);
-
-    }
-
     useEffect(() => {
         peticionGet();
-        getOferta();
-        getProducto();
+
+        getOfertas()
+            .then(ofertas => {
+                setOfertas(ofertas);
+            })
+
+        getProductos()
+            .then(productos => {
+                setProductos(productos);
+            })
+
     }, [])
 
     useEffect(() => {
@@ -129,7 +138,21 @@ export const ConsumoArticulosPage = () => {
         consumoSeleccionado.id = 0;
         const resp = await postConsumos(consumoSeleccionado);
         abrirCerrarModalInsertar();
-        getConsumos();
+        peticionGet();
+        setConsumoSeleccionado({
+            id: 0,
+            oferta: 0,
+            fecha: null,
+            producto: '',
+            cantidad: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
     }
 
     const peticionPut = async () => {
@@ -142,8 +165,22 @@ export const ConsumoArticulosPage = () => {
                 consumo = consumoSeleccionado
             }
         });
-        getConsumos();
+        peticionGet();
         abrirCerrarModalEditar();
+        setConsumoSeleccionado({
+            id: 0,
+            oferta: 0,
+            fecha: null,
+            producto: '',
+            cantidad: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
 
     }
 
@@ -153,11 +190,23 @@ export const ConsumoArticulosPage = () => {
         while (i < ConsumoEliminar.length) {
 
             const resp = await deleteConsumos(ConsumoEliminar[i]);
-            getConsumos();
+            peticionGet();
             abrirCerrarModalEliminar();
-
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
             i++;
-
         }
     }
 
@@ -273,6 +322,7 @@ export const ConsumoArticulosPage = () => {
                                     onRowClick={(consumoSeleccionado, evt) => {
                                         setConsumoSeleccionado(consumoSeleccionado.row)
                                         setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
+                                        setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
                                         abrirCerrarModalEditar();
                                     }}
                                 />
@@ -285,7 +335,12 @@ export const ConsumoArticulosPage = () => {
                         <ModalLayout
                             titulo="Agregar nuevo consumo"
                             contenido={
-                                <InsertarConsumoModal change={handleChange} setConsumoSeleccionado={setConsumoSeleccionado} />
+                                <InsertarConsumoModal
+                                    change={handleChange}
+                                    setConsumoSeleccionado={setConsumoSeleccionado}
+                                    ofertas={ofertas}
+                                    productos={productos}
+                                />
                             }
                             botones={[
                                 insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
@@ -315,8 +370,11 @@ export const ConsumoArticulosPage = () => {
                                 change={handleChange}
                                 setConsumoSeleccionado={setConsumoSeleccionado}
                                 productoEditar={productoEditar}
+                                ofertaEditar={ofertaEditar}
+                                ofertas={ofertas}
+                                productos={productos}
                             />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                             abrirCerrarModalEditar()
 
                             if (peticionPut()) {
@@ -418,7 +476,7 @@ export const ConsumoArticulosPage = () => {
                         open={modalEditar}
                         onClose={abrirCerrarModalEditar}
                     />
-                    
+
                 </MainLayout>
             }
         </>

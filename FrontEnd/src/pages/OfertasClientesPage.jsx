@@ -531,7 +531,7 @@ export const OfertasClientesPage = () => {
                                 contacto2Editar={contacto2Editar}
                                 contacto3Editar={contacto3Editar}
                             />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                             abrirCerrarModalEditar()
 
                             if (peticionPut()) {

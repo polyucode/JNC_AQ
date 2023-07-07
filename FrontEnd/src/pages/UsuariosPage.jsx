@@ -434,6 +434,14 @@ export const UsuariosPage = () => {
     setRowsIds(ids);
   }
 
+  const handleChangeCheckbox = e => {
+    const { name, value, checked } = e.target
+    setUsuarioSeleccionado(prevState => ({
+        ...prevState,
+        [name]: checked
+    }))
+}
+
   const handleSnackClose = (event, reason) => {
 
     if (reason === 'clickaway') {
@@ -555,7 +563,7 @@ export const UsuariosPage = () => {
                   perfilUsuario={perfilUsuarioEditar}
                   clienteUsuario={clienteUsuarioEditar}
                 />}
-              botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+              botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                 abrirCerrarModalEditar()
                 if (peticionPut()) {
                   setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
@@ -644,6 +652,7 @@ export const UsuariosPage = () => {
                 <InsertarUsuarioModal
                   change={handleChange}
                   handleChangePerfil={handleChangePerfil}
+                  handleChangeCheckbox={handleChangeCheckbox}
                   estadoCliente={estadoCboCliente}
                   setUsuarioSeleccionado={setUsuarioSeleccionado}
                 />
@@ -668,6 +677,7 @@ export const UsuariosPage = () => {
                   usuarioSeleccionado={usuarioSeleccionado}
                   change={handleChange}
                   handleChangePerfil={handleChangePerfil}
+                  handleChangeCheckbox={handleChangeCheckbox}
                   estadoCliente={estadoCboCliente}
                   handlePdf={handleFile}
                   fileChange={fileChange}
