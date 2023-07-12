@@ -39,9 +39,6 @@ namespace AnalisisQuimicos.Core.Services
 
             ElementosPlanta elemplanta = _unidadDeTrabajo.ElementosPlantaRepository.GetById((int)valoresSorted[0].Id_Elemento).Result;
 
-            //ClientesContactos contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)cliente.Codigo).ToArray()[0];
-
-            //Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetUsuariosByClient(cliente.Id).Result;
             Usuarios usuario = _unidadDeTrabajo.UsuarioRepository.GetById((int)valoresSorted[0].Id_Operario).Result;
 
             ParametrosElementoQueryFilter filtro = new ParametrosElementoQueryFilter
