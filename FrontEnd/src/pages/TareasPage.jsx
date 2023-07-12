@@ -64,8 +64,7 @@ export const TareasPage = () => {
     nombreCliente: "",
     oferta: 0,
     pedido: 0,
-    operario: "",
-    protocolo: "",
+    operario: 0,
     elemento: 0,
     nombreElemento: "",
     analisis: 0,
@@ -98,8 +97,7 @@ export const TareasPage = () => {
     fechaRecogido: null,
     realizado: false,
     fechaRealizado: null,
-    operario: '',
-    protocolo: '',
+    operario: 0,
     observaciones: '',
     facturado: false,
     numeroFacturado: '',
@@ -595,8 +593,7 @@ export const TareasPage = () => {
       nombreCliente: "",
       oferta: 0,
       pedido: 0,
-      operario: "",
-      protocolo: "",
+      operario: 0,
       elemento: 0,
       nombreElemento: "",
       analisis: 0,
@@ -1061,13 +1058,12 @@ export const TareasPage = () => {
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
-                    height: 700,
+                    height: 1000,
                     backgroundColor: '#FFFFFF'
                   }}
                   rows={rows}
                   columns={columns}
                   pageSize={100}
-                  rowsPerPageOptions={[10, 20, 50, 100]}
                   onSelectionModelChange={(ids) => handleSelectRow(ids)}
                   onRowClick={(tareaSeleccionada, evt) => {
                     setTareaSeleccionada(tareaSeleccionada.row)
@@ -1094,7 +1090,7 @@ export const TareasPage = () => {
             contenido={
               <EditarTareaModal
                 tareaSeleccionada={tareaSeleccionada}
-                change={handleChange}
+                handleChange={handleChange}
                 autocompleteChange={handleAutocompleteChange}
                 handleChangeFecha={handleChangeFecha}
                 setTareaSeleccionada={setTareaSeleccionada}
@@ -1106,6 +1102,8 @@ export const TareasPage = () => {
                 analisisAutocomplete={analisisAutocomplete}
                 elementoTareaEditar={elementoTareaEditar}
                 analisisEditar={analisisEditar}
+                analisisSeleccionado={analisisSeleccionado}
+                setAnalisisSeleccionado={setAnalisisSeleccionado}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
               abrirCerrarModalEditar()

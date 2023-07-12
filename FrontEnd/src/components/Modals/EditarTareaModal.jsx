@@ -86,7 +86,7 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) => {
+export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, analisisSeleccionado, setAnalisisSeleccionado }) => {
 
 
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -101,37 +101,6 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
     const [data, setData] = useState([]);
 
     const [AnalisisEliminar, setAnalisisEliminar] = useState([]);
-
-    const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
-
-        id: 0,
-        codigoCliente: 0,
-        nombreCliente: '',
-        oferta: 0,
-        pedido: 0,
-        elemento: 0,
-        periodo: '',
-        analisis: 0,
-        fecha: null,
-        recogido: false,
-        fechaRecogido: null,
-        realizado: false,
-        fechaRealizado: null,
-        operario: '',
-        protocolo: '',
-        observaciones: '',
-        facturado: false,
-        numeroFactura: '',
-        cancelado: false,
-        comentarios: '',
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-    });
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -791,10 +760,11 @@ export const EditarTareaModal = ({ change: handleChange, autocompleteChange, tar
                 titulo="Agregar nuevo detalle"
                 contenido={
                     <InsertarDetalleModal
-                        change={handleChangeDet}
+                        handleChangeDet={handleChangeDet}
                         tareaSeleccionada={tareaSeleccionada}
                         handleChangeFecha={handleChangeDetFecha}
                         setAnalisisSeleccionado={setAnalisisSeleccionado}
+                        analisis={analisis}
                     />
                 }
                 botones={[

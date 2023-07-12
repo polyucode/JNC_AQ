@@ -162,7 +162,7 @@ const HomeCliente = () => {
         setIncidencias(parametrosFiltrados.filter(inc => inc.observaciones !== ""));
 
         //Aqui filtramos los prametrosAnalisisFiltrados que tengan Observaciones
-        setPDF_Analisis(parametrosFiltrados.filter(pdf => pdf.pdf !== null));
+        setPDF_Analisis(parametrosFiltrados.filter(pdf => pdf.pdf !== null && pdf.pdf !== 0));
 
 
     }, [plantaActiva, elementoActivo, parametrosFiltrados]);
@@ -186,6 +186,9 @@ const HomeCliente = () => {
     // Con esta función, al seleccionar una oferta seteamos la planta activa
     const handleSeleccionOferta = (e) => {
 
+        setElementoActivo({});
+        setAnalisisActivo({});
+
         const ofertaSeleccionada = parseInt(e.target.textContent);
 
         getConfPlantaClientePorClienteOferta(clienteSeleccionado.codigoCliente, ofertaSeleccionada)
@@ -202,8 +205,12 @@ const HomeCliente = () => {
 
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
     const buscaNombreFicheroPorId = (pdf) => {
-        const ficheroEncontrado = ficherosAll.find(row => row.id === pdf);
-        return ficheroEncontrado ? ficheroEncontrado.name : '';
+        if(pdf !== 0){
+            const ficheroEncontrado = ficherosAll.find(row => row.id === pdf);
+            return ficheroEncontrado ? ficheroEncontrado.name : '';
+        } else{
+            return null
+        }
     }
     //Buscar nombre fichero tabla GES_Files segun id pdf en Analisis
 

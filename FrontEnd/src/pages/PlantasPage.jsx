@@ -21,6 +21,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate } from 'react-router-dom';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useUsuarioActual } from '../hooks/useUsuarioActual';
 
 export const PlantasPage = () => {
 
@@ -64,6 +65,8 @@ export const PlantasPage = () => {
     const [nodos2, setNodos2] = useState([]);
     const [lados2, setLados2] = useState([]);
     const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
+
+    const { usuarioActual } = useUsuarioActual();
 
 
     /** EFECTOS **/
@@ -255,7 +258,7 @@ export const PlantasPage = () => {
                 // Obtener los datos de la planta
                 const respPlanta = await getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta);
 
-                if(respPlanta){
+                if (respPlanta) {
                     setEstadoEliminarPlanta(true)
                 }
 
@@ -716,274 +719,549 @@ export const PlantasPage = () => {
     }
 
     return (
-        <MainLayout title="Plantas">
+        <>
+            {usuarioActual.idPerfil === 1 ?
+                <MainLayout title="Plantas">
 
-            <Grid container spacing={2}>
-
-                {/* APARTADO DE DATOS DE PLANTA */}
-                <Grid item xs={12}>
-                    <Card sx={{ p: 2, display: 'flex' }}>
-                        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-
-                            {/* Código de Cliente */}
-                            <Grid item xs={4}>
-                                <Autocomplete
-                                    disabled={plantaCreada}
-                                    disableClearable={true}
-                                    id="CodigoCliente"
-                                    options={clientes}
-                                    getOptionLabel={option => option.codigo.toString()}
-                                    renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
-                                    onChange={handleConfPlantaClienteChange}
-                                />
-                            </Grid>
-
-                            {/* Número de Oferta */}
-                            <Grid item xs={4}>
-                                <Autocomplete
-                                    disabled={plantaCreada}
-                                    disableClearable={true}
-                                    id="Oferta"
-                                    options={ofertas}
-                                    filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
-                                    getOptionLabel={option => option.numeroOferta.toString()}
-                                    renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
-                                    onChange={handleConfPlantaClienteChange}
-                                />
-                            </Grid>
-
-                            {/* Número de niveles */}
-                            <Grid item xs={2}>
-                                <TextField disabled={!crearPlanta || plantaCreada} sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={handleConfPlantaClienteChange} value={confPlantaCliente.NumNiveles} />
-                            </Grid>
-
-                            {/* Botón para crear */}
-                            <Grid item xs={2}>
-                                {
-                                    crearPlanta
-                                        ? (
-                                            <Button
-                                                disabled={plantaCreada}
-                                                sx={{ width: '100%' }}
-                                                color='success'
-                                                variant='contained'
-                                                startIcon={<AddIcon />}
-                                                onClick={handleCrearCargarPlanta}
-                                            >
-                                                Crear
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                disabled={plantaCreada}
-                                                sx={{ width: '100%' }}
-                                                color='success'
-                                                variant='contained'
-                                                startIcon={<DownloadIcon />}
-                                                onClick={handleCrearCargarPlanta}
-                                            >
-                                                Cargar
-                                            </Button>
-                                        )
-                                }
-                            </Grid>
-
-                        </Grid>
-                    </Card>
-                </Grid>
-
-                {/* APARTADO DE NIVELES */}
-                <Grid item xs={12}>
                     <Grid container spacing={2}>
-                        {
-                            niveles.map(nivel => (
-                                <NivelPlanta
-                                    key={nivel}
-                                    nivel={nivel}
-                                    contadorElemento={contadorElemento}
-                                    setContadorElemento={setContadorElemento}
-                                    elementosPlanta={elementosPlanta}
-                                    setElementosPlanta={setElementosPlanta}
-                                    indiceElemento={indiceElemento}
-                                    setIndiceElemento={setIndiceElemento}
-                                />
-                            ))
-                        }
-                    </Grid>
-                </Grid>
 
-                {/* APARTADO DE LISTADO DE ELEMENTOS */}
-                <Grid item xs={4}>
-                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                        {/* APARTADO DE DATOS DE PLANTA */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex' }}>
+                                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
-                        <Typography variant="h6" sx={{ width: '100%' }}>Listado de elementos</Typography>
-                        {
-                            (elementosPlanta.length > 0)
-                                ? (
-                                    <List>
-                                        {
-                                            elementosPlanta.map(elemento => (
-                                                <ListItemButton
-                                                    key={elemento.id}
-                                                    selected={elementoSeleccionado.id === elemento.id}
-                                                    onClick={() => handleSeleccionarElemento(elemento)}
-                                                >
-                                                    <ListItemText primary={elemento.nombre + ' ' + elemento.numero} />
-                                                </ListItemButton>
-                                            ))
-                                        }
-                                    </List>
-                                ) : (
-                                    <Typography>Ningún elemento añadido</Typography>
-                                )
-                        }
-
-                    </Card>
-                </Grid>
-
-                {/* APARTADO DE ANALISIS POR ELEMENTO */}
-                <Grid item xs={8}>
-                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-
-                        <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
-
-                            <Grid item>
-                                <Typography variant="h6" sx={{ width: '100%' }}>Analisis por elemento</Typography>
-                            </Grid>
-
-                            <Grid item>
-                                <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
-                                    <Button color="primary" startIcon={<SaveIcon />} variant="outlined" onClick={handleGuardarAnalisisElemento}>
-                                        Guardar
-                                    </Button>
-                                </Tooltip>
-                            </Grid>
-
-                        </Grid>
-
-                        {/* Mensaje de feedback al guardar tipos de analisis del elemento */}
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <Alert id="snack" className="animate__animated animate__flipInX" onClose={handleSnackClose} severity={snackData.severity} sx={{
-                                    width: '100%',
-                                    display: snackData.open ? 'flex' : 'none'
-                                }}>
-                                    {snackData.msg}
-                                </Alert>
-                            </Grid>
-                        </Grid>
-
-                        {/* Listado de checkboxs para marcar los analisis */}
-                        <Grid container spacing={2}>
-                            {/* <FormGroup> */}
-                            {
-                                analisis.map(analisis => (
-                                    <Grid item xs={6} key={analisis.id}>
-                                        <CheckBoxAnalisis
-                                            label={analisis.nombre}
-                                            name={camelCase(analisis.nombre)}
-                                            onChange={handleAnalisis}
-                                            elementoSeleccionado={elementoSeleccionado}
-                                            elementosPlanta={elementosPlanta}
+                                    {/* Código de Cliente */}
+                                    <Grid item xs={4}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
+                                            disableClearable={true}
+                                            id="CodigoCliente"
+                                            options={clientes}
+                                            getOptionLabel={option => option.codigo.toString()}
+                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
+                                            onChange={handleConfPlantaClienteChange}
                                         />
                                     </Grid>
-                                )
-                                )
-                            }
-                            {/* </FormGroup> */}
+
+                                    {/* Número de Oferta */}
+                                    <Grid item xs={4}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
+                                            disableClearable={true}
+                                            id="Oferta"
+                                            options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
+                                            getOptionLabel={option => option.numeroOferta.toString()}
+                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                            onChange={handleConfPlantaClienteChange}
+                                        />
+                                    </Grid>
+
+                                    {/* Número de niveles */}
+                                    <Grid item xs={2}>
+                                        <TextField disabled={!crearPlanta || plantaCreada} sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={handleConfPlantaClienteChange} value={confPlantaCliente.NumNiveles} />
+                                    </Grid>
+
+                                    {/* Botón para crear */}
+                                    <Grid item xs={2}>
+                                        {
+                                            crearPlanta
+                                                ? (
+                                                    <Button
+                                                        disabled={plantaCreada}
+                                                        sx={{ width: '100%' }}
+                                                        color='success'
+                                                        variant='contained'
+                                                        startIcon={<AddIcon />}
+                                                        onClick={handleCrearCargarPlanta}
+                                                    >
+                                                        Crear
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        disabled={plantaCreada}
+                                                        sx={{ width: '100%' }}
+                                                        color='success'
+                                                        variant='contained'
+                                                        startIcon={<DownloadIcon />}
+                                                        onClick={handleCrearCargarPlanta}
+                                                    >
+                                                        Cargar
+                                                    </Button>
+                                                )
+                                        }
+                                    </Grid>
+
+                                </Grid>
+                            </Card>
                         </Grid>
 
-                    </Card>
-                </Grid>
+                        {/* APARTADO DE NIVELES */}
+                        <Grid item xs={12}>
+                            <Grid container spacing={2}>
+                                {
+                                    niveles.map(nivel => (
+                                        <NivelPlanta
+                                            key={nivel}
+                                            nivel={nivel}
+                                            contadorElemento={contadorElemento}
+                                            setContadorElemento={setContadorElemento}
+                                            elementosPlanta={elementosPlanta}
+                                            setElementosPlanta={setElementosPlanta}
+                                            indiceElemento={indiceElemento}
+                                            setIndiceElemento={setIndiceElemento}
+                                        />
+                                    ))
+                                }
+                            </Grid>
+                        </Grid>
 
-                {/* BOTONES DE ACCIONES */}
-                <Grid item xs={12}>
-                    <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            disabled={!estadoEliminarPlanta}
-                            color='error'
-                            variant='contained'
-                            startIcon={<DeleteIcon />}
-                            onClick={() => eliminarPlanta(confPlantaCliente.Id)}
-                        >
-                            Eliminar Planta
-                        </Button>
-                        <Button
-                            sx={{ ml: 2 }}
-                            disabled={!plantaCreada}
-                            color='success'
-                            variant='contained'
-                            startIcon={<SaveIcon />}
-                            onClick={handleGuardarDatos}
-                        >
-                            Guardar datos
-                        </Button>
+                        {/* APARTADO DE LISTADO DE ELEMENTOS */}
+                        <Grid item xs={4}>
+                            <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
 
-                        <Button
-                            sx={{ ml: 2 }}
-                            color='primary'
-                            variant='contained'
-                            startIcon={<AccountTreeIcon />}
-                            disabled={!datosGuardados || diagramaGenerado}
-                            onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
-                            Generar diagrama
-                        </Button>
+                                <Typography variant="h6" sx={{ width: '100%' }}>Listado de elementos</Typography>
+                                {
+                                    (elementosPlanta.length > 0)
+                                        ? (
+                                            <List>
+                                                {
+                                                    elementosPlanta.map(elemento => (
+                                                        <ListItemButton
+                                                            key={elemento.id}
+                                                            selected={elementoSeleccionado.id === elemento.id}
+                                                            onClick={() => handleSeleccionarElemento(elemento)}
+                                                        >
+                                                            <ListItemText primary={elemento.nombre + ' ' + elemento.numero} />
+                                                        </ListItemButton>
+                                                    ))
+                                                }
+                                            </List>
+                                        ) : (
+                                            <Typography>Ningún elemento añadido</Typography>
+                                        )
+                                }
 
-                        <Button
-                            sx={{ ml: 2 }}
-                            color='success'
-                            variant='contained'
-                            startIcon={<AccountTreeIcon />}
-                            disabled={!datosGuardados || !diagramaGenerado}
-                            onClick={handleGuardarDiagrama}>
-                            Guardar diagrama
-                        </Button>
+                            </Card>
+                        </Grid>
 
-                        <Button
-                            sx={{ ml: 2 }}
-                            color='primary'
-                            variant='contained'
-                            endIcon={<NavigateNextIcon />}
-                            disabled={!diagramaGuardado}
-                            onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
-                            Siguiente
-                        </Button>
+                        {/* APARTADO DE ANALISIS POR ELEMENTO */}
+                        <Grid item xs={8}>
+                            <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
 
-                    </Card>
-                </Grid>
+                                <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
 
-                {/* APARTADO DE DIAGRAMA */}
-                <Grid item xs={12}>
-                    <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
+                                    <Grid item>
+                                        <Typography variant="h6" sx={{ width: '100%' }}>Analisis por elemento</Typography>
+                                    </Grid>
 
-                        <Typography variant="h6">Diagrama de la planta</Typography>
-                        {nodos2.length > 0 ?
-                            <ReactFlow
-                                nodes={nodos2}
-                                edges={lados2}
-                                onEdgesChange={onEdgesChange}
-                                onConnect={onConnect}
-                                nodeTypes={nodeTypes}
-                                fitView
-                            >
-                                <Background />
-                            </ReactFlow> :
-                            <ReactFlow
-                                nodes={nodos}
-                                edges={lados}
-                                onEdgesChange={onEdgesChange}
-                                onConnect={onConnect}
-                                nodeTypes={nodeTypes}
-                                fitView
-                            >
-                                <Background />
-                            </ReactFlow>
-                        }
-                    </Card>
-                </Grid>
+                                    <Grid item>
+                                        <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
+                                            <Button color="primary" startIcon={<SaveIcon />} variant="outlined" onClick={handleGuardarAnalisisElemento}>
+                                                Guardar
+                                            </Button>
+                                        </Tooltip>
+                                    </Grid>
 
-            </Grid>
+                                </Grid>
 
-        </MainLayout>
+                                {/* Mensaje de feedback al guardar tipos de analisis del elemento */}
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Alert id="snack" className="animate__animated animate__flipInX" onClose={handleSnackClose} severity={snackData.severity} sx={{
+                                            width: '100%',
+                                            display: snackData.open ? 'flex' : 'none'
+                                        }}>
+                                            {snackData.msg}
+                                        </Alert>
+                                    </Grid>
+                                </Grid>
+
+                                {/* Listado de checkboxs para marcar los analisis */}
+                                <Grid container spacing={2}>
+                                    {/* <FormGroup> */}
+                                    {
+                                        analisis.map(analisis => (
+                                            <Grid item xs={6} key={analisis.id}>
+                                                <CheckBoxAnalisis
+                                                    label={analisis.nombre}
+                                                    name={camelCase(analisis.nombre)}
+                                                    onChange={handleAnalisis}
+                                                    elementoSeleccionado={elementoSeleccionado}
+                                                    elementosPlanta={elementosPlanta}
+                                                />
+                                            </Grid>
+                                        )
+                                        )
+                                    }
+                                    {/* </FormGroup> */}
+                                </Grid>
+
+                            </Card>
+                        </Grid>
+
+                        {/* BOTONES DE ACCIONES */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button
+                                    disabled={!estadoEliminarPlanta}
+                                    color='error'
+                                    variant='contained'
+                                    startIcon={<DeleteIcon />}
+                                    onClick={() => eliminarPlanta(confPlantaCliente.Id)}
+                                >
+                                    Eliminar Planta
+                                </Button>
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    disabled={!plantaCreada}
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<SaveIcon />}
+                                    onClick={handleGuardarDatos}
+                                >
+                                    Guardar datos
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='primary'
+                                    variant='contained'
+                                    startIcon={<AccountTreeIcon />}
+                                    disabled={!datosGuardados || diagramaGenerado}
+                                    onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
+                                    Generar diagrama
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<AccountTreeIcon />}
+                                    disabled={!datosGuardados || !diagramaGenerado}
+                                    onClick={handleGuardarDiagrama}>
+                                    Guardar diagrama
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='primary'
+                                    variant='contained'
+                                    endIcon={<NavigateNextIcon />}
+                                    disabled={!diagramaGuardado}
+                                    onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
+                                    Siguiente
+                                </Button>
+
+                            </Card>
+                        </Grid>
+
+                        {/* APARTADO DE DIAGRAMA */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
+
+                                <Typography variant="h6">Diagrama de la planta</Typography>
+                                {nodos2.length > 0 ?
+                                    <ReactFlow
+                                        nodes={nodos2}
+                                        edges={lados2}
+                                        onEdgesChange={onEdgesChange}
+                                        onConnect={onConnect}
+                                        nodeTypes={nodeTypes}
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow> :
+                                    <ReactFlow
+                                        nodes={nodos}
+                                        edges={lados}
+                                        onEdgesChange={onEdgesChange}
+                                        onConnect={onConnect}
+                                        nodeTypes={nodeTypes}
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow>
+                                }
+                            </Card>
+                        </Grid>
+
+                    </Grid>
+
+                </MainLayout>
+                :
+                <MainLayout title="Plantas">
+
+                    <Grid container spacing={2}>
+
+                        {/* APARTADO DE DATOS DE PLANTA */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex' }}>
+                                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+
+                                    {/* Código de Cliente */}
+                                    <Grid item xs={4}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
+                                            disableClearable={true}
+                                            id="CodigoCliente"
+                                            options={clientes}
+                                            getOptionLabel={option => option.codigo.toString()}
+                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
+                                            onChange={handleConfPlantaClienteChange}
+                                        />
+                                    </Grid>
+
+                                    {/* Número de Oferta */}
+                                    <Grid item xs={4}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
+                                            disableClearable={true}
+                                            id="Oferta"
+                                            options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
+                                            getOptionLabel={option => option.numeroOferta.toString()}
+                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                            onChange={handleConfPlantaClienteChange}
+                                        />
+                                    </Grid>
+
+                                    {/* Número de niveles */}
+                                    <Grid item xs={2}>
+                                        <TextField disabled={!crearPlanta || plantaCreada} sx={{ width: '100%' }} variant="outlined" label="Nº de niveles" name="NumNiveles" onChange={handleConfPlantaClienteChange} value={confPlantaCliente.NumNiveles} />
+                                    </Grid>
+
+                                    {/* Botón para crear */}
+                                    <Grid item xs={2}>
+                                        {
+                                            crearPlanta
+                                                ? (
+                                                    <Button
+                                                        disabled
+                                                        sx={{ width: '100%' }}
+                                                        color='success'
+                                                        variant='contained'
+                                                        startIcon={<AddIcon />}
+                                                        onClick={handleCrearCargarPlanta}
+                                                    >
+                                                        Crear
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        disabled={plantaCreada}
+                                                        sx={{ width: '100%' }}
+                                                        color='success'
+                                                        variant='contained'
+                                                        startIcon={<DownloadIcon />}
+                                                        onClick={handleCrearCargarPlanta}
+                                                    >
+                                                        Cargar
+                                                    </Button>
+                                                )
+                                        }
+                                    </Grid>
+
+                                </Grid>
+                            </Card>
+                        </Grid>
+
+                        {/* APARTADO DE NIVELES */}
+                        <Grid item xs={12}>
+                            <Grid container spacing={2}>
+                                {
+                                    niveles.map(nivel => (
+                                        <NivelPlanta
+                                            key={nivel}
+                                            nivel={nivel}
+                                            contadorElemento={contadorElemento}
+                                            setContadorElemento={setContadorElemento}
+                                            elementosPlanta={elementosPlanta}
+                                            setElementosPlanta={setElementosPlanta}
+                                            indiceElemento={indiceElemento}
+                                            setIndiceElemento={setIndiceElemento}
+                                        />
+                                    ))
+                                }
+                            </Grid>
+                        </Grid>
+
+                        {/* APARTADO DE LISTADO DE ELEMENTOS */}
+                        <Grid item xs={4}>
+                            <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+
+                                <Typography variant="h6" sx={{ width: '100%' }}>Listado de elementos</Typography>
+                                {
+                                    (elementosPlanta.length > 0)
+                                        ? (
+                                            <List>
+                                                {
+                                                    elementosPlanta.map(elemento => (
+                                                        <ListItemButton
+                                                            key={elemento.id}
+                                                            selected={elementoSeleccionado.id === elemento.id}
+                                                            onClick={() => handleSeleccionarElemento(elemento)}
+                                                        >
+                                                            <ListItemText primary={elemento.nombre + ' ' + elemento.numero} />
+                                                        </ListItemButton>
+                                                    ))
+                                                }
+                                            </List>
+                                        ) : (
+                                            <Typography>Ningún elemento añadido</Typography>
+                                        )
+                                }
+
+                            </Card>
+                        </Grid>
+
+                        {/* APARTADO DE ANALISIS POR ELEMENTO */}
+                        <Grid item xs={8}>
+                            <Card sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+
+                                <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', pb: 2 }}>
+
+                                    <Grid item>
+                                        <Typography variant="h6" sx={{ width: '100%' }}>Analisis por elemento</Typography>
+                                    </Grid>
+
+                                    <Grid item>
+                                        <Tooltip title="Guardar analisis del elemento seleccionado" placement="left">
+                                            <Button color="primary" disabled startIcon={<SaveIcon />} variant="outlined" onClick={handleGuardarAnalisisElemento}>
+                                                Guardar
+                                            </Button>
+                                        </Tooltip>
+                                    </Grid>
+
+                                </Grid>
+
+                                {/* Mensaje de feedback al guardar tipos de analisis del elemento */}
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Alert id="snack" className="animate__animated animate__flipInX" onClose={handleSnackClose} severity={snackData.severity} sx={{
+                                            width: '100%',
+                                            display: snackData.open ? 'flex' : 'none'
+                                        }}>
+                                            {snackData.msg}
+                                        </Alert>
+                                    </Grid>
+                                </Grid>
+
+                                {/* Listado de checkboxs para marcar los analisis */}
+                                <Grid container spacing={2}>
+                                    {/* <FormGroup> */}
+                                    {
+                                        analisis.map(analisis => (
+                                            <Grid item xs={6} key={analisis.id}>
+                                                <CheckBoxAnalisis
+                                                    label={analisis.nombre}
+                                                    usuarioActual={usuarioActual}
+                                                    name={camelCase(analisis.nombre)}
+                                                    onChange={handleAnalisis}
+                                                    elementoSeleccionado={elementoSeleccionado}
+                                                    elementosPlanta={elementosPlanta}
+                                                />
+                                            </Grid>
+                                        )
+                                        )
+                                    }
+                                    {/* </FormGroup> */}
+                                </Grid>
+
+                            </Card>
+                        </Grid>
+
+                        {/* BOTONES DE ACCIONES */}
+                        {/* <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button
+                                    disabled={!estadoEliminarPlanta}
+                                    color='error'
+                                    variant='contained'
+                                    startIcon={<DeleteIcon />}
+                                    onClick={() => eliminarPlanta(confPlantaCliente.Id)}
+                                >
+                                    Eliminar Planta
+                                </Button>
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    disabled={!plantaCreada}
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<SaveIcon />}
+                                    onClick={handleGuardarDatos}
+                                >
+                                    Guardar datos
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='primary'
+                                    variant='contained'
+                                    startIcon={<AccountTreeIcon />}
+                                    disabled={!datosGuardados || diagramaGenerado}
+                                    onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
+                                    Generar diagrama
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<AccountTreeIcon />}
+                                    disabled={!datosGuardados || !diagramaGenerado}
+                                    onClick={handleGuardarDiagrama}>
+                                    Guardar diagrama
+                                </Button>
+
+                                <Button
+                                    sx={{ ml: 2 }}
+                                    color='primary'
+                                    variant='contained'
+                                    endIcon={<NavigateNextIcon />}
+                                    disabled={!diagramaGuardado}
+                                    onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
+                                    Siguiente
+                                </Button>
+
+                            </Card>
+                        </Grid> */}
+
+                        {/* APARTADO DE DIAGRAMA */}
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
+
+                                <Typography variant="h6">Diagrama de la planta</Typography>
+                                {nodos2.length > 0 ?
+                                    <ReactFlow
+                                        nodes={nodos2}
+                                        edges={lados2}
+                                        onEdgesChange={onEdgesChange}
+                                        onConnect={onConnect}
+                                        nodeTypes={nodeTypes}
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow> :
+                                    <ReactFlow
+                                        nodes={nodos}
+                                        edges={lados}
+                                        onEdgesChange={onEdgesChange}
+                                        onConnect={onConnect}
+                                        nodeTypes={nodeTypes}
+                                        fitView
+                                    >
+                                        <Background />
+                                    </ReactFlow>
+                                }
+                            </Card>
+                        </Grid>
+
+                    </Grid>
+
+                </MainLayout>
+            }
+        </>
+
     )
 
 }

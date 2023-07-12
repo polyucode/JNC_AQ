@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { useEffect } from 'react';
 import { getListaElementos } from '../../api';
+import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 
 export const NivelPlanta = ({
     nivel,
@@ -21,16 +22,18 @@ export const NivelPlanta = ({
     const [elementos, setElementos] = useState([]);
     const [elementosNivel, setElementosNivel] = useState([]);
 
+    const { usuarioActual } = useUsuarioActual();
+
     useEffect(() => {
 
         getListaElementos()
-            .then( resp => setElementos(resp));
+            .then(resp => setElementos(resp));
 
-    },[]);
+    }, []);
 
     useEffect(() => {
-        setElementosNivel(elementosPlanta.filter( elemento => elemento.nivel === parseInt(nivel) ));
-    },[elementosPlanta]);
+        setElementosNivel(elementosPlanta.filter(elemento => elemento.nivel === parseInt(nivel)));
+    }, [elementosPlanta]);
 
     const handleSelectElemento = (e) => {
 
@@ -38,7 +41,7 @@ export const NivelPlanta = ({
         const texto = e.target.textContent;
 
         // Si el campo está en blanco, no seguimos
-        if( texto == '' ) return;
+        if (texto == '') return;
 
         let elemento = {
             id: indiceElemento,
@@ -48,7 +51,7 @@ export const NivelPlanta = ({
         }
 
         // Calculamos el número del elemento
-        if ( contadorElemento[texto] ) {
+        if (contadorElemento[texto]) {
 
             setContadorElemento({
                 ...contadorElemento,
@@ -66,67 +69,115 @@ export const NivelPlanta = ({
         }
 
         // Añadimos el elemento al listado
-        setElementosPlanta([ ...elementosPlanta, elemento ]);
+        setElementosPlanta([...elementosPlanta, elemento]);
         setIndiceElemento(indiceElemento - 1);
 
     }
 
-    const handleDeleteElemento = ( id ) => {
-        setElementosPlanta( elementosPlanta.filter( elemento => elemento.id != id ) );
+    const handleDeleteElemento = (id) => {
+        setElementosPlanta(elementosPlanta.filter(elemento => elemento.id != id));
     }
 
     return (
-        <Grid item xs={ 4 }>
+        <Grid item xs={4}>
             <Card sx={{ p: 2, display: 'flex' }}>
-                <Grid container spacing={ 2 }>
+                <Grid container spacing={2}>
 
-                    <Grid item xs={ 12 }>
-                        <Typography variant="h6">Nivel { nivel }</Typography>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">Nivel {nivel}</Typography>
                     </Grid>
 
-                    <Grid item xs={ 12 }>
-                        <Autocomplete
-                            //disableClearable={ true }
-                            id="elemento"
-                            options={ elementos }
-                            getOptionLabel={ option => option.nombre }
-                            renderInput={ params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
-                            onChange={ handleSelectElemento }
-                        />
-                    </Grid>
+                    {
+                        usuarioActual.idPerfil === 1004 ?
+                            <Grid item xs={12}>
+                                <Autocomplete
+                                    //disableClearable={ true }
+                                    id="elemento"
+                                    options={elementos}
+                                    disabled
+                                    getOptionLabel={option => option.nombre}
+                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
+                                    onChange={handleSelectElemento}
+                                />
+                            </Grid>
+                            :
+                            <Grid item xs={12}>
+                                <Autocomplete
+                                    //disableClearable={ true }
+                                    id="elemento"
+                                    options={elementos}
+                                    getOptionLabel={option => option.nombre}
+                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
+                                    onChange={handleSelectElemento}
+                                />
+                            </Grid>
+                    }
 
-                    <Grid item xs={ 12 }>
-                        <List>
+                    {
+                        usuarioActual.idPerfil === 1004 ?
+                            <Grid item xs={12}>
+                                <List>
 
-                            {
-                                (elementosNivel.length > 0)
-                                    ? elementosNivel.map( (elemento, index) => (
-                                        <div key={ elemento.id }>
-                                            <ListItem
-                                                sx={{ backgroundColor: 'none' }}
-                                                secondaryAction={
-                                                    <Tooltip title="Eliminar elemento">
-                                                        <IconButton color="error" edge="end" aria-label="delete" onClick={ () => handleDeleteElemento( elemento.id ) }>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                }
-                                            >
-                                                <ListItemText
-                                                    primary={ `${ elemento.nombre } ${ elemento.numero }` }
-                                                />
-                                            </ListItem>
+                                    {
+                                        (elementosNivel.length > 0)
+                                            ? elementosNivel.map((elemento, index) => (
+                                                <div key={elemento.id}>
+                                                    <ListItem
+                                                        sx={{ backgroundColor: 'none' }}
+                                                        
+                                                    >
+                                                        <ListItemText
+                                                            primary={`${elemento.nombre} ${elemento.numero}`}
+                                                        />
+                                                    </ListItem>
 
-                                            { (index + 1 != elementosNivel.length) && <Divider /> }
-                                        </div>
-                                    ))
-                                    : (
-                                        <Typography>Ningún elemento añadido</Typography>
-                                    )
-                            }
+                                                    {(index + 1 != elementosNivel.length) && <Divider />}
+                                                </div>
+                                            ))
+                                            : (
+                                                <Typography>Ningún elemento añadido</Typography>
+                                            )
+                                    }
 
-                        </List>
-                    </Grid>
+                                </List>
+                            </Grid>
+                            :
+                            <Grid item xs={12}>
+                                <List>
+
+                                    {
+                                        (elementosNivel.length > 0)
+                                            ? elementosNivel.map((elemento, index) => (
+                                                <div key={elemento.id}>
+                                                    <ListItem
+                                                        sx={{ backgroundColor: 'none' }}
+                                                        secondaryAction={
+                                                            <Tooltip title="Eliminar elemento">
+                                                                <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
+                                                                    <DeleteIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <ListItemText
+                                                            primary={`${elemento.nombre} ${elemento.numero}`}
+                                                        />
+                                                    </ListItem>
+
+                                                    {(index + 1 != elementosNivel.length) && <Divider />}
+                                                </div>
+                                            ))
+                                            : (
+                                                <Typography>Ningún elemento añadido</Typography>
+                                            )
+                                    }
+
+                                </List>
+                            </Grid>
+                    }
+
+
+
 
                 </Grid>
             </Card>

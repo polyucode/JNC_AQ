@@ -79,7 +79,7 @@ export const MantenimientoTecnicoPage = () => {
         fechaIso: null,
         parametro: 0,
         unidad: '',
-        valor: 0
+        valor: ''
     })
 
     const [data, setData] = useState([]);
@@ -313,7 +313,7 @@ export const MantenimientoTecnicoPage = () => {
 
     const guardarPDF = async () => {
 
-        const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parseInt(parametro.valor, 10) }))
+        const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parametro.valor }))
 
         const fechaActual = Date.now();
         const hoy = new Date(fechaActual);
@@ -323,6 +323,7 @@ export const MantenimientoTecnicoPage = () => {
             ...valorPrevio,
             pdf: response,
             nombreElemento: parametrosSeleccionado.nombreElemento,
+            operario: parametrosSeleccionado.idOperario,
             realizado: true,
             fechaRealizado: hoy.toISOString()
         }))
@@ -395,7 +396,7 @@ export const MantenimientoTecnicoPage = () => {
                 id_Elemento: parametrosSeleccionado.idElemento,
                 oferta: parametrosSeleccionado.oferta,
                 id_Analisis: parametrosSeleccionado.idAnalisis,
-                id_Operario: parametrosSeleccionado.idOperario,
+                id_Operario: (registro.id_Operario != null) ? registro.id_Operario : parametrosSeleccionado.idOperario,
                 parametro: registro.parametro,
                 referencia: parametrosSeleccionado.referencia,
                 unidad: registro.unidad,
@@ -440,14 +441,22 @@ export const MantenimientoTecnicoPage = () => {
                     Oferta: parametro.oferta,
                     Id_Elemento: parametro.id_Elemento,
                     Id_Analisis: parametro.id_Analisis,
-                    Id_Operario: (parametro.id_Operario === 0) ? usuarioActual.id : parametro.id_Operario,
+                    Id_Operario: (parametro.id_Operario === parametrosSeleccionado.idOperario) ? parametro.id_Operario : parametrosSeleccionado.idOperario,
                     Parametro: parametro.parametro,
                     Fecha: parametro.fecha,
-                    Valor: parseInt(parametro.valor, 10),
+                    Valor: parametro.valor,
                     Unidad: parametro.unidad
                 }
 
+                setTareaAnalisisPlanta(valorPrevio => ({
+                    ...valorPrevio,
+                    nombreElemento: parametrosSeleccionado.nombreElemento,
+                    operario: parametrosSeleccionado.idOperario
+                }))
+
                 const resp = await putValorParametros(parametroPut);
+
+                await putParametrosAnalisisPlanta(tareaAnalisisPlanta);
 
                 if (resp) {
                     // Avisamos al usuario si ha ido bien
@@ -495,11 +504,19 @@ export const MantenimientoTecnicoPage = () => {
                     Id_Operario: (parametro.id_Operario === 0) ? usuarioActual.id : parametro.id_Operario,
                     Parametro: parametro.parametro,
                     Fecha: parametrosSeleccionado.fecha,
-                    Valor: parseInt(parametro.valor, 10),
+                    Valor: parametro.valor,
                     Unidad: parametro.unidad
                 }
 
+                setTareaAnalisisPlanta(valorPrevio => ({
+                    ...valorPrevio,
+                    nombreElemento: parametrosSeleccionado.nombreElemento,
+                    operario: parametrosSeleccionado.idOperario
+                }))
+
                 const resp = await postValorParametros(parametroPut);
+
+                await putParametrosAnalisisPlanta(tareaAnalisisPlanta);
 
                 if (resp) {
                     // Avisamos al usuario si ha ido bien
@@ -544,7 +561,8 @@ export const MantenimientoTecnicoPage = () => {
 
             setTareaAnalisisPlanta(valorPrevio => ({
                 ...valorPrevio,
-                nombreElemento: parametrosSeleccionado.nombreElemento
+                nombreElemento: parametrosSeleccionado.nombreElemento,
+                operario: parametrosSeleccionado.idOperario
             }))
 
 
@@ -749,9 +767,7 @@ export const MantenimientoTecnicoPage = () => {
                                                         </TableHead>
 
                                                         <TableBody>
-                                                            {console.log(parametrosSeleccionado, "PARAMETROS SELECCIONADO")}
                                                             {
-                                                                parametrosSeleccionado.realizado == true ? (
                                                                 valoresParametros.map((parametro, index) => {
 
                                                                     const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
@@ -767,25 +783,6 @@ export const MantenimientoTecnicoPage = () => {
                                                                         />
                                                                     )
                                                                 })
-                                                                )
-                                                                :
-                                                                (
-                                                                valoresParametros.map((parametro, index) => {
-
-                                                                    const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
-
-                                                                    return (
-                                                                        <ParametroMantenimiento
-                                                                            limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
-                                                                            key={index}
-                                                                            indice={index}
-                                                                            parametros={valoresParametros}
-                                                                            onChange={handleEditarParametro}
-                                                                            nombre={nombreParametro}
-                                                                        />
-                                                                    )
-                                                                })
-                                                                )
                                                             }
                                                         </TableBody>
 

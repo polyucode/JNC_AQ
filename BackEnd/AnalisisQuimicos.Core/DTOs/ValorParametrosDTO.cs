@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Id_Operario { get; set; }
         public int? Parametro { get; set; }
         public DateTime? Fecha { get; set; }
-        public int? Valor { get; set; }
+        public string Valor { get; set; }
         public string Unidad { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }

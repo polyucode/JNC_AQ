@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { getUsuarios } from '../../api';
 
 const protocolos = [
@@ -46,7 +47,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarDetalleModal = ({ change: handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado }) => {
+export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado, analisis }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -60,31 +61,34 @@ export const InsertarDetalleModal = ({ change: handleChangeDet, tareaSeleccionad
 
     return (
         <>
-            <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.codigoCliente} />
+            <Grid item xs={3} md={3}>
+            <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.codigoCliente} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={5}>
                 <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreCliente} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%' }} disabled label="Oferta" name="oferta" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.oferta} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} />
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreElemento} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} />
+            <Grid item xs={6} md={6}>
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.analisis} />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={2}>
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeDet} />
             </Grid>
 
-            <Grid item xs={8} md={9}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
+                <Typography> Fecha </Typography>
+            </Grid>
+            <Grid item xs={8} md={4}>
                 <TextField
                     id="fecha"
                     type="date"
@@ -97,41 +101,15 @@ export const InsertarDetalleModal = ({ change: handleChangeDet, tareaSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    sx={{ width: '100%' }}
-                    id="Operarios"
-                    options={operarios}
-                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
-                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
-                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                        ...prevState,
-                        operario: value.nombre + ' ' + value.apellidos
-                    }))}
-                />
-            </Grid>
-
-            <Grid item xs={4} md={3}>
-                <TextField
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
+            <Grid item xs={12} md={12}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%' }}
+                    name="observaciones"
                     onChange={handleChangeDet}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>
-
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="observaciones" name="observaciones" onChange={handleChangeDet} />
+                />
             </Grid>
 
         </>
