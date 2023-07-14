@@ -22,6 +22,7 @@ import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { deleteProductos, getProductos, postProductos, putProductos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { ModalLayout2 } from "../components/ModalLayout2";
 
 
 const token = {
@@ -77,7 +78,7 @@ export const ProductosPage = () => {
         { headerName: 'Descripcion', field: 'descripcion', width: 700 }
 
     ];
-    
+
     const peticionGet = async () => {
 
         const resp = await getProductos();
@@ -97,16 +98,29 @@ export const ProductosPage = () => {
 
     }, [data]);
 
-    
+
 
     const peticionPost = async () => {
+
         productoSeleccionado.id = null;
 
         const resp = await postProductos(productoSeleccionado);
 
         //setData(data.concat(response.data));
         abrirCerrarModalInsertar();
-        getProductos();
+        peticionGet();
+        setProductoSeleccionado({
+            id: 0,
+            codigoProducto: 0,
+            descripcion: "",
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
 
     }
 
@@ -121,8 +135,20 @@ export const ProductosPage = () => {
                 producto = productoSeleccionado
             }
         });
-        getProductos();
         abrirCerrarModalEditar();
+        peticionGet();
+        setProductoSeleccionado({
+            id: 0,
+            codigoProducto: 0,
+            descripcion: "",
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
 
     }
 
@@ -133,8 +159,20 @@ export const ProductosPage = () => {
 
             const resp = await deleteProductos(ProductoEliminar[i]);
 
-            getProductos();
             abrirCerrarModalEliminar();
+            peticionGet();
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: 0,
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
 
             i++;
 
@@ -374,7 +412,7 @@ export const ProductosPage = () => {
 
                     {/* Modal Editar Producto*/}
 
-                    <ModalLayout
+                    <ModalLayout2
                         titulo="Editar producto"
                         contenido={
                             <EditarProductoModal

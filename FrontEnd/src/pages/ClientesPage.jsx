@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button } from '@mui/material';
-import MaterialTable from '@material-table/core';
-import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 
 import Snackbar from '@mui/material/Snackbar';
@@ -21,8 +12,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-
+import { ModalLayout} from "../components/ModalLayout";
+import { ModalLayout2 } from '../components/ModalLayout2';
 
 // Table MUI
 import { DataGrid } from '@mui/x-data-grid';
@@ -31,9 +22,9 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { useForm } from '../hooks/useForm';
 import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
+import { EditarClienteModal2 } from '../components/Modals/EditarClienteModal2';
 
 
 const token = {
@@ -549,10 +540,13 @@ export const ClientesPage = () => {
 
           {/* Agregar cliente */}
           <ModalLayout
-            key={`cliente-añadir-${clienteSeleccionado.id}`}
             titulo="Agregar nuevo cliente"
             contenido={
-              <InsertarClienteModal clienteSeleccionado={clienteSeleccionado} change={handleChange} autocompleteChange={handleAutocompleteChange} />
+              <InsertarClienteModal 
+                clienteSeleccionado={clienteSeleccionado} 
+                change={handleChange} 
+                autocompleteChange={handleAutocompleteChange} 
+              />
             }
             botones={[
               insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
@@ -575,12 +569,11 @@ export const ClientesPage = () => {
           {/* Modal Editar Cliente*/}
 
           <ModalLayout
-            key={`cliente-editar-${clienteSeleccionado.id}`}
             titulo="Editar cliente"
             contenido={
-              <EditarClienteModal
+              <EditarClienteModal2
                 clienteSeleccionado={clienteSeleccionado}
-                change={handleChange}
+                handleChange={handleChange}
                 autocompleteChange={handleAutocompleteChange}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
@@ -599,7 +592,6 @@ export const ClientesPage = () => {
 
           {/* Eliminar cliente */}
           <ModalLayout
-            key={`cliente-eliminar-${clienteSeleccionado.id}`}
             titulo="Eliminar cliente"
             contenido={
               <>
@@ -674,7 +666,7 @@ export const ClientesPage = () => {
           {/* LISTA DE MODALS */}
           {/* Modal Editar Cliente*/}
 
-          <ModalLayout
+          <ModalLayout2
             key={`cliente-editar-${clienteSeleccionado.id}`}
             titulo="Editar cliente"
             contenido={

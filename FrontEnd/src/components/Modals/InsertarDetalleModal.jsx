@@ -74,7 +74,7 @@ export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handl
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreElemento} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.elemento} />
             </Grid>
 
             <Grid item xs={6} md={6}>

@@ -39,6 +39,7 @@ import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegi
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { ModalLayout2 } from "../components/ModalLayout2";
 
 const token = {
     headers: {
@@ -741,12 +742,6 @@ export const VisualizacionPage = () => {
 
     }, [data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15, data16, data17, data18]);
 
-    useEffect(() => {
-
-        getFicheros()
-            .then(resp => setFicheros(resp))
-    }, [])
-
     const handleChangeInput = e => {
         const { name, value } = e.target;
         setAnalisisSeleccionado(prevState => ({
@@ -779,11 +774,6 @@ export const VisualizacionPage = () => {
             '-' + String(fecha1.getDate()).padStart(2, '0')
 
         return fecha2
-    }
-
-    const subirArchivo = async () => {
-        const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-        return resp;
     }
 
     const abrirCerrarModalInsertar = () => {
@@ -1137,6 +1127,14 @@ export const VisualizacionPage = () => {
 
     }
 
+    const GetFichero = async () => {
+
+        const resp = await getFicheros();
+
+        const fichero = Object.entries(resp).map(([key, value]) => (key, value));
+        setFicheros(fichero);
+    }
+
     const GetOferta = async () => {
 
         const resp = await getOfertas();
@@ -1368,6 +1366,7 @@ export const VisualizacionPage = () => {
         FisicoQuimicoCondensados();
         FisicoQuimicoCaldera();
         Aerobios();
+        GetFichero();
         Legionela();
         AguasResiduales();
         Desinfecciones();
@@ -1489,10 +1488,10 @@ export const VisualizacionPage = () => {
         analisisSeleccionado.id = 0;
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
-
-        Aerobios();
+        
         abrirCerrarModalInsertarAerobio();
         GetParametrosAnalisisPlanta();
+        Aerobios();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: analisisSeleccionado.codigoCliente,
@@ -1572,7 +1571,14 @@ export const VisualizacionPage = () => {
 
     const peticionPut = async () => {
 
-        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+        if (fileChange != null) {
+            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+            if(resp){
+                analisisSeleccionado.pdf = resp.data
+            }   
+        }
+        
+        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
         analisisModificado.map(analisi => {
@@ -1580,9 +1586,9 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if (fileChange != null) {
-            subirArchivo()
-        }
+
+        abrirCerrarModalEditar();
+        GetParametrosAnalisisPlanta();
         AguasResiduales();
         Desinfecciones();
         AguaPozo();
@@ -1592,9 +1598,8 @@ export const VisualizacionPage = () => {
         ControlFugaGas();
         AguaPotable();
         RevisionBandeja();
-        GetParametrosAnalisisPlanta();
+        GetFichero();
         //Otros();
-        abrirCerrarModalEditar();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: analisisSeleccionado.codigoCliente,
@@ -1684,7 +1689,17 @@ export const VisualizacionPage = () => {
 
     const peticionPutAerobio = async () => {
 
-        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+        if (fileChange != null) {
+            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+            if(resp){
+                analisisSeleccionado.pdf = resp.data
+            }
+    
+            
+        }
+        
+        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
         analisisModificado.map(analisi => {
@@ -1692,12 +1707,11 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if (fileChange != null) {
-            subirArchivo()
-        }
-        Aerobios();
-        GetParametrosAnalisisPlanta();
+
         abrirCerrarModalEditarAerobio();
+        GetParametrosAnalisisPlanta();
+        Aerobios();
+        GetFichero();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: analisisSeleccionado.codigoCliente,
@@ -1734,7 +1748,16 @@ export const VisualizacionPage = () => {
 
     const peticionPutLegionela = async () => {
 
-        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+        if (fileChange != null) {
+            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+            if(resp){
+                analisisSeleccionado.pdf = resp.data
+            }
+    
+            
+        }
+        
+        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
         analisisModificado.map(analisi => {
@@ -1742,12 +1765,11 @@ export const VisualizacionPage = () => {
                 analisi = analisisSeleccionado
             }
         });
-        if (fileChange != null) {
-            subirArchivo()
-        }
-        Legionela();
-        GetParametrosAnalisisPlanta();
+
         abrirCerrarModalEditarLegionela();
+        GetParametrosAnalisisPlanta();
+        Legionela();
+        GetFichero();       
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: analisisSeleccionado.codigoCliente,
@@ -5529,17 +5551,7 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
-                                                                }),
-
+                                                                })
                                                             ]}
                                                             open={modalEditar1}
                                                             onClose={abrirCerrarModalEditar1}
@@ -5608,15 +5620,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf()
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -5686,15 +5689,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -5764,15 +5758,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -5843,15 +5828,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -5922,15 +5898,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -6003,15 +5970,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditarAerobio()
-
-                                                                    if (peticionPutAerobio()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditarAerobio}
@@ -6084,15 +6042,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditarLegionela()
-
-                                                                    if (peticionPutLegionela()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditarLegionela}
@@ -6165,15 +6114,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6246,15 +6186,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6325,15 +6256,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdf();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar1()
-
-                                                                    if (peticionPut1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar1}
@@ -6406,15 +6328,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6487,15 +6400,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6568,15 +6472,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6649,15 +6544,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6730,15 +6616,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6811,15 +6688,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}
@@ -6892,15 +6760,6 @@ export const VisualizacionPage = () => {
                                                             botones={[
                                                                 insertarBotonesModal(<PictureAsPdfIcon />, 'Descargar Pdf', async () => {
                                                                     descargarPdfNoFQ();
-                                                                }),
-                                                                insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                                                                    abrirCerrarModalEditar()
-
-                                                                    if (peticionPut()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-                                                                    }
                                                                 })
                                                             ]}
                                                             open={modalEditar}

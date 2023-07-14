@@ -31,6 +31,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { ModalLayout2 } from "../components/ModalLayout2";
 
 const token = {
     headers: {
@@ -614,7 +615,7 @@ export const OfertasClientesPage = () => {
 
                     {/* Modal Editar Oferta*/}
 
-                    <ModalLayout
+                    <ModalLayout2
                         titulo="Editar Oferta"
                         contenido={
                             <EditarOfertaModal

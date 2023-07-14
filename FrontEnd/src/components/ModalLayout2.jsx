@@ -13,7 +13,7 @@ const style = {
   boxShadow: 24
 };
 
-export const ModalLayout = ({ titulo, contenido, botones, open, onClose }) => {
+export const ModalLayout2 = ({ titulo, contenido, botones, open, onClose }) => {
 
 const { usuarioActual } = useUsuarioActual();
 
@@ -56,7 +56,10 @@ const { usuarioActual } = useUsuarioActual();
               spacing={ 2 }
             >
               {
+                usuarioActual.idPerfil === 1 ?
                 botones.map( boton => boton )
+                :
+                false
               }
             </Grid>
 

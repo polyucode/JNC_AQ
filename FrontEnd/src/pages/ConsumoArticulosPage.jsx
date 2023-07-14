@@ -257,226 +257,161 @@ export const ConsumoArticulosPage = () => {
 
     return (
         <>
-            {usuarioActual.idPerfil === 1 ?
-                <MainLayout title='Consumos'>
+            <MainLayout title='Consumos'>
 
-                    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                            {snackData.msg}
-                        </Alert>
-                    </Snackbar>
+                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                        {snackData.msg}
+                    </Alert>
+                </Snackbar>
 
-                    <Grid container spacing={2}>
+                <Grid container spacing={2}>
 
-                        {/* Título y botones de opción */}
-                        <Grid item xs={12}>
-                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant='h6'>Listado de Consumos</Typography>
-                                {
-                                    (rowsIds.length > 0) ?
-                                        (
-                                            <Grid item>
-                                                <Button
-                                                    sx={{ mr: 2 }}
-                                                    color='error'
-                                                    variant='contained'
-                                                    startIcon={<DeleteIcon />}
-                                                    onClick={(event, rowData) => {
-                                                        setConsumoEliminar(rowsIds)
-                                                        abrirCerrarModalEliminar()
-                                                    }}
-                                                >
-                                                    Eliminar
-                                                </Button>
-                                            </Grid>
-                                        ) : (
+                    {/* Título y botones de opción */}
+                    <Grid item xs={12}>
+                        <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography variant='h6'>Listado de Consumos</Typography>
+                            {
+                                (rowsIds.length > 0) ?
+                                    (
+                                        <Grid item>
                                             <Button
-                                                color='success'
+                                                sx={{ mr: 2 }}
+                                                color='error'
                                                 variant='contained'
-                                                startIcon={<AddIcon />}
-                                                onClick={abrirCerrarModalInsertar}
-                                            >Añadir</Button>
-                                        )
-                                }
-                            </Card>
-                        </Grid>
-
-                        {/* Tabla donde se muestran los registros de los clientes */}
-                        <Grid item xs={12}>
-                            <Card>
-                                <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
-                                    localeText={DATAGRID_LOCALE_TEXT}
-                                    sx={{
-                                        width: '100%',
-                                        height: 1000,
-                                        backgroundColor: '#FFFFFF'
-                                    }}
-                                    rows={rows}
-                                    columns={columnas}
-                                    checkboxSelection
-                                    disableSelectionOnClick
-                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                                    onRowClick={(consumoSeleccionado, evt) => {
-                                        setConsumoSeleccionado(consumoSeleccionado.row)
-                                        setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
-                                        setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
-                                        abrirCerrarModalEditar();
-                                    }}
-                                />
-                            </Card>
-                        </Grid>
-
-                        {/* LISTA DE MODALS */}
-
-                        {/* Agregar consumo */}
-                        <ModalLayout
-                            titulo="Agregar nuevo consumo"
-                            contenido={
-                                <InsertarConsumoModal
-                                    change={handleChange}
-                                    setConsumoSeleccionado={setConsumoSeleccionado}
-                                    ofertas={ofertas}
-                                    productos={productos}
-                                />
+                                                startIcon={<DeleteIcon />}
+                                                onClick={(event, rowData) => {
+                                                    setConsumoEliminar(rowsIds)
+                                                    abrirCerrarModalEliminar()
+                                                }}
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        </Grid>
+                                    ) : (
+                                        <Button
+                                            color='success'
+                                            variant='contained'
+                                            startIcon={<AddIcon />}
+                                            onClick={abrirCerrarModalInsertar}
+                                        >Añadir</Button>
+                                    )
                             }
-                            botones={[
-                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                    abrirCerrarModalInsertar();
-
-                                    if (peticionPost()) {
-                                        setSnackData({ open: true, msg: 'Consumo añadido correctamente', severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir el consumo', severity: 'error' })
-                                    }
-
-                                }, 'success')
-                            ]}
-                            open={modalInsertar}
-                            onClose={abrirCerrarModalInsertar}
-                        />
-
+                        </Card>
                     </Grid>
 
-                    {/* Modal Editar Consumo*/}
+                    {/* Tabla donde se muestran los registros de los clientes */}
+                    <Grid item xs={12}>
+                        <Card>
+                            <DataGrid
+                                components={{ Toolbar: GridToolbar }}
+                                localeText={DATAGRID_LOCALE_TEXT}
+                                sx={{
+                                    width: '100%',
+                                    height: 1000,
+                                    backgroundColor: '#FFFFFF'
+                                }}
+                                rows={rows}
+                                columns={columnas}
+                                checkboxSelection
+                                disableSelectionOnClick
+                                onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                onRowClick={(consumoSeleccionado, evt) => {
+                                    setConsumoSeleccionado(consumoSeleccionado.row)
+                                    setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
+                                    setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
+                                    abrirCerrarModalEditar();
+                                }}
+                            />
+                        </Card>
+                    </Grid>
 
+                    {/* LISTA DE MODALS */}
+
+                    {/* Agregar consumo */}
                     <ModalLayout
-                        titulo="Editar consumo"
+                        titulo="Agregar nuevo consumo"
                         contenido={
-                            <EditarConsumoModal
-                                consumoSeleccionado={consumoSeleccionado}
+                            <InsertarConsumoModal
                                 change={handleChange}
                                 setConsumoSeleccionado={setConsumoSeleccionado}
-                                productoEditar={productoEditar}
-                                ofertaEditar={ofertaEditar}
                                 ofertas={ofertas}
                                 productos={productos}
-                            />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                            abrirCerrarModalEditar()
-
-                            if (peticionPut()) {
-                                setSnackData({ open: true, msg: 'Consumo editado correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al editar el consumo', severity: 'error' })
-                            }
-                        })
-                        ]}
-                        open={modalEditar}
-                        onClose={abrirCerrarModalEditar}
-                    />
-
-                    {/* Eliminar consumo */}
-                    <ModalLayout
-                        titulo="Eliminar consumo"
-                        contenido={
-                            <>
-                                <Grid item xs={12}>
-                                    <Typography>Estás seguro que deseas eliminar el consumo?</Typography>
-                                </Grid>
-                            </>
+                            />
                         }
                         botones={[
-                            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                abrirCerrarModalEliminar();
+                            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                abrirCerrarModalInsertar();
 
-                                if (peticionDelete()) {
-                                    setSnackData({ open: true, msg: `Consumo eliminado correctamente`, severity: 'success' });
+                                if (peticionPost()) {
+                                    setSnackData({ open: true, msg: 'Consumo añadido correctamente', severity: 'success' });
                                 } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el consumo', severity: 'error' })
+                                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el consumo', severity: 'error' })
                                 }
 
-                            }, 'error'),
-                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                            }, 'success')
                         ]}
-                        open={modalEliminar}
-                        onClose={abrirCerrarModalEliminar}
+                        open={modalInsertar}
+                        onClose={abrirCerrarModalInsertar}
                     />
-                </MainLayout>
-                :
-                <MainLayout title='Consumos'>
 
-                    <Grid container spacing={2}>
+                </Grid>
 
-                        {/* Título y botones de opción */}
-                        <Grid item xs={12}>
-                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                <Typography variant='h6'>Listado de Consumos</Typography>
-                            </Card>
-                        </Grid>
+                {/* Modal Editar Consumo*/}
 
-                        {/* Tabla donde se muestran los registros de los clientes */}
-                        <Grid item xs={12}>
-                            <Card>
-                                <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
-                                    localeText={DATAGRID_LOCALE_TEXT}
-                                    sx={{
-                                        width: '100%',
-                                        height: 1000,
-                                        backgroundColor: '#FFFFFF'
-                                    }}
-                                    rows={rows}
-                                    columns={columnas}
-                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                                    onRowClick={(consumoSeleccionado, evt) => {
-                                        setConsumoSeleccionado(consumoSeleccionado.row)
-                                        setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
-                                        abrirCerrarModalEditar();
-                                    }}
-                                />
-                            </Card>
-                        </Grid>
+                <ModalLayout
+                    titulo="Editar consumo"
+                    contenido={
+                        <EditarConsumoModal
+                            consumoSeleccionado={consumoSeleccionado}
+                            change={handleChange}
+                            setConsumoSeleccionado={setConsumoSeleccionado}
+                            productoEditar={productoEditar}
+                            ofertaEditar={ofertaEditar}
+                            ofertas={ofertas}
+                            productos={productos}
+                        />}
+                    botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                        abrirCerrarModalEditar()
 
-                    </Grid>
+                        if (peticionPut()) {
+                            setSnackData({ open: true, msg: 'Consumo editado correctamente', severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al editar el consumo', severity: 'error' })
+                        }
+                    })
+                    ]}
+                    open={modalEditar}
+                    onClose={abrirCerrarModalEditar}
+                />
 
-                    {/* Modal Editar Consumo*/}
+                {/* Eliminar consumo */}
+                <ModalLayout
+                    titulo="Eliminar consumo"
+                    contenido={
+                        <>
+                            <Grid item xs={12}>
+                                <Typography>Estás seguro que deseas eliminar el consumo?</Typography>
+                            </Grid>
+                        </>
+                    }
+                    botones={[
+                        insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                            abrirCerrarModalEliminar();
 
-                    <ModalLayout
-                        titulo="Editar consumo"
-                        contenido={
-                            <EditarConsumoModal
-                                consumoSeleccionado={consumoSeleccionado}
-                                change={handleChange}
-                                setConsumoSeleccionado={setConsumoSeleccionado}
-                                productoEditar={productoEditar}
-                            />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                            abrirCerrarModalEditar()
-
-                            if (peticionPut()) {
-                                setSnackData({ open: true, msg: 'Consumo editado correctamente', severity: 'success' });
+                            if (peticionDelete()) {
+                                setSnackData({ open: true, msg: `Consumo eliminado correctamente`, severity: 'success' });
                             } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al editar el consumo', severity: 'error' })
+                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar el consumo', severity: 'error' })
                             }
-                        })
-                        ]}
-                        open={modalEditar}
-                        onClose={abrirCerrarModalEditar}
-                    />
 
-                </MainLayout>
-            }
+                        }, 'error'),
+                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                    ]}
+                    open={modalEliminar}
+                    onClose={abrirCerrarModalEliminar}
+                />
+            </MainLayout>
         </>
 
     )

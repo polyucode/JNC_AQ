@@ -85,6 +85,8 @@ export const MantenimientoTecnicoPage = () => {
     const [data, setData] = useState([]);
     const [dataParametros, setDataParametros] = useState([]);
 
+    const [nombreOperario, setNombreOperario] = useState([]);
+
     const { usuarioActual } = useUsuarioActual();
 
     const GetConfNivelesPlantasCliente = async () => {
@@ -307,7 +309,7 @@ export const MantenimientoTecnicoPage = () => {
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.fecha,
-            fechaIso: e.target.textContent 
+            fechaIso: e.target.textContent
         }))
     }
 
@@ -410,6 +412,9 @@ export const MantenimientoTecnicoPage = () => {
 
         // Finalmente, añadimos los datos al estado
         setValoresParametros(parametrosMostrar);
+
+        const operario = operarios.find((op) => op.id === parametrosMostrar[0].id_Operario)
+        setNombreOperario(operario.nombre + ' ' + operario.apellidos)
 
     }
 
@@ -722,6 +727,17 @@ export const MantenimientoTecnicoPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
+                {valoresParametros != "" && usuarioActual.idPerfil === 1004 && valoresParametros[0].id_Operario !== usuarioActual.id ?
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Typography>Esta tarea la ha realizado {nombreOperario}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    :
+                    false
+                }
 
                 {/* Sección tabla de parámetros */}
                 <Grid item xs={12}>
@@ -796,6 +812,8 @@ export const MantenimientoTecnicoPage = () => {
                                 )}
                     </Card>
                 </Grid>
+
+
 
                 {/* Sección de botones */}
                 <Grid item xs={12}>

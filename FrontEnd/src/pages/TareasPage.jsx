@@ -82,7 +82,6 @@ export const TareasPage = () => {
   });
 
   const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
-
     id: 0,
     codigoCliente: 0,
     nombreCliente: '',
@@ -97,8 +96,11 @@ export const TareasPage = () => {
     fechaRecogido: null,
     realizado: false,
     fechaRealizado: null,
-    operario: 0,
     observaciones: '',
+    pdf: 0,
+    recibido: false,
+    fechaPdf: null,
+    resultado: '',
     facturado: false,
     numeroFacturado: '',
     cancelado: false,
@@ -110,7 +112,7 @@ export const TareasPage = () => {
     delDate: null,
     delIdUser: null,
     deleted: null,
-  });
+});
 
   const [nombreClienteEditar, setNombreClienteEditar] = useState([]);
   const [clienteTareaEditar, setClienteTareaEditar] = useState([]);
@@ -374,7 +376,7 @@ export const TareasPage = () => {
 
   const peticionPost = async () => {
 
-    tareaSeleccionada.id = null;
+    tareaSeleccionada.id = 0;
 
     const response = await postTareas(tareaSeleccionada);
 
@@ -641,7 +643,6 @@ export const TareasPage = () => {
     });
 
   }
-
 
   const peticionPostVis = async () => {
 
@@ -1036,12 +1037,6 @@ export const TareasPage = () => {
         :
         <MainLayout title="Tareas">
 
-          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-              {snackData.msg}
-            </Alert>
-          </Snackbar>
-
           <Grid container spacing={2}>
             {/* Título y botones de opción */}
             <Grid item xs={12}>
@@ -1102,8 +1097,6 @@ export const TareasPage = () => {
                 analisisAutocomplete={analisisAutocomplete}
                 elementoTareaEditar={elementoTareaEditar}
                 analisisEditar={analisisEditar}
-                analisisSeleccionado={analisisSeleccionado}
-                setAnalisisSeleccionado={setAnalisisSeleccionado}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
               abrirCerrarModalEditar()

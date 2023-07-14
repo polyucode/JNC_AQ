@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { Modal } from '@mui/material';
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import { ModalLayout2 } from "../components/ModalLayout2";
 import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
 import { insertarBotonesModal } from "../helpers/insertarBotonesModal";
 import { EditarUsuarioModal } from '../components/Modals/EditarUsuarioModal';
@@ -179,19 +180,20 @@ export const UsuariosPage = () => {
 
   }
 
+  const GetFichero = async () => {
+
+    const resp = await getFicheros();
+
+    const fichero = Object.entries(resp).map(([key, value]) => (key, value));
+    setFicheros(fichero);
+}
+
   // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
   useEffect(() => {
     peticionGet();
     GetCliente();
     GetPerfil();
-
-    getFicheros()
-      .then(resp => setFicheros(resp))
-
-    if (usuarioActual.idPerfil === 1004) {
-      setMostrarBoton(false)
-    }
-
+    GetFichero();
   }, [])
 
   useEffect(() => {
@@ -202,9 +204,6 @@ export const UsuariosPage = () => {
 
   }, [usuarios]);
 
-  const subirImagen = async () => {
-    await subirFirma(usuarioSeleccionado.id, fileChange)
-  }
   //Insertar usuario
   const peticionPost = async () => {
 
@@ -240,17 +239,24 @@ export const UsuariosPage = () => {
   // Editar el usuario
   const peticionPut = async () => {
 
-    const resp = await putUsuarios(usuarioSeleccionado);
+    if(fileChange != null){
+      const resp = await subirFirma(usuarioSeleccionado.id, fileChange)
+      if(resp){
+        usuarioSeleccionado.firma = resp.data
+      }
+    }
+    await putUsuarios(usuarioSeleccionado);
 
-    subirImagen();
     var usuarioModificado = usuarios;
     usuarioModificado.map(usuario => {
       if (usuario.id === usuarioSeleccionado.id) {
         usuario = usuarioSeleccionado
       }
     });
-    peticionGet();
+
     abrirCerrarModalEditar();
+    peticionGet();
+    GetFichero();
     setUsuarioSeleccionado({
       id: 0,
       nombre: '',
@@ -670,7 +676,7 @@ export const UsuariosPage = () => {
               onClose={abrirCerrarModalInsertar}
             />
 
-            <ModalLayout
+            <ModalLayout2
               titulo="Editar usuario"
               contenido={
                 <EditarUsuarioModal

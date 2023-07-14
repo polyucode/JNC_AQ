@@ -86,7 +86,7 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, analisisSeleccionado, setAnalisisSeleccionado }) => {
+export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) => {
 
 
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -101,6 +101,39 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     const [data, setData] = useState([]);
 
     const [AnalisisEliminar, setAnalisisEliminar] = useState([]);
+
+    const [analisisSeleccionado, setAnalisisSeleccionado] = useState({
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: '',
+        oferta: 0,
+        pedido: 0,
+        elemento: 0,
+        nombreElemento: '',
+        periodo: '',
+        analisis: 0,
+        fecha: null,
+        recogido: false,
+        fechaRecogido: null,
+        realizado: false,
+        fechaRealizado: null,
+        observaciones: '',
+        pdf: 0,
+        recibido: false,
+        fechaPdf: null,
+        resultado: '',
+        facturado: false,
+        numeroFacturado: '',
+        cancelado: false,
+        comentarios: '',
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    });
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -390,11 +423,16 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         analisisSeleccionado.analisis = tareaSeleccionada.analisis;
         analisisSeleccionado.pedido = tareaSeleccionada.pedido;
         analisisSeleccionado.elemento = tareaSeleccionada.elemento;
+        analisisSeleccionado.operario = tareaSeleccionada.operario;
+
+        console.log(analisisSeleccionado)
 
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
-        peticionGet();
+        console.log(resp)
+
         abrirCerrarModalInsertar();
+        peticionGet();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: 0,
@@ -402,6 +440,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             oferta: 0,
             pedido: 0,
             elemento: 0,
+            nombreElemento: "",
             periodo: '',
             analisis: 0,
             fecha: null,
@@ -409,8 +448,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
-            operario: '',
-            protocolo: '',
+            operario: 0,
             observaciones: '',
             facturado: false,
             numeroFacturado: '',
@@ -428,19 +466,22 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     }
 
     const peticionPut = async () => {
+
+        console.log(analisisSeleccionado)
         
         const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         console.log(resp)
         
-        var analisisSeleccionado = data;
-        analisisSeleccionado.map(analisis => {
+        var analisisModificado = data;
+        analisisModificado.map(analisis => {
             if (analisis.id === analisisSeleccionado.id) {
                 analisis = analisisSeleccionado
             }
         });
-        peticionGet();
+
         abrirCerrarModalEditar();
+        peticionGet();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: 0,
@@ -448,6 +489,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             oferta: 0,
             pedido: 0,
             elemento: 0,
+            nombreElemento: "",
             periodo: '',
             analisis: 0,
             fecha: null,
@@ -455,8 +497,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             fechaRecogido: null,
             realizado: false,
             fechaRealizado: null,
-            operario: '',
-            protocolo: '',
+            operario: 0,
             observaciones: '',
             facturado: false,
             numeroFacturado: '',
@@ -496,8 +537,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                 fechaRecogido: null,
                 realizado: false,
                 fechaRealizado: null,
-                operario: '',
-                protocolo: '',
+                operario: 0,
                 observaciones: '',
                 facturado: false,
                 numeroFacturado: '',
@@ -772,9 +812,9 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                         abrirCerrarModalInsertar();
 
                         if (peticionPost()) {
-                            setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
+                            setSnackData({ open: true, msg: 'Detalle añadido correctamente', severity: 'success' });
                         } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
+                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el detalle de la tarea', severity: 'error' })
                         }
 
                     }, 'success')

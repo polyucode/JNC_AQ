@@ -17,7 +17,7 @@ export const putParametrosAnalisisPlanta = async ( analisis ) => {
 export const putParametrosAnalisisPlantaPorId = async ( analisis ) => {
     
     const resp = await instance.put(`/parametrosanalisisplanta?id=${ analisis.id }`, analisis);
-    return resp.data.data;
+    return resp;
     
 }
 
