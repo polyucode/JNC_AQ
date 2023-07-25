@@ -571,7 +571,7 @@ export const ClientesPage = () => {
           <ModalLayout
             titulo="Editar cliente"
             contenido={
-              <EditarClienteModal2
+              <EditarClienteModal
                 clienteSeleccionado={clienteSeleccionado}
                 handleChange={handleChange}
                 autocompleteChange={handleAutocompleteChange}

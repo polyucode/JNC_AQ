@@ -889,6 +889,7 @@ export const PlantasPage = () => {
                                                     onChange={handleAnalisis}
                                                     elementoSeleccionado={elementoSeleccionado}
                                                     elementosPlanta={elementosPlanta}
+                                                    usuarioActual={usuarioActual}
                                                 />
                                             </Grid>
                                         )
