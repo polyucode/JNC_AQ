@@ -805,6 +805,8 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                         handleChangeFecha={handleChangeDetFecha}
                         setAnalisisSeleccionado={setAnalisisSeleccionado}
                         analisis={analisis}
+                        elementoTareaEditar={elementoTareaEditar}
+                        analisisEditar={analisisEditar}
                     />
                 }
                 botones={[

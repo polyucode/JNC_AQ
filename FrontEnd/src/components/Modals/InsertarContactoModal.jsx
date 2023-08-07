@@ -41,27 +41,27 @@ export const InsertarContactoModal = ({ change:handleChange, autocompleteChange,
 
     return (
         <>
-            <Grid item xs={ 3 } md={ 4 }>
+            <Grid item xs={ 3 } md={ 3 }>
                 <TextField sx={{ width: '100%' }} disabled label="Código Cliente" name="codigoCliente" type="number" onChange={ handleChange } value={cliente && cliente.codigo} />
             </Grid>
 
-            <Grid item xs={ 3 } md={ 4 }>
+            <Grid item xs={ 3 } md={ 6 }>
                 <TextField sx={{ width: '100%' }} label="Nombre" name="nombre" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 4 }>
+            <Grid item xs={ 6 } md={ 3 }>
                 <TextField sx={{ width: '100%' }} label="Telefono" name="telefono" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 3 }>
+            <Grid item xs={ 6 } md={ 7 }>
                 <TextField sx={{ width: '100%' }} label="Email" name="email" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 3 }>
+            <Grid item xs={ 6 } md={ 5 }>
                 <TextField sx={{ width: '100%' }} label="Cargo" name="cargo" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 12 } md={ 6 }>
+            <Grid item xs={ 12 } md={ 12 }>
                 <TextField sx={{ width: '100%' }} label="Comentarios" name="comentarios" onChange={ handleChange } />
             </Grid>
 

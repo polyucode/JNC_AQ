@@ -38,7 +38,7 @@ function handleClick(e)
           <h2 id="NavTitulo" >Inicio</h2>
           </div>
         <div className='navbar-login'>
-          {localStorage.getItem('UsuarioActual') === null ? 
+          {localStorage.getItem('usuarioActual') === null ? 
           (
             <Link  className='nav-link' to={'login'} onClick={() => handleClick('Login')}>
               <FaIcons.FaUser/>

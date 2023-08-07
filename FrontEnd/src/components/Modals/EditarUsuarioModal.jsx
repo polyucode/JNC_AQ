@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange }) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, /* error */ }) => {
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -57,7 +57,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
                     options={perfiles}
                     defaultValue={perfilUsuario[0]}
                     getOptionLabel={option => option.nombre}
-                    renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" />}
+                    renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ />}
                     onChange={handleChangePerfil}
                 />
             </Grid>

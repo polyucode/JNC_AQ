@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Grid, Card, Typography, Button, Autocomplete } from '@mui/material';
+import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
 import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos, getContactos } from '../../api';
-import axios from "axios";
-import { TextField } from '@material-ui/core';
 
 import { ModalLayout } from "../ModalLayout";
 
@@ -25,7 +23,7 @@ const token = {
     }
 };
 
-export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSeleccionado }) => {
+export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSeleccionado, comarcaEditar, setClienteSeleccionado }) => {
 
     // Declaramos variables necesarias
     const [comarcas, setComarcas] = useState([]);
@@ -301,378 +299,194 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     return (
         <>
-            {
-                usuarioActual.idPerfil === 1 ?
-                    <Grid container spacing={1}>
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
-                        </Grid>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+            </Grid>
 
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
-                        </Grid>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
+            </Grid>
 
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
-                        </Grid>
+            <Grid item xs={3} md={6}>
+                <TextField sx={{ width: '100%' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
+            </Grid>
 
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} />
-                        </Grid>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} />
+            </Grid>
 
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
-                        </Grid>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
+            </Grid>
 
-                        <Grid item xs={6} md={6}>
-                            <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
-                        </Grid>
+            <Grid item xs={3} md={6}>
+                <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
+            </Grid>
 
-                        <Grid item xs={6} md={9}>
-                            <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
-                        </Grid>
+            <Grid item xs={3} md={8}>
+                <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
+            </Grid>
 
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
-                        </Grid>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
+            </Grid>
 
-                        {/* Desplegable de Comarcas */}
-                        <Grid item xs={6} md={4}>
-                            <Autocomplete
-                                disableClearable={true}
-                                id="comarca"
-                                options={comarcas}
-                                getOptionLabel={option => option.descripcion}
-                                inputValue={clienteSeleccionado.comarca}
-                                renderInput={params => <TextField {...params} label="Comarca" name="comarca" />}
-                                onChange={autocompleteChange}
-                            />
-                        </Grid>
+            <Grid item xs={3} md={4}>
+                <Autocomplete
+                    disableClearable={true}
+                    id="comarca"
+                    options={comarcas}
+                    getOptionLabel={option => option.descripcion}
+                    defaultValue={comarcaEditar[0]}
+                    renderInput={params => <TextField {...params} label="Comarca" name="comarca" />}
+                    onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                        ...prevState,
+                        comarca: value.descripcion
+                    }))}
+                />
+            </Grid>
 
-                        {/* Desplegable de Provincias */}
+            <Grid item xs={3} md={4}>
+                <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
+            </Grid>
 
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
-                        </Grid>
+            <Grid item xs={3} md={4}>
+                <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
+            </Grid>
 
-                        {/* Deplegable de Poblaciones */}
+            <Grid container spacing={3}>
 
-                        <Grid item xs={6} md={8}>
-                            <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
-                        </Grid>
-
-                        <Grid container spacing={3}>
-
-                            {/* Título y botones de opción */}
-                            <Grid item xs={12}>
-                                <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography variant='h6'>Listado de Contactos</Typography>
-                                    {
-                                        (rowsIds.length > 0) ?
-                                            (
-                                                <Grid item>
-                                                    <Button
-                                                        sx={{ mr: 2 }}
-                                                        color='error'
-                                                        variant='contained'
-                                                        startIcon={<DeleteIcon />}
-                                                        onClick={(event, rowData) => {
-                                                            setContactoClienteEliminar(rowsIds)
-                                                            abrirCerrarModalEliminar()
-                                                        }}
-                                                    >
-                                                        Eliminar
-                                                    </Button>
-                                                </Grid>
-                                            ) : (
-                                                <Button
-                                                    color='success'
-                                                    variant='contained'
-                                                    startIcon={<AddIcon />}
-                                                    onClick={abrirCerrarModalInsertar}
-                                                >Añadir</Button>
-                                            )
-                                    }
-                                </Card>
-                            </Grid>
-
-                            {/* Tabla donde se muestran los registros de los clientes */}
-                            <Grid item xs={12}>
-                                <Card>
-                                    <DataGrid
-                                        components={{ Toolbar: GridToolbar }}
-                                        localeText={DATAGRID_LOCALE_TEXT}
-                                        sx={{
-                                            width: '100%',
-                                            height: 700,
-                                            backgroundColor: '#FFFFFF'
-                                        }}
-                                        rows={rows}
-                                        columns={columns}
-                                        pageSize={4}
-                                        rowsPerPageOptions={[4]}
-                                        checkboxSelection
-                                        disableSelectionOnClick
-                                        onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                                        onRowClick={(contactoSeleccionado, evt) => {
-                                            setContactoSeleccionado(contactoSeleccionado.row)
-                                            abrirCerrarModalEditar();
-                                        }}
-                                    />
-                                </Card>
-                            </Grid>
-                        </Grid>
-
-                        <ModalLayout
-                            key={`contacto-añadir-${contactoSeleccionado.id}`}
-                            titulo="Agregar nuevo contacto"
-                            contenido={
-                                <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
-                            }
-                            botones={[
-                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                    abrirCerrarModalInsertar();
-
-                                    if (peticionPostContacto()) {
-                                        setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
-                                    }
-
-                                }, 'success')
-                            ]}
-                            open={modalInsertar}
-                            onClose={abrirCerrarModalInsertar}
-                        />
-                        {/* Modal Editar Cliente*/}
-
-                        <ModalLayout
-                            key={`contacto-editar-${contactoSeleccionado.id}`}
-                            titulo="Editar contacto"
-                            contenido={
-                                <EditarContactoModal
-                                    contactoSeleccionado={contactoSeleccionado}
-                                    change={handleChangeContacto}
-                                />}
-                            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                                abrirCerrarModalEditar()
-
-                                if (peticionPutContacto()) {
-                                    setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
-                                }
-                            })
-                            ]}
-                            open={modalEditar}
-                            onClose={abrirCerrarModalEditar}
-                        />
-
-                        {/* Eliminar cliente */}
-                        <ModalLayout
-                            key={`contacto-eliminar-${contactoSeleccionado.id}`}
-                            titulo="Eliminar contacto"
-                            contenido={
-                                <>
-                                    <Grid item xs={12}>
-                                        <Typography>Estás seguro que deseas eliminar el contacto?</Typography>
+                <Grid item xs={12}>
+                    <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography variant='h6'>Listado de Contactos</Typography>
+                        {
+                            (rowsIds.length > 0) ?
+                                (
+                                    <Grid item>
+                                        <Button
+                                            sx={{ mr: 2 }}
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteIcon />}
+                                            onClick={(event, rowData) => {
+                                                setContactoClienteEliminar(rowsIds)
+                                                abrirCerrarModalEliminar()
+                                            }}
+                                        >
+                                            Eliminar
+                                        </Button>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography><b>{contactoSeleccionado.nombre}</b></Typography>
-                                    </Grid>
-                                </>
-                            }
-                            botones={[
-                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                    abrirCerrarModalEliminar();
-
-                                    if (peticionDeleteContacto()) {
-                                        setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
-                                    }
-
-                                }, 'error'),
-                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                            ]}
-                            open={modalEliminar}
-                            onClose={abrirCerrarModalEliminar}
+                                ) : (
+                                    <Button
+                                        color='success'
+                                        variant='contained'
+                                        startIcon={<AddIcon />}
+                                        onClick={abrirCerrarModalInsertar}
+                                    >Añadir</Button>
+                                )
+                        }
+                    </Card>
+                </Grid>
+                
+                <Grid item xs={12}>
+                    <Card>
+                        <DataGrid
+                            components={{ Toolbar: GridToolbar }}
+                            localeText={DATAGRID_LOCALE_TEXT}
+                            sx={{
+                                width: '100%',
+                                height: 700,
+                                backgroundColor: '#FFFFFF'
+                            }}
+                            rows={rows}
+                            columns={columns}
+                            pageSize={4}
+                            rowsPerPageOptions={[4]}
+                            checkboxSelection
+                            disableSelectionOnClick
+                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                            onRowClick={(contactoSeleccionado, evt) => {
+                                setContactoSeleccionado(contactoSeleccionado.row)
+                                abrirCerrarModalEditar();
+                            }}
                         />
+                    </Card>
+                </Grid>
+            </Grid>
 
-                    </Grid>
-                    :
-                    <Grid container spacing={1}>
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+            <ModalLayout
+                key={`contacto-añadir-${contactoSeleccionado.id}`}
+                titulo="Agregar nuevo contacto"
+                contenido={
+                    <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
+                }
+                botones={[
+                    insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                        abrirCerrarModalInsertar();
+
+                        if (peticionPostContacto()) {
+                            setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
+                        }
+
+                    }, 'success')
+                ]}
+                open={modalInsertar}
+                onClose={abrirCerrarModalInsertar}
+            />
+
+            <ModalLayout
+                key={`contacto-editar-${contactoSeleccionado.id}`}
+                titulo="Editar contacto"
+                contenido={
+                    <EditarContactoModal
+                        contactoSeleccionado={contactoSeleccionado}
+                        change={handleChangeContacto}
+                    />}
+                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                    abrirCerrarModalEditar()
+
+                    if (peticionPutContacto()) {
+                        setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
+                    } else {
+                        setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
+                    }
+                })
+                ]}
+                open={modalEditar}
+                onClose={abrirCerrarModalEditar}
+            />
+
+            <ModalLayout
+                key={`contacto-eliminar-${contactoSeleccionado.id}`}
+                titulo="Eliminar contacto"
+                contenido={
+                    <>
+                        <Grid item xs={12}>
+                            <Typography>Estás seguro que deseas eliminar el contacto?</Typography>
                         </Grid>
-
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cif} />
+                        <Grid item xs={12}>
+                            <Typography><b>{contactoSeleccionado.nombre}</b></Typography>
                         </Grid>
+                    </>
+                }
+                botones={[
+                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                        abrirCerrarModalEliminar();
 
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
-                        </Grid>
+                        if (peticionDeleteContacto()) {
+                            setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
+                        } else {
+                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
+                        }
 
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} />
-                        </Grid>
-
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="Móvil" name="movil" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.movil} />
-                        </Grid>
-
-                        <Grid item xs={6} md={6}>
-                            <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
-                        </Grid>
-
-                        <Grid item xs={6} md={9}>
-                            <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
-                        </Grid>
-
-                        <Grid item xs={6} md={3}>
-                            <TextField sx={{ width: '100%' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
-                        </Grid>
-
-                        {/* Desplegable de Comarcas */}
-                        <Grid item xs={6} md={4}>
-                            <Autocomplete
-                                disableClearable={true}
-                                id="comarca"
-                                options={comarcas}
-                                getOptionLabel={option => option.descripcion}
-                                inputValue={clienteSeleccionado.comarca}
-                                renderInput={params => <TextField {...params} label="Comarca" name="comarca" />}
-                                onChange={autocompleteChange}
-                            />
-                        </Grid>
-
-                        {/* Desplegable de Provincias */}
-
-                        <Grid item xs={6} md={4}>
-                            <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
-                        </Grid>
-
-                        {/* Deplegable de Poblaciones */}
-
-                        <Grid item xs={6} md={8}>
-                            <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
-                        </Grid>
-
-                        <Grid container spacing={3}>
-
-                            {/* Título y botones de opción */}
-                            <Grid item xs={12}>
-                                <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography variant='h6'>Listado de Contactos</Typography>
-                                </Card>
-                            </Grid>
-
-                            {/* Tabla donde se muestran los registros de los clientes */}
-                            <Grid item xs={12}>
-                                <Card>
-                                    <DataGrid
-                                        components={{ Toolbar: GridToolbar }}
-                                        localeText={DATAGRID_LOCALE_TEXT}
-                                        sx={{
-                                            width: '100%',
-                                            height: 700,
-                                            backgroundColor: '#FFFFFF'
-                                        }}
-                                        rows={rows}
-                                        columns={columns}
-                                        pageSize={4}
-                                        rowsPerPageOptions={[4]}
-                                        checkboxSelection
-                                        disableSelectionOnClick
-                                        onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                                        onRowClick={(contactoSeleccionado, evt) => {
-                                            setContactoSeleccionado(contactoSeleccionado.row)
-                                            abrirCerrarModalEditar();
-                                        }}
-                                    />
-                                </Card>
-                            </Grid>
-                        </Grid>
-
-                        <ModalLayout
-                            key={`contacto-añadir-${contactoSeleccionado.id}`}
-                            titulo="Agregar nuevo contacto"
-                            contenido={
-                                <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
-                            }
-                            botones={[
-                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                    abrirCerrarModalInsertar();
-
-                                    if (peticionPostContacto()) {
-                                        setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
-                                    }
-
-                                }, 'success')
-                            ]}
-                            open={modalInsertar}
-                            onClose={abrirCerrarModalInsertar}
-                        />
-                        {/* Modal Editar Cliente*/}
-
-                        <ModalLayout
-                            key={`contacto-editar-${contactoSeleccionado.id}`}
-                            titulo="Editar contacto"
-                            contenido={
-                                <EditarContactoModal
-                                    contactoSeleccionado={contactoSeleccionado}
-                                    change={handleChangeContacto}
-                                />}
-                            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                                abrirCerrarModalEditar()
-
-                                if (peticionPutContacto()) {
-                                    setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
-                                }
-                            })
-                            ]}
-                            open={modalEditar}
-                            onClose={abrirCerrarModalEditar}
-                        />
-
-                        {/* Eliminar cliente */}
-                        <ModalLayout
-                            key={`contacto-eliminar-${contactoSeleccionado.id}`}
-                            titulo="Eliminar contacto"
-                            contenido={
-                                <>
-                                    <Grid item xs={12}>
-                                        <Typography>Estás seguro que deseas eliminar el contacto?</Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography><b>{contactoSeleccionado.nombre}</b></Typography>
-                                    </Grid>
-                                </>
-                            }
-                            botones={[
-                                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                    abrirCerrarModalEliminar();
-
-                                    if (peticionDeleteContacto()) {
-                                        setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
-                                    }
-
-                                }, 'error'),
-                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                            ]}
-                            open={modalEliminar}
-                            onClose={abrirCerrarModalEliminar}
-                        />
-
-                    </Grid>
-            }
+                    }, 'error'),
+                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                ]}
+                open={modalEliminar}
+                onClose={abrirCerrarModalEliminar}
+            />
 
         </>
     )

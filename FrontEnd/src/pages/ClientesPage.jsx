@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import { ModalLayout} from "../components/ModalLayout";
+import { ModalLayout } from "../components/ModalLayout";
 import { ModalLayout2 } from '../components/ModalLayout2';
 
 // Table MUI
@@ -24,7 +24,6 @@ import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
-import { EditarClienteModal2 } from '../components/Modals/EditarClienteModal2';
 
 
 const token = {
@@ -51,12 +50,6 @@ export const ClientesPage = () => {
 
 
   // Modal detalle 
-  const [modalInsertarContacto, setModalInsertarContacto] = useState(false);
-
-  const [modalEditarContacto, setModalEditarContacto] = useState(false);
-
-  const [modalEliminarContacto, setModalEliminarContacto] = useState(false);
-
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState({
     id: 0,
@@ -81,19 +74,7 @@ export const ClientesPage = () => {
     deleted: null,
   });
 
-  const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-  const [FilasSeleccionadasDet, setFilasSeleccionadasDet] = useState([]);
-
-  const [comarcaClienteEditar, setComarcaClienteEditar] = useState([]);
-  const [provinciaClienteEditar, setProvinciaClienteEditar] = useState([]);
-  const [poblacionClienteEditar, setPoblacionClienteEditar] = useState([]);
-
-  const [clienteClienteEditar, setclienteClienteEditar] = useState([]);
-
   const [ClienteEliminar, setClienteEliminar] = useState([]);
-  const [contactoClienteEditar, setContactoClienteEditar] = useState([]);
-  const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
-
 
   const [data, setData] = useState([]);
 
@@ -104,6 +85,8 @@ export const ClientesPage = () => {
   const [poblacion, setPoblacion] = useState([]);
   const [provincia, setProvincia] = useState([]);
   const [comarcas, setComarcas] = useState([]);
+
+  const [comarcaEditar, setComarcaEditar] = useState([]);
 
   const { usuarioActual } = useUsuarioActual();
 
@@ -140,12 +123,20 @@ export const ClientesPage = () => {
 
   }
 
+  const GetComarcas = async () => {
+
+    const resp = await getComarcas();
+    setComarcas(resp);
+
+  }
+
   // Efectos de React
   // Llamadas a las APIs
   useEffect(() => {
     peticionGet();
     GetPoblacion();
     GetProvincia();
+    GetComarcas();
   }, []);
 
   // Obtener la lista de clientes
@@ -158,13 +149,6 @@ export const ClientesPage = () => {
   }, [data]);
 
   // Obtener la lista de comarcas
-  useEffect(() => {
-
-    if (comarcas.length > 0) {
-      setComarcas(comarcas);
-    }
-
-  }, [comarcas]);
 
   useEffect(() => {
 
@@ -410,22 +394,6 @@ export const ClientesPage = () => {
     }
   }
 
-  //modal insertar contacto cliente
-  const abrirCerrarModalInsertarContacto = () => {
-    setModalInsertarContacto(!modalInsertarContacto);
-  }
-
-  //modal editar contacto cliente
-  const abrirCerrarModalEditarContacto = () => {
-    setModalEditarContacto(!modalEditarContacto);
-  }
-
-  //modal eliminar contacto cliente
-  const abrirCerrarModalEliminarContacto = () => {
-    setModalEditar(!modalEditar);
-    setModalEliminarContacto(!modalEliminarContacto);
-  }
-
   const handleAutocompleteChange = (e) => {
 
     // Obtenemos el nombre del campo y su valor
@@ -465,232 +433,226 @@ export const ClientesPage = () => {
 
   return (
     <>
-      {usuarioActual.idPerfil === 1 ?
-        <MainLayout key="clientes" title='Clientes'>
+      {
+        usuarioActual.idPerfil === 1 ?
+          <MainLayout key="clientes" title='Clientes'>
 
-          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-              {snackData.msg}
-            </Alert>
-          </Snackbar>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
+              <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
+                {snackData.msg}
+              </Alert>
+            </Snackbar>
 
-          <Grid container spacing={2}>
+            <Grid container spacing={2}>
 
-            {/* Título y botones de opción */}
-            <Grid item xs={12}>
-              <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant='h6'>Listado de clientes</Typography>
-                {
-                  (rowsIds.length > 0) ?
-                    (
-                      <Grid item>
+              {/* Título y botones de opción */}
+              <Grid item xs={12}>
+                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6'>Listado de clientes</Typography>
+                  {
+                    (rowsIds.length > 0) ?
+                      (
+                        <Grid item>
+                          <Button
+                            sx={{ mr: 2 }}
+                            color='error'
+                            variant='contained'
+                            startIcon={<DeleteIcon />}
+                            onClick={(event, rowData) => {
+                              setClienteEliminar(rowsIds)
+                              abrirCerrarModalEliminar()
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </Grid>
+                      ) : (
                         <Button
-                          sx={{ mr: 2 }}
-                          color='error'
+                          color='success'
                           variant='contained'
-                          startIcon={<DeleteIcon />}
-                          onClick={(event, rowData) => {
-                            setClienteEliminar(rowsIds)
-                            abrirCerrarModalEliminar()
-                          }}
-                        >
-                          Eliminar
-                        </Button>
-                      </Grid>
-                    ) : (
-                      <Button
-                        color='success'
-                        variant='contained'
-                        startIcon={<AddIcon />}
-                        onClick={abrirCerrarModalInsertar}
-                      >Añadir</Button>
-                    )
-                }
-              </Card>
+                          startIcon={<AddIcon />}
+                          onClick={abrirCerrarModalInsertar}
+                        >Añadir</Button>
+                      )
+                  }
+                </Card>
+              </Grid>
+
+              {/* Tabla donde se muestran los registros de los clientes */}
+              <Grid item xs={12}>
+                <Card>
+                  <DataGrid
+                    components={{ Toolbar: GridToolbar }}
+                    localeText={DATAGRID_LOCALE_TEXT}
+                    sx={{
+                      width: '100%',
+                      height: 1000,
+                      backgroundColor: '#FFFFFF'
+                    }}
+                    rows={rows}
+                    columns={columns}
+                    pageSize={100}
+                    checkboxSelection
+                    disableSelectionOnClick
+                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                    onRowClick={(clienteSeleccionado, evt) => {
+                      setClienteSeleccionado(clienteSeleccionado.row)
+                      setComarcaEditar(comarcas.filter(comarca => comarca.descripcion === clienteSeleccionado.row.comarca))
+                      abrirCerrarModalEditar();
+                    }}
+                  />
+                </Card>
+              </Grid>
+
             </Grid>
 
-            {/* Tabla donde se muestran los registros de los clientes */}
-            <Grid item xs={12}>
-              <Card>
-                <DataGrid
-                  components={{ Toolbar: GridToolbar }}
-                  localeText={DATAGRID_LOCALE_TEXT}
-                  sx={{
-                    width: '100%',
-                    height: 1000,
-                    backgroundColor: '#FFFFFF'
-                  }}
-                  rows={rows}
-                  columns={columns}
-                  pageSize={100}
-                  checkboxSelection
-                  disableSelectionOnClick
-                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                  onRowClick={(clienteSeleccionado, evt) => {
-                    setClienteSeleccionado(clienteSeleccionado.row)
-                    abrirCerrarModalEditar();
-                  }}
+            {/* LISTA DE MODALS */}
+
+            {/* Agregar cliente */}
+            <ModalLayout
+              titulo="Agregar nuevo cliente"
+              contenido={
+                <InsertarClienteModal
+                  clienteSeleccionado={clienteSeleccionado}
+                  change={handleChange}
+                  autocompleteChange={handleAutocompleteChange}
                 />
-              </Card>
-            </Grid>
-
-          </Grid>
-
-          {/* LISTA DE MODALS */}
-
-          {/* Agregar cliente */}
-          <ModalLayout
-            titulo="Agregar nuevo cliente"
-            contenido={
-              <InsertarClienteModal 
-                clienteSeleccionado={clienteSeleccionado} 
-                change={handleChange} 
-                autocompleteChange={handleAutocompleteChange} 
-              />
-            }
-            botones={[
-              insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                abrirCerrarModalInsertar();
-
-                if (peticionPost()) {
-                  setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
-                }
-
-              }, 'success')
-            ]}
-            open={modalInsertar}
-            onClose={abrirCerrarModalInsertar}
-          />
-
-
-
-          {/* Modal Editar Cliente*/}
-
-          <ModalLayout
-            titulo="Editar cliente"
-            contenido={
-              <EditarClienteModal
-                clienteSeleccionado={clienteSeleccionado}
-                handleChange={handleChange}
-                autocompleteChange={handleAutocompleteChange}
-              />}
-            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-              abrirCerrarModalEditar()
-
-              if (peticionPut()) {
-                setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
-              } else {
-                setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
               }
-            })
-            ]}
-            open={modalEditar}
-            onClose={abrirCerrarModalEditar}
-          />
+              botones={[
+                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                  abrirCerrarModalInsertar();
 
-          {/* Eliminar cliente */}
-          <ModalLayout
-            titulo="Eliminar cliente"
-            contenido={
-              <>
-                <Grid item xs={12}>
-                  <Typography>Estás seguro que deseas eliminar el cliente?</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography><b>{clienteSeleccionado.razonSocial}</b></Typography>
-                </Grid>
-              </>
-            }
-            botones={[
-              insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                abrirCerrarModalEliminar();
+                  if (peticionPost()) {
+                    setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
+                  } else {
+                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
+                  }
 
-                if (peticionDelete()) {
-                  setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${clienteSeleccionado.razonSocial}`, severity: 'success' });
+                }, 'success')
+              ]}
+              open={modalInsertar}
+              onClose={abrirCerrarModalInsertar}
+            />
+
+
+
+            {/* Modal Editar Cliente*/}
+
+            <ModalLayout
+              titulo="Editar cliente"
+              contenido={
+                <EditarClienteModal
+                  clienteSeleccionado={clienteSeleccionado}
+                  handleChange={handleChange}
+                  autocompleteChange={handleAutocompleteChange}
+                  comarcaEditar={comarcaEditar}
+                  setClienteSeleccionado={setClienteSeleccionado}
+                />}
+              botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                abrirCerrarModalEditar()
+
+                if (peticionPut()) {
+                  setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
                 } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al eliminar el cliente', severity: 'error' })
+                  setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
                 }
+              })
+              ]}
+              open={modalEditar}
+              onClose={abrirCerrarModalEditar}
+            />
 
-              }, 'error'),
-              insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-            ]}
-            open={modalEliminar}
-            onClose={abrirCerrarModalEliminar}
-          />
-        </MainLayout>
-        :
-        <MainLayout key="clientes" title='Clientes'>
-
-          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-              {snackData.msg}
-            </Alert>
-          </Snackbar>
-
-          <Grid container spacing={2}>
-
-            {/* Título y botones de opción */}
-            <Grid item xs={12}>
-              <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant='h6'>Listado de clientes</Typography>
-              </Card>
-            </Grid>
-
-            {/* Tabla donde se muestran los registros de los clientes */}
-            <Grid item xs={12}>
-              <Card>
-                <DataGrid
-                  components={{ Toolbar: GridToolbar }}
-                  localeText={DATAGRID_LOCALE_TEXT}
-                  sx={{
-                    width: '100%',
-                    height: 1000,
-                    backgroundColor: '#FFFFFF'
-                  }}
-                  rows={rows}
-                  columns={columns}
-                  //rowsPerPageOptions={[1000]}
-                  onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                  onRowClick={(clienteSeleccionado, evt) => {
-                    setClienteSeleccionado(clienteSeleccionado.row)
-                    abrirCerrarModalEditar();
-                  }}
-                />
-              </Card>
-            </Grid>
-
-          </Grid>
-
-          {/* LISTA DE MODALS */}
-          {/* Modal Editar Cliente*/}
-
-          <ModalLayout2
-            key={`cliente-editar-${clienteSeleccionado.id}`}
-            titulo="Editar cliente"
-            contenido={
-              <EditarClienteModal
-                clienteSeleccionado={clienteSeleccionado}
-                change={handleChange}
-                autocompleteChange={handleAutocompleteChange}
-              />}
-            botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-              abrirCerrarModalEditar()
-
-              if (peticionPut()) {
-                setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
-              } else {
-                setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
+            {/* Eliminar cliente */}
+            <ModalLayout
+              titulo="Eliminar cliente"
+              contenido={
+                <>
+                  <Grid item xs={12}>
+                    <Typography>Estás seguro que deseas eliminar el cliente?</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography><b>{clienteSeleccionado.razonSocial}</b></Typography>
+                  </Grid>
+                </>
               }
-            })
-            ]}
-            open={modalEditar}
-            onClose={abrirCerrarModalEditar}
-          />
+              botones={[
+                insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                  abrirCerrarModalEliminar();
 
-        </MainLayout>
+                  if (peticionDelete()) {
+                    setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${clienteSeleccionado.razonSocial}`, severity: 'success' });
+                  } else {
+                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el cliente', severity: 'error' })
+                  }
+
+                }, 'error'),
+                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+              ]}
+              open={modalEliminar}
+              onClose={abrirCerrarModalEliminar}
+            />
+          </MainLayout>
+          :
+          <MainLayout key="clientes" title='Clientes'>
+
+            <Grid container spacing={2}>
+
+              {/* Título y botones de opción */}
+              <Grid item xs={12}>
+                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='h6'>Listado de clientes</Typography>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Card>
+                  <DataGrid
+                    components={{ Toolbar: GridToolbar }}
+                    localeText={DATAGRID_LOCALE_TEXT}
+                    sx={{
+                      width: '100%',
+                      height: 1000,
+                      backgroundColor: '#FFFFFF'
+                    }}
+                    rows={rows}
+                    columns={columns}
+                    pageSize={100}
+                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                    onRowClick={(clienteSeleccionado, evt) => {
+                      setClienteSeleccionado(clienteSeleccionado.row)
+                      abrirCerrarModalEditar();
+                    }}
+                  />
+                </Card>
+              </Grid>
+
+            </Grid>
+
+            <ModalLayout2
+              titulo="Editar cliente"
+              contenido={
+                <EditarClienteModal
+                  clienteSeleccionado={clienteSeleccionado}
+                  handleChange={handleChange}
+                  autocompleteChange={handleAutocompleteChange}
+                />}
+              botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                abrirCerrarModalEditar()
+
+                if (peticionPut()) {
+                  setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
+                } else {
+                  setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
+                }
+              })
+              ]}
+              open={modalEditar}
+              onClose={abrirCerrarModalEditar}
+            />
+
+          </MainLayout>
       }
+
     </>
 
   );

@@ -41,15 +41,15 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
 
     return (
         <>
-            <Grid item xs={ 3 } md={ 4 }>
+            <Grid item xs={ 3 } md={ 3 }>
                 <TextField sx={{ width: '100%' }} label="Código" name="codigo" type="number" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 3 } md={ 4 }>
+            <Grid item xs={ 3 } md={ 3 }>
                 <TextField sx={{ width: '100%' }} label="CIF" name="cif" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 6 } md={ 4 }>
+            <Grid item xs={ 6 } md={ 6 }>
                 <TextField sx={{ width: '100%' }} label="Razón social" name="razonSocial" onChange={ handleChange } />
             </Grid>
 
@@ -65,7 +65,7 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
                 <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={ handleChange } />
             </Grid>
 
-            <Grid item xs={ 8 } md={ 9 }>
+            <Grid item xs={ 8 } md={ 8 }>
                 <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={ handleChange } />
             </Grid>
 
@@ -91,7 +91,7 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
             </Grid>
 
             {/* Deplegable de Poblaciones */}
-            <Grid item xs={ 12 } md={ 8 }>
+            <Grid item xs={ 12 } md={ 4 }>
                 <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
 

@@ -112,6 +112,8 @@ export const UsuariosPage = () => {
     deleted: null,
   });
 
+  const [error, setError] = useState(false);
+
   const { usuarioActual } = useUsuarioActual();
 
   const columns = [
@@ -186,7 +188,7 @@ export const UsuariosPage = () => {
 
     const fichero = Object.entries(resp).map(([key, value]) => (key, value));
     setFicheros(fichero);
-}
+  }
 
   // Sirve como el componentDidMount, inicia los metodos cuando entra en la página
   useEffect(() => {
@@ -207,76 +209,75 @@ export const UsuariosPage = () => {
   //Insertar usuario
   const peticionPost = async () => {
 
-    usuarioSeleccionado.id = null;
+      usuarioSeleccionado.id = null;
 
-    const resp = await postUsuarios(usuarioSeleccionado);
+      const resp = await postUsuarios(usuarioSeleccionado);
 
-    abrirCerrarModalInsertar();
-    peticionGet();
-    setUsuarioSeleccionado({
-      id: 0,
-      nombre: '',
-      apellidos: '',
-      login: null,
-      telefono: '',
-      usuario: '',
-      password: '',
-      activo: false,
-      firma: '',
-      idCliente: 0,
-      idPerfil: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    });
-
+      abrirCerrarModalInsertar();
+      peticionGet();
+      setUsuarioSeleccionado({
+        id: 0,
+        nombre: '',
+        apellidos: '',
+        login: null,
+        telefono: '',
+        usuario: '',
+        password: '',
+        activo: false,
+        firma: 0,
+        idCliente: 0,
+        idPerfil: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
   }
 
   // Editar el usuario
   const peticionPut = async () => {
 
-    if(fileChange != null){
-      const resp = await subirFirma(usuarioSeleccionado.id, fileChange)
-      if(resp){
-        usuarioSeleccionado.firma = resp.data
+      if (fileChange != null) {
+        const resp = await subirFirma(usuarioSeleccionado.id, fileChange)
+        if (resp) {
+          usuarioSeleccionado.firma = resp.data
+        }
       }
-    }
-    await putUsuarios(usuarioSeleccionado);
+      await putUsuarios(usuarioSeleccionado);
 
-    var usuarioModificado = usuarios;
-    usuarioModificado.map(usuario => {
-      if (usuario.id === usuarioSeleccionado.id) {
-        usuario = usuarioSeleccionado
-      }
-    });
+      var usuarioModificado = usuarios;
+      usuarioModificado.map(usuario => {
+        if (usuario.id === usuarioSeleccionado.id) {
+          usuario = usuarioSeleccionado
+        }
+      });
 
-    abrirCerrarModalEditar();
-    peticionGet();
-    GetFichero();
-    setUsuarioSeleccionado({
-      id: 0,
-      nombre: '',
-      apellidos: '',
-      login: null,
-      telefono: '',
-      usuario: '',
-      password: '',
-      activo: false,
-      firma: '',
-      idCliente: 0,
-      idPerfil: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    });
+      abrirCerrarModalEditar();
+      peticionGet();
+      GetFichero();
+      setUsuarioSeleccionado({
+        id: 0,
+        nombre: '',
+        apellidos: '',
+        login: null,
+        telefono: '',
+        usuario: '',
+        password: '',
+        activo: false,
+        firma: 0,
+        idCliente: 0,
+        idPerfil: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
 
   }
 
@@ -299,7 +300,7 @@ export const UsuariosPage = () => {
         usuario: '',
         password: '',
         activo: false,
-        firma: '',
+        firma: 0,
         idCliente: 0,
         idPerfil: 0,
         addDate: null,
@@ -328,7 +329,7 @@ export const UsuariosPage = () => {
         usuario: '',
         password: '',
         activo: false,
-        firma: '',
+        firma: 0,
         idCliente: 0,
         idPerfil: 0,
         addDate: null,
@@ -357,7 +358,7 @@ export const UsuariosPage = () => {
         usuario: '',
         password: '',
         activo: false,
-        firma: '',
+        firma: 0,
         idCliente: 0,
         idPerfil: 0,
         addDate: null,
@@ -386,7 +387,7 @@ export const UsuariosPage = () => {
         usuario: '',
         password: '',
         activo: false,
-        firma: '',
+        firma: 0,
         idCliente: 0,
         idPerfil: 0,
         addDate: null,
@@ -443,10 +444,10 @@ export const UsuariosPage = () => {
   const handleChangeCheckbox = e => {
     const { name, value, checked } = e.target
     setUsuarioSeleccionado(prevState => ({
-        ...prevState,
-        [name]: checked
+      ...prevState,
+      [name]: checked
     }))
-}
+  }
 
   const handleSnackClose = (event, reason) => {
 
@@ -540,6 +541,8 @@ export const UsuariosPage = () => {
                   handleChangePerfil={handleChangePerfil}
                   estadoCliente={estadoCboCliente}
                   setUsuarioSeleccionado={setUsuarioSeleccionado}
+                  handleChangeCheckbox={handleChangeCheckbox}
+                  //error={error}
                 />
               }
               botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
@@ -566,8 +569,10 @@ export const UsuariosPage = () => {
                   handlePdf={handleFile}
                   fileChange={fileChange}
                   setUsuarioSeleccionado={setUsuarioSeleccionado}
+                  handleChangeCheckbox={handleChangeCheckbox}
                   perfilUsuario={perfilUsuarioEditar}
                   clienteUsuario={clienteUsuarioEditar}
+                  //error={error}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                 abrirCerrarModalEditar()

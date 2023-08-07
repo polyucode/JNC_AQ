@@ -47,7 +47,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado, analisis }) => {
+export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado, analisisEditar, elementoTareaEditar }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -57,6 +57,7 @@ export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handl
             .then(operarios => {
                 setOperarios(operarios);
             })
+
     }, [])
 
     return (
@@ -74,11 +75,11 @@ export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handl
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.elemento} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].numero} />
             </Grid>
 
             <Grid item xs={6} md={6}>
-                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.analisis} />
+                <TextField sx={{ width: '100%' }} disabled label="Analisis" name="analisis" onChange={handleChangeDet} value={analisisEditar[0].nombre} />
             </Grid>
 
             <Grid item xs={12} md={2}>

@@ -37,8 +37,6 @@ export const DashboardProvider = ({ children }) => {
 
     const handleSeleccionarElemento = async (id) => {
 
-        console.log('Elemento del diagrama seleccionado: ' + id);
-
         const elemento = await getElementoPorId(id);
         console.log(elementoActivo);
 

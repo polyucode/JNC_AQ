@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { getClientes, getPerfiles } from '../../api';
 
-export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, setUsuarioSeleccionado }) =>{
+export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, setUsuarioSeleccionado /* error */ }) =>{
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -41,7 +41,7 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
             </Grid>
 
             <Grid item xs={ 4 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Contraseña" name="password" type="password" onChange={ handleChange } />
+                <TextField sx={{ width: '100%' }} label="Contraseña" name="password" type="password" onChange={ handleChange } /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ />
             </Grid>
 
             <Grid item xs={4} md={ 4 }>
@@ -64,7 +64,7 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
                     id="CboPerfiles"
                     options={ perfiles }
                     getOptionLabel={ option => option.nombre }
-                    renderInput={ params => <TextField {...params} label="Perfil" name="idPerfil" /> }
+                    renderInput={ params => <TextField {...params} label="Perfil" name="idPerfil" /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ /> }
                     onChange={ handleChangePerfil }
                 />
             </Grid>
