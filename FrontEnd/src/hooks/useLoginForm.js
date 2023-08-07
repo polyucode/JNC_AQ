@@ -41,18 +41,6 @@ export const useLoginForm = () => {
 
     const handleSubmit = async ( event ) => {
         event.preventDefault();
-        
-        // Revisamos si los campos están rellenados
-        if( loginData.usuario.length < 2 || loginData.contrasena.length < 2 ) {
-
-            setLoginError({
-                ...loginError,
-                error: true,
-                errorMessage: 'Los campos deben tener mas de 1 caracter'
-            });
-            return;
-
-        }
 
         // Seteamos los valores de los campos
         const loginValues = {
@@ -60,14 +48,27 @@ export const useLoginForm = () => {
             Password: loginData.contrasena
         }
 
-        try {
+        const data = await postToken(loginValues);
+        
+        // Revisamos si los campos están rellenados
+        if( loginData.usuario.length < 2 || loginData.contrasena.length < 2 || data.data.item2.activo == false) {
 
-            const data = await postToken(loginValues);
+            setLoginError({
+                ...loginError,
+                error: true,
+                errorMessage: 'No existe el usuario o el usuario no está activo'
+            });
+            return;
+
+        }
+
+
+        try {
 
             // Seteamos el token en el localStorage
             localStorage.setItem( 'token', data.data.token );
             localStorage.setItem( 'usuarioActual', JSON.stringify( data.data.item2 ) );
-            
+
             // Despachamos la acción
             login( data.data.item2 );
 
