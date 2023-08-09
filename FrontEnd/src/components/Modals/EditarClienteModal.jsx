@@ -23,7 +23,7 @@ const token = {
     }
 };
 
-export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSeleccionado, comarcaEditar, setClienteSeleccionado }) => {
+export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSeleccionado, comarcaEditar, setClienteSeleccionado, errorCP, errorCodigo, errorTelefono, errorDireccion, errorNombre, errorEmail }) => {
 
     // Declaramos variables necesarias
     const [comarcas, setComarcas] = useState([]);
@@ -300,7 +300,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     return (
         <>
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -308,11 +308,11 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={6}>
-                <TextField sx={{ width: '100%' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} error={errorTelefono} helperText={errorTelefono ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -320,15 +320,15 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={6}>
-                <TextField sx={{ width: '100%' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} error={errorEmail} helperText={errorEmail ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={8}>
-                <TextField sx={{ width: '100%' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Dirección" name="direccion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.direccion} error={errorDireccion} helperText={errorDireccion ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} error={errorCP} helperText={errorCP ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={4}>

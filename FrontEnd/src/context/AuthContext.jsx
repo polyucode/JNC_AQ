@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         const action = { type: types.login, payload: user };
         dispatch( action );
 
-        //window.location.reload();
+        window.location.reload();
 
     }
 

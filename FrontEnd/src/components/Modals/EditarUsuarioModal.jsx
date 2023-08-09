@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, /* error */ }) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, errorPerfil, errorNombre}) => {
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -24,7 +24,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
     return (
         <>
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={6} md={5}>
@@ -55,9 +55,10 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
                     disableClearable={true}
                     id="CboPerfiles"
                     options={perfiles}
+                    style={{ marginTop: '20px'}}
                     defaultValue={perfilUsuario[0]}
                     getOptionLabel={option => option.nombre}
-                    renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ />}
+                    renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" error={errorPerfil} helperText={errorPerfil ? 'Este campo es obligatorio' : ' '} />}
                     onChange={handleChangePerfil}
                 />
             </Grid>

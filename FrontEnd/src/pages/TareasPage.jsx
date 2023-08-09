@@ -18,6 +18,8 @@ import { ModalLayout } from "../components/ModalLayout";
 import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
+import Swal from 'sweetalert2';
+
 const token = {
   headers: {
     Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -376,6 +378,8 @@ export const TareasPage = () => {
 
   const peticionPost = async () => {
 
+
+
     tareaSeleccionada.id = 0;
 
     const response = await postTareas(tareaSeleccionada);
@@ -550,8 +554,6 @@ export const TareasPage = () => {
 
     abrirCerrarModalInsertar();
     peticionGet();
-    /* setValores({ codigo: tareaSeleccionada.codigoCliente, nombre: tareaSeleccionada.nombreCliente, ofertas: tareaSeleccionada.oferta, elemento: tareaSeleccionada.elementoPlanta })
-    { tareaSeleccionada.analisis === "Físico-Químico Torre" || tareaSeleccionada.analisis === "Físico-Químico Aporte" || tareaSeleccionada.analisis === "Físico-Químico Alimentación" || tareaSeleccionada.analisis === "Físico-Químico Rechazo" || tareaSeleccionada.analisis === "Físico-Químico Condensados" || tareaSeleccionada.analisis === "Físico-Químico Caldera" && navigate("/plantasTabla", { replace: true }); } */
     setTareaSeleccionada({
       id: 0,
       codigoCliente: 0,
@@ -573,6 +575,21 @@ export const TareasPage = () => {
       delDate: null,
       delIdUser: null,
       deleted: null,
+    });
+
+    Swal.fire({
+      position: 'center',
+      icon: 'info',
+      title: 'Tarea Creada',
+      text: `La tarea se ha creado correctamente`,
+      showConfirmButton: false,
+      timer: 3000,
+      showClass: {
+        popup: 'animate__animated animate__bounceIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__bounceOut'
+      }
     });
 
   }
@@ -611,6 +628,21 @@ export const TareasPage = () => {
       deleted: null,
     });
 
+    Swal.fire({
+      position: 'center',
+      icon: 'info',
+      title: 'Tarea Editada',
+      text: `La tarea se ha editado correctamente`,
+      showConfirmButton: false,
+      timer: 2000,
+      showClass: {
+        popup: 'animate__animated animate__bounceIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__bounceOut'
+      }
+    });
+
   }
 
   const peticionDelete = async () => {
@@ -642,6 +674,21 @@ export const TareasPage = () => {
       deleted: null,
     });
 
+    Swal.fire({
+      position: 'center',
+      icon: 'info',
+      title: 'Tarea Eliminada',
+      text: `La tarea se ha eliminado correctamente`,
+      showConfirmButton: false,
+      timer: 2000,
+      showClass: {
+        popup: 'animate__animated animate__bounceIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__bounceOut'
+      }
+    });
+
   }
 
   const peticionPostVis = async () => {
@@ -655,8 +702,7 @@ export const TareasPage = () => {
     analisisSeleccionado.elemento = tareaSeleccionada.elemento;
 
     const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
-
-    //abrirCerrarModalInsertarDet();
+    
     setAnalisisSeleccionado({
       id: 0,
       codigoCliente: 0,
@@ -952,16 +998,9 @@ export const TareasPage = () => {
               />
             }
             botones={[
-              insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                abrirCerrarModalInsertar();
-
-                if (peticionPost()) {
-                  setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                }
-
-              }, 'success')
+              insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                peticionPost();
+              })
             ]}
             open={modalInsertar}
             onClose={abrirCerrarModalInsertar}
@@ -990,13 +1029,7 @@ export const TareasPage = () => {
                 analisisEditar={analisisEditar}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-              abrirCerrarModalEditar()
-
-              if (peticionPut()) {
-                setSnackData({ open: true, msg: 'Tarea editada correctamente', severity: 'success' });
-              } else {
-                setSnackData({ open: true, msg: 'Ha habido un error al editar la tarea', severity: 'error' })
-              }
+              peticionPut();
             })
             ]}
             open={modalEditar}
@@ -1018,16 +1051,8 @@ export const TareasPage = () => {
             }
             botones={[
               insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                abrirCerrarModalEliminar();
-
-                if (peticionDelete()) {
-                  setSnackData({ open: true, msg: `Tarea eliminada correctamente: ${tareaSeleccionada.nombreCliente}`, severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al eliminar la tarea', severity: 'error' })
-                }
-
-              }, 'error'),
-              insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                peticionDelete();
+              }, 'error')
             ]}
             open={modalEliminar}
             onClose={abrirCerrarModalEliminar}

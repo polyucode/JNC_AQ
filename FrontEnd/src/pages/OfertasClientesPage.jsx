@@ -33,6 +33,8 @@ import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getCon
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
+import Swal from 'sweetalert2';
+
 const token = {
     headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -100,6 +102,12 @@ export const OfertasClientesPage = () => {
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const { usuarioActual } = useUsuarioActual();
+
+    const [errorOferta, setErrorOferta] = useState(false);
+    const [errorPedido, setErrorPedido] = useState(false);
+    const [errorCodigo, setErrorCodigo] = useState(false);
+    const [errorFechaInicio, setErrorFechaInicio] = useState(false);
+    const [errorFechaFinal, setErrorFechaFinal] = useState(false);
 
     const columns = [
 
@@ -182,33 +190,80 @@ export const OfertasClientesPage = () => {
 
     const peticionPost = async () => {
 
-        ofertaSeleccionada.id = null;
+        if (ofertaSeleccionada.numeroOferta != 0) {
+            setErrorOferta(false)
+        } else {
+            setErrorOferta(true)
+        }
 
-        const resp = await postOfertas(ofertaSeleccionada);
+        if (ofertaSeleccionada.pedido != 0) {
+            setErrorPedido(false)
+        } else {
+            setErrorPedido(true)
+        }
 
-        abrirCerrarModalInsertar();
-        getOferta();
-        setOfertaSeleccionada({
-            id: 0,
-            numeroOferta: 0,
-            pedido: 0,
-            codigoCliente: 0,
-            nombreCliente: '',
-            descripcion: '',
-            fechaInicio: '',
-            fechaFinalizacion: '',
-            contacto1: '',
-            contacto2: '',
-            contacto3: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+        if (ofertaSeleccionada.codigoCliente != 0) {
+            setErrorCodigo(false)
+        } else {
+            setErrorCodigo(true)
+        }
 
+        if (ofertaSeleccionada.fechaInicio != null) {
+            setErrorFechaInicio(false)
+        } else {
+            setErrorFechaInicio(true)
+        }
+
+        if (ofertaSeleccionada.fechaFinalizacion != null) {
+            setErrorFechaFinal(false)
+        } else {
+            setErrorFechaFinal(true)
+        }
+
+        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null) {
+            ofertaSeleccionada.id = null;
+
+            const resp = await postOfertas(ofertaSeleccionada);
+
+            abrirCerrarModalInsertar();
+            getOferta();
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: null,
+                fechaFinalizacion: null,
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Oferta Creada',
+                text: `La oferta se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+
+        }
     }
 
     const peticionPut = async () => {
@@ -291,8 +346,8 @@ export const OfertasClientesPage = () => {
                 codigoCliente: 0,
                 nombreCliente: '',
                 descripcion: '',
-                fechaInicio: '',
-                fechaFinalizacion: '',
+                fechaInicio: null,
+                fechaFinalizacion: null,
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
@@ -319,8 +374,8 @@ export const OfertasClientesPage = () => {
                 codigoCliente: 0,
                 nombreCliente: '',
                 descripcion: '',
-                fechaInicio: '',
-                fechaFinalizacion: '',
+                fechaInicio: null,
+                fechaFinalizacion: null,
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
@@ -347,8 +402,8 @@ export const OfertasClientesPage = () => {
                 codigoCliente: 0,
                 nombreCliente: '',
                 descripcion: '',
-                fechaInicio: '',
-                fechaFinalizacion: '',
+                fechaInicio: null,
+                fechaFinalizacion: null,
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
@@ -498,16 +553,9 @@ export const OfertasClientesPage = () => {
                                     />
                                 }
                                 botones={[
-                                    insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                        abrirCerrarModalInsertar();
-
-                                        if (peticionPost()) {
-                                            setSnackData({ open: true, msg: 'Oferta añadida correctamente', severity: 'success' });
-                                        } else {
-                                            setSnackData({ open: true, msg: 'Ha habido un error al añadir la oferta', severity: 'error' })
-                                        }
-
-                                    }, 'success')
+                                    insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                        peticionPost();
+                                    })
                                 ]}
                                 open={modalInsertar}
                                 onClose={abrirCerrarModalInsertar}

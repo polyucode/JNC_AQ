@@ -1,32 +1,14 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
 import { Grid, Card, Typography, Button } from '@mui/material';
-import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
-import { Modal } from '@mui/material';
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { ModalLayout2 } from "../components/ModalLayout2";
-import { InsertarUsuarioModal, InsertarUsuarioModalBotones } from '../components/Modals/InsertarUsuarioModal';
+import { InsertarUsuarioModal } from '../components/Modals/InsertarUsuarioModal';
 import { insertarBotonesModal } from "../helpers/insertarBotonesModal";
 import { EditarUsuarioModal } from '../components/Modals/EditarUsuarioModal';
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
-
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel'
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -34,36 +16,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { deleteUsuarios, getClientes, getFicheros, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
-const token = {
-  headers: {
-    Authorization: 'Bearer ' + localStorage.getItem('token')
-  }
-};
-
-//estilos modal
-const useStyles = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos: {
-    cursor: 'pointer'
-  },
-  inputMaterial: {
-    width: '100%'
-  }
-}));
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import Swal from 'sweetalert2';
 
 export const UsuariosPage = () => {
 
@@ -71,25 +24,18 @@ export const UsuariosPage = () => {
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
   const [perfilUsuarioEditar, setPerfilUsuarioEditar] = useState([]);
   const [clienteUsuarioEditar, setClienteUsuarioEditar] = useState([]);
   const [UsuarioEliminar, setUsuarioEliminar] = useState([]);
-  const [data, setData] = useState([]);
   const [fileChange, setFileChange] = useState(null);
-
-  const [mostrarBoton, setMostrarBoton] = useState(true);
 
   const [rowsIds, setRowsIds] = useState([]);
   const [rows, setRows] = useState([]);
-
-  const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
   const [perfiles, setPerfiles] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [ficheros, setFicheros] = useState([]);
-  const styles = useStyles();
   const [estadoCboCliente, setestadoCboCliente] = useState(true);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
     id: 0,
@@ -99,6 +45,7 @@ export const UsuariosPage = () => {
     telefono: '',
     usuario: '',
     password: '',
+    repetir_contraseña: '',
     activo: false,
     firma: 0,
     idCliente: 0,
@@ -112,7 +59,10 @@ export const UsuariosPage = () => {
     deleted: null,
   });
 
-  const [error, setError] = useState(false);
+  const [errorPerfil, setErrorPerfil] = useState(false);
+  const [errorContraseña, setErrorContraseña] = useState(false);
+  const [errorRepetirContraseña, setErrorRepetirContraseña] = useState(false);
+  const [errorNombre, setErrorNombre] = useState(false);
 
   const { usuarioActual } = useUsuarioActual();
 
@@ -209,6 +159,36 @@ export const UsuariosPage = () => {
   //Insertar usuario
   const peticionPost = async () => {
 
+    if (usuarioSeleccionado.nombre != "") {
+      setErrorNombre(false)
+    } else {
+      setErrorNombre(true)
+    }
+
+    if (usuarioSeleccionado.idPerfil != 0) {
+      setErrorPerfil(false)
+    } else {
+      setErrorPerfil(true)
+    }
+
+    if (usuarioSeleccionado.password.length >= 4) {
+      setErrorContraseña(false)
+    } else {
+      setErrorContraseña(true)
+    }
+
+    if (usuarioSeleccionado.password === usuarioSeleccionado.repetir_contraseña) {
+      setErrorRepetirContraseña(false)
+    } else {
+      setErrorRepetirContraseña(true)
+    }
+
+    if (usuarioSeleccionado.idPerfil != 0 && usuarioSeleccionado.password.length >= 4 && usuarioSeleccionado.nombre != "" && usuarioSeleccionado.password === usuarioSeleccionado.repetir_contraseña) {
+      setErrorContraseña(false)
+      setErrorRepetirContraseña(false)
+      setErrorPerfil(false)
+      setErrorNombre(false)
+
       usuarioSeleccionado.id = null;
 
       const resp = await postUsuarios(usuarioSeleccionado);
@@ -235,11 +215,41 @@ export const UsuariosPage = () => {
         delIdUser: null,
         deleted: null,
       });
+
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Usuario Creado',
+        text: `El usuario se ha creado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+
+    }
   }
 
   // Editar el usuario
   const peticionPut = async () => {
 
+    if (usuarioSeleccionado.nombre != "") {
+      setErrorNombre(false)
+    } else {
+      setErrorNombre(true)
+    }
+
+    if (usuarioSeleccionado.idPerfil != 0) {
+      setErrorPerfil(false)
+    } else {
+      setErrorPerfil(true)
+    }
+
+    if (usuarioSeleccionado.nombre != "" && usuarioSeleccionado.idPerfil != 0) {
       if (fileChange != null) {
         const resp = await subirFirma(usuarioSeleccionado.id, fileChange)
         if (resp) {
@@ -279,6 +289,22 @@ export const UsuariosPage = () => {
         deleted: null,
       });
 
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Usuario Editado',
+        text: `El usuario se ha editado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+
+    }
   }
 
   // Borrar el usuario
@@ -315,10 +341,30 @@ export const UsuariosPage = () => {
       i++;
 
     }
+
+    Swal.fire({
+      position: 'center',
+      icon: 'info',
+      title: 'Usuario Eliminado',
+      text: `El usuario se ha eliminado correctamente`,
+      showConfirmButton: false,
+      timer: 2000,
+      showClass: {
+        popup: 'animate__animated animate__bounceIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__bounceOut'
+      }
+    });
+
   }
 
   //modal insertar usuario
   const abrirCerrarModalInsertar = () => {
+    setErrorPerfil(false)
+    setErrorContraseña(false)
+    setErrorNombre(false)
+    setErrorRepetirContraseña(false)
     if (modalInsertar) {
       setUsuarioSeleccionado({
         id: 0,
@@ -348,6 +394,10 @@ export const UsuariosPage = () => {
 
   // Modal editar usuario
   const abrirCerrarModalEditar = () => {
+    setErrorPerfil(false)
+    setErrorContraseña(false)
+    setErrorNombre(false)
+    setErrorRepetirContraseña(false)
     if (modalEditar) {
       setUsuarioSeleccionado({
         id: 0,
@@ -377,6 +427,10 @@ export const UsuariosPage = () => {
 
   //modal eliminar usuario
   const abrirCerrarModalEliminar = () => {
+    setErrorPerfil(false)
+    setErrorContraseña(false)
+    setErrorNombre(false)
+    setErrorRepetirContraseña(false)
     if (modalEliminar) {
       setUsuarioSeleccionado({
         id: 0,
@@ -449,27 +503,10 @@ export const UsuariosPage = () => {
     }))
   }
 
-  const handleSnackClose = (event, reason) => {
-
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackData({ open: false, msg: '', severity: 'info' });
-
-  };
-
   return (
     <>
       {usuarioActual.idPerfil === 1 ?
         <MainLayout title='Usuarios'>
-
-          <Snackbar anchorOrigin={{ vertical: 'bot', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-              {snackData.msg}
-            </Alert>
-          </Snackbar>
-
           <div>
             <Grid container spacing={2}>
 
@@ -542,18 +579,16 @@ export const UsuariosPage = () => {
                   estadoCliente={estadoCboCliente}
                   setUsuarioSeleccionado={setUsuarioSeleccionado}
                   handleChangeCheckbox={handleChangeCheckbox}
-                  //error={error}
+                  errorPerfil={errorPerfil}
+                  errorContraseña={errorContraseña}
+                  errorNombre={errorNombre}
+                  errorRepetirContraseña={errorRepetirContraseña}
                 />
               }
               botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
-                abrirCerrarModalInsertar();
-                if (peticionPost()) {
-                  setSnackData({ open: true, msg: 'Usuario añadido correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el usuario', severity: 'error' })
-                }
+                peticionPost();
               })
-              ]}
+            ]}
               open={modalInsertar}
               onClose={abrirCerrarModalInsertar}
             />
@@ -572,17 +607,12 @@ export const UsuariosPage = () => {
                   handleChangeCheckbox={handleChangeCheckbox}
                   perfilUsuario={perfilUsuarioEditar}
                   clienteUsuario={clienteUsuarioEditar}
-                  //error={error}
+                  errorPerfil={errorPerfil}
+                  errorNombre={errorNombre}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                abrirCerrarModalEditar()
-                if (peticionPut()) {
-                  setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
-                }
-              })
-              ]}
+                peticionPut();
+              })]}
               open={modalEditar}
               onClose={abrirCerrarModalEditar}
             />
@@ -601,18 +631,8 @@ export const UsuariosPage = () => {
               }
               botones={[
                 insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-
                   peticionDelete();
-                  abrirCerrarModalEliminar();
-
-                  if (peticionDelete()) {
-                    setSnackData({ open: true, msg: `Usuario eliminado correctamente: ${usuarioSeleccionado.nombre}`, severity: 'success' });
-                  } else {
-                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el usuario', severity: 'error' })
-                  }
-
-                }, 'error'),
-                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                }, 'error')
               ]}
               open={modalEliminar}
               onClose={abrirCerrarModalEliminar}
@@ -622,7 +642,6 @@ export const UsuariosPage = () => {
         <MainLayout title='Usuarios'>
           <div>
             <Grid container spacing={2}>
-
               {/* Título y botones de opción */}
               <Grid item xs={12}>
                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
@@ -657,30 +676,6 @@ export const UsuariosPage = () => {
               </Card>
             </Grid>
 
-            <ModalLayout
-              titulo="Agregar nuevo usuario"
-              contenido={
-                <InsertarUsuarioModal
-                  change={handleChange}
-                  handleChangePerfil={handleChangePerfil}
-                  handleChangeCheckbox={handleChangeCheckbox}
-                  estadoCliente={estadoCboCliente}
-                  setUsuarioSeleccionado={setUsuarioSeleccionado}
-                />
-              }
-              botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
-                abrirCerrarModalInsertar();
-                if (peticionPost()) {
-                  setSnackData({ open: true, msg: 'Usuario añadido correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al añadir el usuario', severity: 'error' })
-                }
-              })
-              ]}
-              open={modalInsertar}
-              onClose={abrirCerrarModalInsertar}
-            />
-
             <ModalLayout2
               titulo="Editar usuario"
               contenido={
@@ -696,15 +691,7 @@ export const UsuariosPage = () => {
                   perfilUsuario={perfilUsuarioEditar}
                   clienteUsuario={clienteUsuarioEditar}
                 />}
-              botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                abrirCerrarModalEditar()
-                if (peticionPut()) {
-                  setSnackData({ open: true, msg: 'Usuario editado correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al editar el usuario', severity: 'error' })
-                }
-              })
-              ]}
+              botones={[insertarBotonesModal(<AddIcon />, 'Editar')]}
               open={modalEditar}
               onClose={abrirCerrarModalEditar}
             />

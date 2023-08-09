@@ -2,15 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button } from '@mui/material';
 import { MainLayout } from "../layout/MainLayout";
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
-
 // Iconos
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout } from "../components/ModalLayout";
 import { ModalLayout2 } from '../components/ModalLayout2';
@@ -25,20 +19,10 @@ import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
 
-
-const token = {
-  headers: {
-    Authorization: 'Bearer ' + localStorage.getItem('token')
-  }
-};
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import Swal from 'sweetalert2';
 
 export const ClientesPage = () => {
 
-  const [rowsSelected, setRowsSelected] = useState(false);
   const [rowsIds, setRowsIds] = useState([]);
 
   //variables
@@ -80,8 +64,6 @@ export const ClientesPage = () => {
 
   const [rows, setRows] = useState([]);
 
-  const [clientes, setClientes] = useState([]);
-  const [perfiles, setPerfiles] = useState([]);
   const [poblacion, setPoblacion] = useState([]);
   const [provincia, setProvincia] = useState([]);
   const [comarcas, setComarcas] = useState([]);
@@ -90,9 +72,12 @@ export const ClientesPage = () => {
 
   const { usuarioActual } = useUsuarioActual();
 
-
-  const [estadoCboCliente, setestadoCboCliente] = useState(true);
-  const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+  const [errorCodigo, setErrorCodigo] = useState(false);
+  const [errorTelefono, setErrorTelefono] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorDireccion, setErrorDireccion] = useState(false);
+  const [errorNombre, setErrorNombre] = useState(false);
+  const [errorCP, setErrorCP] = useState(false);
 
   // Columnas de la tabla
   const columns = [
@@ -182,72 +167,177 @@ export const ClientesPage = () => {
 
   const peticionPost = async () => {
 
-    clienteSeleccionado.id = null;
+    if (clienteSeleccionado.codigo != 0) {
+      setErrorCodigo(false)
+    } else {
+      setErrorCodigo(true)
+    }
 
-    const resp = await postCliente(clienteSeleccionado);
+    if (clienteSeleccionado.razonSocial != "") {
+      setErrorNombre(false)
+    } else {
+      setErrorNombre(true)
+    }
 
-    abrirCerrarModalInsertar();
-    peticionGet();
-    setClienteSeleccionado({
-      id: 0,
-      codigo: 0,
-      cif: '',
-      razonSocial: '',
-      telefono: '',
-      movil: '',
-      email: '',
-      direccion: '',
-      poblacion: '',
-      provincia: '',
-      cp: '',
-      comarca: '',
-      idSector: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    })
+    if (clienteSeleccionado.telefono != "") {
+      setErrorTelefono(false)
+    } else {
+      setErrorTelefono(true)
+    }
 
+    if (clienteSeleccionado.direccion != "") {
+      setErrorDireccion(false)
+    } else {
+      setErrorDireccion(true)
+    }
+
+    if (clienteSeleccionado.cp != "") {
+      setErrorCP(false)
+    } else {
+      setErrorCP(true)
+    }
+
+    if (clienteSeleccionado.email != "") {
+      setErrorEmail(false)
+    } else {
+      setErrorEmail(true)
+    }
+
+    if (clienteSeleccionado.codigo != 0 && clienteSeleccionado.razonSocial != "" && clienteSeleccionado.telefono != "" && clienteSeleccionado.direccion != "" && clienteSeleccionado.cp != "" && clienteSeleccionado.email != "") {
+      clienteSeleccionado.id = null;
+
+      const resp = await postCliente(clienteSeleccionado);
+
+      abrirCerrarModalInsertar();
+      peticionGet();
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Cliente Creado',
+        text: `El cliente se ha creado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    }
   }
 
   const peticionPut = async () => {
 
-    const resp = await putCliente(clienteSeleccionado);
+    if (clienteSeleccionado.codigo != 0) {
+      setErrorCodigo(false)
+    } else {
+      setErrorCodigo(true)
+    }
 
-    var clienteModificado = data;
-    clienteModificado.map(cliente => {
-      if (cliente.id === clienteSeleccionado.id) {
-        cliente = clienteSeleccionado
-      }
-    });
-    peticionGet();
-    abrirCerrarModalEditar();
-    setClienteSeleccionado({
-      id: 0,
-      codigo: 0,
-      cif: '',
-      razonSocial: '',
-      telefono: '',
-      movil: '',
-      email: '',
-      direccion: '',
-      poblacion: '',
-      provincia: '',
-      cp: '',
-      comarca: '',
-      idSector: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    })
+    if (clienteSeleccionado.razonSocial != "") {
+      setErrorNombre(false)
+    } else {
+      setErrorNombre(true)
+    }
 
+    if (clienteSeleccionado.telefono != "") {
+      setErrorTelefono(false)
+    } else {
+      setErrorTelefono(true)
+    }
+
+    if (clienteSeleccionado.direccion != "") {
+      setErrorDireccion(false)
+    } else {
+      setErrorDireccion(true)
+    }
+
+    if (clienteSeleccionado.cp != "") {
+      setErrorCP(false)
+    } else {
+      setErrorCP(true)
+    }
+
+    if (clienteSeleccionado.email != "") {
+      setErrorEmail(false)
+    } else {
+      setErrorEmail(true)
+    }
+
+    if (clienteSeleccionado.codigo != 0 && clienteSeleccionado.razonSocial != "" && clienteSeleccionado.telefono != "" && clienteSeleccionado.direccion != "" && clienteSeleccionado.cp != "" && clienteSeleccionado.email != "") {
+      const resp = await putCliente(clienteSeleccionado);
+
+      var clienteModificado = data;
+      clienteModificado.map(cliente => {
+        if (cliente.id === clienteSeleccionado.id) {
+          cliente = clienteSeleccionado
+        }
+      });
+      peticionGet();
+      abrirCerrarModalEditar();
+      setClienteSeleccionado({
+        id: 0,
+        codigo: 0,
+        cif: '',
+        razonSocial: '',
+        telefono: '',
+        movil: '',
+        email: '',
+        direccion: '',
+        poblacion: '',
+        provincia: '',
+        cp: '',
+        comarca: '',
+        idSector: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Cliente Editado',
+        text: `El cliente se ha editado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      })
+
+    }
   }
 
   const peticionDelete = async () => {
@@ -285,6 +375,21 @@ export const ClientesPage = () => {
       i++;
 
     }
+
+    Swal.fire({
+      position: 'center',
+      icon: 'info',
+      title: 'Cliente Eliminado',
+      text: `El cliente se ha eliminado correctamente`,
+      showConfirmButton: false,
+      timer: 2000,
+      showClass: {
+        popup: 'animate__animated animate__bounceIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__bounceOut'
+      }
+    });
   }
 
   const handleChange = e => {
@@ -299,6 +404,12 @@ export const ClientesPage = () => {
 
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
+    setErrorCP(false)
+    setErrorCodigo(false)
+    setErrorDireccion(false)
+    setErrorEmail(false)
+    setErrorNombre(false)
+    setErrorTelefono(false)
     if (modalInsertar) {
       setClienteSeleccionado({
         id: 0,
@@ -331,6 +442,12 @@ export const ClientesPage = () => {
 
   //modal editar cliente
   const abrirCerrarModalEditar = () => {
+    setErrorCP(false)
+    setErrorCodigo(false)
+    setErrorDireccion(false)
+    setErrorEmail(false)
+    setErrorNombre(false)
+    setErrorTelefono(false)
     if (modalEditar) {
       setClienteSeleccionado({
         id: 0,
@@ -364,6 +481,12 @@ export const ClientesPage = () => {
   //modal eliminar cliente
 
   const abrirCerrarModalEliminar = () => {
+    setErrorCP(false)
+    setErrorCodigo(false)
+    setErrorDireccion(false)
+    setErrorEmail(false)
+    setErrorNombre(false)
+    setErrorTelefono(false)
     if (modalEliminar) {
       setClienteSeleccionado({
         id: 0,
@@ -419,30 +542,11 @@ export const ClientesPage = () => {
 
   }
 
-  const [snackOpen, setSnackOpen] = React.useState(false);
-
-  const handleSnackClose = (event, reason) => {
-
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackData({ open: false, msg: '', severity: 'info' });
-
-  };
-
   return (
     <>
       {
         usuarioActual.idPerfil === 1 ?
           <MainLayout key="clientes" title='Clientes'>
-
-            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-              <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                {snackData.msg}
-              </Alert>
-            </Snackbar>
-
             <Grid container spacing={2}>
 
               {/* Título y botones de opción */}
@@ -516,19 +620,18 @@ export const ClientesPage = () => {
                   clienteSeleccionado={clienteSeleccionado}
                   change={handleChange}
                   autocompleteChange={handleAutocompleteChange}
+                  errorCP={errorCP}
+                  errorNombre={errorNombre}
+                  errorCodigo={errorCodigo}
+                  errorDireccion={errorDireccion}
+                  errorEmail={errorEmail}
+                  errorTelefono={errorTelefono}
                 />
               }
               botones={[
-                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                  abrirCerrarModalInsertar();
-
-                  if (peticionPost()) {
-                    setSnackData({ open: true, msg: 'Cliente añadido correctamente', severity: 'success' });
-                  } else {
-                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el cliente', severity: 'error' })
-                  }
-
-                }, 'success')
+                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                  peticionPost();
+                })
               ]}
               open={modalInsertar}
               onClose={abrirCerrarModalInsertar}
@@ -547,15 +650,15 @@ export const ClientesPage = () => {
                   autocompleteChange={handleAutocompleteChange}
                   comarcaEditar={comarcaEditar}
                   setClienteSeleccionado={setClienteSeleccionado}
+                  errorCP={errorCP}
+                  errorNombre={errorNombre}
+                  errorCodigo={errorCodigo}
+                  errorDireccion={errorDireccion}
+                  errorEmail={errorEmail}
+                  errorTelefono={errorTelefono}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                abrirCerrarModalEditar()
-
-                if (peticionPut()) {
-                  setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
-                }
+                peticionPut();
               })
               ]}
               open={modalEditar}
@@ -577,16 +680,8 @@ export const ClientesPage = () => {
               }
               botones={[
                 insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                  abrirCerrarModalEliminar();
-
-                  if (peticionDelete()) {
-                    setSnackData({ open: true, msg: `Cliente eliminado correctamente: ${clienteSeleccionado.razonSocial}`, severity: 'success' });
-                  } else {
-                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el cliente', severity: 'error' })
-                  }
-
-                }, 'error'),
-                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                  peticionDelete();
+                }, 'error')
               ]}
               open={modalEliminar}
               onClose={abrirCerrarModalEliminar}
@@ -636,16 +731,7 @@ export const ClientesPage = () => {
                   handleChange={handleChange}
                   autocompleteChange={handleAutocompleteChange}
                 />}
-              botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                abrirCerrarModalEditar()
-
-                if (peticionPut()) {
-                  setSnackData({ open: true, msg: 'Cliente editado correctamente', severity: 'success' });
-                } else {
-                  setSnackData({ open: true, msg: 'Ha habido un error al editar el cliente', severity: 'error' })
-                }
-              })
-              ]}
+              botones={[insertarBotonesModal(<AddIcon />, 'Guardar')]}
               open={modalEditar}
               onClose={abrirCerrarModalEditar}
             />

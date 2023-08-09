@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
 import { getClientes, getPerfiles } from '../../api';
 
-export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, setUsuarioSeleccionado /* error */ }) =>{
+export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, setUsuarioSeleccionado, errorPerfil, errorContraseña, errorNombre, errorRepetirContraseña }) =>{
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -25,7 +25,7 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
     return (
         <>
             <Grid item xs={ 6 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Nombre" name="nombre" onChange={ handleChange } />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Nombre" name="nombre" onChange={ handleChange } error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 6 } md={ 5}>
@@ -41,11 +41,11 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
             </Grid>
 
             <Grid item xs={ 4 } md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Contraseña" name="password" type="password" onChange={ handleChange } /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Contraseña" name="password" type="password" onChange={ handleChange } error={errorContraseña} helperText={errorContraseña ? 'Este campo tiene que ser mayor de 3 caracteres' : ' '} />
             </Grid>
 
             <Grid item xs={4} md={ 4 }>
-                <TextField sx={{ width: '100%' }} label="Repetir Contraseña" name="repetir_contraseña" type="password" onChange={ handleChange } />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Repetir Contraseña" name="repetir_contraseña" type="password" onChange={ handleChange } error={errorRepetirContraseña} helperText={errorRepetirContraseña ? 'Este campo no coincide con la contraseña' : ' '} />
             </Grid>
 
             <Grid item xs={ 4 }>
@@ -62,9 +62,10 @@ export const InsertarUsuarioModal = ({ change:handleChange, handleChangePerfil, 
                 <Autocomplete
                     disableClearable={ true }
                     id="CboPerfiles"
+                    style={{ marginTop: '20px'}}
                     options={ perfiles }
                     getOptionLabel={ option => option.nombre }
-                    renderInput={ params => <TextField {...params} label="Perfil" name="idPerfil" /* error={error} helperText={error ? 'Este campo es obligatorio' : ' '} */ /> }
+                    renderInput={ params => <TextField {...params} label="Perfil" name="idPerfil" error={errorPerfil} helperText={errorPerfil ? 'Este campo es obligatorio' : ' '} /> }
                     onChange={ handleChangePerfil }
                 />
             </Grid>

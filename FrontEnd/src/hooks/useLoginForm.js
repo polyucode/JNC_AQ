@@ -91,17 +91,6 @@ export const useLoginForm = () => {
     
     }
 
-    // const logout = () => {
-
-    //     localStorage.clear();
-
-
-    //     setTimeout(() => {
-    //         navigate('/login', { replace: true });
-    //     }, 1000);
-
-    // }
-
     return {
         //* Propiedades
         loginData,
@@ -110,6 +99,5 @@ export const useLoginForm = () => {
         //* Métodos
         handleChange,
         handleSubmit,
-        //logout
     }
 }
