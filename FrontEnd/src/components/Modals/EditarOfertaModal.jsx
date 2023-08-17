@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getContactos, getClientes } from '../../api';
 
-export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar }) => {
+export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -38,7 +38,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     return (
         <>
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={6} md={8}>
@@ -46,7 +46,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} />
+                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '}/>
             </Grid>
 
             <Grid item xs={6} md={3}>
@@ -56,8 +56,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     options={clientes}
                     getOptionLabel={option => option.codigo}
                     defaultValue={codigoClienteEditar[0]}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" />}
+                    sx={{ width: '100%', marginTop: '20px' }}
+                    renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         codigoCliente: parseInt(value.codigo),
@@ -87,11 +87,13 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     id="fechainicio"
                     type="date"
                     name="fechaInicio"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '20px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={errorFechaInicio}
+                    helperText={errorFechaInicio ? 'Introduzca una fecha' : ' '}
                     value={ofertaSeleccionada && formateandofechas(ofertaSeleccionada.fechaInicio)}
                 />
             </Grid>
@@ -104,12 +106,14 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     id="fechafinalizacion"
                     type="date"
                     name="fechaFinalizacion"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '20px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,
                     }}
                     value={ofertaSeleccionada && formateandofechas(ofertaSeleccionada.fechaFinalizacion)}
+                    error={errorFechaFinal}
+                    helperText={errorFechaFinal ? 'Introduzca una fecha mayor que la de inicio' : ' '}
                 />
             </Grid>
 

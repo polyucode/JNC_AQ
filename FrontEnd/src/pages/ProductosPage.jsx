@@ -24,6 +24,8 @@ import { deleteProductos, getProductos, postProductos, putProductos } from "../a
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
+import Swal from 'sweetalert2';
+
 
 const token = {
     headers: {
@@ -48,7 +50,7 @@ export const ProductosPage = () => {
 
     const [productoSeleccionado, setProductoSeleccionado] = useState({
         id: 0,
-        codigoProducto: 0,
+        codigoProducto: "",
         descripcion: "",
         addDate: null,
         addIdUser: null,
@@ -70,6 +72,8 @@ export const ProductosPage = () => {
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const { usuarioActual } = useUsuarioActual();
+
+    const [errorProducto, setErrorProducto] = useState(false);
 
     const columnas = [
 
@@ -102,54 +106,98 @@ export const ProductosPage = () => {
 
     const peticionPost = async () => {
 
-        productoSeleccionado.id = null;
+        if (productoSeleccionado.codigoProducto != "") {
+            setErrorProducto(false)
+        } else {
+            setErrorProducto(true)
+        }
 
-        const resp = await postProductos(productoSeleccionado);
+        if (productoSeleccionado.codigoProducto != "") {
+            productoSeleccionado.id = null;
 
-        //setData(data.concat(response.data));
-        abrirCerrarModalInsertar();
-        peticionGet();
-        setProductoSeleccionado({
-            id: 0,
-            codigoProducto: 0,
-            descripcion: "",
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+            const resp = await postProductos(productoSeleccionado);
+
+            abrirCerrarModalInsertar();
+            peticionGet();
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: "",
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Producto Creado',
+                text: `El producto se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
 
     }
 
     const peticionPut = async () => {
 
-        const resp = await putProductos(productoSeleccionado);
+        if (productoSeleccionado.codigoProducto != "") {
+            setErrorProducto(false)
+        } else {
+            setErrorProducto(true)
+        }
 
-        var productoModificado = data;
+        if (productoSeleccionado.codigoProducto != "") {
+            const resp = await putProductos(productoSeleccionado);
 
-        productoModificado.map(producto => {
-            if (producto.id === productoSeleccionado.id) {
-                producto = productoSeleccionado
-            }
-        });
-        abrirCerrarModalEditar();
-        peticionGet();
-        setProductoSeleccionado({
-            id: 0,
-            codigoProducto: 0,
-            descripcion: "",
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+            var productoModificado = data;
 
+            productoModificado.map(producto => {
+                if (producto.id === productoSeleccionado.id) {
+                    producto = productoSeleccionado
+                }
+            });
+            abrirCerrarModalEditar();
+            peticionGet();
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: "",
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Producto Editado',
+                text: `El producto se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionDelete = async () => {
@@ -163,7 +211,7 @@ export const ProductosPage = () => {
             peticionGet();
             setProductoSeleccionado({
                 id: 0,
-                codigoProducto: 0,
+                codigoProducto: "",
                 descripcion: "",
                 addDate: null,
                 addIdUser: null,
@@ -175,21 +223,86 @@ export const ProductosPage = () => {
             })
 
             i++;
-
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Producto Eliminado',
+            text: `El prudcto se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
     //Modales
     const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
+        setErrorProducto(false)
+        if (modalInsertar) {
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: "",
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar(!modalInsertar);
+        } else {
+            setModalInsertar(!modalInsertar);
+        }
     }
 
     const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
+        setErrorProducto(false)
+        if (modalEliminar) {
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: "",
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEliminar(!modalEliminar);
+        } else {
+            setModalEliminar(!modalEliminar);
+        }
     }
 
     const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
+        setErrorProducto(false)
+        if (modalEditar) {
+            setProductoSeleccionado({
+                id: 0,
+                codigoProducto: 0,
+                descripcion: "",
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar(!modalEditar);
+        } else {
+            setModalEditar(!modalEditar);
+        }
     }
 
 
@@ -301,19 +414,15 @@ export const ProductosPage = () => {
                         <ModalLayout
                             titulo="Agregar nuevo producto"
                             contenido={
-                                <InsertarProductoModal change={handleChange} />
+                                <InsertarProductoModal 
+                                    change={handleChange} 
+                                    errorProducto={errorProducto}
+                                />
                             }
                             botones={[
-                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                    abrirCerrarModalInsertar();
-
-                                    if (peticionPost()) {
-                                        setSnackData({ open: true, msg: 'Producto añadido correctamente', severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir el producto', severity: 'error' })
-                                    }
-
-                                }, 'success')
+                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                    peticionPost();
+                                })
                             ]}
                             open={modalInsertar}
                             onClose={abrirCerrarModalInsertar}
@@ -329,15 +438,10 @@ export const ProductosPage = () => {
                             <EditarProductoModal
                                 productoSeleccionado={productoSeleccionado}
                                 change={handleChange}
+                                errorProducto={errorProducto}
                             />}
                         botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                            abrirCerrarModalEditar()
-
-                            if (peticionPut()) {
-                                setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
-                            }
+                            peticionPut();
                         })
                         ]}
                         open={modalEditar}
@@ -359,16 +463,8 @@ export const ProductosPage = () => {
                         }
                         botones={[
                             insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                abrirCerrarModalEliminar();
-
-                                if (peticionDelete()) {
-                                    setSnackData({ open: true, msg: `Producto eliminado correctamente: ${productoSeleccionado.descripcion}`, severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el producto', severity: 'error' })
-                                }
-
+                                peticionDelete()
                             }, 'error'),
-                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
                         ]}
                         open={modalEliminar}
                         onClose={abrirCerrarModalEliminar}

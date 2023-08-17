@@ -94,9 +94,6 @@ export const OfertasClientesPage = () => {
 
     const [articulos, setArticulos] = useState([]);
 
-    const [fechaInicio, setFechaInicio] = useState("");
-    const [fechaFinalizacion, setFechaFinalizacion] = useState("");
-
     const [data, setData] = useState([]);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
@@ -214,13 +211,13 @@ export const OfertasClientesPage = () => {
             setErrorFechaInicio(true)
         }
 
-        if (ofertaSeleccionada.fechaFinalizacion != null) {
+        if (ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
             setErrorFechaFinal(false)
         } else {
             setErrorFechaFinal(true)
         }
 
-        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null) {
+        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
             ofertaSeleccionada.id = null;
 
             const resp = await postOfertas(ofertaSeleccionada);
@@ -268,37 +265,84 @@ export const OfertasClientesPage = () => {
 
     const peticionPut = async () => {
 
-        const resp = await putOfertas(ofertaSeleccionada);
+        if (ofertaSeleccionada.numeroOferta != 0) {
+            setErrorOferta(false)
+        } else {
+            setErrorOferta(true)
+        }
 
-        var ofertaModificada = data;
-        ofertaModificada.map(oferta => {
-            if (oferta.id === ofertaSeleccionada.id) {
-                oferta = ofertaSeleccionada
-            }
-        });
-        getOferta();
-        abrirCerrarModalEditar();
-        setOfertaSeleccionada({
-            id: 0,
-            numeroOferta: 0,
-            pedido: 0,
-            codigoCliente: 0,
-            nombreCliente: '',
-            descripcion: '',
-            fechaInicio: '',
-            fechaFinalizacion: '',
-            contacto1: '',
-            contacto2: '',
-            contacto3: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+        if (ofertaSeleccionada.pedido != 0) {
+            setErrorPedido(false)
+        } else {
+            setErrorPedido(true)
+        }
 
+        if (ofertaSeleccionada.codigoCliente != 0) {
+            setErrorCodigo(false)
+        } else {
+            setErrorCodigo(true)
+        }
+
+        if (ofertaSeleccionada.fechaInicio != null) {
+            setErrorFechaInicio(false)
+        } else {
+            setErrorFechaInicio(true)
+        }
+
+        if (ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+            setErrorFechaFinal(false)
+        } else {
+            setErrorFechaFinal(true)
+        }
+
+        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+            const resp = await putOfertas(ofertaSeleccionada);
+
+            var ofertaModificada = data;
+            ofertaModificada.map(oferta => {
+                if (oferta.id === ofertaSeleccionada.id) {
+                    oferta = ofertaSeleccionada
+                }
+            });
+            getOferta();
+            abrirCerrarModalEditar();
+            setOfertaSeleccionada({
+                id: 0,
+                numeroOferta: 0,
+                pedido: 0,
+                codigoCliente: 0,
+                nombreCliente: '',
+                descripcion: '',
+                fechaInicio: null,
+                fechaFinalizacion: null,
+                contacto1: '',
+                contacto2: '',
+                contacto3: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Oferta Editada',
+                text: `La oferta se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+
+        }
     }
 
     const peticionDelete = async () => {
@@ -334,10 +378,30 @@ export const OfertasClientesPage = () => {
             i++;
 
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Oferta Eliminada',
+            text: `La oferta se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
     //Modales
     const abrirCerrarModalInsertar = () => {
+        setErrorCodigo(false)
+        setErrorFechaFinal(false)
+        setErrorFechaInicio(false)
+        setErrorOferta(false)
+        setErrorPedido(false)
         if (modalInsertar) {
             setOfertaSeleccionada({
                 id: 0,
@@ -366,6 +430,11 @@ export const OfertasClientesPage = () => {
     }
 
     const abrirCerrarModalEliminar = () => {
+        setErrorCodigo(false)
+        setErrorFechaFinal(false)
+        setErrorFechaInicio(false)
+        setErrorOferta(false)
+        setErrorPedido(false)
         if (modalEliminar) {
             setOfertaSeleccionada({
                 id: 0,
@@ -394,6 +463,11 @@ export const OfertasClientesPage = () => {
     }
 
     const abrirCerrarModalEditar = () => {
+        setErrorCodigo(false)
+        setErrorFechaFinal(false)
+        setErrorFechaInicio(false)
+        setErrorOferta(false)
+        setErrorPedido(false)
         if (modalEditar) {
             setOfertaSeleccionada({
                 id: 0,
@@ -550,6 +624,11 @@ export const OfertasClientesPage = () => {
                                         change={handleChange}
                                         handleChangeFecha={handleChangeFecha}
                                         setOfertaSeleccionada={setOfertaSeleccionada}
+                                        errorCodigo={errorCodigo}
+                                        errorFechaFinal={errorFechaFinal}
+                                        errorFechaInicio={errorFechaInicio}
+                                        errorOferta={errorOferta}
+                                        errorPedido={errorPedido}
                                     />
                                 }
                                 botones={[
@@ -576,15 +655,14 @@ export const OfertasClientesPage = () => {
                                     contacto1Editar={contacto1Editar}
                                     contacto2Editar={contacto2Editar}
                                     contacto3Editar={contacto3Editar}
+                                    errorCodigo={errorCodigo}
+                                    errorFechaFinal={errorFechaFinal}
+                                    errorFechaInicio={errorFechaInicio}
+                                    errorOferta={errorOferta}
+                                    errorPedido={errorPedido}
                                 />}
                             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                                abrirCerrarModalEditar()
-
-                                if (peticionPut()) {
-                                    setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
-                                }
+                                peticionPut();
                             })
                             ]}
                             open={modalEditar}
@@ -606,16 +684,8 @@ export const OfertasClientesPage = () => {
                             }
                             botones={[
                                 insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                    abrirCerrarModalEliminar();
-
-                                    if (peticionDelete()) {
-                                        setSnackData({ open: true, msg: `Oferta eliminada correctamente: ${ofertaSeleccionada.numeroOferta}`, severity: 'success' });
-                                    } else {
-                                        setSnackData({ open: true, msg: 'Ha habido un error al eliminar la oferta', severity: 'error' })
-                                    }
-
+                                    peticionDelete();
                                 }, 'error'),
-                                insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
                             ]}
                             open={modalEliminar}
                             onClose={abrirCerrarModalEliminar}
