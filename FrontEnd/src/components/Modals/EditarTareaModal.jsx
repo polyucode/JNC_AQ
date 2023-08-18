@@ -86,7 +86,7 @@ const tipos = [
     { id: 7, nombre: "Bisemanal" }*/
 ]
 
-export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar }) => {
+export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, errorFecha }) => {
 
 
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -466,12 +466,8 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     }
 
     const peticionPut = async () => {
-
-        console.log(analisisSeleccionado)
         
         const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
-
-        console.log(resp)
         
         var analisisModificado = data;
         analisisModificado.map(analisis => {
@@ -592,13 +588,12 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         codigoCliente: parseInt(value.codigo),
-                        oferta: '',
-                        pedido: '',
+                        oferta: 0,
+                        pedido: 0,
                         elemento: 0,
                         nombreElemento: '',
                         analisis: 0,
                         nombreAnalisis: '',
-                        fecha: ''
                     }))}
                 />
             </Grid>
@@ -698,11 +693,13 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     id="fecha"
                     type="date"
                     name="fecha"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '22px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={errorFecha}
+                    helperText={errorFecha ? 'Introduzca una fecha' : ' '}
                     value={tareaSeleccionada && formateandofechas(tareaSeleccionada.fecha)}
                 />
             </Grid>

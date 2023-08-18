@@ -39,7 +39,8 @@ import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegi
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
 import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
-import { ModalLayout2 } from "../components/ModalLayout2";
+
+import Swal from 'sweetalert2';
 
 const token = {
     headers: {
@@ -50,54 +51,6 @@ const token = {
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
-const localization = {
-    body: {
-        emptyDataSourceMessage: 'No hay datos por mostrar',
-        addTooltip: 'Añadir',
-        deleteTooltip: 'Eliminar',
-        editTooltip: 'Editar',
-        filterRow: {
-            filterTooltip: 'Filtrar',
-        },
-        editRow: {
-            deleteText: '¿Segura(o) que quiere eliminar?',
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-        },
-    },
-    grouping: {
-        placeholder: "Arrastre un encabezado aquí para agrupar",
-        groupedBy: 'Agrupado por',
-    },
-    header: {
-        actions: 'Acciones',
-    },
-    pagination: {
-        firstAriaLabel: 'Primera página',
-        firstTooltip: 'Primera página',
-        labelDisplayedRows: '{from}-{to} de {count}',
-        labelRowsPerPage: 'Filas por página:',
-        labelRowsSelect: 'filas',
-        lastAriaLabel: 'Ultima página',
-        lastTooltip: 'Ultima página',
-        nextAriaLabel: 'Pagina siguiente',
-        nextTooltip: 'Pagina siguiente',
-        previousAriaLabel: 'Pagina anterior',
-        previousTooltip: 'Pagina anterior',
-    },
-    toolbar: {
-        addRemoveColumns: 'Agregar o eliminar columnas',
-        exportAriaLabel: 'Exportar',
-        exportName: 'Exportar a CSV',
-        exportTitle: 'Exportar',
-        nRowsSelected: '{0} filas seleccionadas',
-        searchPlaceholder: 'Buscar',
-        searchTooltip: 'Buscar',
-        showColumnsAriaLabel: 'Mostrar columnas',
-        showColumnsTitle: 'Mostrar columnas',
-    },
-}
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -325,6 +278,8 @@ export const VisualizacionPage = () => {
 
     const [actualState, changeCheckState] = useState(false);
     const [actualState2, changeActualState] = useState(false);
+
+    const [errorFecha, setErrorFecha] = useState(false);
 
     const columnas = [
         //visibles
@@ -777,6 +732,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalInsertar = () => {
+        setErrorFecha(false)
         if (modalInsertar) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -814,6 +770,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalInsertar1 = () => {
+        setErrorFecha(false)
         if (modalInsertar1) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -851,6 +808,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalInsertarAerobio = () => {
+        setErrorFecha(false)
         if (modalInsertarAerobio) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -888,6 +846,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalInsertarLegionela = () => {
+        setErrorFecha(false)
         if (modalInsertarLegionela) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -925,6 +884,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalEditar = () => {
+        setErrorFecha(false)
         if (modalEditar) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -962,6 +922,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalEditar1 = () => {
+        setErrorFecha(false)
         if (modalEditar1) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -999,6 +960,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalEditarAerobio = () => {
+        setErrorFecha(false)
         if (modalEditarAerobio) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -1036,6 +998,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalEditarLegionela = () => {
+        setErrorFecha(false)
         if (modalEditarLegionela) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -1073,6 +1036,7 @@ export const VisualizacionPage = () => {
     }
 
     const abrirCerrarModalEliminar = () => {
+        setErrorFecha(false)
         if (modalEliminar) {
             setAnalisisSeleccionado({
                 id: 0,
@@ -1383,201 +1347,290 @@ export const VisualizacionPage = () => {
 
     const peticionPost = async () => {
 
-        analisisSeleccionado.id = 0;
+        if (analisisSeleccionado.fecha != null) {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+        if (analisisSeleccionado.fecha != null) {
+            analisisSeleccionado.id = 0;
 
-        AguasResiduales();
-        Desinfecciones();
-        AguaPozo();
-        DesinfeccionACS();
-        MantMaqFrio();
-        Mediciones();
-        ControlFugaGas();
-        AguaPotable();
-        RevisionBandeja();
-        abrirCerrarModalInsertar();
-        GetParametrosAnalisisPlanta();
-        //Otros();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: '',
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+            const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
+            AguasResiduales();
+            Desinfecciones();
+            AguaPozo();
+            DesinfeccionACS();
+            MantMaqFrio();
+            Mediciones();
+            ControlFugaGas();
+            AguaPotable();
+            RevisionBandeja();
+            abrirCerrarModalInsertar();
+            GetParametrosAnalisisPlanta();
+            //Otros();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Creada',
+                text: `La tarea se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 3000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPost1 = async () => {
 
-        analisisSeleccionado.id = 0;
+        if (analisisSeleccionado.fecha != null) {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+        if (analisisSeleccionado.fecha != null) {
+            analisisSeleccionado.id = 0;
 
-        //setData(data.concat(response.data));
-        FisicoQuimicoTorre();
-        FisicoQuimicoAporte();
-        FisicoQuimicoAlimentacion();
-        FisicoQuimicoRechazo();
-        FisicoQuimicoCondensados();
-        FisicoQuimicoCaldera();
-        Osmosis();
-        abrirCerrarModalInsertar1();
-        GetParametrosAnalisisPlanta();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: '',
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+            const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
+            //setData(data.concat(response.data));
+            FisicoQuimicoTorre();
+            FisicoQuimicoAporte();
+            FisicoQuimicoAlimentacion();
+            FisicoQuimicoRechazo();
+            FisicoQuimicoCondensados();
+            FisicoQuimicoCaldera();
+            Osmosis();
+            abrirCerrarModalInsertar1();
+            GetParametrosAnalisisPlanta();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Creada',
+                text: `La tarea se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 3000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPostAerobio = async () => {
 
-        analisisSeleccionado.id = 0;
+        if (analisisSeleccionado.fecha != null) {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
-        
-        abrirCerrarModalInsertarAerobio();
-        GetParametrosAnalisisPlanta();
-        Aerobios();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: '',
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+        if (analisisSeleccionado.fecha != null) {
+            analisisSeleccionado.id = 0;
 
+            const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+
+            abrirCerrarModalInsertarAerobio();
+            GetParametrosAnalisisPlanta();
+            Aerobios();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Creada',
+                text: `La tarea se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 3000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPostLegionela = async () => {
 
-        analisisSeleccionado.id = 0;
+        if (analisisSeleccionado.fecha != null) {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
+        if (analisisSeleccionado.fecha != null) {
+            analisisSeleccionado.id = 0;
 
-        Legionela();
-        abrirCerrarModalInsertarLegionela();
-        GetParametrosAnalisisPlanta();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: '',
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+            const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
+            Legionela();
+            abrirCerrarModalInsertarLegionela();
+            GetParametrosAnalisisPlanta();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: '',
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Creada',
+                text: `La tarea se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 3000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPut = async () => {
 
         if (fileChange != null) {
             const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if(resp){
+            if (resp) {
                 analisisSeleccionado.pdf = resp.data
-            }   
+            }
         }
-        
+
         await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
@@ -1692,13 +1745,13 @@ export const VisualizacionPage = () => {
 
         if (fileChange != null) {
             const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if(resp){
+            if (resp) {
                 analisisSeleccionado.pdf = resp.data
             }
-    
-            
+
+
         }
-        
+
         await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
@@ -1750,13 +1803,13 @@ export const VisualizacionPage = () => {
 
         if (fileChange != null) {
             const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if(resp){
+            if (resp) {
                 analisisSeleccionado.pdf = resp.data
             }
-    
-            
+
+
         }
-        
+
         await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
         var analisisModificado = data;
@@ -1769,7 +1822,7 @@ export const VisualizacionPage = () => {
         abrirCerrarModalEditarLegionela();
         GetParametrosAnalisisPlanta();
         Legionela();
-        GetFichero();       
+        GetFichero();
         setAnalisisSeleccionado({
             id: 0,
             codigoCliente: analisisSeleccionado.codigoCliente,
@@ -2239,7 +2292,7 @@ export const VisualizacionPage = () => {
                                 id='nombreCliente'
                                 label="Nombre Cliente"
                                 sx={{ width: 250 }}
-                                style={{ marginTop: '15px'}}
+                                style={{ marginTop: '15px' }}
                                 value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
                                 name="nombreCliente"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
@@ -2262,7 +2315,7 @@ export const VisualizacionPage = () => {
                                 id='pedido'
                                 sx={{ width: 250 }}
                                 label="Pedido"
-                                style={{ marginTop: '15px'}}
+                                style={{ marginTop: '15px' }}
                                 value={analisisSeleccionado && analisisSeleccionado.pedido}
                                 name="pedido"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
@@ -2290,12 +2343,6 @@ export const VisualizacionPage = () => {
                                             case 1:
                                                 return (
                                                     <>
-
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -2377,19 +2424,13 @@ export const VisualizacionPage = () => {
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisisid={analisi.id}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -2461,11 +2502,6 @@ export const VisualizacionPage = () => {
                                             case 2:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -2547,19 +2583,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -2630,11 +2660,6 @@ export const VisualizacionPage = () => {
                                             case 3:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -2716,19 +2741,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -2799,11 +2818,6 @@ export const VisualizacionPage = () => {
                                             case 4:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -2885,19 +2899,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -2968,11 +2976,6 @@ export const VisualizacionPage = () => {
                                             case 5:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3054,19 +3057,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -3137,11 +3134,6 @@ export const VisualizacionPage = () => {
                                             case 6:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3223,19 +3215,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost1()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -3306,11 +3292,6 @@ export const VisualizacionPage = () => {
                                             case 7:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3392,19 +3373,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertarAerobio();
-
-                                                                    if (peticionPostAerobio()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPostAerobio();
+                                                                })
                                                             ]}
                                                             open={modalInsertarAerobio}
                                                             onClose={abrirCerrarModalInsertarAerobio}
@@ -3477,11 +3452,6 @@ export const VisualizacionPage = () => {
                                             case 8:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3563,19 +3533,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertarLegionela();
-
-                                                                    if (peticionPostLegionela()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPostLegionela();
+                                                                })
                                                             ]}
                                                             open={modalInsertarLegionela}
                                                             onClose={abrirCerrarModalInsertarLegionela}
@@ -3648,11 +3612,6 @@ export const VisualizacionPage = () => {
                                             case 9:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3734,19 +3693,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -3819,11 +3772,6 @@ export const VisualizacionPage = () => {
                                             case 10:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -3906,19 +3854,13 @@ export const VisualizacionPage = () => {
                                                                     analisisAutocomplete={analisisAutocomplete}
                                                                     analisisid={analisi.id}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -3991,11 +3933,6 @@ export const VisualizacionPage = () => {
                                             case 11:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4077,19 +4014,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar1();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost1();
+                                                                })
                                                             ]}
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
@@ -4160,11 +4091,6 @@ export const VisualizacionPage = () => {
                                             case 12:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4246,19 +4172,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -4331,11 +4251,6 @@ export const VisualizacionPage = () => {
                                             case 13:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4417,19 +4332,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -4502,11 +4411,6 @@ export const VisualizacionPage = () => {
                                             case 14:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4588,19 +4492,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -4673,11 +4571,6 @@ export const VisualizacionPage = () => {
                                             case 15:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4759,19 +4652,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -4844,11 +4731,6 @@ export const VisualizacionPage = () => {
                                             case 16:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -4930,19 +4812,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -5015,11 +4891,6 @@ export const VisualizacionPage = () => {
                                             case 17:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -5101,19 +4972,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -5186,11 +5051,6 @@ export const VisualizacionPage = () => {
                                             case 18:
                                                 return (
                                                     <>
-                                                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                                                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                                                {snackData.msg}
-                                                            </Alert>
-                                                        </Snackbar>
 
                                                         <Grid container spacing={2}>
                                                             {/* Título y botones de opción */}
@@ -5272,19 +5132,13 @@ export const VisualizacionPage = () => {
                                                                     analisisid={analisi.id}
                                                                     setAnalisisSeleccionado={setAnalisisSeleccionado}
                                                                     analisis={analisis}
+                                                                    errorFecha={errorFecha}
                                                                 />
                                                             }
                                                             botones={[
-                                                                insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                                                    abrirCerrarModalInsertar();
-
-                                                                    if (peticionPost()) {
-                                                                        setSnackData({ open: true, msg: 'Tarea añadida correctamente', severity: 'success' });
-                                                                    } else {
-                                                                        setSnackData({ open: true, msg: 'Ha habido un error al añadir la tarea', severity: 'error' })
-                                                                    }
-
-                                                                }, 'success')
+                                                                insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                                                    peticionPost();
+                                                                })
                                                             ]}
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
@@ -5441,7 +5295,7 @@ export const VisualizacionPage = () => {
                                 id='nombreCliente'
                                 label="Nombre Cliente"
                                 sx={{ width: 250 }}
-                                style={{ marginTop: '15px'}}
+                                style={{ marginTop: '15px' }}
                                 value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
                                 name="nombreCliente"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
@@ -5464,7 +5318,7 @@ export const VisualizacionPage = () => {
                                 id='pedido'
                                 sx={{ width: 250 }}
                                 label="Pedido"
-                                style={{ marginTop: '15px'}}
+                                style={{ marginTop: '15px' }}
                                 value={analisisSeleccionado && analisisSeleccionado.pedido}
                                 name="pedido"
                                 onChange={(event, value) => setAnalisisSeleccionado(prevState => ({

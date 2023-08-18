@@ -114,7 +114,7 @@ export const TareasPage = () => {
     delDate: null,
     delIdUser: null,
     deleted: null,
-});
+  });
 
   const [nombreClienteEditar, setNombreClienteEditar] = useState([]);
   const [clienteTareaEditar, setClienteTareaEditar] = useState([]);
@@ -158,6 +158,14 @@ export const TareasPage = () => {
   let navigate = useNavigate();
 
   const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+  const [errorCodigo, setErrorCodigo] = useState(false);
+  const [errorOferta, setErrorOferta] = useState(false);
+  const [errorElemento, setErrorElemento] = useState(false);
+  const [errorAnalisis, setErrorAnalisis] = useState(false);
+  const [errorOperario, setErrorOperario] = useState(false);
+  const [errorFecha, setErrorFecha] = useState(false);
+  const [errorPeriodo, setErrorPeriodo] = useState(false);
 
   const { usuarioActual } = useUsuarioActual();
 
@@ -378,271 +386,318 @@ export const TareasPage = () => {
 
   const peticionPost = async () => {
 
-
-
-    tareaSeleccionada.id = 0;
-
-    const response = await postTareas(tareaSeleccionada);
-
-    //Creamos los detalles
-    var date = new Date(tareaSeleccionada.fecha);
-
-    if (tareaSeleccionada.tipo === 1) {
-      for (let i = 0; i < 12; i++) {
-
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.nombreCliente;
-        analisisSeleccionado.oferta = response.oferta;
-        analisisSeleccionado.pedido = response.pedido;
-        analisisSeleccionado.elemento = response.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.operario = response.operario;
-        analisisSeleccionado.protocolo = response.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setMonth(date.getMonth() + 1)
-        peticionPostVis();
-      }
+    if (tareaSeleccionada.codigoCliente != 0) {
+      setErrorCodigo(false)
+    } else {
+      setErrorCodigo(true)
     }
-    if (tareaSeleccionada.tipo === 2) {
-      for (let i = 0; i < 6; i++) {
 
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.nombreCliente;
-        analisisSeleccionado.oferta = response.oferta;
-        analisisSeleccionado.pedido = response.pedido;
-        analisisSeleccionado.elemento = response.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.fechaRecogido = null;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.operario;
-        analisisSeleccionado.protocolo = response.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setMonth(date.getMonth() + 2)
-        peticionPostVis();
-      }
+    if (tareaSeleccionada.oferta != 0) {
+      setErrorOferta(false)
+    } else {
+      setErrorOferta(true)
     }
-    if (tareaSeleccionada.tipo === 3) {
-      for (let i = 0; i < 4; i++) {
 
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.nombreCliente;
-        analisisSeleccionado.oferta = response.oferta;
-        analisisSeleccionado.pedido = response.pedido;
-        analisisSeleccionado.elemento = response.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.fechaRecogido = null;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.operario;
-        analisisSeleccionado.protocolo = response.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setMonth(date.getMonth() + 3)
-        peticionPostVis();
-      }
+    if (tareaSeleccionada.elemento != 0) {
+      setErrorElemento(false)
+    } else {
+      setErrorElemento(true)
     }
-    if (tareaSeleccionada.tipo === 4) {
-      for (let i = 0; i < 2; i++) {
 
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.nombreCliente;
-        analisisSeleccionado.oferta = response.oferta;
-        analisisSeleccionado.pedido = response.pedido;
-        analisisSeleccionado.elemento = response.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.fechaRecogido = null;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.operario;
-        analisisSeleccionado.protocolo = response.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setMonth(date.getMonth() + 6)
-        peticionPostVis();
-      }
+    if (tareaSeleccionada.analisis != 0) {
+      setErrorAnalisis(false)
+    } else {
+      setErrorAnalisis(true)
     }
-    if (tareaSeleccionada.tipo === 5) {
-      for (let i = 0; i < 1; i++) {
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.nombreCliente;
-        analisisSeleccionado.oferta = response.oferta;
-        analisisSeleccionado.pedido = response.pedido;
-        analisisSeleccionado.elemento = response.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-        analisisSeleccionado.analisis = response.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.fechaRecogido = null;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.operario;
-        analisisSeleccionado.protocolo = response.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setMonth(date.getMonth() + 12)
-        peticionPostVis();
-      }
+
+    if (tareaSeleccionada.operario != 0) {
+      setErrorOperario(false)
+    } else {
+      setErrorOperario(true)
     }
-    /*if (tareaSeleccionada.tipo === 6) {
-      for (let i = 0; i < 48; i++) {
-        analisisSeleccionado.id = 0;
-        analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-        analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-        analisisSeleccionado.oferta = response.data.data.oferta;
-        analisisSeleccionado.pedido = response.data.data.pedido;
-        analisisSeleccionado.elemento = response.data.data.elemento;
-        analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-        analisisSeleccionado.periodo = "";
-        analisisSeleccionado.analisis = response.data.data.analisis;
-        analisisSeleccionado.fecha = date.toJSON();
-        analisisSeleccionado.recogido = false;
-        analisisSeleccionado.fechaRecogido = null;
-        analisisSeleccionado.realizado = false;
-        analisisSeleccionado.fechaRealizado = null;
-        analisisSeleccionado.operario = response.data.data.operario;
-        analisisSeleccionado.protocolo = response.data.data.protocolo;
-        analisisSeleccionado.observaciones = "";
-        analisisSeleccionado.facturado = false;
-        analisisSeleccionado.numeroFacturado = "";
-        analisisSeleccionado.cancelado = false;
-        analisisSeleccionado.comentarios = "";
-        date.setDate(date.getDay() + 7)
-        peticionPostVis();
+
+    if (tareaSeleccionada.fecha != null) {
+      setErrorFecha(false)
+    } else {
+      setErrorFecha(true)
+    }
+
+    if (tareaSeleccionada.tipo != 0) {
+      setErrorPeriodo(false)
+    } else {
+      setErrorPeriodo(true)
+    }
+
+    if (tareaSeleccionada.tipo != 0 && tareaSeleccionada.fecha != null && tareaSeleccionada.operario != 0 && tareaSeleccionada.analisis != 0 && tareaSeleccionada.elemento != 0 && tareaSeleccionada.oferta != 0 && tareaSeleccionada.codigoCliente != 0) {
+      tareaSeleccionada.id = 0;
+
+      const response = await postTareas(tareaSeleccionada);
+
+      //Creamos los detalles
+      var date = new Date(tareaSeleccionada.fecha);
+
+      if (tareaSeleccionada.tipo === 1) {
+        for (let i = 0; i < 12; i++) {
+
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.nombreCliente;
+          analisisSeleccionado.oferta = response.oferta;
+          analisisSeleccionado.pedido = response.pedido;
+          analisisSeleccionado.elemento = response.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+          analisisSeleccionado.analisis = response.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.operario = response.operario;
+          analisisSeleccionado.protocolo = response.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setMonth(date.getMonth() + 1)
+          peticionPostVis();
+        }
       }
-    }*/
+      if (tareaSeleccionada.tipo === 2) {
+        for (let i = 0; i < 6; i++) {
 
-    abrirCerrarModalInsertar();
-    peticionGet();
-    setTareaSeleccionada({
-      id: 0,
-      codigoCliente: 0,
-      nombreCliente: "",
-      oferta: 0,
-      pedido: 0,
-      operario: "",
-      protocolo: "",
-      elemento: 0,
-      nombreElemento: "",
-      analisis: 0,
-      nombreAnalisis: "",
-      fecha: null,
-      tipo: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    });
-
-    Swal.fire({
-      position: 'center',
-      icon: 'info',
-      title: 'Tarea Creada',
-      text: `La tarea se ha creado correctamente`,
-      showConfirmButton: false,
-      timer: 3000,
-      showClass: {
-        popup: 'animate__animated animate__bounceIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__bounceOut'
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.nombreCliente;
+          analisisSeleccionado.oferta = response.oferta;
+          analisisSeleccionado.pedido = response.pedido;
+          analisisSeleccionado.elemento = response.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+          analisisSeleccionado.analisis = response.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.fechaRecogido = null;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.fechaRealizado = null;
+          analisisSeleccionado.operario = response.operario;
+          analisisSeleccionado.protocolo = response.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setMonth(date.getMonth() + 2)
+          peticionPostVis();
+        }
       }
-    });
+      if (tareaSeleccionada.tipo === 3) {
+        for (let i = 0; i < 4; i++) {
 
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.nombreCliente;
+          analisisSeleccionado.oferta = response.oferta;
+          analisisSeleccionado.pedido = response.pedido;
+          analisisSeleccionado.elemento = response.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+          analisisSeleccionado.analisis = response.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.fechaRecogido = null;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.fechaRealizado = null;
+          analisisSeleccionado.operario = response.operario;
+          analisisSeleccionado.protocolo = response.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setMonth(date.getMonth() + 3)
+          peticionPostVis();
+        }
+      }
+      if (tareaSeleccionada.tipo === 4) {
+        for (let i = 0; i < 2; i++) {
+
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.nombreCliente;
+          analisisSeleccionado.oferta = response.oferta;
+          analisisSeleccionado.pedido = response.pedido;
+          analisisSeleccionado.elemento = response.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+          analisisSeleccionado.analisis = response.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.fechaRecogido = null;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.fechaRealizado = null;
+          analisisSeleccionado.operario = response.operario;
+          analisisSeleccionado.protocolo = response.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setMonth(date.getMonth() + 6)
+          peticionPostVis();
+        }
+      }
+      if (tareaSeleccionada.tipo === 5) {
+        for (let i = 0; i < 1; i++) {
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.nombreCliente;
+          analisisSeleccionado.oferta = response.oferta;
+          analisisSeleccionado.pedido = response.pedido;
+          analisisSeleccionado.elemento = response.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+          analisisSeleccionado.analisis = response.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.fechaRecogido = null;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.fechaRealizado = null;
+          analisisSeleccionado.operario = response.operario;
+          analisisSeleccionado.protocolo = response.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setMonth(date.getMonth() + 12)
+          peticionPostVis();
+        }
+      }
+      /*if (tareaSeleccionada.tipo === 6) {
+        for (let i = 0; i < 48; i++) {
+          analisisSeleccionado.id = 0;
+          analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
+          analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
+          analisisSeleccionado.oferta = response.data.data.oferta;
+          analisisSeleccionado.pedido = response.data.data.pedido;
+          analisisSeleccionado.elemento = response.data.data.elemento;
+          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
+          analisisSeleccionado.periodo = "";
+          analisisSeleccionado.analisis = response.data.data.analisis;
+          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.recogido = false;
+          analisisSeleccionado.fechaRecogido = null;
+          analisisSeleccionado.realizado = false;
+          analisisSeleccionado.fechaRealizado = null;
+          analisisSeleccionado.operario = response.data.data.operario;
+          analisisSeleccionado.protocolo = response.data.data.protocolo;
+          analisisSeleccionado.observaciones = "";
+          analisisSeleccionado.facturado = false;
+          analisisSeleccionado.numeroFacturado = "";
+          analisisSeleccionado.cancelado = false;
+          analisisSeleccionado.comentarios = "";
+          date.setDate(date.getDay() + 7)
+          peticionPostVis();
+        }
+      }*/
+
+      abrirCerrarModalInsertar();
+      peticionGet();
+      setTareaSeleccionada({
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: "",
+        oferta: 0,
+        pedido: 0,
+        operario: 0,
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
+        fecha: null,
+        tipo: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
+
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Tarea Creada',
+        text: `La tarea se ha creado correctamente`,
+        showConfirmButton: false,
+        timer: 3000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    }
   }
 
   const peticionPut = async () => {
 
-    const resp = await putTareas(tareaSeleccionada);
+    if (tareaSeleccionada.fecha != "") {
+      setErrorFecha(false)
+    } else {
+      setErrorFecha(true)
+    }
 
-    var tareaModificada = data;
-    tareaModificada.map(tarea => {
-      if (tarea.id === tareaSeleccionada.id) {
-        tarea = tareaSeleccionada
-      }
-    });
-    peticionGet();
-    abrirCerrarModalEditar();
-    setTareaSeleccionada({
-      id: 0,
-      codigoCliente: 0,
-      nombreCliente: "",
-      oferta: 0,
-      pedido: 0,
-      operario: 0,
-      elemento: 0,
-      nombreElemento: "",
-      analisis: 0,
-      nombreAnalisis: "",
-      fecha: null,
-      tipo: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    });
+    if (tareaSeleccionada.fecha != "") {
+      const resp = await putTareas(tareaSeleccionada);
 
-    Swal.fire({
-      position: 'center',
-      icon: 'info',
-      title: 'Tarea Editada',
-      text: `La tarea se ha editado correctamente`,
-      showConfirmButton: false,
-      timer: 2000,
-      showClass: {
-        popup: 'animate__animated animate__bounceIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__bounceOut'
-      }
-    });
+      var tareaModificada = data;
+      tareaModificada.map(tarea => {
+        if (tarea.id === tareaSeleccionada.id) {
+          tarea = tareaSeleccionada
+        }
+      });
+      peticionGet();
+      abrirCerrarModalEditar();
+      setTareaSeleccionada({
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: "",
+        oferta: 0,
+        pedido: 0,
+        operario: 0,
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
+        fecha: null,
+        tipo: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      });
 
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Tarea Editada',
+        text: `La tarea se ha editado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    }
   }
 
   const peticionDelete = async () => {
@@ -702,7 +757,7 @@ export const TareasPage = () => {
     analisisSeleccionado.elemento = tareaSeleccionada.elemento;
 
     const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
-    
+
     setAnalisisSeleccionado({
       id: 0,
       codigoCliente: 0,
@@ -786,6 +841,13 @@ export const TareasPage = () => {
 
   //modal insertar mantenimientocab
   const abrirCerrarModalInsertar = () => {
+    setErrorAnalisis(false)
+    setErrorCodigo(false)
+    setErrorElemento(false)
+    setErrorFecha(false)
+    setErrorOferta(false)
+    setErrorOperario(false)
+    setErrorPeriodo(false)
     if (modalInsertar) {
       setTareaSeleccionada({
         id: 0,
@@ -793,8 +855,7 @@ export const TareasPage = () => {
         nombreCliente: "",
         oferta: 0,
         pedido: 0,
-        operario: "",
-        protocolo: "",
+        operario: 0,
         elemento: 0,
         nombreElemento: "",
         analisis: 0,
@@ -818,6 +879,13 @@ export const TareasPage = () => {
   //modal editar mantenimiento
 
   const abrirCerrarModalEditar = () => {
+    setErrorAnalisis(false)
+    setErrorCodigo(false)
+    setErrorElemento(false)
+    setErrorFecha(false)
+    setErrorOferta(false)
+    setErrorOperario(false)
+    setErrorPeriodo(false)
     if (modalEditar) {
       setTareaSeleccionada({
         id: 0,
@@ -825,8 +893,7 @@ export const TareasPage = () => {
         nombreCliente: "",
         oferta: 0,
         pedido: 0,
-        operario: "",
-        protocolo: "",
+        operario: 0,
         elemento: 0,
         nombreElemento: "",
         analisis: 0,
@@ -849,6 +916,13 @@ export const TareasPage = () => {
 
   // modal eliminar mantenimiento
   const abrirCerrarModalEliminar = () => {
+    setErrorAnalisis(false)
+    setErrorCodigo(false)
+    setErrorElemento(false)
+    setErrorFecha(false)
+    setErrorOferta(false)
+    setErrorOperario(false)
+    setErrorPeriodo(false)
     if (modalEliminar) {
       setTareaSeleccionada({
         id: 0,
@@ -856,8 +930,7 @@ export const TareasPage = () => {
         nombreCliente: "",
         oferta: 0,
         pedido: 0,
-        operario: "",
-        protocolo: "",
+        operario: 0,
         elemento: 0,
         nombreElemento: "",
         analisis: 0,
@@ -995,6 +1068,13 @@ export const TareasPage = () => {
                 //estadoOperario={estadoOperario}
                 elementosAutocomplete={elementosAutocomplete}
                 analisisAutocomplete={analisisAutocomplete}
+                errorAnalisis={errorAnalisis}
+                errorCodigo={errorCodigo}
+                errorElemento={errorElemento}
+                errorFecha={errorFecha}
+                errorOferta={errorOferta}
+                errorOperario={errorOperario}
+                errorPeriodo={errorPeriodo}
               />
             }
             botones={[
@@ -1027,6 +1107,7 @@ export const TareasPage = () => {
                 analisisAutocomplete={analisisAutocomplete}
                 elementoTareaEditar={elementoTareaEditar}
                 analisisEditar={analisisEditar}
+                errorFecha={errorFecha}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
               peticionPut();

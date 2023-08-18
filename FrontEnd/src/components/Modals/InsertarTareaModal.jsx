@@ -57,7 +57,7 @@ const tipos = [
 
 
 
-export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, elementosAutocomplete, analisisAutocomplete }) => {
+export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, elementosAutocomplete, analisisAutocomplete, errorAnalisis, errorCodigo, errorElemento, errorFecha, errorOferta, errorOperario, errorPeriodo }) => {
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -104,13 +104,13 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     id="CboClientes"
                     options={clientes}
                     getOptionLabel={option => option.codigo}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" />}
+                    sx={{ width: '100%', marginTop: '22px' }}
+                    renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         codigoCliente: parseInt(value.codigo),
-                        pedido: '',
-                        elemento: ''
+                        pedido: 0,
+                        elemento: 0
                     }))}
                 />
             </Grid>
@@ -129,13 +129,13 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
             <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '22px' }}
                     id="Oferta"
                     inputValue={tareaSeleccionada.oferta}
                     options={ofertas}
                     filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
                     getOptionLabel={option => option.numeroOferta}
-                    renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
+                    renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         oferta: parseInt(value.numeroOferta)
@@ -161,8 +161,8 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     inputValue={tareaSeleccionada.nombreElemento}
                     options={elementosAutocomplete}
                     getOptionLabel={option => (option.nombre + ' ' + option.numero)}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
+                    sx={{ width: '100%', marginTop: '22px' }}
+                    renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" error={errorElemento} helperText={errorElemento ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         elemento: parseInt(value.id),
@@ -177,8 +177,8 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     id="analisis"
                     options={analisisAutocomplete}
                     getOptionLabel={option => option.nombre}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" />}
+                    sx={{ width: '100%', marginTop: '22px' }}
+                    renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" error={errorAnalisis} helperText={errorAnalisis ? 'Este campo es obligatorio' : ' '} />}
                     onChange={handleChangeAnalisis}
                 />
             </Grid>
@@ -187,12 +187,12 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                 <Autocomplete
                     //disabled={estadoOperario}
                     disableClearable={true}
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '22px' }}
                     id="Operarios"
                     options={operarios}
                     filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
                     getOptionLabel={option => option.nombre + ' ' + option.apellidos}
-                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
+                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" error={errorOperario} helperText={errorOperario ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         operario: value.id
@@ -219,16 +219,18 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
             </Grid>*/}
 
             <Grid item xs={4} md={8} style={{ display: 'flex' }}>
-                <h3 style={{ width: '30%' }}> Fecha </h3>
+                <h3 style={{ width: '30%', marginTop: '22px' }}> Fecha </h3>
                 <TextField
                     id="fecha"
                     type="date"
                     name="fecha"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '22px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={errorFecha}
+                    helperText={errorFecha ? 'Introduzca una fecha' : ' '}
                 />
             </Grid>
 
@@ -238,8 +240,8 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     id="CboTipos"
                     options={tipos}
                     getOptionLabel={option => option.nombre}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="idTipo" />}
+                    sx={{ width: '100%', marginTop: '22px' }}
+                    renderInput={(params) => <TextField {...params} label="Periodicidad" name="tipo" error={errorPeriodo} helperText={errorPeriodo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
                         tipo: value.id

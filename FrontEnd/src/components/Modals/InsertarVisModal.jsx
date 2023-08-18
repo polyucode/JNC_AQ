@@ -46,7 +46,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid, analisis }) => {
+export const InsertarVisModal = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid, analisis, errorFecha }) => {
 
     const [operarios, setOperarios] = useState([]);
     const [nombreAnalisis, setNombreAnalisis] = useState([]);
@@ -100,7 +100,7 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex', marginTop: '22px' }}>
                 <Typography> Fecha </Typography>
             </Grid>
             <Grid item xs={8} md={4}>
@@ -108,11 +108,13 @@ export const InsertarVisModal = ({ change: handleChangeInput, analisisSelecciona
                     id="fecha"
                     type="date"
                     name="fecha"
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', marginTop: '22px' }}
                     onChange={handleChangeInput}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    error={errorFecha} 
+                    helperText={errorFecha ? 'Introduzca una fecha' : ' '}
                 />
             </Grid>
 

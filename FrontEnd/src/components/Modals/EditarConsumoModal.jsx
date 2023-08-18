@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getOfertas, getProductos } from '../../api';
 
-export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, ofertas, productos }) => {
+export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, ofertas, productos, errorFecha, errorCantidad }) => {
 
     function formateandofechas(fecha) {
         if(fecha !== null){
@@ -40,7 +40,7 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                 <p> Fecha </p>
             </Grid>
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} name="fecha" type="date" onChange={handleChange} value={consumoSeleccionado && formateandofechas(consumoSeleccionado.fecha)} />
+                <TextField sx={{ width: '100%', marginTop: '22px' }} name="fecha" type="date" onChange={handleChange} value={consumoSeleccionado && formateandofechas(consumoSeleccionado.fecha)} error={errorFecha} helperText={errorFecha ? 'Introduzca una fecha' : ' '} />
             </Grid>
 
             <Grid item xs={6} md={4}>
@@ -60,7 +60,7 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} label="Cantidad" name="cantidad" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} />
+                <TextField sx={{ width: '100%', marginTop: '22px' }} label="Cantidad" name="cantidad" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} error={errorCantidad} helperText={errorCantidad ? 'Introduzca una cantidad' : ' '} />
             </Grid>
 
         </>

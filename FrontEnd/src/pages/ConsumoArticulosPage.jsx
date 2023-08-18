@@ -26,6 +26,8 @@ import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
+import Swal from 'sweetalert2';
+
 
 const token = {
     headers: {
@@ -77,6 +79,11 @@ export const ConsumoArticulosPage = () => {
     const [descripcionEditar, setDescripcionEditar] = useState([]);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
+
+    const [errorOferta, setErrorOferta] = useState(false);
+    const [errorProducto, setErrorProducto] = useState(false);
+    const [errorFecha, setErrorFecha] = useState(false);
+    const [errorCantidad, setErrorCantidad] = useState(false);
 
     const { usuarioActual } = useUsuarioActual();
 
@@ -135,53 +142,124 @@ export const ConsumoArticulosPage = () => {
     }, [data]);
 
     const peticionPost = async () => {
-        consumoSeleccionado.id = 0;
-        const resp = await postConsumos(consumoSeleccionado);
-        abrirCerrarModalInsertar();
-        peticionGet();
-        setConsumoSeleccionado({
-            id: 0,
-            oferta: 0,
-            fecha: null,
-            producto: '',
-            cantidad: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+
+        if (consumoSeleccionado.oferta != 0) {
+            setErrorOferta(false)
+        } else {
+            setErrorOferta(true)
+        }
+
+        if (consumoSeleccionado.fecha != null) {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
+
+        if (consumoSeleccionado.producto != "") {
+            setErrorProducto(false)
+        } else {
+            setErrorProducto(true)
+        }
+
+        if (consumoSeleccionado.cantidad != 0) {
+            setErrorCantidad(false)
+        } else {
+            setErrorCantidad(true)
+        }
+
+        if (consumoSeleccionado.oferta != 0 && consumoSeleccionado.fecha != null && consumoSeleccionado.producto != "" && consumoSeleccionado.cantidad != 0) {
+            consumoSeleccionado.id = 0;
+            const resp = await postConsumos(consumoSeleccionado);
+            abrirCerrarModalInsertar();
+            peticionGet();
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Consumo Creado',
+                text: `El consumo se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPut = async () => {
 
-        const resp = await putConsumos(consumoSeleccionado);
+        if (consumoSeleccionado.fecha != "") {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        var consumoModificado = data;
-        consumoModificado.map(consumo => {
-            if (consumo.id === consumoSeleccionado.id) {
-                consumo = consumoSeleccionado
-            }
-        });
-        peticionGet();
-        abrirCerrarModalEditar();
-        setConsumoSeleccionado({
-            id: 0,
-            oferta: 0,
-            fecha: null,
-            producto: '',
-            cantidad: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+        if (consumoSeleccionado.cantidad != 0) {
+            setErrorCantidad(false)
+        } else {
+            setErrorCantidad(true)
+        }
 
+        if (consumoSeleccionado.fecha != "" && consumoSeleccionado.cantidad != 0) {
+            const resp = await putConsumos(consumoSeleccionado);
+
+            var consumoModificado = data;
+            consumoModificado.map(consumo => {
+                if (consumo.id === consumoSeleccionado.id) {
+                    consumo = consumoSeleccionado
+                }
+            });
+            peticionGet();
+            abrirCerrarModalEditar();
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Consumo Editado',
+                text: `El consumo se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+
+        }
     }
 
     const peticionDelete = async () => {
@@ -208,19 +286,100 @@ export const ConsumoArticulosPage = () => {
             })
             i++;
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Consumo Eliminado',
+            text: `El consumo se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
     //Modales
     const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar);
+        setErrorFecha(false)
+        setErrorCantidad(false)
+        setErrorOferta(false)
+        setErrorProducto(false)
+        if (modalInsertar) {
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalInsertar(!modalInsertar);
+        } else {
+            setModalInsertar(!modalInsertar);
+        }
     }
 
     const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
+        setErrorFecha(false)
+        setErrorCantidad(false)
+        setErrorOferta(false)
+        setErrorProducto(false)
+        if (modalEliminar) {
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEliminar(!modalEliminar);
+        } else {
+            setModalEliminar(!modalEliminar);
+        }
     }
 
     const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar);
+        setErrorFecha(false)
+        setErrorCantidad(false)
+        setErrorOferta(false)
+        setErrorProducto(false)
+        if (modalEditar) {
+            setConsumoSeleccionado({
+                id: 0,
+                oferta: 0,
+                fecha: null,
+                producto: '',
+                cantidad: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            })
+            setModalEditar(!modalEditar);
+        } else {
+            setModalEditar(!modalEditar);
+        }
     }
 
 
@@ -337,19 +496,16 @@ export const ConsumoArticulosPage = () => {
                                 setConsumoSeleccionado={setConsumoSeleccionado}
                                 ofertas={ofertas}
                                 productos={productos}
+                                errorCantidad={errorCantidad}
+                                errorFecha={errorFecha}
+                                errorOferta={errorOferta}
+                                errorProducto={errorProducto}
                             />
                         }
                         botones={[
-                            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                abrirCerrarModalInsertar();
-
-                                if (peticionPost()) {
-                                    setSnackData({ open: true, msg: 'Consumo añadido correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el consumo', severity: 'error' })
-                                }
-
-                            }, 'success')
+                            insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                peticionPost();
+                            })
                         ]}
                         open={modalInsertar}
                         onClose={abrirCerrarModalInsertar}
@@ -370,15 +526,11 @@ export const ConsumoArticulosPage = () => {
                             ofertaEditar={ofertaEditar}
                             ofertas={ofertas}
                             productos={productos}
+                            errorFecha={errorFecha}
+                            errorCantidad={errorCantidad}
                         />}
                     botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                        abrirCerrarModalEditar()
-
-                        if (peticionPut()) {
-                            setSnackData({ open: true, msg: 'Consumo editado correctamente', severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al editar el consumo', severity: 'error' })
-                        }
+                        peticionPut();
                     })
                     ]}
                     open={modalEditar}
@@ -397,16 +549,8 @@ export const ConsumoArticulosPage = () => {
                     }
                     botones={[
                         insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                            abrirCerrarModalEliminar();
-
-                            if (peticionDelete()) {
-                                setSnackData({ open: true, msg: `Consumo eliminado correctamente`, severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al eliminar el consumo', severity: 'error' })
-                            }
-
+                            peticionDelete();
                         }, 'error'),
-                        insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
                     ]}
                     open={modalEliminar}
                     onClose={abrirCerrarModalEliminar}
