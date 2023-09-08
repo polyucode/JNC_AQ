@@ -38,7 +38,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     return (
         <>
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={6} md={8}>
@@ -46,7 +46,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '}/>
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '}/>
             </Grid>
 
             <Grid item xs={6} md={3}>
@@ -56,7 +56,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     options={clientes}
                     getOptionLabel={option => option.codigo}
                     defaultValue={codigoClienteEditar[0]}
-                    sx={{ width: '100%', marginTop: '20px' }}
+                    sx={{ width: '100%', marginTop: '25px' }}
                     renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
@@ -87,7 +87,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     id="fechainicio"
                     type="date"
                     name="fechaInicio"
-                    sx={{ width: '100%', marginTop: '20px' }}
+                    sx={{ width: '100%', marginTop: '25px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,
@@ -106,7 +106,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     id="fechafinalizacion"
                     type="date"
                     name="fechaFinalizacion"
-                    sx={{ width: '100%', marginTop: '20px' }}
+                    sx={{ width: '100%', marginTop: '25px' }}
                     onChange={handleChangeFecha}
                     InputLabelProps={{
                         shrink: true,

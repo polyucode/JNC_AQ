@@ -1624,178 +1624,218 @@ export const VisualizacionPage = () => {
 
     const peticionPut = async () => {
 
-        if (fileChange != null) {
-            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if (resp) {
-                analisisSeleccionado.pdf = resp.data
-            }
+        if (analisisSeleccionado.fecha != "") {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
         }
 
-        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
-
-        var analisisModificado = data;
-        analisisModificado.map(analisi => {
-            if (analisi.id === analisisSeleccionado.id) {
-                analisi = analisisSeleccionado
+        if (analisisSeleccionado.fecha != "") {
+            if (fileChange != null) {
+                const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+                if (resp) {
+                    analisisSeleccionado.pdf = resp.data
+                }
             }
-        });
 
-        abrirCerrarModalEditar();
-        GetParametrosAnalisisPlanta();
-        AguasResiduales();
-        Desinfecciones();
-        AguaPozo();
-        DesinfeccionACS();
-        MantMaqFrio();
-        Mediciones();
-        ControlFugaGas();
-        AguaPotable();
-        RevisionBandeja();
-        GetFichero();
-        //Otros();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: 0,
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+            await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
 
+            var analisisModificado = data;
+            analisisModificado.map(analisi => {
+                if (analisi.id === analisisSeleccionado.id) {
+                    analisi = analisisSeleccionado
+                }
+            });
+
+            abrirCerrarModalEditar();
+            GetParametrosAnalisisPlanta();
+            AguasResiduales();
+            Desinfecciones();
+            AguaPozo();
+            DesinfeccionACS();
+            MantMaqFrio();
+            Mediciones();
+            ControlFugaGas();
+            AguaPotable();
+            RevisionBandeja();
+            GetFichero();
+            //Otros();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: 0,
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Editada',
+                text: `La tarea se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
     }
 
     const peticionPut1 = async () => {
 
-        const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+        if (analisisSeleccionado.fecha != "") {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
+        }
 
-        var analisisModificado = data;
-        analisisModificado.map(analisi => {
-            if (analisi.id === analisisSeleccionado.id) {
-                analisi = analisisSeleccionado
-            }
-        });
-        FisicoQuimicoTorre();
-        FisicoQuimicoAporte();
-        FisicoQuimicoAlimentacion();
-        FisicoQuimicoRechazo();
-        FisicoQuimicoCondensados();
-        FisicoQuimicoCaldera();
-        Osmosis();
-        GetParametrosAnalisisPlanta();
-        abrirCerrarModalEditar1();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: 0,
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+        if (analisisSeleccionado.fecha != "") {
+            const resp = await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+
+            var analisisModificado = data;
+            analisisModificado.map(analisi => {
+                if (analisi.id === analisisSeleccionado.id) {
+                    analisi = analisisSeleccionado
+                }
+            });
+            FisicoQuimicoTorre();
+            FisicoQuimicoAporte();
+            FisicoQuimicoAlimentacion();
+            FisicoQuimicoRechazo();
+            FisicoQuimicoCondensados();
+            FisicoQuimicoCaldera();
+            Osmosis();
+            GetParametrosAnalisisPlanta();
+            abrirCerrarModalEditar1();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: 0,
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+        }
 
     }
 
     const peticionPutAerobio = async () => {
 
-
-        if (fileChange != null) {
-            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if (resp) {
-                analisisSeleccionado.pdf = resp.data
-            }
-
-
+        if (analisisSeleccionado.fecha != "") {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
         }
 
-        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
-
-        var analisisModificado = data;
-        analisisModificado.map(analisi => {
-            if (analisi.id === analisisSeleccionado.id) {
-                analisi = analisisSeleccionado
+        if (analisisSeleccionado.fecha != "") {
+            if (fileChange != null) {
+                const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+                if (resp) {
+                    analisisSeleccionado.pdf = resp.data
+                }
+    
+    
             }
-        });
+    
+            await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+    
+            var analisisModificado = data;
+            analisisModificado.map(analisi => {
+                if (analisi.id === analisisSeleccionado.id) {
+                    analisi = analisisSeleccionado
+                }
+            });
+    
+            abrirCerrarModalEditarAerobio();
+            GetParametrosAnalisisPlanta();
+            Aerobios();
+            GetFichero();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: 0,
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
+        }
 
-        abrirCerrarModalEditarAerobio();
-        GetParametrosAnalisisPlanta();
-        Aerobios();
-        GetFichero();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: 0,
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+
+        
 
     }
 

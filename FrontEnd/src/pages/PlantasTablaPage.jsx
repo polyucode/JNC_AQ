@@ -443,7 +443,7 @@ export const PlantasTablaPage = () => {
                     Id_Analisis: parametrosSeleccionado.idAnalisis,
                     Parametro: parametro.id,
                     Fecha: null,
-                    Valor: 0,
+                    Valor: "",
                     Unidad: parametro.unidades,
                     addDate: null,
                     addIdUser: null,
@@ -454,9 +454,9 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
-                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
+                console.log(param2)
 
-                console.log(valorFiltrado, "VALOR FILTRADO")
+                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
 
                 if (valorFiltrado.length == 0) {
                     const resp = postValorParametros(param2);
