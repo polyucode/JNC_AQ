@@ -2,8 +2,8 @@ import axios from 'axios';
 
 export const instance = axios.create({
 
-    baseURL: 'https://localhost:44343/api',
-    //baseURL: 'http://172.26.0.169:44343/api',
+    //baseURL: 'https://localhost:44343/api',
+    baseURL: 'http://172.26.0.169:44343/api',
     headers: {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
