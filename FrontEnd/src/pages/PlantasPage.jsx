@@ -368,6 +368,8 @@ export const PlantasPage = () => {
 
     }
 
+    console.log(elementoSeleccionado, "ELEMENTO SELECCIONADO")
+
     const handleAnalisis = (event) => {
 
         setElementoSeleccionado({
@@ -411,12 +413,17 @@ export const PlantasPage = () => {
 
     };
 
+    console.log(confNivelesPlantaCliente, "CONF NIVELES")
+    console.log(elementosPlanta, "ELEMENTOS")
+
     const handleGuardarDatos = async () => {
 
         let niveles = [];
 
         // Guardamos los datos de la planta
         await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
+
+        const respAnalisis = await getAnalisisNivelesPlantasCliente();
 
         // Guardamos los registros de los elementos de la planta para obtener sus IDs
         let elementosActualizados = [];
@@ -455,10 +462,8 @@ export const PlantasPage = () => {
                 await putElementos(postElemento);
 
                 // Añadimos el elemento al listado
-                elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel });
+                //elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel });
                 idElementoActualizado = elemento.id;
-
-                console.log(elementosActualizados);
 
                 // Añadimos el ID del elemento al registro del nivel
                 postNivelesPlanta = {
@@ -472,7 +477,7 @@ export const PlantasPage = () => {
                 const respElemento = await postElementos(postElemento);
 
                 // Añadimos el elemento al listado
-                elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
+                //elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
                 idElementoActualizado = respElemento.id;
 
                 // Añadimos el ID del elemento al registro del nivel
@@ -482,7 +487,7 @@ export const PlantasPage = () => {
                 }
 
                 // Recorremos los parámetros para crear sus registros corespondientes
-                await parametros.map(async (parametro, index) => {
+                /* await parametros.map(async (parametro, index) => {
 
                     // Preparamos el cuerpo de la petición
                     const postParametro = {
@@ -510,7 +515,7 @@ export const PlantasPage = () => {
                     const resp = await postParametrosElementoPlantaCliente(postParametro);
 
 
-                });
+                }); */
 
             }
 
@@ -525,6 +530,7 @@ export const PlantasPage = () => {
                     id: registroNivel[0].id
                 }
 
+
                 // Hacemos la petición PUT
                 await putConfNivelesPlantasCliente(postNivelesPlanta);
                 niveles.push(postNivelesPlanta);
@@ -536,6 +542,9 @@ export const PlantasPage = () => {
                 niveles.push(respNiveles);
 
             }
+
+            
+            console.log(elemento, "ELEMENTO")
 
             // Comprobamos si el elemento tiene analisis
             if (elemento.analisis) {
@@ -601,10 +610,15 @@ export const PlantasPage = () => {
                 }
             }
 
+            elementosActualizados.push(elemento)
+
         }));
+
+        console.log(elementosActualizados, "ELEMENTOS ACTUALIZADOS")
 
         // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
         setElementosPlanta(elementosActualizados);
+        setConfNivelesPlantaCliente(niveles)
         setDatosGuardados(true);
 
         // Avisamos al usuario
