@@ -315,7 +315,7 @@ export const PlantasTablaPage = () => {
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta && planta.id_Elemento === parametrosSeleccionado.idElemento);
 
         lista.map(analisis => {
-            opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id));
+            opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id && !anal.deleted));
         })
 
         opcionesFiltradasAnalisis.map(nomAnalisis => {
@@ -701,7 +701,7 @@ export const PlantasTablaPage = () => {
                                     id="analisis"
                                     inputValue={parametrosSeleccionado.nombreAnalisis}
                                     options={analisisAutocomplete}
-                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11)}
+                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11 )}
                                     getOptionLabel={option => option.nombre}
                                     renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
                                     onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}

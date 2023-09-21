@@ -42,7 +42,7 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
     return (
         <>
             <Grid item xs={ 3 } md={ 3 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Código" name="codigo" type="number" onChange={ handleChange } error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Código" name="codigo" type="number" onChange={ handleChange } error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 3 } md={ 3 }>
@@ -50,11 +50,11 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
             </Grid>
 
             <Grid item xs={ 6 } md={ 6 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Razón social" name="razonSocial" onChange={ handleChange } error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Razón social" name="razonSocial" onChange={ handleChange } error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 6 } md={ 3 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Teléfono" name="telefono" onChange={ handleChange } error={errorTelefono} helperText={errorTelefono ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Teléfono" name="telefono" onChange={ handleChange } error={errorTelefono} helperText={errorTelefono ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 6 } md={ 3 }>
@@ -62,15 +62,15 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
             </Grid>
 
             <Grid item xs={ 12 } md={ 6 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Email" name="email" type="email" onChange={ handleChange } error={errorEmail} helperText={errorEmail ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Email" name="email" type="email" onChange={ handleChange } error={errorEmail} helperText={errorEmail ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 8 } md={ 8 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Dirección" name="direccion" onChange={ handleChange } error={errorDireccion} helperText={errorDireccion ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Dirección" name="direccion" onChange={ handleChange } error={errorDireccion} helperText={errorDireccion ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={ 4 } md={ 3 }>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="CP" name="cp" onChange={ handleChange } error={errorCP} helperText={errorCP ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="CP" name="cp" onChange={ handleChange } error={errorCP} helperText={errorCP ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             {/* Desplegable de Comarcas */}

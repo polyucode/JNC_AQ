@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { useEffect } from 'react';
-import { getListaElementos } from '../../api';
+import { deleteAnalisisNivelesPlantasCliente, deleteConfNivelesPlantasCliente, deleteElementosPlanta, getAnalisisNivelesPlantasCliente, getConfNivelesPlantasCliente, getElementosPlanta, getListaElementos } from '../../api';
 import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 
 export const NivelPlanta = ({
@@ -16,7 +16,8 @@ export const NivelPlanta = ({
     elementosPlanta,
     setElementosPlanta,
     indiceElemento,
-    setIndiceElemento
+    setIndiceElemento,
+    confNivelesPlantaCliente
 }) => {
 
     const [elementos, setElementos] = useState([]);
@@ -74,7 +75,38 @@ export const NivelPlanta = ({
 
     }
 
-    const handleDeleteElemento = (id) => {
+    const handleDeleteElemento = async (id) => {
+
+        console.log(id)
+
+        if (id > 0) {
+            const respAnalisis = await getAnalisisNivelesPlantasCliente();
+
+            const respNiveles = await getConfNivelesPlantasCliente();
+
+            const respElementos = await getElementosPlanta();
+
+            const elementoNivelBorrado = respNiveles.filter(nivel => nivel.id_Elemento == id)
+
+            const analisisElementoBorrado = respAnalisis.filter(analisi => analisi.id_NivelesPlanta == elementoNivelBorrado[0].id)
+
+            const elementoBorrado = respElementos.filter(elem => elem.id == id)
+
+            if (elementoNivelBorrado) {
+                await deleteConfNivelesPlantasCliente(elementoNivelBorrado[0].id)
+            }
+
+            if (elementoBorrado) {
+                await deleteElementosPlanta(elementoBorrado[0].id)
+            }
+
+            if (analisisElementoBorrado) {
+                analisisElementoBorrado.map(async (anal) => {
+                    await deleteAnalisisNivelesPlantasCliente(anal.id)
+                })
+            }
+        }
+
         setElementosPlanta(elementosPlanta.filter(elemento => elemento.id != id));
     }
 
@@ -124,7 +156,7 @@ export const NivelPlanta = ({
                                                 <div key={elemento.id}>
                                                     <ListItem
                                                         sx={{ backgroundColor: 'none' }}
-                                                        
+
                                                     >
                                                         <ListItemText
                                                             primary={`${elemento.nombre} ${elemento.numero}`}

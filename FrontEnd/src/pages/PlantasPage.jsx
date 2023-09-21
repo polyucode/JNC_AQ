@@ -182,6 +182,8 @@ export const PlantasPage = () => {
 
     }, [elementosPlanta]);
 
+    console.log(confPlantaCliente)
+
     // FUNCIONES
 
     const handleCrearCargarPlanta = async () => {
@@ -267,7 +269,7 @@ export const PlantasPage = () => {
                 setLados2(datosDiagrama.lados)
 
                 // Actualizamos los datos de la planta
-                setConfPlantaCliente(prevState => ({ ...prevState, Id: respPlanta.id, NumNiveles: respPlanta.numNiveles }));
+                setConfPlantaCliente(prevState => ({ ...prevState, Id: respPlanta.id, NumNiveles: respPlanta.numNiveles, Diagrama: respPlanta.diagrama }));
                 setPlantaCreada(true);
 
                 // Generamos los niveles según lo indicado por el usuario
@@ -368,8 +370,6 @@ export const PlantasPage = () => {
 
     }
 
-    console.log(elementoSeleccionado, "ELEMENTO SELECCIONADO")
-
     const handleAnalisis = (event) => {
 
         setElementoSeleccionado({
@@ -413,17 +413,12 @@ export const PlantasPage = () => {
 
     };
 
-    console.log(confNivelesPlantaCliente, "CONF NIVELES")
-    console.log(elementosPlanta, "ELEMENTOS")
-
     const handleGuardarDatos = async () => {
 
         let niveles = [];
 
         // Guardamos los datos de la planta
         await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
-
-        const respAnalisis = await getAnalisisNivelesPlantasCliente();
 
         // Guardamos los registros de los elementos de la planta para obtener sus IDs
         let elementosActualizados = [];
@@ -462,7 +457,7 @@ export const PlantasPage = () => {
                 await putElementos(postElemento);
 
                 // Añadimos el elemento al listado
-                //elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel });
+                elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
                 idElementoActualizado = elemento.id;
 
                 // Añadimos el ID del elemento al registro del nivel
@@ -477,7 +472,7 @@ export const PlantasPage = () => {
                 const respElemento = await postElementos(postElemento);
 
                 // Añadimos el elemento al listado
-                //elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel });
+                elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
                 idElementoActualizado = respElemento.id;
 
                 // Añadimos el ID del elemento al registro del nivel
@@ -485,37 +480,6 @@ export const PlantasPage = () => {
                     ...postNivelesPlanta,
                     id_Elemento: respElemento.id,
                 }
-
-                // Recorremos los parámetros para crear sus registros corespondientes
-                /* await parametros.map(async (parametro, index) => {
-
-                    // Preparamos el cuerpo de la petición
-                    const postParametro = {
-                        Activo: false,
-                        CodigoCliente: confPlantaCliente.CodigoCliente,
-                        EsPlantilla: true,
-                        Id_Elemento: respElemento.id,
-                        LimInf: 0,
-                        LimSup: 0,
-                        NombreCliente: confPlantaCliente.NombreCliente,
-                        Oferta: confPlantaCliente.Oferta,
-                        Parametro: parametro.id,
-                        Unidades: parametro.unidad,
-                        VerInspector: false,
-                        addDate: null,
-                        addIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                        modDate: null,
-                        modIdUser: null
-                    }
-
-                    // Realizamos la petición POST para crear el registro
-                    const resp = await postParametrosElementoPlantaCliente(postParametro);
-
-
-                }); */
 
             }
 
@@ -543,14 +507,8 @@ export const PlantasPage = () => {
 
             }
 
-            
-            console.log(elemento, "ELEMENTO")
-
             // Comprobamos si el elemento tiene analisis
             if (elemento.analisis) {
-
-                console.log(idElementoActualizado);
-                console.log(niveles.filter(nivel => nivel.id_Elemento === idElementoActualizado))
 
                 // Obtenemos el id del nivel de la planta relacionada al elemento y obtenemos sus registros
                 const idNivelPlanta = niveles.filter(nivel => nivel.id_Elemento === idElementoActualizado)[0].id;
@@ -589,7 +547,6 @@ export const PlantasPage = () => {
 
                         // Finalmente, realizamos la petición PUT
                         const respAnalisis = await putAnalisisNivelesPlantasCliente(putAnalisis);
-                        console.log(respAnalisis);
 
                     } else {
 
@@ -610,11 +567,7 @@ export const PlantasPage = () => {
                 }
             }
 
-            elementosActualizados.push(elemento)
-
         }));
-
-        console.log(elementosActualizados, "ELEMENTOS ACTUALIZADOS")
 
         // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
         setElementosPlanta(elementosActualizados);
@@ -824,6 +777,7 @@ export const PlantasPage = () => {
                                             setElementosPlanta={setElementosPlanta}
                                             indiceElemento={indiceElemento}
                                             setIndiceElemento={setIndiceElemento}
+                                            confNivelesPlantaCliente={confNivelesPlantaCliente}
                                         />
                                     ))
                                 }
@@ -964,7 +918,7 @@ export const PlantasPage = () => {
                                     variant='contained'
                                     endIcon={<NavigateNextIcon />}
                                     disabled={!diagramaGuardado}
-                                    onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
+                                    onClick={() => { navigate('/plantasTabla'); }}>
                                     Siguiente
                                 </Button>
 
