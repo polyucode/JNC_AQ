@@ -103,7 +103,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
-                    getOptionLabel={option => option.codigo}
+                    getOptionLabel={option => option.codigo.toString()}
                     sx={{ width: '100%', marginTop: '22px' }}
                     renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
@@ -131,10 +131,10 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     disableClearable={true}
                     sx={{ width: '100%', marginTop: '22px' }}
                     id="Oferta"
-                    inputValue={tareaSeleccionada.oferta}
+                    inputValue={tareaSeleccionada.oferta.toString()}
                     options={ofertas}
                     filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
-                    getOptionLabel={option => option.numeroOferta}
+                    getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,

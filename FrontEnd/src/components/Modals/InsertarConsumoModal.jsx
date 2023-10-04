@@ -12,7 +12,7 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                     sx={{ width: '100%', marginTop: '20px' }}
                     id="Oferta"
                     options={ofertas}
-                    getOptionLabel={option => option.numeroOferta}
+                    getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,

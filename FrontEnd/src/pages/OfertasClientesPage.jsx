@@ -589,6 +589,7 @@ export const OfertasClientesPage = () => {
                             <Grid item xs={12}>
                                 <Card>
                                     <DataGrid
+                                        key="ofertas"
                                         components={{ Toolbar: GridToolbar }}
                                         localeText={DATAGRID_LOCALE_TEXT}
                                         sx={{
@@ -617,6 +618,7 @@ export const OfertasClientesPage = () => {
 
                             {/* Agregar Oferta */}
                             <ModalLayout
+                                key={`oferta-añadir-${ofertaSeleccionada.id}`}
                                 titulo="Agregar nueva oferta"
                                 contenido={
                                     <InsertarOfertaModal
@@ -645,6 +647,7 @@ export const OfertasClientesPage = () => {
                         {/* Modal Editar Oferta*/}
 
                         <ModalLayout
+                            key={`oferta-editar-${ofertaSeleccionada.id}`}
                             titulo="Editar Oferta"
                             contenido={
                                 <EditarOfertaModal
@@ -671,6 +674,7 @@ export const OfertasClientesPage = () => {
 
                         {/* Eliminar oferta */}
                         <ModalLayout
+                            key={`oferta-eliminar-${ofertaSeleccionada.id}`}
                             titulo="Eliminar oferta"
                             contenido={
                                 <>

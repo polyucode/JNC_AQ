@@ -300,7 +300,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     return (
         <>
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -308,11 +308,11 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={6}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Razón social" name="razonSocial" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.razonSocial} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} error={errorTelefono} helperText={errorTelefono ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Teléfono" name="telefono" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.telefono} error={errorTelefono} helperText={errorTelefono ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -320,7 +320,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={6}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} error={errorEmail} helperText={errorEmail ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Email" name="email" type="email" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.email} error={errorEmail} helperText={errorEmail ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={8}>
@@ -328,13 +328,14 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} error={errorCP} helperText={errorCP ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="CP" name="cp" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.cp} error={errorCP} helperText={errorCP ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={3} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="comarca"
+                    sx={{ marginBottom: '10px'}}
                     options={comarcas}
                     getOptionLabel={option => option.descripcion}
                     defaultValue={comarcaEditar[0]}
@@ -347,11 +348,11 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             </Grid>
 
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
+                <TextField sx={{ width: '100%', marginBottom: '10px' }} label="Província" name="provincia" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.provincia} />
             </Grid>
 
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
+                <TextField sx={{ width: '100%', marginBottom: '10px' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
 
             <Grid container spacing={3}>

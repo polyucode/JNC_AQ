@@ -27,7 +27,7 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     id="Oferta"
                     options={ofertas}
                     defaultValue={ofertaEditar[0]}
-                    getOptionLabel={option => option.numeroOferta}
+                    getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,

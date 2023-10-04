@@ -182,8 +182,6 @@ export const PlantasPage = () => {
 
     }, [elementosPlanta]);
 
-    console.log(confPlantaCliente)
-
     // FUNCIONES
 
     const handleCrearCargarPlanta = async () => {

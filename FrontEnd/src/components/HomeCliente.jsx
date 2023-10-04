@@ -382,7 +382,7 @@ const HomeCliente = () => {
                     <Grid item xs={12}>
                         <Card>
                             <CardContent>
-                                <Grid container sx={{ alignItems: 'center' }}>
+                                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
                                     <Grid item xs={6}>
                                         <Typography variant="h6">
@@ -405,7 +405,7 @@ const HomeCliente = () => {
                                             disableClearable={true}
                                             id="clientes"
                                             options={clientes}
-                                            getOptionLabel={option => option.codigo}
+                                            getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} label="Código Cliente" name="codigoCliente" />}
                                             onChange={(event, value) => setClienteSeleccionado(prevState => ({
                                                 ...prevState,
@@ -420,7 +420,7 @@ const HomeCliente = () => {
                                             id="ofertas"
                                             options={ofertas}
                                             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === clienteSeleccionado.codigoCliente)}
-                                            getOptionLabel={option => option.numeroOferta}
+                                            getOptionLabel={option => option.numeroOferta.toString()}
                                             renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
                                             onChange={handleSeleccionOferta}
                                         />
@@ -434,7 +434,7 @@ const HomeCliente = () => {
                     <Grid item xs={12}>
                         <Card>
                             <CardContent sx={{ p: 0 }}>
-                                <Grid container>
+                                <Grid container spacing={2}>
                                     <Grid item xs={12}>
                                         <Typography variant="h6" sx={{ pt: 1, pb: 1, pl: 2 }}>Diagrama de la planta</Typography>
                                     </Grid>
@@ -464,7 +464,7 @@ const HomeCliente = () => {
                         <Card style={{ height: '600px', overflowY: 'auto' }}>
                             <CardContent sx={{ p: 2 }}>
 
-                                <Grid containter spacing={2}>
+                                <Grid container spacing={2}>
 
                                     <Grid item xs={12} sx={{ pb: 2 }}>
                                         <Typography variant="h6">Incidéncias</Typography>
@@ -542,7 +542,7 @@ const HomeCliente = () => {
                         <Card style={{ height: '600px', overflowY: 'auto' }}>
                             <CardContent sx={{ p: 2 }}>
 
-                                <Grid containter spacing={2}>
+                                <Grid container spacing={2}>
 
                                     <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'space-between' }}>
                                         {
@@ -618,8 +618,6 @@ const HomeCliente = () => {
 
                                                             if (valoresPorTarea.length > 0) {
 
-                                                                console.log({ valoresPorTarea });
-
                                                                 // Mapeamos los valores en un array, y los registro que no estén seteamos una raya
                                                                 valoresPorTarea.map(val => {
 
@@ -637,8 +635,6 @@ const HomeCliente = () => {
                                                                             }
                                                                         }
                                                                     }
-
-                                                                    console.log("FECHAS: ", { fechas })
 
                                                                 });
 
@@ -860,7 +856,7 @@ const HomeCliente = () => {
                                                 <Card style={{ height: '600px', overflowY: 'auto' }}>
                                                     <CardContent sx={{ p: 2 }}>
 
-                                                        <Grid containter spacing={2}>
+                                                        <Grid container spacing={2}>
 
                                                             <Grid item xs={12} sx={{ pb: 2 }}>
                                                                 <Typography variant="h6">PDF'S</Typography>

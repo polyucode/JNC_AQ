@@ -581,7 +581,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
-                    getOptionLabel={option => option.codigo}
+                    getOptionLabel={option => option.codigo.toString()}
                     defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" />}
@@ -614,10 +614,10 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     disableClearable={true}
                     sx={{ width: '100%' }}
                     id="Oferta"
-                    inputValue={tareaSeleccionada.oferta}
+                    inputValue={tareaSeleccionada.oferta.toString()}
                     options={ofertas}
                     filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
-                    getOptionLabel={option => option.numeroOferta}
+                    getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
@@ -660,7 +660,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     id="analisis"
                     options={analisisAutocomplete}
                     defaultValue={analisisEditar[0]}
-                    getOptionLabel={option => option.nombre}
+                    getOptionLabel={option => option.nombre.toString()}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Analisis" name="analisis" />}
                     onChange={handleChangeAnalisis}
@@ -710,7 +710,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     id="CboTipos"
                     options={tipos}
                     defaultValue={tipoTareaEditar[0]}
-                    getOptionLabel={option => option.nombre}
+                    getOptionLabel={option => option.nombre.toString()}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Periodicidad" name="tipo" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({

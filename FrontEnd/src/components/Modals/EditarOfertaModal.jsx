@@ -54,7 +54,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
-                    getOptionLabel={option => option.codigo}
+                    getOptionLabel={option => option.codigo.toString()}
                     defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%', marginTop: '25px' }}
                     renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
