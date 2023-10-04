@@ -454,8 +454,6 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
-                console.log(param2)
-
                 const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
 
                 if (valorFiltrado.length == 0) {
@@ -469,8 +467,6 @@ export const PlantasTablaPage = () => {
     const abrirPlantilla = async () => {
 
         const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
-
-        //let tipoParametrosActualizados = tipoParametros;
 
         const datosMapeados = resp.map(datos => {
 
@@ -491,8 +487,10 @@ export const PlantasTablaPage = () => {
 
         });
 
+        const datosOrdenados = datosMapeados.sort((a, b) => a.id - b.id);
+
         // Una vez mapeado, seteamos los datos en el estado
-        setTipoParametros([...datosMapeados]);
+        setTipoParametros([...datosOrdenados]);
 
     }
 

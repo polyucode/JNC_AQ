@@ -305,12 +305,28 @@ export const MantenimientoTecnicoPage = () => {
     const onChangeFecha = (e, value, name) => {
 
         setValoresParametros([])
+        setTareaAnalisisPlanta({})
 
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.fecha,
             fechaIso: e.target.textContent
         }))
+    }
+
+    const onChangeOperario = (e, value, name) => {
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.id
+        }))
+
+        if(tareaAnalisisPlanta != {}){
+            setTareaAnalisisPlanta((prevState) => ({
+                ...prevState,
+                operario: value.id
+            }))
+        }
     }
 
     const guardarPDF = async () => {
@@ -360,62 +376,63 @@ export const MantenimientoTecnicoPage = () => {
 
         // Recorremos los registros para ver que valores podemos guardar (activo)
 
-        resp.map(registro => {
+        if(resp2[0].analisis == 1 || resp2[0].analisis == 2 || resp2[0].analisis == 3 || resp2[0].analisis == 4 || resp2[0].analisis == 5 || resp2[0].analisis == 6 || resp2[0].analisis == 11){
+            resp.map(registro => {
 
-            const valoresPorParametro = datos.filter(param => param.parametro === registro.parametro)
-
-            // Preparamos el valor del mes actual y el arreglo de meses
-            let mesActual = new Date().getMonth();
-            let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-            // Mapeamos los valores en un array, y si no hay datos seteamos un 0
-            valoresPorParametro.map(val => {
-
-                const fecha = new Date(val.fecha);
-
-                for (let i = 0; i < 12; i++) {
-                    if (fecha.getMonth() === i) {
-                        fechas[i] = val.valor;
+                const valoresPorParametro = datos.filter(param => param.parametro === registro.parametro)
+    
+                // Preparamos el valor del mes actual y el arreglo de meses
+                let mesActual = new Date().getMonth();
+                let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    
+                // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                valoresPorParametro.map(val => {
+    
+                    const fecha = new Date(val.fecha);
+    
+                    for (let i = 0; i < 12; i++) {
+                        if (fecha.getMonth() === i) {
+                            fechas[i] = val.valor;
+                        }
                     }
+    
+                });
+    
+                // Volteamos las fechas para obtener los meses anteriores
+                fechas = fechas.reverse();
+    
+                // Obtenemos los dos últimos meses y si no hay registros, seteamos un 0
+                let valoresMeses = fechas.slice(12 - mesActual, (12 - mesActual) + 2);
+                if (valoresMeses.length < 2) {
+                    valoresMeses.push(0);
                 }
-
-            });
-
-            // Volteamos las fechas para obtener los meses anteriores
-            fechas = fechas.reverse();
-
-            // Obtenemos los dos últimos meses y si no hay registros, seteamos un 0
-            let valoresMeses = fechas.slice(12 - mesActual, (12 - mesActual) + 2);
-            if (valoresMeses.length < 2) {
-                valoresMeses.push(0);
-            }
-
-            // Creamos el objeto
-            parametrosMostrar.push({
-                id: registro.id,
-                codigoCliente: parametrosSeleccionado.codigoCliente,
-                fecha: registro.fecha,
-                id_Elemento: parametrosSeleccionado.idElemento,
-                oferta: parametrosSeleccionado.oferta,
-                id_Analisis: parametrosSeleccionado.idAnalisis,
-                id_Operario: (registro.id_Operario != null) ? registro.id_Operario : parametrosSeleccionado.idOperario,
-                parametro: registro.parametro,
-                referencia: parametrosSeleccionado.referencia,
-                unidad: registro.unidad,
-                valor: registro.valor,
-                limInf: valoresPorParametro[0] ? valoresPorParametro[0].limInf : 0,
-                limSup: valoresPorParametro[0] ? valoresPorParametro[0].limSup : 0,
-                dosMeses: valoresMeses
+    
+                // Creamos el objeto
+                parametrosMostrar.push({
+                    id: registro.id,
+                    codigoCliente: parametrosSeleccionado.codigoCliente,
+                    fecha: registro.fecha,
+                    id_Elemento: parametrosSeleccionado.idElemento,
+                    oferta: parametrosSeleccionado.oferta,
+                    id_Analisis: parametrosSeleccionado.idAnalisis,
+                    id_Operario: (registro.id_Operario != null) ? registro.id_Operario : parametrosSeleccionado.idOperario,
+                    parametro: registro.parametro,
+                    referencia: parametrosSeleccionado.referencia,
+                    unidad: registro.unidad,
+                    valor: registro.valor,
+                    limInf: valoresPorParametro[0] ? valoresPorParametro[0].limInf : 0,
+                    limSup: valoresPorParametro[0] ? valoresPorParametro[0].limSup : 0,
+                    dosMeses: valoresMeses
+                })
+    
             })
-
-        })
-
-        // Finalmente, añadimos los datos al estado
-        setValoresParametros(parametrosMostrar);
-
-        const operario = operarios.find((op) => op.id === parametrosMostrar[0].id_Operario)
-        setNombreOperario(operario.nombre + ' ' + operario.apellidos)
-
+    
+            // Finalmente, añadimos los datos al estado
+            setValoresParametros(parametrosMostrar);
+    
+            const operario = operarios.find((op) => op.id === parametrosMostrar[0].id_Operario)
+            setNombreOperario(operario.nombre + ' ' + operario.apellidos)
+        }
     }
 
     const handleEditarParametro = (e, id) => {
@@ -632,7 +649,7 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="codigoOferta"
                                         options={ofertas.sort((a, b) => b.numeroOferta - a.numeroOferta)}
-                                        inputValue={parametrosSeleccionado.oferta}
+                                        inputValue={parametrosSeleccionado.oferta.toString()}
                                         filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
                                         getOptionLabel={option => option.numeroOferta.toString()}
                                         renderInput={params => <TextField {...params} label="Código de oferta" name="oferta" />}
@@ -674,10 +691,7 @@ export const MantenimientoTecnicoPage = () => {
                                         filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
                                         getOptionLabel={option => option.nombre + ' ' + option.apellidos}
                                         renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
-                                        onChange={(event, value) => setParametrosSeleccionado(prevState => ({
-                                            ...prevState,
-                                            idOperario: value.id
-                                        }))}
+                                        onChange={(event, value) => onChangeOperario(event, value, "idOperario")}
                                     />
                                 </Grid>
 
@@ -747,8 +761,8 @@ export const MantenimientoTecnicoPage = () => {
                                 (<CardContent style={{ padding: '30px', margin: '15px' }}>
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>
-                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Recogida de Muestras" name="recogido" onChange={handleChangeCheckbox} />
-                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Realizado" name="realizado" onChange={handleChangeCheckbox2} />
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Recogida de Muestras" name="recogido" checked={tareaAnalisisPlanta.recogido} onChange={handleChangeCheckbox} />
+                                            <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Realizado" name="realizado" checked={tareaAnalisisPlanta.realizado} onChange={handleChangeCheckbox2} />
                                         </Grid>
                                         <Grid item xs={6} md={6}>
                                             <p> Observaciones </p>
@@ -758,6 +772,7 @@ export const MantenimientoTecnicoPage = () => {
                                                 name="observaciones"
                                                 style={{ width: '100%' }}
                                                 onChange={handleTextArea}
+                                                defaultValue={tareaAnalisisPlanta.observaciones}
                                             />
                                         </Grid>
                                     </Grid>
