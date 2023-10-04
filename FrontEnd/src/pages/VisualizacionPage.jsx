@@ -1766,6 +1766,21 @@ export const VisualizacionPage = () => {
                 delIdUser: null,
                 deleted: null,
             });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Editada',
+                text: `La tarea se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
 
     }
@@ -1832,69 +1847,103 @@ export const VisualizacionPage = () => {
                 delIdUser: null,
                 deleted: null,
             });
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Editada',
+                text: `La tarea se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
-
-
-        
-
     }
 
     const peticionPutLegionela = async () => {
 
-        if (fileChange != null) {
-            const resp = await subirPdf(analisisSeleccionado.id, fileChange)
-            if (resp) {
-                analisisSeleccionado.pdf = resp.data
-            }
-
-
+        if (analisisSeleccionado.fecha != "") {
+            setErrorFecha(false)
+        } else {
+            setErrorFecha(true)
         }
 
-        await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
-
-        var analisisModificado = data;
-        analisisModificado.map(analisi => {
-            if (analisi.id === analisisSeleccionado.id) {
-                analisi = analisisSeleccionado
+        if (analisisSeleccionado.fecha != "") {
+            if (fileChange != null) {
+                const resp = await subirPdf(analisisSeleccionado.id, fileChange)
+                if (resp) {
+                    analisisSeleccionado.pdf = resp.data
+                }
+    
+    
             }
-        });
+    
+            await putParametrosAnalisisPlantaPorId(analisisSeleccionado);
+    
+            var analisisModificado = data;
+            analisisModificado.map(analisi => {
+                if (analisi.id === analisisSeleccionado.id) {
+                    analisi = analisisSeleccionado
+                }
+            });
+    
+            abrirCerrarModalEditarLegionela();
+            GetParametrosAnalisisPlanta();
+            Legionela();
+            GetFichero();
+            setAnalisisSeleccionado({
+                id: 0,
+                codigoCliente: analisisSeleccionado.codigoCliente,
+                nombreCliente: analisisSeleccionado.nombreCliente,
+                oferta: analisisSeleccionado.oferta,
+                pedido: analisisSeleccionado.pedido,
+                elemento: analisisSeleccionado.elemento,
+                nombreElemento: analisisSeleccionado.nombreElemento,
+                periodo: '',
+                analisis: 0,
+                fecha: null,
+                recogido: false,
+                fechaRecogido: null,
+                realizado: false,
+                fechaRealizado: null,
+                observaciones: '',
+                pdf: 0,
+                fechaPdf: null,
+                resultado: '',
+                facturado: false,
+                numeroFacturado: '',
+                cancelado: false,
+                comentarios: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null,
+            });
 
-        abrirCerrarModalEditarLegionela();
-        GetParametrosAnalisisPlanta();
-        Legionela();
-        GetFichero();
-        setAnalisisSeleccionado({
-            id: 0,
-            codigoCliente: analisisSeleccionado.codigoCliente,
-            nombreCliente: analisisSeleccionado.nombreCliente,
-            oferta: analisisSeleccionado.oferta,
-            pedido: analisisSeleccionado.pedido,
-            elemento: analisisSeleccionado.elemento,
-            nombreElemento: analisisSeleccionado.nombreElemento,
-            periodo: '',
-            analisis: 0,
-            fecha: null,
-            recogido: false,
-            fechaRecogido: null,
-            realizado: false,
-            fechaRealizado: null,
-            observaciones: '',
-            pdf: 0,
-            fechaPdf: null,
-            resultado: '',
-            facturado: false,
-            numeroFacturado: '',
-            cancelado: false,
-            comentarios: '',
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Tarea Editada',
+                text: `La tarea se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
 
+        }
     }
 
     const peticionDelete = async () => {
@@ -1961,6 +2010,21 @@ export const VisualizacionPage = () => {
             i++;
 
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Tarea Eliminada',
+            text: `La tarea se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
 
