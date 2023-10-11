@@ -910,16 +910,26 @@ export const PlantasPage = () => {
                                     Guardar diagrama
                                 </Button>
 
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    color='primary'
-                                    variant='contained'
-                                    endIcon={<NavigateNextIcon />}
-                                    disabled={!diagramaGuardado}
-                                    onClick={() => { navigate('/plantasTabla'); }}>
-                                    Siguiente
-                                </Button>
-
+                                {estadoEliminarPlanta ?
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        color='primary'
+                                        variant='contained'
+                                        endIcon={<NavigateNextIcon />}
+                                        onClick={() => { navigate('/plantasTabla'); }}>
+                                        Siguiente
+                                    </Button>
+                                    :
+                                    <Button
+                                        sx={{ ml: 2 }}
+                                        color='primary'
+                                        variant='contained'
+                                        endIcon={<NavigateNextIcon />}
+                                        disabled={!diagramaGuardado}
+                                        onClick={() => { navigate('/plantasTabla'); }}>
+                                        Siguiente
+                                    </Button>
+                                }
                             </Card>
                         </Grid>
 

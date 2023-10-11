@@ -21,17 +21,19 @@ export const DashboardProvider = ({ children }) => {
 
     /*** EFECTOS ***/
 
-    // Obtenemos todos los parámetros
-    useEffect(() => {
+    const GetParametrosAnalisisPlanta = async () => {
 
-        getValorParametros()
-            .then(resp => setListaParametros(resp));
+        const resp = await getParametrosAnalisisPlanta();
+        setParametrosAnalisis(resp);
 
-        getParametrosAnalisisPlanta()
-            .then(resp => setParametrosAnalisis(resp));
+    }
 
+    const GetValoresParametros = async () => {
 
-    }, []);
+        const resp = await getValorParametros();
+        setListaParametros(resp);
+
+    }
 
     /*** FUNCIONES ***/
 
@@ -89,7 +91,9 @@ export const DashboardProvider = ({ children }) => {
             setElementoActivo,
             handleSeleccionarElemento,
             handleSeleccionarParametro,
-            handleSeleccionarAnalisis
+            handleSeleccionarAnalisis,
+            GetParametrosAnalisisPlanta,
+            GetValoresParametros
         }}>
             {children}
         </DashboardContext.Provider>

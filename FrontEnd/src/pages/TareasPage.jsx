@@ -15,7 +15,7 @@ import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout } from "../components/ModalLayout";
-import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas } from "../api";
+import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas, getParametrosAnalisisPlanta, getTareaById, deleteParametrosAnalisisPlanta } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -140,6 +140,8 @@ export const TareasPage = () => {
   const [analisis, setAnalisis] = useState([]);
   const [ofertas, setOfertas] = useState([]);
   const [operarios, setOperarios] = useState([]);
+
+  const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
 
   const [confNivelesPlantasCliente, setConfNivelesPlantasCliente] = useState([]);
   const [analisisNivelesPlantasCliente, setAnalisisNivelesPlantasCliente] = useState([]);
@@ -305,6 +307,11 @@ export const TareasPage = () => {
     getUsuarios()
       .then(operarios => {
         setOperarios(operarios);
+      })
+
+    getParametrosAnalisisPlanta()
+      .then(parametros => {
+        setParametrosAnalisisPlanta(parametros);
       })
 
   }, [])
@@ -702,32 +709,47 @@ export const TareasPage = () => {
 
   const peticionDelete = async () => {
 
-    const resp = await deleteTareas(TareaEliminar[0]);
+    var i = 0;
 
-    peticionGet();
-    abrirCerrarModalEliminar();
-    setTareaSeleccionada({
-      id: 0,
-      codigoCliente: 0,
-      nombreCliente: "",
-      oferta: 0,
-      pedido: 0,
-      operario: "",
-      protocolo: "",
-      elemento: 0,
-      nombreElemento: "",
-      analisis: 0,
-      nombreAnalisis: "",
-      fecha: null,
-      tipo: 0,
-      addDate: null,
-      addIdUser: null,
-      modDate: null,
-      modIdUser: null,
-      delDate: null,
-      delIdUser: null,
-      deleted: null,
-    });
+    while (i < TareaEliminar.length) {
+
+      const tarea = await getTareaById(TareaEliminar[i]);
+
+      const tareaAnalisis = parametrosAnalisisPlanta.filter(param => param.codigoCliente === tarea.codigoCliente && param.oferta === tarea.oferta && param.elemento === tarea.elemento && param.analisis === tarea.analisis)
+
+      tareaAnalisis.map(async (an) => {
+        await deleteParametrosAnalisisPlanta(an.id)
+      })
+
+      const resp = await deleteTareas(TareaEliminar[i]);
+
+      peticionGet();
+      abrirCerrarModalEliminar();
+      setTareaSeleccionada({
+        id: 0,
+        codigoCliente: 0,
+        nombreCliente: "",
+        oferta: 0,
+        pedido: 0,
+        operario: "",
+        protocolo: "",
+        elemento: 0,
+        nombreElemento: "",
+        analisis: 0,
+        nombreAnalisis: "",
+        fecha: null,
+        tipo: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+      })
+
+      i++;
+    }
 
     Swal.fire({
       position: 'center',

@@ -337,6 +337,9 @@ export const ProductosPage = () => {
     };
 
 
+    console.log(rowsIds, "ROWS IDS")
+
+
 
     return (
         <>

@@ -8,6 +8,12 @@ export const getTareas = async () => {
 
 }
 
+export const getTareaById = async ( id ) => {
+
+    const resp = await instance.get(`/tareas/${id}`);
+    return resp.data.data;
+}
+
 export const postTareas = async ( tarea ) => {
 
     const resp = await instance.post('/tareas', tarea);

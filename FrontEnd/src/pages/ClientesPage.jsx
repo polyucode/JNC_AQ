@@ -541,7 +541,6 @@ export const ClientesPage = () => {
     setRowsIds(ids);
 
   }
-
   return (
     <>
       {

@@ -35,9 +35,9 @@ export const SlidebarDataAdmin = [
         key: 3
     },
     {
-        title: 'Tareas',
-        path: '/tareas',
-        icon: <FormatListBulletedIcon />,
+        title: 'Ofertas',
+        path: '/ofertas',
+        icon: <LocalOfferIcon />,
         cName: 'nav-text',
         key: 4
     },
@@ -56,39 +56,38 @@ export const SlidebarDataAdmin = [
         key: 6
     },
     {
-        title: 'Mantenimiento (Tecnico)',
-        path: '/mantenimientoTecnico',
-        icon: <EngineeringIcon />,
+        title: 'Tareas',
+        path: '/tareas',
+        icon: <FormatListBulletedIcon />,
         cName: 'nav-text',
         key: 7
     },
     {
-        title: 'Ofertas',
-        path: '/ofertas',
-        icon: <LocalOfferIcon />,
+        title: 'Mantenimiento (Tecnico)',
+        path: '/mantenimientoTecnico',
+        icon: <EngineeringIcon />,
         cName: 'nav-text',
         key: 8
-    },
-    {
-        title: 'Productos',
-        path: '/productos',
-        icon: <InventoryIcon />,
-        cName: 'nav-text',
-        key: 9
-    },
-    {
-        title: 'Consumos de Articulos',
-        path: '/consumoarticulos',
-        icon: <CategoryIcon />,
-        cName: 'nav-text',
-        key: 10
     },
     {
         title: 'Visualizacion',
         path: '/visualizacion',
         icon: <VisibilityIcon />,
         cName: 'nav-text',
+        key: 9
+    },   
+    {
+        title: 'Productos',
+        path: '/productos',
+        icon: <InventoryIcon />,
+        cName: 'nav-text',
+        key: 10
+    },
+    {
+        title: 'Consumos de Articulos',
+        path: '/consumoarticulos',
+        icon: <CategoryIcon />,
+        cName: 'nav-text',
         key: 11
     }
-
 ]
