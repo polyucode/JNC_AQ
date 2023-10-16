@@ -703,7 +703,7 @@ export const PlantasPage = () => {
                                             id="CodigoCliente"
                                             options={clientes}
                                             getOptionLabel={option => option.codigo.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
                                             onChange={handleConfPlantaClienteChange}
                                         />
                                     </Grid>
@@ -717,7 +717,7 @@ export const PlantasPage = () => {
                                             options={ofertas}
                                             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
                                             getOptionLabel={option => option.numeroOferta.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Número de Oferta" name="Oferta" />}
                                             onChange={handleConfPlantaClienteChange}
                                         />
                                     </Grid>
@@ -984,7 +984,7 @@ export const PlantasPage = () => {
                                             id="CodigoCliente"
                                             options={clientes}
                                             getOptionLabel={option => option.codigo.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Código de Cliente" name="CodigoCliente" />}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
                                             onChange={handleConfPlantaClienteChange}
                                         />
                                     </Grid>
@@ -998,7 +998,7 @@ export const PlantasPage = () => {
                                             options={ofertas}
                                             filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
                                             getOptionLabel={option => option.numeroOferta.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" type="number" label="Número de Oferta" name="Oferta" />}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Número de Oferta" name="Oferta" />}
                                             onChange={handleConfPlantaClienteChange}
                                         />
                                     </Grid>

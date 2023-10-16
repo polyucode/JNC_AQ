@@ -41,8 +41,6 @@ const tipos = [
 
 export const TareasPage = () => {
 
-  const { valores, setValores } = useContext(ThemeContext);
-
   let opcionesFiltradas = [];
   let opcionesFiltradasAnalisis = [];
   let opcionesNombreFiltradasAnalisis = [];
@@ -713,11 +711,12 @@ export const TareasPage = () => {
 
     while (i < TareaEliminar.length) {
 
-      const tarea = await getTareaById(TareaEliminar[i]);
+      const tarea = await getTareaById(TareaEliminar[i])
 
       const tareaAnalisis = parametrosAnalisisPlanta.filter(param => param.codigoCliente === tarea.codigoCliente && param.oferta === tarea.oferta && param.elemento === tarea.elemento && param.analisis === tarea.analisis)
 
       tareaAnalisis.map(async (an) => {
+        console.log(an, "AN")
         await deleteParametrosAnalisisPlanta(an.id)
       })
 

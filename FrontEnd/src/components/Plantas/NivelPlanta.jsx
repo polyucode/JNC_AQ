@@ -23,6 +23,9 @@ export const NivelPlanta = ({
     const [elementos, setElementos] = useState([]);
     const [elementosNivel, setElementosNivel] = useState([]);
 
+    const [selectedElemento, setSelectedElemento] = useState(null);
+    const [key, setKey] = useState(0);
+
     const { usuarioActual } = useUsuarioActual();
 
     useEffect(() => {
@@ -36,7 +39,7 @@ export const NivelPlanta = ({
         setElementosNivel(elementosPlanta.filter(elemento => elemento.nivel === parseInt(nivel)));
     }, [elementosPlanta]);
 
-    const handleSelectElemento = (e) => {
+    const handleSelectElemento = (e, newValue) => {
 
         // Preparamos el elemento a crear
         const texto = e.target.textContent;
@@ -72,12 +75,12 @@ export const NivelPlanta = ({
         // Añadimos el elemento al listado
         setElementosPlanta([...elementosPlanta, elemento]);
         setIndiceElemento(indiceElemento - 1);
+        setSelectedElemento(null);
+        setKey(key + 1);
 
     }
 
     const handleDeleteElemento = async (id) => {
-
-        console.log(id)
 
         if (id > 0) {
             const respAnalisis = await getAnalisisNivelesPlantasCliente();
@@ -123,24 +126,24 @@ export const NivelPlanta = ({
                         usuarioActual.idPerfil === 1004 ?
                             <Grid item xs={12}>
                                 <Autocomplete
-                                    //disableClearable={ true }
                                     id="elemento"
                                     options={elementos}
                                     disabled
                                     getOptionLabel={option => option.nombre}
-                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
+                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
                                     onChange={handleSelectElemento}
                                 />
                             </Grid>
                             :
                             <Grid item xs={12}>
                                 <Autocomplete
-                                    //disableClearable={ true }
+                                    key={key}
                                     id="elemento"
                                     options={elementos}
                                     getOptionLabel={option => option.nombre}
-                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="Oferta" />}
+                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
                                     onChange={handleSelectElemento}
+                                    value={selectedElemento}
                                 />
                             </Grid>
                     }
@@ -149,7 +152,6 @@ export const NivelPlanta = ({
                         usuarioActual.idPerfil === 1004 ?
                             <Grid item xs={12}>
                                 <List>
-
                                     {
                                         (elementosNivel.length > 0)
                                             ? elementosNivel.map((elemento, index) => (

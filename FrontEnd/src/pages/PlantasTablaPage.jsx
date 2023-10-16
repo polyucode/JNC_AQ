@@ -235,7 +235,6 @@ export const PlantasTablaPage = () => {
 
     /*** HOOKS ***/
     const { state } = useLocation();
-    const { valores } = useContext(ThemeContext);
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
     const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
 
