@@ -37,7 +37,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros } from "../api";
+import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros, getAnalisisId } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -1284,11 +1284,40 @@ export const VisualizacionPage = () => {
 
     const descargarPdf = async () => {
 
-        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type': 'application/pdf' } });
+        const resp = await getAnalisisId(analisisSeleccionado.analisis)
+
+        const fecha = new Date(analisisSeleccionado.fecha); // Convertir la cadena a un objeto de fecha
+
+        // Obtener año y mes de la fecha
+        const año = fecha.getFullYear();
+        const mes = fecha.getMonth() + 1; // Los meses van de 0 a 11, por lo que se suma 1
+
+        // Formatear el mes para asegurarse de que siempre tenga dos dígitos (por ejemplo, '08' en lugar de '8')
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+
+        // Crear la cadena de fecha en formato 'YYYY-MM'
+        const fechaFormateada = `${año}-${mesFormateado}`;
+
+        const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
     }
 
     const descargarPdfNoFQ = async () => {
-        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.nombreCliente, analisisSeleccionado.oferta, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), analisisEditar[0].nombre, analisisSeleccionado.fecha, { headers: { 'Content-type': 'application/pdf' } });
+
+        const resp = await getAnalisisId(analisisSeleccionado.analisis)
+
+        const fecha = new Date(analisisSeleccionado.fecha); // Convertir la cadena a un objeto de fecha
+
+        // Obtener año y mes de la fecha
+        const año = fecha.getFullYear();
+        const mes = fecha.getMonth() + 1; // Los meses van de 0 a 11, por lo que se suma 1
+
+        // Formatear el mes para asegurarse de que siempre tenga dos dígitos (por ejemplo, '08' en lugar de '8')
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+
+        // Crear la cadena de fecha en formato 'YYYY-MM'
+        const fechaFormateada = `${año}-${mesFormateado}`;
+
+        const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
     }
 
     function FiltrarData() {

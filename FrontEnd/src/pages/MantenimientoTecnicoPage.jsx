@@ -79,7 +79,8 @@ export const MantenimientoTecnicoPage = () => {
         fechaIso: null,
         parametro: 0,
         unidad: '',
-        valor: ''
+        valor: '',
+        metodo: '1. 18'
     })
 
     const [data, setData] = useState([]);
@@ -321,7 +322,7 @@ export const MantenimientoTecnicoPage = () => {
             [name]: value.id
         }))
 
-        if(tareaAnalisisPlanta != {}){
+        if (tareaAnalisisPlanta != {}) {
             setTareaAnalisisPlanta((prevState) => ({
                 ...prevState,
                 operario: value.id
@@ -331,7 +332,7 @@ export const MantenimientoTecnicoPage = () => {
 
     const guardarPDF = async () => {
 
-        const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parametro.valor }))
+        const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parametro.valor, metodo: parametrosSeleccionado.metodo }))
 
         const fechaActual = Date.now();
         const hoy = new Date(fechaActual);
@@ -376,37 +377,37 @@ export const MantenimientoTecnicoPage = () => {
 
         // Recorremos los registros para ver que valores podemos guardar (activo)
 
-        if(resp2[0].analisis == 1 || resp2[0].analisis == 2 || resp2[0].analisis == 3 || resp2[0].analisis == 4 || resp2[0].analisis == 5 || resp2[0].analisis == 6 || resp2[0].analisis == 11){
+        if (resp2[0].analisis == 1 || resp2[0].analisis == 2 || resp2[0].analisis == 3 || resp2[0].analisis == 4 || resp2[0].analisis == 5 || resp2[0].analisis == 6 || resp2[0].analisis == 11) {
             resp.map(registro => {
 
                 const valoresPorParametro = datos.filter(param => param.parametro === registro.parametro)
-    
+
                 // Preparamos el valor del mes actual y el arreglo de meses
                 let mesActual = new Date().getMonth();
                 let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    
+
                 // Mapeamos los valores en un array, y si no hay datos seteamos un 0
                 valoresPorParametro.map(val => {
-    
+
                     const fecha = new Date(val.fecha);
-    
+
                     for (let i = 0; i < 12; i++) {
                         if (fecha.getMonth() === i) {
                             fechas[i] = val.valor;
                         }
                     }
-    
+
                 });
-    
+
                 // Volteamos las fechas para obtener los meses anteriores
                 fechas = fechas.reverse();
-    
+
                 // Obtenemos los dos últimos meses y si no hay registros, seteamos un 0
                 let valoresMeses = fechas.slice(12 - mesActual, (12 - mesActual) + 2);
                 if (valoresMeses.length < 2) {
                     valoresMeses.push(0);
                 }
-    
+
                 // Creamos el objeto
                 parametrosMostrar.push({
                     id: registro.id,
@@ -424,12 +425,12 @@ export const MantenimientoTecnicoPage = () => {
                     limSup: valoresPorParametro[0] ? valoresPorParametro[0].limSup : 0,
                     dosMeses: valoresMeses
                 })
-    
+
             })
-    
+
             // Finalmente, añadimos los datos al estado
             setValoresParametros(parametrosMostrar);
-    
+
             const operario = operarios.find((op) => op.id === parametrosMostrar[0].id_Operario)
             setNombreOperario(operario.nombre + ' ' + operario.apellidos)
         }
@@ -467,7 +468,8 @@ export const MantenimientoTecnicoPage = () => {
                     Parametro: parametro.parametro,
                     Fecha: parametro.fecha,
                     Valor: parametro.valor,
-                    Unidad: parametro.unidad
+                    Unidad: parametro.unidad,
+                    Metodo: parametrosSeleccionado.metodo
                 }
 
                 setTareaAnalisisPlanta(valorPrevio => ({
@@ -527,7 +529,8 @@ export const MantenimientoTecnicoPage = () => {
                     Parametro: parametro.parametro,
                     Fecha: parametrosSeleccionado.fecha,
                     Valor: parametro.valor,
-                    Unidad: parametro.unidad
+                    Unidad: parametro.unidad,
+                    Metodo: parametrosSeleccionado.metodo
                 }
 
                 setTareaAnalisisPlanta(valorPrevio => ({
@@ -785,40 +788,49 @@ export const MantenimientoTecnicoPage = () => {
                                     <CardContent>
                                         {
                                             (parametrosElemento.length > 0) ? (
-                                                <TableContainer>
-                                                    <Table size="small">
+                                                <>
+                                                    <TextField
+                                                        label="Metodo Analítico"
+                                                        id='metodo'
+                                                        name="metodo"
+                                                        onChange={handleChange}
+                                                        value={parametrosSeleccionado && parametrosSeleccionado.metodo}
+                                                    />
+                                                    <TableContainer>
+                                                        <Table size="small">
 
-                                                        <TableHead>
-                                                            <TableRow>
-                                                                <TableCell><b>Parámetro</b></TableCell>
-                                                                <TableCell><b>Valor</b></TableCell>
-                                                                <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
-                                                                <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
-                                                            </TableRow>
-                                                        </TableHead>
+                                                            <TableHead>
+                                                                <TableRow>
+                                                                    <TableCell><b>Parámetro</b></TableCell>
+                                                                    <TableCell><b>Valor</b></TableCell>
+                                                                    <TableCell><b>Valor mes pasado (fecha) </b></TableCell>
+                                                                    <TableCell><b>Valor de hace 2 meses (fecha)</b></TableCell>
+                                                                </TableRow>
+                                                            </TableHead>
 
-                                                        <TableBody>
-                                                            {
-                                                                valoresParametros.map((parametro, index) => {
+                                                            <TableBody>
+                                                                {
+                                                                    valoresParametros.map((parametro, index) => {
 
-                                                                    const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
+                                                                        const nombreParametro = parametros.filter(param => param.id === parametro.parametro)[0].nombre;
 
-                                                                    return (
-                                                                        <ParametroMantenimiento
-                                                                            limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
-                                                                            key={index}
-                                                                            indice={index}
-                                                                            parametros={valoresParametros}
-                                                                            onChange={handleEditarParametro}
-                                                                            nombre={nombreParametro}
-                                                                        />
-                                                                    )
-                                                                })
-                                                            }
-                                                        </TableBody>
+                                                                        return (
+                                                                            <ParametroMantenimiento
+                                                                                limite={({ limSup: parametro.limSup, limInf: parametro.limInf })}
+                                                                                key={index}
+                                                                                indice={index}
+                                                                                parametros={valoresParametros}
+                                                                                onChange={handleEditarParametro}
+                                                                                nombre={nombreParametro}
+                                                                            />
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </TableBody>
 
-                                                    </Table>
-                                                </TableContainer>
+                                                        </Table>
+                                                    </TableContainer>
+                                                </>
                                             ) : (
                                                 <Typography>No hay parametros para mostrar</Typography>
                                             )

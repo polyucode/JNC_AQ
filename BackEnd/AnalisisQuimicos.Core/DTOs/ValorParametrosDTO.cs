@@ -17,6 +17,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public DateTime? Fecha { get; set; }
         public string Valor { get; set; }
         public string Unidad { get; set; }
+        public string Metodo { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

@@ -16,5 +16,6 @@ namespace AnalisisQuimicos.Core.Entities
         public DateTime? Fecha { get; set; }
         public string Valor { get; set; }
         public string Unidad { get; set; }
+        public string Metodo { get; set; }
     }
 }

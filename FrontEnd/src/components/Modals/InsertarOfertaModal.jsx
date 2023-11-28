@@ -27,15 +27,19 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 <TextField sx={{ width: '100%', marginTop: '25px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
-            <Grid item xs={6} md={3}>
+            <Grid item xs={6} md={5}>
                 <TextField sx={{ width: '100%' }} label="Descripcion" name="descripcion" onChange={handleChange} />
             </Grid>
 
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <TextField sx={{ width: '100%', marginTop: '25px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%'}} label="Referencia" name="referencia" onChange={handleChange} />
+            </Grid>
+
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="CodigoCliente"
@@ -53,7 +57,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-            <Grid item xs={6} md={7}>
+            <Grid item xs={6} md={6}>
                 <TextField
                     sx={{ width: '100%' }}
                     label="Nombre del cliente"

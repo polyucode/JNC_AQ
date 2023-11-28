@@ -233,6 +233,9 @@ export const PlantasTablaPage = () => {
 
     const [parametrosFiltrados, setParametrosFiltrados] = useState([]);
 
+    const [abroPlantilla, setAbroPlantilla] = useState(false);
+    const [key, setKey] = useState(0);
+
     /*** HOOKS ***/
     const { state } = useLocation();
     const { parametrosBack, setDatosParametrosBack } = useParserBack();
@@ -335,6 +338,12 @@ export const PlantasTablaPage = () => {
     useEffect(() => {
         setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false })))
     }, [parametros]);
+
+    useEffect(() => {
+        if(parametrosFiltrados.length > 0){
+            setAbroPlantilla(true)
+        }
+    }, [parametrosFiltrados])
 
     /*** FUNCIONES ***/
 
@@ -465,6 +474,7 @@ export const PlantasTablaPage = () => {
 
     const abrirPlantilla = async () => {
 
+        setAbroPlantilla(false)
         const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         const datosMapeados = resp.map(datos => {
@@ -603,6 +613,19 @@ export const PlantasTablaPage = () => {
         }))
     }
 
+    const onChangeElemento = (e, value, name) => {
+
+        setParametrosSeleccionado(prevState => ({
+            ...prevState,
+            idElemento: value.id,
+            nombreElemento: e.target.innerText,
+            idAnalisis: 0,
+            nombreAnalisis: ""
+        }))
+
+        setKey(key + 1)
+    }
+
     const handleChange = e => {
         const { name, value } = e.target;
         setParametrosSeleccionado(prevState => ({
@@ -610,6 +633,8 @@ export const PlantasTablaPage = () => {
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
+
+    console.log(abroPlantilla)
 
     return (
         <MainLayout title="Parametrización de planta">
@@ -680,21 +705,14 @@ export const PlantasTablaPage = () => {
                                     options={elementosAutocomplete}
                                     getOptionLabel={option => (option.nombre + ' ' + option.numero)}
                                     renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
-                                    onChange={(event, value) => {
-                                        setParametrosSeleccionado(prevState => ({
-                                            ...prevState,
-                                            idElemento: value.id,
-                                            nombreElemento: event.target.innerText,
-                                            idAnalisis: 0,
-                                            nombreAnalisis: ''
-                                        }))
-                                    }}
+                                    onChange={(event, value) => onChangeElemento(event, value, "elemento")}
                                 />
                             </Grid>
 
                             <Grid item xs={3}>
                                 <Autocomplete
                                     disableClearable={true}
+                                    key={key}
                                     id="analisis"
                                     inputValue={parametrosSeleccionado.nombreAnalisis}
                                     options={analisisAutocomplete}
@@ -730,6 +748,7 @@ export const PlantasTablaPage = () => {
 
                                             <Grid item>
                                                 <Button
+                                                    disabled={abroPlantilla}
                                                     color='success'
                                                     variant='contained'
                                                     startIcon={<NoteAddIcon />}
@@ -796,6 +815,7 @@ export const PlantasTablaPage = () => {
                                                         unidades={handleUnidad}
                                                         activar={handleActivo}
                                                         verInsp={handleVerInspector}
+                                                        disabled={abroPlantilla}
                                                     />
                                                 ))
                                             }

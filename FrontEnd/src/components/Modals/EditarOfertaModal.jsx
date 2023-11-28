@@ -41,12 +41,16 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 <TextField sx={{ width: '100%', marginTop: '25px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
-            <Grid item xs={6} md={8}>
+            <Grid item xs={6} md={5}>
                 <TextField sx={{ width: '100%' }} label="Descripcion" name="descripcion" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.descripcion} />
             </Grid>
 
             <Grid item xs={3} md={3}>
                 <TextField sx={{ width: '100%', marginTop: '25px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '}/>
+            </Grid>
+
+            <Grid item xs={3} md={3}>
+                <TextField sx={{ width: '100%' }} label="Referencia" name="referencia" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.referencia} />
             </Grid>
 
             <Grid item xs={6} md={3}>

@@ -1,6 +1,6 @@
 import { Checkbox, TableCell, TableRow, TextField } from "@mui/material"
 
-export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, activar, verInsp }) => {
+export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, activar, verInsp, disabled }) => {
 
     return (
         <TableRow
@@ -14,7 +14,7 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     margin="none"
                     onChange={ limInf }
                     value={ parametros[indice].limInf }
-                    disabled={ !parametros[indice].activo }
+                    disabled={ !parametros[indice].activo || disabled }
                 />
             </TableCell>
             <TableCell>
@@ -24,7 +24,7 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     margin="none"
                     onChange={ limSup }
                     value={ parametros[indice].limSup }
-                    disabled={ !parametros[indice].activo }
+                    disabled={ !parametros[indice].activo || disabled }
                 />
             </TableCell>
             <TableCell>
@@ -34,7 +34,7 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     margin="none"
                     onChange={ unidades }
                     value={parametros[indice].unidades}
-                    disabled={ !parametros[indice].activo }
+                    disabled={ !parametros[indice].activo || disabled }
                 />
             </TableCell>
             <TableCell>
@@ -44,6 +44,7 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     onChange={ (e) => activar( e, indice ) }
                     checked={ parametros[indice].activo }
                     value={ parametros[indice].activo }
+                    disabled={disabled}
                 />
             </TableCell>
             <TableCell>
@@ -53,7 +54,7 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     onChange={ verInsp }
                     checked={ parametros[indice].verInspector }
                     value={ parametros[indice].verInspector }
-                    disabled={ !parametros[indice].activo }
+                    disabled={ !parametros[indice].activo || disabled }
                 />
             </TableCell>
         </TableRow>

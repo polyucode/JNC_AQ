@@ -7,16 +7,16 @@ export const getOfertas = async () => {
 
 }
 
-export const putOfertas = async ( cliente ) => {
+export const putOfertas = async ( oferta ) => {
 
-    const resp = await instance.put(`/ofertasclientes?id=${ cliente.id }`, cliente);
+    const resp = await instance.put(`/ofertasclientes?id=${ oferta.id }`, oferta);
     return resp;
 
 }
 
-export const postOfertas = async ( cliente ) => {
+export const postOfertas = async ( oferta ) => {
 
-    const resp = await instance.post('/ofertasclientes', cliente);
+    const resp = await instance.post('/ofertasclientes', oferta);
     return resp;
 
 }

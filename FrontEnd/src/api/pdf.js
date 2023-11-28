@@ -1,13 +1,13 @@
 import { instance } from '.';
 
 export const generarPdf = async ( valores ) => {
-    
+
     const resp = await instance.post('/PDFGenerator', valores);
     return resp.data;
 
 }
 
-export const bajarPdf = async ( id, nombre, oferta, elemento, analisis, fecha ) => {
+export const bajarPdf = async ( id, codigo, elemento, analisis, fecha ) => {
 
     const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
 
@@ -17,7 +17,7 @@ export const bajarPdf = async ( id, nombre, oferta, elemento, analisis, fecha ) 
     // create "a" HTML element with href to file & click
     const link = document.createElement('a');
     link.href = href;
-    link.setAttribute('download', `${nombre}_${oferta}_${elemento}_${analisis}_${fecha}.pdf`); //or any other extension
+    link.setAttribute('download', `M${codigo}_${fecha}_${analisis}_${elemento}.pdf`); //or any other extension
     document.body.appendChild(link);
     link.click();
 
@@ -27,7 +27,7 @@ export const bajarPdf = async ( id, nombre, oferta, elemento, analisis, fecha ) 
 
 }
 
-export const bajarPdfNoFQ = async ( id, nombre, oferta, elemento, analisis, fecha ) => {
+export const bajarPdfNoFQ = async ( id, codigo, elemento, analisis, fecha ) => {
 
     const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
 
@@ -37,7 +37,7 @@ export const bajarPdfNoFQ = async ( id, nombre, oferta, elemento, analisis, fech
     // create "a" HTML element with href to file & click
     const link = document.createElement('a');
     link.href = href;
-    link.setAttribute('download', `${nombre}_${oferta}_${elemento}_${analisis}_${fecha}.pdf`); //or any other extension
+    link.setAttribute('download', `M${codigo}_${fecha}_${analisis}_${elemento}.pdf`); //or any other extension
     document.body.appendChild(link);
     link.click();
 

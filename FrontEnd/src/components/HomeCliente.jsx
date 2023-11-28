@@ -75,8 +75,11 @@ const HomeCliente = () => {
 
     const [clienteSeleccionado, setClienteSeleccionado] = useState({
         id: 0,
+        nombreCliente: "",
         codigoCliente: 0,
-        oferta: 0
+        oferta: 0,
+        descripcion: '',
+        referencia: ''
     })
 
     // Variables para el diagrama
@@ -169,6 +172,17 @@ const HomeCliente = () => {
 
 
     }, [plantaActiva, elementoActivo, parametrosFiltrados]);
+
+    useEffect(() => {
+
+        const nombre = ofertas.filter(oferta => oferta.referencia === clienteSeleccionado.referencia);
+        console.log(nombre);
+        (nombre.length > 0) && setClienteSeleccionado({
+          ...clienteSeleccionado,
+          oferta: nombre[0].numeroOferta
+        })
+    
+      }, [clienteSeleccionado.referencia])
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -374,7 +388,11 @@ const HomeCliente = () => {
             return 0;
         })
         : parametrosPDF;
-    //Ordenacion por columnas (Apartado PDF'S)
+
+
+    const clientesUnicos = clientes.filter((cliente, index, self) =>
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+    );
 
     return (
         <>
@@ -392,11 +410,11 @@ const HomeCliente = () => {
                                             {
                                                 plantaActiva.nombreCliente
                                                     ? plantaActiva.nombreCliente
-                                                    : 'Selecciona un código de oferta'
+                                                    : 'Selecciona un cliente'
                                             }
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={1}>
                                         {
                                             plantaActiva.descripcion && (
                                                 <Typography>{plantaActiva.descripcion}</Typography>
@@ -406,8 +424,24 @@ const HomeCliente = () => {
                                     <Grid item xs={2}>
                                         <Autocomplete
                                             disableClearable={true}
+                                            id="nombreCliente"
+                                            options={clientesUnicos}
+                                            getOptionLabel={option => option.razonSocial}
+                                            renderInput={params => <TextField {...params} label="Nombre Cliente" name="nombreCliente" />}
+                                            onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                                                ...prevState,
+                                                nombreCliente: value.razonSocial,
+                                                codigoCliente: '',
+                                                oferta: ''
+                                            }))}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
                                             id="clientes"
                                             options={clientes}
+                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === clienteSeleccionado.nombreCliente)}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} label="Código Cliente" name="codigoCliente" />}
                                             onChange={(event, value) => setClienteSeleccionado(prevState => ({
@@ -417,7 +451,7 @@ const HomeCliente = () => {
                                             }))}
                                         />
                                     </Grid>
-                                    <Grid item xs={2}>
+                                    <Grid item xs={1}>
                                         <Autocomplete
                                             disableClearable={true}
                                             id="ofertas"
@@ -971,7 +1005,7 @@ const HomeCliente = () => {
                             <CardContent>
                                 <Grid container sx={{ alignItems: 'center' }}>
 
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         <Typography variant="h6">
                                             {
                                                 plantaActiva.nombreCliente
@@ -980,7 +1014,7 @@ const HomeCliente = () => {
                                             }
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={2}>
                                         {
                                             plantaActiva.descripcion && (
                                                 <Typography>{plantaActiva.descripcion}</Typography>
@@ -992,7 +1026,38 @@ const HomeCliente = () => {
                                             disableClearable={true}
                                             id="ofertas"
                                             options={ofertas}
-                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === user.idCliente)}
+                                            getOptionLabel={option => option.descripcion}
+                                            renderInput={params => <TextField {...params} label="Descripción" name="descripcion" />}
+                                            onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                                                ...prevState,
+                                                descripcion: value.descripcion,
+                                                referencia: '',
+                                                oferta: ''
+                                            }))}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="ofertas"
+                                            options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.descripcion === clienteSeleccionado.descripcion)}
+                                            getOptionLabel={option => option.referencia}
+                                            renderInput={params => <TextField {...params} label="Referencia cliente" name="referencia" />}
+                                            onChange={(event, value) => setClienteSeleccionado(prevState => ({
+                                                ...prevState,
+                                                referencia: value.referencia,
+                                                oferta: ''
+                                            }))}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disableClearable={true}
+                                            id="ofertas"
+                                            options={ofertas}
+                                            inputValue={clienteSeleccionado.oferta}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.descripcion === clienteSeleccionado.descripcion)}
                                             getOptionLabel={option => option.numeroOferta}
                                             renderInput={params => <TextField {...params} label="Código oferta" name="codigoOferta" />}
                                             onChange={handleSeleccionOferta2}
@@ -1210,8 +1275,6 @@ const HomeCliente = () => {
                                                                             }
                                                                         }
                                                                     }
-
-                                                                    console.log("FECHAS: ", { fechas })
 
                                                                 });
 
