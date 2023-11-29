@@ -68,7 +68,7 @@ namespace AnalisisQuimicos.Core.Services
                 Directory.CreateDirectory(path);
             }
 
-            string nombreArchivo = cliente.RazonSocial + "_" + valoresSorted[0].Oferta + "_" + nombreElemento + "_" + analisis.Nombre + "_" + fecha.ToString("ddMyyyy", CultureInfo.InvariantCulture) + ".pdf";
+            string nombreArchivo = "M" + cliente.Codigo + "_" + fecha.ToString("yyyy-MM", CultureInfo.InvariantCulture) + "_" + analisis.Nombre + "_" + nombreElemento + ".pdf";
 
             path = Path.Combine(path, nombreArchivo);
 
@@ -87,6 +87,7 @@ namespace AnalisisQuimicos.Core.Services
 
             //string nombreParametro = _unidadDeTrabajo.ParametrosRepository.GetById((int)valoresSorted[0].Parametro).Result.Nombre;
             string referencia = valoresSorted[0].Oferta.ToString();
+            string metodo = valoresSorted[0].Metodo;
             if (!string.IsNullOrEmpty(valoresSorted[0].Referencia))
             {
                 referencia += " - " + valoresSorted[0].Referencia;
@@ -194,6 +195,8 @@ namespace AnalisisQuimicos.Core.Services
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FILAS", filasParametros);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", elemplanta.Nombre + " " + elemplanta.Numero);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REF", referencia);
+
+            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@MET", metodo);
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REG", "");
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FECHA", fecha.ToString("dd/M/yyyy", CultureInfo.InvariantCulture));
