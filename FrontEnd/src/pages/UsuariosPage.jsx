@@ -503,6 +503,10 @@ export const UsuariosPage = () => {
     }))
   }
 
+  const clientesUnicos = clientes.filter((cliente, index, self) =>
+    index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+  );
+
   return (
     <>
       {usuarioActual.idPerfil === 1 ?
@@ -583,12 +587,13 @@ export const UsuariosPage = () => {
                   errorContraseña={errorContraseña}
                   errorNombre={errorNombre}
                   errorRepetirContraseña={errorRepetirContraseña}
+                  clientesUnicos={clientesUnicos}
                 />
               }
               botones={[insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
                 peticionPost();
               })
-            ]}
+              ]}
               open={modalInsertar}
               onClose={abrirCerrarModalInsertar}
             />
@@ -609,6 +614,7 @@ export const UsuariosPage = () => {
                   clienteUsuario={clienteUsuarioEditar}
                   errorPerfil={errorPerfil}
                   errorNombre={errorNombre}
+                  clientesUnicos={clientesUnicos}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                 peticionPut();

@@ -176,13 +176,19 @@ const HomeCliente = () => {
     useEffect(() => {
 
         const nombre = ofertas.filter(oferta => oferta.referencia === clienteSeleccionado.referencia);
-        console.log(nombre);
         (nombre.length > 0) && setClienteSeleccionado({
           ...clienteSeleccionado,
           oferta: nombre[0].numeroOferta
         })
     
-      }, [clienteSeleccionado.referencia])
+    }, [clienteSeleccionado.referencia])
+
+    useEffect(() => {
+
+        getConfPlantaClientePorClienteOferta(user.idCliente, clienteSeleccionado.oferta)
+            .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
+
+    }, [clienteSeleccionado.oferta])
 
     const ChartContainer = () => (
         <Chart style={{ height: '500px' }}>
@@ -215,6 +221,11 @@ const HomeCliente = () => {
     const handleSeleccionOferta2 = (e) => {
 
         const ofertaSeleccionada = parseInt(e.target.textContent);
+
+        setClienteSeleccionado({
+            ...clienteSeleccionado,
+            oferta: e.target.textContent
+        })
 
         getConfPlantaClientePorClienteOferta(user.idCliente, ofertaSeleccionada)
             .then(res => res ? setPlantaActiva(res) : setPlantaActiva({}));
@@ -1026,6 +1037,7 @@ const HomeCliente = () => {
                                             disableClearable={true}
                                             id="ofertas"
                                             options={ofertas}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === user.idCliente)}
                                             getOptionLabel={option => option.descripcion}
                                             renderInput={params => <TextField {...params} label="Descripción" name="descripcion" />}
                                             onChange={(event, value) => setClienteSeleccionado(prevState => ({

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, errorPerfil, errorNombre}) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, errorPerfil, errorNombre, clientesUnicos}) => {
 
     const [perfiles, setPerfiles] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -70,7 +70,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
                     disabled={estadoCliente}
                     id="CboClientes"
                     defaultValue={clienteUsuario[0]}
-                    options={clientes}
+                    options={clientesUnicos}
                     getOptionLabel={option => option.razonSocial}
                     renderInput={params => <TextField {...params} label="Clientes" name="idCliente" />}
                     onChange={(event, value) => setUsuarioSeleccionado(prevState => ({
