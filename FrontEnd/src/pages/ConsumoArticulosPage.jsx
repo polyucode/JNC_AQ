@@ -23,7 +23,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos } from "../api";
+import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -56,6 +56,9 @@ export const ConsumoArticulosPage = () => {
         fecha: null,
         producto: '',
         cantidad: 0,
+        albaran: 0,
+        modoEnvio: 0,
+        observaciones: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -72,11 +75,12 @@ export const ConsumoArticulosPage = () => {
     const [clientes, setClientes] = useState([]);
     const [ofertas, setOfertas] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [modoEnvio, setModoEnvio] = useState([]);
 
     const [clienteEditar, setClienteEditar] = useState([]);
     const [ofertaEditar, setOfertaEditar] = useState([]);
     const [productoEditar, setProductoEditar] = useState([]);
-    const [descripcionEditar, setDescripcionEditar] = useState([]);
+    const [modoEnvioEditar, setModoEnvioEditar] = useState([]);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
@@ -90,12 +94,12 @@ export const ConsumoArticulosPage = () => {
     const columnas = [
 
         //Visibles
-        { headerName: 'Oferta', field: 'oferta', width: 400 },
+        { headerName: 'Oferta', field: 'oferta', width: 150 },
         {
             headerName: 'Fecha',
             field: 'fecha',
             type: 'date',
-            width: 400,
+            width: 200,
             valueFormatter: (params) => {
                 if (params.value != null) {
                     const date = new Date(params.value);
@@ -106,8 +110,19 @@ export const ConsumoArticulosPage = () => {
                 }
             }
         },
-        { headerName: 'Producto', field: 'producto', width: 400 },
-        { headerName: 'Cantidad', field: 'cantidad', width: 400 }
+        { headerName: 'Producto', field: 'producto', width: 200 },
+        { headerName: 'Cantidad', field: 'cantidad', width: 150 },
+        { headerName: 'Numero Albaran', field: 'albaran', width: 150 },
+        { 
+            headerName: 'Metodo Entrega', 
+            field: 'modoEnvio', 
+            width: 200,
+            valueFormatter: (params) => {
+                const env = modoEnvio.find((envio) => envio.id === params.value);
+                return env ? env.nombre : '';
+            } 
+        },
+        { headerName: 'Observaciones', field: 'observaciones', width: 400 }
     ];
 
 
@@ -129,6 +144,11 @@ export const ConsumoArticulosPage = () => {
         getProductos()
             .then(productos => {
                 setProductos(productos);
+            })
+
+        getModoEnvio()
+            .then(envio => {
+                setModoEnvio(envio);
             })
 
     }, [])
@@ -178,6 +198,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -235,6 +258,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -276,6 +302,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -316,6 +345,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -342,6 +374,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -368,6 +403,9 @@ export const ConsumoArticulosPage = () => {
                 fecha: null,
                 producto: '',
                 cantidad: 0,
+                albaran: 0,
+                modoEnvio: 0,
+                observaciones: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -418,12 +456,6 @@ export const ConsumoArticulosPage = () => {
         <>
             <MainLayout title='Consumos'>
 
-                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                        {snackData.msg}
-                    </Alert>
-                </Snackbar>
-
                 <Grid container spacing={2}>
 
                     {/* Título y botones de opción */}
@@ -463,7 +495,7 @@ export const ConsumoArticulosPage = () => {
                     <Grid item xs={12}>
                         <Card>
                             <DataGrid
-                                components={{ Toolbar: GridToolbar }}
+                                //components={{ Toolbar: GridToolbar }}
                                 localeText={DATAGRID_LOCALE_TEXT}
                                 sx={{
                                     width: '100%',
@@ -479,6 +511,7 @@ export const ConsumoArticulosPage = () => {
                                     setConsumoSeleccionado(consumoSeleccionado.row)
                                     setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
                                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
+                                    setModoEnvioEditar(modoEnvio.filter(envio => envio.id === consumoSeleccionado.row.modoEnvio))
                                     abrirCerrarModalEditar();
                                 }}
                             />
@@ -524,6 +557,7 @@ export const ConsumoArticulosPage = () => {
                             setConsumoSeleccionado={setConsumoSeleccionado}
                             productoEditar={productoEditar}
                             ofertaEditar={ofertaEditar}
+                            modoEnvioEditar={modoEnvioEditar}
                             ofertas={ofertas}
                             productos={productos}
                             errorFecha={errorFecha}

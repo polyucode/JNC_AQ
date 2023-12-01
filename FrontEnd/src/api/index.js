@@ -8,6 +8,7 @@ export * from './contactos';
 export * from './elementos';
 export * from './elementosPlanta';
 export * from './entregas';
+export * from './modoEnvio';
 export * from './niveles';
 export * from './ofertas';
 export * from './ofertasProductos';

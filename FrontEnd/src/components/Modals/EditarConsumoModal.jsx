@@ -1,8 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getOfertas, getProductos } from '../../api';
+import { getModoEnvio, getOfertas, getProductos } from '../../api';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 
-export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, ofertas, productos, errorFecha, errorCantidad }) => {
+export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, modoEnvioEditar, ofertas, productos, errorFecha, errorCantidad }) => {
+
+    const [modoEnvio, setModoEnvio] = useState([]);
+
+    useEffect(() => {
+        
+        getModoEnvio()
+            .then(envio => {
+                setModoEnvio(envio);
+            })
+    })
+
 
     function formateandofechas(fecha) {
         if(fecha !== null){
@@ -20,7 +32,7 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
 
     return (
         <>
-            <Grid item xs={3} md={4}>
+            <Grid item xs={3} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     sx={{ width: '100%' }}
@@ -50,8 +62,8 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     options={productos}
                     getOptionLabel={option => option.descripcion}
                     defaultValue={productoEditar[0]}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} name="producto" />}
+                    sx={{ width: '100%' }}
+                    renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,
                         producto: value.descripcion
@@ -61,6 +73,38 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
 
             <Grid item xs={6} md={3}>
                 <TextField sx={{ width: '100%', marginTop: '22px' }} label="Cantidad" name="cantidad" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} error={errorCantidad} helperText={errorCantidad ? 'Introduzca una cantidad' : ' '} />
+            </Grid>
+
+            <Grid item xs={6} md={3}>
+                <TextField sx={{ width: '100%' }} label="Nº Albaran" name="albaran" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.albaran}/>
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+                <Autocomplete
+                    disableClearable={true}
+                    id="producto"                   
+                    options={modoEnvio}
+                    defaultValue={modoEnvioEditar[0]}
+                    getOptionLabel={option => option.nombre}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} name="modoEnvio" label="Metodo Entrega" />}
+                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
+                        ...prevState,
+                        modoEnvio: value.id
+                    }))}
+                />
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%', padding: '10px' }}
+                    name="observaciones"
+                    onChange={handleChange}
+                    value={consumoSeleccionado && consumoSeleccionado.observaciones}
+                />
             </Grid>
 
         </>

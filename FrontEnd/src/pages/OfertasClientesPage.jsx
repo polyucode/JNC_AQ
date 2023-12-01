@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
-import MaterialTable from '@material-table/core';
-import axios from "axios";
-import { ExportCsv, ExportPdf } from '@material-table/exporters';
-import AddCircle from '@material-ui/icons/AddCircle';
-import RemoveCircle from '@material-ui/icons/RemoveCircle';
-import Edit from '@material-ui/icons/Edit';
-import { Modal, TextField } from '@material-ui/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
-import { Grid, Card, Typography, Button } from '@mui/material';
+import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
 
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -26,10 +13,10 @@ import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos } from "../api";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
@@ -69,6 +56,9 @@ export const OfertasClientesPage = () => {
         contacto1: '',
         contacto2: '',
         contacto3: '',
+        producto: 0,
+        unidades: 0,
+        precio: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -85,6 +75,7 @@ export const OfertasClientesPage = () => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
+    const [productos, setProductos] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
 
     const [contacto1Editar, setContacto1Editar] = useState([]);
@@ -92,12 +83,11 @@ export const OfertasClientesPage = () => {
     const [contacto3Editar, setContacto3Editar] = useState([]);
 
     const [clienteCodigoEditar, setClientesCodigoEditar] = useState([]);
+    const [productoEditar, setProductoEditar] = useState([]);
 
     const [articulos, setArticulos] = useState([]);
 
     const [data, setData] = useState([]);
-
-    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const { usuarioActual } = useUsuarioActual();
 
@@ -107,13 +97,15 @@ export const OfertasClientesPage = () => {
     const [errorFechaInicio, setErrorFechaInicio] = useState(false);
     const [errorFechaFinal, setErrorFechaFinal] = useState(false);
 
+    const [filterText, setFilterText] = useState('');
+
     const columns = [
 
         //Visibles
         { headerName: 'Nº Oferta', field: 'numeroOferta', width: 150 },
         { headerName: 'Descripcion', field: 'descripcion', width: 400 },
         { headerName: 'Pedido', field: 'pedido', width: 150 },
-        { headerName: 'Referencia', field: 'referencia', width: 150},
+        { headerName: 'Referencia Cliente', field: 'referencia', width: 250 },
         { headerName: 'CodigoCliente', field: 'codigoCliente', width: 150 },
         { headerName: 'NombreCliente', field: 'nombreCliente', width: 250 },
         {
@@ -136,7 +128,18 @@ export const OfertasClientesPage = () => {
         },
         { headerName: 'Contacto1', field: 'contacto1', width: 200 },
         { headerName: 'Contacto2', field: 'contacto2', width: 200 },
-        { headerName: 'Contacto3', field: 'contacto3', width: 200 }
+        { headerName: 'Contacto3', field: 'contacto3', width: 200 },
+        {
+            headerName: 'Producto',
+            field: 'producto',
+            width: 200,
+            valueFormatter: (params) => {
+                const prod = productos.find((producto) => producto.id === params.value);
+                return prod ? prod.descripcion : '';
+            }
+        },
+        { headerName: 'Unidades', field: 'unidades', width: 200 },
+        { headerName: 'Precio', field: 'precio', width: 200 }
     ];
     const getOferta = async () => {
 
@@ -160,7 +163,10 @@ export const OfertasClientesPage = () => {
             .then(contactos => {
                 setContactos(contactos);
             })
-
+        getProductos()
+            .then(productos => {
+                setProductos(productos);
+            })
     }, [])
 
     useEffect(() => {
@@ -239,6 +245,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -322,6 +331,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -371,6 +383,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -421,6 +436,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -455,6 +473,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -489,6 +510,9 @@ export const OfertasClientesPage = () => {
                 contacto1: '',
                 contacto2: '',
                 contacto3: '',
+                producto: 0,
+                unidades: 0,
+                precio: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -538,38 +562,48 @@ export const OfertasClientesPage = () => {
         setRowsIds(ids);
     }
 
-    const handleSnackClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackData({ open: false, msg: '', severity: 'info' });
+    const handleFilterChange = (event) => {
+        setFilterText(event.target.value);
     };
 
-
+    const filteredData = rows.filter(item =>
+        item.nombreCliente.toLowerCase().includes(filterText.toLowerCase())
+    );
 
     return (
         <>
             {
                 usuarioActual.idPerfil === 1 ?
                     <MainLayout title="Ofertas">
-                        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                            <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                                {snackData.msg}
-                            </Alert>
-                        </Snackbar>
-
                         <Grid container spacing={2}>
-
                             {/* Título y botones de opción */}
                             <Grid item xs={12}>
                                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant='h6'>Listado de ofertas</Typography>
+                                    <Grid item xs={5}>
+                                        <TextField
+                                            label="Filtrar cliente"
+                                            variant="outlined"
+                                            value={filterText}
+                                            onChange={handleFilterChange}
+                                            sx={{ width: '50%' }}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton>
+                                                            <SearchIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </Grid>
                                     {
                                         (rowsIds.length > 0) ?
                                             (
                                                 <Grid item>
                                                     <Button
-                                                        sx={{ mr: 2 }}
+                                                        sx={{ height: '40px' }}
                                                         color='error'
                                                         variant='contained'
                                                         startIcon={<DeleteIcon />}
@@ -583,6 +617,7 @@ export const OfertasClientesPage = () => {
                                                 </Grid>
                                             ) : (
                                                 <Button
+                                                    sx={{ height: '40px' }}
                                                     color='success'
                                                     variant='contained'
                                                     startIcon={<AddIcon />}
@@ -598,14 +633,14 @@ export const OfertasClientesPage = () => {
                                 <Card>
                                     <DataGrid
                                         key="ofertas"
-                                        components={{ Toolbar: GridToolbar }}
+                                        //components={{ Toolbar: GridToolbar }}
                                         localeText={DATAGRID_LOCALE_TEXT}
                                         sx={{
                                             width: '100%',
                                             height: 1000,
                                             backgroundColor: '#FFFFFF'
                                         }}
-                                        rows={rows}
+                                        rows={filteredData}
                                         columns={columns}
                                         checkboxSelection
                                         disableSelectionOnClick
@@ -616,6 +651,7 @@ export const OfertasClientesPage = () => {
                                             setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
                                             setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
                                             setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
+                                            setProductoEditar(productos.filter(producto => producto.id === ofertaSeleccionada.row.producto))
                                             abrirCerrarModalEditar();
                                         }}
                                     />
@@ -666,6 +702,7 @@ export const OfertasClientesPage = () => {
                                     contacto1Editar={contacto1Editar}
                                     contacto2Editar={contacto2Editar}
                                     contacto3Editar={contacto3Editar}
+                                    productoEditar={productoEditar}
                                     errorCodigo={errorCodigo}
                                     errorFechaFinal={errorFechaFinal}
                                     errorFechaInicio={errorFechaInicio}
@@ -712,6 +749,24 @@ export const OfertasClientesPage = () => {
                             <Grid item xs={12}>
                                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant='h6'>Listado de ofertas</Typography>
+                                    <Grid item xs={8}>
+                                        <TextField
+                                            label="Filtrar cliente"
+                                            variant="outlined"
+                                            value={filterText}
+                                            onChange={handleFilterChange}
+                                            sx={{ width: '30%' }}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton>
+                                                            <SearchIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </Grid>
                                 </Card>
                             </Grid>
 
@@ -719,14 +774,14 @@ export const OfertasClientesPage = () => {
                             <Grid item xs={12}>
                                 <Card>
                                     <DataGrid
-                                        components={{ Toolbar: GridToolbar }}
+                                        //components={{ Toolbar: GridToolbar }}
                                         localeText={DATAGRID_LOCALE_TEXT}
                                         sx={{
                                             width: '100%',
                                             height: 1000,
                                             backgroundColor: '#FFFFFF'
                                         }}
-                                        rows={rows}
+                                        rows={filteredData}
                                         columns={columns}
                                         onSelectionModelChange={(ids) => handleSelectRow(ids)}
                                         onRowClick={(ofertaSeleccionada, evt) => {
@@ -755,16 +810,7 @@ export const OfertasClientesPage = () => {
                                     contacto2Editar={contacto2Editar}
                                     contacto3Editar={contacto3Editar}
                                 />}
-                            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                                abrirCerrarModalEditar()
-
-                                if (peticionPut()) {
-                                    setSnackData({ open: true, msg: 'Oferta editada correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al editar la oferta', severity: 'error' })
-                                }
-                            })
-                            ]}
+                            botones={[insertarBotonesModal(<AddIcon />, 'Guardar')]}
                             open={modalEditar}
                             onClose={abrirCerrarModalEditar}
                         />

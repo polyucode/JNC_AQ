@@ -17,6 +17,9 @@ namespace AnalisisQuimicos.Core.Entities
         public string Contacto1 { get; set; }
         public string Contacto2 { get; set; }
         public string Contacto3 { get; set; }
+        public int? Producto { get; set; }
+        public int? Unidades { get; set; }
+        public decimal Precio { get; set; }
 
     }
 }

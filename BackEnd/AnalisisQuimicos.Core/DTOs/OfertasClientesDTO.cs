@@ -18,6 +18,9 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Contacto1 { get; set; }
         public string Contacto2 { get; set; }
         public string Contacto3 { get; set; }
+        public int? Producto { get; set; }
+        public int? Unidades { get; set; }
+        public decimal Precio { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

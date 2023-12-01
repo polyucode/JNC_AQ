@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, Typography, Button } from '@mui/material';
+import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { MainLayout } from "../layout/MainLayout";
 
 // Iconos
@@ -78,6 +79,8 @@ export const ClientesPage = () => {
   const [errorDireccion, setErrorDireccion] = useState(false);
   const [errorNombre, setErrorNombre] = useState(false);
   const [errorCP, setErrorCP] = useState(false);
+
+  const [filterText, setFilterText] = useState('');
 
   // Columnas de la tabla
   const columns = [
@@ -402,6 +405,14 @@ export const ClientesPage = () => {
 
   }
 
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+  };
+
+  const filteredData = rows.filter(item =>
+    item.razonSocial.toLowerCase().includes(filterText.toLowerCase())
+  );
+
   //modal insertar cliente
   const abrirCerrarModalInsertar = () => {
     setErrorCP(false)
@@ -552,12 +563,30 @@ export const ClientesPage = () => {
               <Grid item xs={12}>
                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='h6'>Listado de clientes</Typography>
+                  <Grid item xs={5}>
+                    <TextField
+                      label="Filtrar cliente"
+                      variant="outlined"
+                      value={filterText}
+                      onChange={handleFilterChange}
+                      sx={{ width: '50%' }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton>
+                              <SearchIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
                   {
                     (rowsIds.length > 0) ?
                       (
                         <Grid item>
                           <Button
-                            sx={{ mr: 2 }}
+                            sx={{ height: '40px' }}
                             color='error'
                             variant='contained'
                             startIcon={<DeleteIcon />}
@@ -571,6 +600,7 @@ export const ClientesPage = () => {
                         </Grid>
                       ) : (
                         <Button
+                          sx={{ height: '40px' }}
                           color='success'
                           variant='contained'
                           startIcon={<AddIcon />}
@@ -585,14 +615,14 @@ export const ClientesPage = () => {
               <Grid item xs={12}>
                 <Card>
                   <DataGrid
-                    components={{ Toolbar: GridToolbar }}
+                    //components={{ Toolbar: GridToolbar }}
                     localeText={DATAGRID_LOCALE_TEXT}
                     sx={{
                       width: '100%',
-                      height: 1000,
+                      height: 800,
                       backgroundColor: '#FFFFFF'
                     }}
-                    rows={rows}
+                    rows={filteredData}
                     columns={columns}
                     pageSize={100}
                     checkboxSelection
@@ -695,20 +725,40 @@ export const ClientesPage = () => {
               <Grid item xs={12}>
                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='h6'>Listado de clientes</Typography>
+
+                  <Grid item xs={8}>
+                    <TextField
+                      label="Filtrar cliente"
+                      variant="outlined"
+                      value={filterText}
+                      onChange={handleFilterChange}
+                      sx={{ width: '30%' }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton>
+                              <SearchIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
                 </Card>
+
               </Grid>
 
               <Grid item xs={12}>
                 <Card>
                   <DataGrid
-                    components={{ Toolbar: GridToolbar }}
+                    //components={{ Toolbar: GridToolbar }}
                     localeText={DATAGRID_LOCALE_TEXT}
                     sx={{
                       width: '100%',
                       height: 1000,
                       backgroundColor: '#FFFFFF'
                     }}
-                    rows={rows}
+                    rows={filteredData}
                     columns={columns}
                     pageSize={100}
                     onSelectionModelChange={(ids) => handleSelectRow(ids)}

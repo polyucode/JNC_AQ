@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getClientes, getContactos } from '../../api';
+import { getClientes, getContactos, getProductos } from '../../api';
 
 export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
 
     const [contactos, setContactos] = useState([]);
-    const [clientes, setClientes] = useState([]);
+    const [clientes, setClientes] = useState([]); 
+    const [productos, setProductos] = useState([]);
 
     useEffect(() => {
 
@@ -17,6 +18,11 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
         getClientes()
             .then(clientes => {
                 setClientes(clientes);
+            })
+        
+        getProductos()
+            .then(productos => {
+                setProductos(productos);
             })
 
     }, [])
@@ -122,8 +128,6 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-
-            {/* Desplegable de Comarcas */}
             <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
@@ -141,7 +145,6 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                 />
             </Grid>
 
-            {/* Desplegable de Provincias */}
             <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
@@ -157,6 +160,29 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                         contacto3: value.nombre
                     }))}
                 />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+                <Autocomplete
+                    disableClearable={true}
+                    id="producto"
+                    options={productos}
+                    getOptionLabel={option => option.descripcion}
+                    sx={{ width: '100%' }}
+                    renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
+                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                        ...prevState,
+                        producto: value.id,
+                    }))}
+                />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} label="Unidades" name="unidades" type='number' onChange={handleChange} />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+                <TextField sx={{ width: '100%' }} label="Precio" name="precio" type='number' onChange={handleChange} />
             </Grid>
 
         </>
