@@ -9,7 +9,8 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Id { get; set; }
         public int? Oferta { get; set; }
         public DateTime? Fecha { get; set; }
-        public string Producto { get; set; }
+        public int? Producto { get; set; }
+        public string DescripcionProducto { get; set; }
         public int? Cantidad { get; set; }
         public int? Albaran { get; set; }
         public int? ModoEnvio { get; set; }

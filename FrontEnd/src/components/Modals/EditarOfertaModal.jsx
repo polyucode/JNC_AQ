@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getContactos, getClientes, getProductos, getOfertasProductos, putOfertasProductos, deleteOfertasProductos, postOfertasProductos } from '../../api';
+import { getContactos, getClientes, getProductos, getOfertasProductos, putOfertasProductos, deleteOfertasProductos, postOfertasProductos, getConsumos } from '../../api';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -22,6 +22,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [consumos, setConsumos] = useState([]);
 
     const [productoEditar2, setProductoEditar2] = useState([]);
 
@@ -68,7 +69,16 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         },
         { field: 'precio', headerName: 'Precio Unitario', width: 150 },
         { field: 'cantidad', headerName: 'Estimación consumo', width: 200 },
-        { field: 'consumidos', headerName: 'Consumidos', width: 200 },
+        { 
+            field: 'consumidos', 
+            headerName: 'Consumidos', 
+            width: 200,
+            valueGetter: (params) => {
+                const ofertaProductoKey = `${params.row.oferta}_${params.row.producto}`;
+                const consumoInfo = consumos[ofertaProductoKey];
+                return consumoInfo ? consumoInfo.totalCantidad : '';
+            }
+        },
         { field: 'pendientes', headerName: 'Pendientes', width: 350 },
     ]
 
@@ -90,6 +100,12 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             .then(productos => {
                 setProductos(productos);
             })
+        
+        getConsumos()
+            .then(consumos => {
+                const sumByOfferAndProduct = sumarCantidadesPorOfertaYProducto(consumos);
+                setConsumos(sumByOfferAndProduct);
+            })
 
     }, [])
 
@@ -108,6 +124,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
     }
 
+    console.log(consumos, "CONSUMOS")
+
     function formateandofechas(fecha) {
         if (fecha !== null) {
             const fecha1 = new Date(fecha)
@@ -121,6 +139,21 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             return null
         }
     }
+
+    const sumarCantidadesPorOfertaYProducto = (consumos) => {
+        return consumos.reduce((acc, consumo) => {
+            const key = `${consumo.oferta}_${consumo.producto}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    oferta: consumo.oferta,
+                    producto: consumo.producto,
+                    totalCantidad: 0
+                };
+            }
+            acc[key].totalCantidad += consumo.cantidad;
+            return acc;
+        }, {});
+    };
 
     const peticionPostProducto = async () => {
 

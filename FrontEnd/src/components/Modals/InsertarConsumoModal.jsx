@@ -50,7 +50,8 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                     renderInput={(params) => <TextField {...params} name="producto" label="Producto" error={errorProducto} helperText={errorProducto ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,
-                        producto: value.descripcion
+                        producto: value.id,
+                        descripcionProducto: value.descripcion
                     }))}
                 />
             </Grid>

@@ -54,7 +54,8 @@ export const ConsumoArticulosPage = () => {
         id: 0,
         oferta: 0,
         fecha: null,
-        producto: '',
+        producto: 0,
+        descripcionProducto: '',
         cantidad: 0,
         albaran: 0,
         modoEnvio: 0,
@@ -110,7 +111,15 @@ export const ConsumoArticulosPage = () => {
                 }
             }
         },
-        { headerName: 'Producto', field: 'producto', width: 200 },
+        { 
+            field: 'producto', 
+            headerName: 'Producto', 
+            width: 200,
+            valueFormatter: (params) => {
+                const prod = productos.find((producto) => producto.id === params.value);
+                return prod ? prod.descripcion : '';
+            }
+        },
         { headerName: 'Cantidad', field: 'cantidad', width: 150 },
         { headerName: 'Numero Albaran', field: 'albaran', width: 150 },
         { 
@@ -196,7 +205,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -256,7 +266,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -300,7 +311,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -343,7 +355,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -372,7 +385,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -401,7 +415,8 @@ export const ConsumoArticulosPage = () => {
                 id: 0,
                 oferta: 0,
                 fecha: null,
-                producto: '',
+                producto: 0,
+                descripcionProducto: '',
                 cantidad: 0,
                 albaran: 0,
                 modoEnvio: 0,
@@ -509,7 +524,7 @@ export const ConsumoArticulosPage = () => {
                                 onSelectionModelChange={(ids) => handleSelectRow(ids)}
                                 onRowClick={(consumoSeleccionado, evt) => {
                                     setConsumoSeleccionado(consumoSeleccionado.row)
-                                    setProductoEditar(productos.filter(producto => producto.descripcion === consumoSeleccionado.row.producto))
+                                    setProductoEditar(productos.filter(producto => producto.id === consumoSeleccionado.row.producto))
                                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
                                     setModoEnvioEditar(modoEnvio.filter(envio => envio.id === consumoSeleccionado.row.modoEnvio))
                                     abrirCerrarModalEditar();

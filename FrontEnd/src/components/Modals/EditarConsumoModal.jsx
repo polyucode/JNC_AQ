@@ -66,7 +66,8 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,
-                        producto: value.descripcion
+                        producto: value.id,
+                        descripcionProducto: value.descripcion
                     }))}
                 />
             </Grid>
