@@ -16,6 +16,8 @@ import { ModalLayout } from "../ModalLayout";
 
 import Swal from 'sweetalert2';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
+import { MostrarConsumoModal } from './MostrarConsumoModal';
+import { ModalLayout3 } from '../ModalLayout3';
 
 export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar, productoEditar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
 
@@ -51,16 +53,15 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     const [rows, setRows] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
-
     const [modalEditar, setModalEditar] = useState(false);
-
     const [modalEliminar, setModalEliminar] = useState(false);
+    const [modalConsumo, setModalConsumo] = useState(false);
 
 
     const columns = [
-        { 
-            field: 'producto', 
-            headerName: 'Productos', 
+        {
+            field: 'producto',
+            headerName: 'Productos',
             width: 200,
             valueFormatter: (params) => {
                 const prod = productos.find((producto) => producto.id === params.value);
@@ -69,17 +70,32 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         },
         { field: 'precio', headerName: 'Precio Unitario', width: 150 },
         { field: 'cantidad', headerName: 'Estimación consumo', width: 200 },
-        { 
-            field: 'consumidos', 
-            headerName: 'Consumidos', 
+        {
+            field: 'consumidos',
+            headerName: 'Consumidos',
             width: 200,
             valueGetter: (params) => {
                 const ofertaProductoKey = `${params.row.oferta}_${params.row.producto}`;
                 const consumoInfo = consumos[ofertaProductoKey];
-                return consumoInfo ? consumoInfo.totalCantidad : '';
+                return consumoInfo ? consumoInfo.totalCantidad : 0;
             }
         },
-        { field: 'pendientes', headerName: 'Pendientes', width: 350 },
+        {
+            field: 'pendientes',
+            headerName: 'Pendientes',
+            width: 200,
+            valueGetter: (params) => {
+                const cantidad = params.row.cantidad; // Valor de la columna Cantidad
+                const ofertaProductoKey = `${params.row.oferta}_${params.row.producto}`;
+                const consumoInfo = consumos[ofertaProductoKey];
+                const consumidos = consumoInfo ? consumoInfo.totalCantidad : 0; // Valor de la columna Consumidos
+
+                // Realizar la resta entre Cantidad y Consumidos para obtener Pendientes
+                const pendientes = cantidad - consumidos;
+
+                return pendientes >= 0 ? pendientes : ''; // Devolver el resultado, si es negativo devuelve un string vacío
+            }
+        },
     ]
 
     useEffect(() => {
@@ -100,7 +116,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             .then(productos => {
                 setProductos(productos);
             })
-        
+
         getConsumos()
             .then(consumos => {
                 const sumByOfferAndProduct = sumarCantidadesPorOfertaYProducto(consumos);
@@ -123,8 +139,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         setData(resp.filter(oferta => oferta.oferta === ofertaSeleccionada.numeroOferta))
 
     }
-
-    console.log(consumos, "CONSUMOS")
 
     function formateandofechas(fecha) {
         if (fecha !== null) {
@@ -160,7 +174,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         ofertaProducto.id = null;
         ofertaProducto.codigoCliente = ofertaSeleccionada.codigoCliente;
         ofertaProducto.oferta = ofertaSeleccionada.numeroOferta;
-        ofertaProducto.pendientes = ofertaProducto.cantidad - ofertaProducto.consumidos;
 
         const resp = await postOfertasProductos(ofertaProducto);
 
@@ -290,8 +303,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         });
     }
 
-    console.log(rows, "ROWS")
-
     const abrirCerrarModalInsertar = () => {
         if (modalInsertar) {
             setOfertaProducto({
@@ -367,6 +378,14 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         }
     }
 
+    const abrirCerrarModalConsumo = () => {
+        if (modalConsumo) {
+            setModalConsumo(!modalConsumo);
+        } else {
+            setModalConsumo(!modalConsumo);
+        }
+    }
+
     const handleChangeProducto = e => {
 
         const { name, value } = e.target;
@@ -403,7 +422,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="Referencia" name="referencia" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.referencia} />
+                <TextField sx={{ width: '100%' }} label="Referencia Cliente" name="referencia" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.referencia} />
             </Grid>
 
             <Grid item xs={6} md={3}>
@@ -605,9 +624,15 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                             disableSelectionOnClick
                             onSelectionModelChange={(ids) => handleSelectRow(ids)}
                             onRowClick={(ofertaProducto, evt) => {
-                                setOfertaProducto(ofertaProducto.row)
-                                setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
-                                abrirCerrarModalEditar();
+                                const clickedColumn = evt.target.dataset.field;
+                                if (clickedColumn === 'consumidos') {
+                                    setOfertaProducto(ofertaProducto.row)
+                                    abrirCerrarModalConsumo();
+                                } else {
+                                    setOfertaProducto(ofertaProducto.row)
+                                    setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
+                                    abrirCerrarModalEditar();
+                                }
                             }}
                         />
                     </Card>
@@ -636,6 +661,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                         ofertaProducto={ofertaProducto}
                         setOfertaProducto={setOfertaProducto}
                         productoEditar={productoEditar2}
+                        consumos={consumos}
+                        ofertaSeleccionada={ofertaSeleccionada}
                     />}
                 botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                     peticionPutProducto();
@@ -661,6 +688,15 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 ]}
                 open={modalEliminar}
                 onClose={abrirCerrarModalEliminar}
+            />
+
+            <ModalLayout3
+                titulo="Detalle Consumo"
+                contenido={
+                    <MostrarConsumoModal ofertaProducto={ofertaProducto} />
+                }
+                open={modalConsumo}
+                onClose={abrirCerrarModalConsumo}
             />
 
         </>

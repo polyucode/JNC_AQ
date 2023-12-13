@@ -42,7 +42,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%'}} label="Referencia" name="referencia" onChange={handleChange} />
+                <TextField sx={{ width: '100%'}} label="Referencia Cliente" name="referencia" onChange={handleChange} />
             </Grid>
 
             <Grid item xs={6} md={3}>

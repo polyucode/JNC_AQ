@@ -14,8 +14,6 @@ namespace AnalisisQuimicos.Core.Entities
         public decimal Precio { get; set; }
         public int? StockMin { get; set; }
         public int? StockMax { get; set; }
-        public int? Consumidos { get; set; }
-        public int? Pendientes { get; set; }
         public string ADR { get; set; }
         public string Portes { get; set; }
     }

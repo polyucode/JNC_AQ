@@ -52,6 +52,7 @@ export const ProductosPage = () => {
         id: 0,
         codigoProducto: "",
         descripcion: "",
+        kg: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -78,8 +79,9 @@ export const ProductosPage = () => {
     const columnas = [
 
         //Visibles
-        { headerName: 'Codigo del Producto', field: 'codigoProducto', width: 700 },
-        { headerName: 'Descripcion', field: 'descripcion', width: 700 }
+        { headerName: 'Codigo del Producto', field: 'codigoProducto', width: 500 },
+        { headerName: 'Descripcion', field: 'descripcion', width: 500 },
+        { headerName: 'KG', field: 'kg', width: 500}
 
     ];
 
@@ -123,6 +125,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: "",
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -174,6 +177,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: "",
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -213,6 +217,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: "",
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -249,6 +254,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: "",
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -270,6 +276,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: "",
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -291,6 +298,7 @@ export const ProductosPage = () => {
                 id: 0,
                 codigoProducto: 0,
                 descripcion: "",
+                kg: 0,
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -335,11 +343,6 @@ export const ProductosPage = () => {
         setSnackData({ open: false, msg: '', severity: 'info' });
 
     };
-
-
-    console.log(rowsIds, "ROWS IDS")
-
-
 
     return (
         <>
@@ -391,7 +394,7 @@ export const ProductosPage = () => {
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
+                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
@@ -489,7 +492,7 @@ export const ProductosPage = () => {
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
+                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',

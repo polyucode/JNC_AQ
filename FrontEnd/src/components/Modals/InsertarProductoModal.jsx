@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, InputAdornment } from '@mui/material';
 
 export const InsertarProductoModal = ({ change:handleChange, errorProducto }) =>{
 
@@ -9,8 +9,24 @@ export const InsertarProductoModal = ({ change:handleChange, errorProducto }) =>
                 <TextField sx={{ width: '100%', marginTop: '22px' }} label="Código Producto" name="codigoProducto" onChange={ handleChange } error={errorProducto} helperText={errorProducto ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
-            <Grid item xs={ 3 } md={ 9 }>
+            <Grid item xs={ 3 } md={ 5 }>
                 <TextField sx={{ width: '100%' }} label="Descripcion" name="descripcion" onChange={ handleChange } />
+            </Grid>
+
+            <Grid item xs={ 3 } md={ 4 }>
+                <TextField 
+                    sx={{ width: '100%' }} 
+                    label="Definir unidad" 
+                    name="kg" 
+                    onChange={ handleChange }
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                KG
+                            </InputAdornment>
+                        ),
+                    }}  
+                />
             </Grid>
 
         </>

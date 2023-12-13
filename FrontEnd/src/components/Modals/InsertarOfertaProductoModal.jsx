@@ -17,7 +17,7 @@ export const InsertarOfertaProductoModal = ({ handleChangeProducto, ofertaProduc
 
     return (
         <>
-            <Grid item xs={6} md={6}>
+            <Grid item xs={6} md={4}>
                 <Autocomplete
                     disableClearable={true}
                     id="producto"
@@ -41,13 +41,13 @@ export const InsertarOfertaProductoModal = ({ handleChangeProducto, ofertaProduc
                 <TextField sx={{ width: '100%' }} label="Estimación Consumo" name="cantidad" type='number' onChange={handleChangeProducto} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Consumidos" name="consumidos" type='number' onChange={handleChangeProducto} />
+            {/* <Grid item xs={6} md={4}>
+                <TextField disabled sx={{ width: '100%' }} label="Consumidos" name="consumidos" type='number' onChange={handleChangeProducto} />
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField disabled sx={{ width: '100%' }} label="Pendientes" name="pendientes" type='number' onChange={handleChangeProducto} value={ofertaProducto.cantidad - ofertaProducto.consumidos} />
-            </Grid>
+                <TextField disabled sx={{ width: '100%' }} label="Pendientes" name="pendientes" type='number' onChange={handleChangeProducto} />
+            </Grid> */}
 
         </>
     )

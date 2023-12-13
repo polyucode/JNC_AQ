@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Card, Typography, Button, Snackbar, Slide } from '@mui/material';
+import { Grid, Card, Typography, Button, Snackbar, Slide, TextField, InputAdornment, IconButton, Autocomplete } from '@mui/material';
 import axios from "axios";
 import MuiAlert from '@mui/material/Alert';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { ThemeContext } from "../router/AppRouter";
 import { MainLayout } from "../layout/MainLayout";
@@ -166,6 +167,9 @@ export const TareasPage = () => {
   const [errorOperario, setErrorOperario] = useState(false);
   const [errorFecha, setErrorFecha] = useState(false);
   const [errorPeriodo, setErrorPeriodo] = useState(false);
+
+  const [filterText, setFilterText] = useState('');
+  const [filterOferta, setFilterOferta] = useState(0);
 
   const { usuarioActual } = useUsuarioActual();
 
@@ -827,6 +831,19 @@ export const TareasPage = () => {
     }))
   }
 
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+  };
+
+  const handleFilterOferta = (event) => {
+    setFilterOferta(parseInt(event.target.innerText));
+  };
+
+  const filteredData = rows.filter(item =>
+    item.nombreCliente.toLowerCase().includes(filterText.toLowerCase()) &&
+    (filterOferta !== 0 ? item.oferta === filterOferta : true)
+  );
+
   const handleAutocompleteChange = (e) => {
 
     // Obtenemos el nombre del campo y su valor
@@ -1005,17 +1022,46 @@ export const TareasPage = () => {
             </Alert>
           </Snackbar>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             {/* Título y botones de opción */}
             <Grid item xs={12}>
               <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant='h6'>Listado de Tareas</Typography>
+                <Grid item xs={4}>
+                  <TextField
+                    label="Filtrar cliente"
+                    variant="outlined"
+                    value={filterText}
+                    onChange={handleFilterChange}
+                    sx={{ width: '50%' }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton>
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    disableClearable={true}
+                    sx={{ width: '50%' }}
+                    id="Oferta"
+                    options={ofertas}
+                    getOptionLabel={option => option.numeroOferta.toString()}
+                    renderInput={(params) => <TextField {...params} label="Filtrar por oferta" name="oferta" />}
+                    onChange={handleFilterOferta}
+                  />
+                </Grid>
                 {
                   (rowsIds.length > 0) ?
                     (
                       <Grid item>
                         <Button
-                          sx={{ mr: 2 }}
+                          sx={{ height: '40px' }}
                           color='error'
                           variant='contained'
                           startIcon={<DeleteIcon />}
@@ -1029,6 +1075,7 @@ export const TareasPage = () => {
                       </Grid>
                     ) : (
                       <Button
+                        sx={{ height: '40px' }}
                         color='success'
                         variant='contained'
                         startIcon={<AddIcon />}
@@ -1043,14 +1090,14 @@ export const TareasPage = () => {
             <Grid item xs={12}>
               <Card>
                 <DataGrid
-                  components={{ Toolbar: GridToolbar }}
+                  //components={{ Toolbar: GridToolbar }}
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
                     height: 1000,
                     backgroundColor: '#FFFFFF'
                   }}
-                  rows={rows}
+                  rows={filteredData}
                   columns={columns}
                   pageSize={100}
                   checkboxSelection
