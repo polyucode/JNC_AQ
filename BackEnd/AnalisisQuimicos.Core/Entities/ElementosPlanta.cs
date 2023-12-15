@@ -7,6 +7,7 @@ namespace AnalisisQuimicos.Core.Entities
     {
         public string Nombre { get; set; }
         public int? Numero { get; set; }
+        public string Descripcion { get; set; }
         public bool? Maestro { get; set; }
 
     }

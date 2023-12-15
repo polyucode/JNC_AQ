@@ -27,7 +27,7 @@ import { AuthContext } from "../context/AuthContext";
 import {
     getConfNivelesPlantasCliente, getParametrosElementoPlantaClienteConFiltros, getUsuarios, getClientes, getElementos, getOfertas,
     getParametros, getFilasParametros, putValorParametros, getAnalisis, getAnalisisNivelesPlantasCliente, getParametrosAnalisisPlanta, generarPdf,
-    getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta, postValorParametros
+    getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta, postValorParametros, getElementosPlanta
 } from "../api";
 
 const token = {
@@ -116,7 +116,7 @@ export const MantenimientoTecnicoPage = () => {
         getOfertas()
             .then((res) => setOfertas(res));
 
-        getElementos()
+        getElementosPlanta()
             .then((res) => setElementos(res));
 
         getParametros()
@@ -377,7 +377,7 @@ export const MantenimientoTecnicoPage = () => {
 
         // Recorremos los registros para ver que valores podemos guardar (activo)
 
-        if (resp2[0].analisis == 1 || resp2[0].analisis == 2 || resp2[0].analisis == 3 || resp2[0].analisis == 4 || resp2[0].analisis == 5 || resp2[0].analisis == 6 || resp2[0].analisis == 11) {
+        if (resp2[0].analisis == 1 || resp2[0].analisis == 2 || resp2[0].analisis == 3 || resp2[0].analisis == 4 || resp2[0].analisis == 5 || resp2[0].analisis == 6 || resp2[0].analisis == 7 || resp2[0].analisis == 8) {
             resp.map(registro => {
 
                 const valoresPorParametro = datos.filter(param => param.parametro === registro.parametro)
@@ -666,7 +666,7 @@ export const MantenimientoTecnicoPage = () => {
                                         id="elemento"
                                         options={elementosAutocomplete}
                                         inputValue={parametrosSeleccionado.nombreElemento}
-                                        getOptionLabel={option => option.nombre + ' ' + option.numero}
+                                        getOptionLabel={option => option.descripcion !== null ? option.nombre + ' ' + option.descripcion : option.nombre + ' ' + option.numero}
                                         renderInput={params => <TextField {...params} label="Elemento" name="idElemento" />}
                                         onChange={(event, value) => onChangeElemento(event, value, "idElemento")}
                                     />
@@ -760,7 +760,7 @@ export const MantenimientoTecnicoPage = () => {
                 <Grid item xs={12}>
                     <Card>
                         {
-                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 8 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) && tareaAnalisisPlanta.codigoCliente ?
+                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) && tareaAnalisisPlanta.codigoCliente ?
                                 (<CardContent style={{ padding: '30px', margin: '15px' }}>
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>

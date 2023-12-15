@@ -160,7 +160,7 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     id="CboElementosPlanta"
                     inputValue={tareaSeleccionada.nombreElemento}
                     options={elementosAutocomplete}
-                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                    getOptionLabel={option => option.descripcion !== null ? (option.nombre + ' ' + option.descripcion) : (option.nombre + ' ' + option.numero)}
                     sx={{ width: '100%', marginTop: '22px' }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" error={errorElemento} helperText={errorElemento ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({

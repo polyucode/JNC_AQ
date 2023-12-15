@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getClientes, getContactos, getProductos } from '../../api';
 
-export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
+export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, handleChangeAutocomplete, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]); 

@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import {
     getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros,
     getConfNivelesPlantasCliente, getElementos, getOfertas, getParametros, getParametrosAnalisisPlanta, getAnalisisNivelesPlantasCliente,
-    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente, getValorParametros
+    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente, getValorParametros, getElementosPlanta
 } from '../api';
 
 const token = {
@@ -259,7 +259,7 @@ export const PlantasTablaPage = () => {
         getOfertas()
             .then(resp => setOferta(resp));
 
-        getElementos()
+        getElementosPlanta()
             .then(resp => setElementos(resp));
 
         getParametros()
@@ -316,9 +316,12 @@ export const PlantasTablaPage = () => {
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta && planta.id_Elemento === parametrosSeleccionado.idElemento);
 
+        console.log(lista)
         lista.map(analisis => {
             opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id && !anal.deleted));
         })
+
+        console.log(opcionesFiltradasAnalisis)
 
         opcionesFiltradasAnalisis.map(nomAnalisis => {
             nomAnalisis.map(anal => {
@@ -634,8 +637,6 @@ export const PlantasTablaPage = () => {
         }));
     }
 
-    console.log(abroPlantilla)
-
     return (
         <MainLayout title="Parametrización de planta">
 
@@ -703,7 +704,7 @@ export const PlantasTablaPage = () => {
                                     id="elemento"
                                     inputValue={parametrosSeleccionado.nombreElemento}
                                     options={elementosAutocomplete}
-                                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                                    getOptionLabel={option => option.descripcion !== null ? (option.nombre + ' ' + option.descripcion) : (option.nombre + ' ' + option.numero)}
                                     renderInput={(params) => <TextField {...params} name="elemento" label="Elemento" />}
                                     onChange={(event, value) => onChangeElemento(event, value, "elemento")}
                                 />
@@ -716,7 +717,7 @@ export const PlantasTablaPage = () => {
                                     id="analisis"
                                     inputValue={parametrosSeleccionado.nombreAnalisis}
                                     options={analisisAutocomplete}
-                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 11 )}
+                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 7 || an.id === 8 )}
                                     getOptionLabel={option => option.nombre}
                                     renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
                                     onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}

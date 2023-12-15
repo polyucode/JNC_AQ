@@ -8,6 +8,7 @@ namespace AnalisisQuimicos.Core.DTOs
     {
         public int? Id { get; set; }
         public string Nombre { get; set; }
+        public bool? FisicoQuimico { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

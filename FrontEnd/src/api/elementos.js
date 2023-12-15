@@ -10,28 +10,28 @@ export const getListaElementos = async () => {
 
 export const getElementos = async () => {
 
-    const resp = await instance.get('/elementosplanta')
+    const resp = await instance.get('/elementos')
     return Object.entries(resp.data.data).map(([key, value]) => (key, value));
 
 }
 
 export const getElementoPorId = async ( id ) => {
 
-    const resp = await instance.get(`/elementosplanta/${ id }`);
+    const resp = await instance.get(`/elementos/${ id }`);
     return resp.data.data;
     
 }
 
 export const postElementos = async ( elemento ) => {
 
-    const resp = await instance.post('/elementosplanta', elemento);
+    const resp = await instance.post('/elementos', elemento);
     return resp.data.data;
 
 }
 
 export const putElementos = async ( elemento ) => {
 
-    const resp = await instance.put('/elementosplanta', elemento);
+    const resp = await instance.put('/elementos', elemento);
     return resp.data.data;
 
 }

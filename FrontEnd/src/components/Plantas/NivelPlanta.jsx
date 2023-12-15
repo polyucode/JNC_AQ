@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { TextField } from '@material-ui/core';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Card, Divider, Grid, IconButton, List, ListItem, ListItemText, Tooltip } from '@mui/material';
+import { Card, Divider, Grid, IconButton, List, ListItem, ListItemText, Tooltip, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { useEffect } from 'react';
-import { deleteAnalisisNivelesPlantasCliente, deleteConfNivelesPlantasCliente, deleteElementosPlanta, getAnalisisNivelesPlantasCliente, getConfNivelesPlantasCliente, getElementosPlanta, getListaElementos } from '../../api';
+import { deleteAnalisisNivelesPlantasCliente, deleteConfNivelesPlantasCliente, deleteElementosPlanta, getAnalisisNivelesPlantasCliente, getConfNivelesPlantasCliente, getElementosPlanta, getListaElementos, putElementosPlanta } from '../../api';
 import { useUsuarioActual } from '../../hooks/useUsuarioActual';
+import { ModalLayout2 } from '../ModalLayout2';
+import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
+import Swal from 'sweetalert2';
 
 export const NivelPlanta = ({
     nivel,
@@ -17,27 +21,64 @@ export const NivelPlanta = ({
     setElementosPlanta,
     indiceElemento,
     setIndiceElemento,
+    elementos,
     confNivelesPlantaCliente
 }) => {
 
-    const [elementos, setElementos] = useState([]);
+    //const [elementos, setElementos] = useState([]);
     const [elementosNivel, setElementosNivel] = useState([]);
 
     const [selectedElemento, setSelectedElemento] = useState(null);
     const [key, setKey] = useState(0);
 
+    const [openModal, setOpenModal] = useState(false);
+
+    const [elementoSeleccionado, setElementoSeleccionado] = useState({
+        id: 0,
+        nombre: '',
+        numero: 0,
+        descripcion: '',
+        nivel: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null
+    })
+    const [elementName, setElementName] = useState('');
+    const [elementNumero, setElementNumero] = useState(0);
+    const [elementDescription, setElementDescription] = useState('');
+
+
     const { usuarioActual } = useUsuarioActual();
-
-    useEffect(() => {
-
-        getListaElementos()
-            .then(resp => setElementos(resp));
-
-    }, []);
 
     useEffect(() => {
         setElementosNivel(elementosPlanta.filter(elemento => elemento.nivel === parseInt(nivel)));
     }, [elementosPlanta]);
+
+    const handleEditClick = (elementId, elementName, elementNumero, elementDescription, elementNivel) => {
+        setOpenModal(true);
+
+        setElementName(elementName);
+        setElementNumero(elementNumero);
+        setElementDescription(elementDescription);
+
+        setElementoSeleccionado(prevState => ({
+            ...prevState,
+            id: elementId,
+            nombre: elementName,
+            numero: elementNumero,
+            descripcion: elementDescription,
+            nivel: elementNivel
+        }))
+
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
     const handleSelectElemento = (e, newValue) => {
 
@@ -113,108 +154,209 @@ export const NivelPlanta = ({
         setElementosPlanta(elementosPlanta.filter(elemento => elemento.id != id));
     }
 
+    const handleChange = (event) => {
+
+        setElementDescription(event.target.value)
+
+        setElementoSeleccionado(prevState => ({
+            ...prevState,
+            descripcion: event.target.value
+        }))
+    }
+
+    const peticionPutElemento = async () => {
+
+        const resp = await putElementosPlanta(elementoSeleccionado);
+
+        var elementoModificado = elementosPlanta;
+        elementoModificado.map(elemento => {
+            if (elemento.id === elementoSeleccionado.id) {
+                elemento = elementoSeleccionado
+            }
+        });
+
+        const elementosActualizados = elementosPlanta.map(elemento => {
+            if (elemento.id === elementoSeleccionado.id) {
+                return elementoSeleccionado;
+            } else{
+                return elemento;
+            }
+        });
+
+        setElementosPlanta(elementosActualizados);
+
+        handleCloseModal()
+        setElementoSeleccionado({
+            id: 0,
+            nombre: '',
+            numero: 0,
+            descripcion: '',
+            nivel: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null
+        })
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Elemento Modificado',
+            text: `El elemento se ha modificado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
+
+    }
+
     return (
-        <Grid item xs={4}>
-            <Card sx={{ p: 2, display: 'flex' }}>
-                <Grid container spacing={2}>
+        <>
+            <Grid item xs={4}>
+                <Card sx={{ p: 2, display: 'flex' }}>
+                    <Grid container spacing={2}>
 
-                    <Grid item xs={12}>
-                        <Typography variant="h6">Nivel {nivel}</Typography>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Nivel {nivel}</Typography>
+                        </Grid>
+
+                        {
+                            usuarioActual.idPerfil === 1004 ?
+                                <Grid item xs={12}>
+                                    <Autocomplete
+                                        id="elemento"
+                                        options={elementos}
+                                        disabled
+                                        getOptionLabel={option => option.nombre}
+                                        renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
+                                        onChange={handleSelectElemento}
+                                    />
+                                </Grid>
+                                :
+                                <Grid item xs={12}>
+                                    <Autocomplete
+                                        key={key}
+                                        id="elemento"
+                                        options={elementos}
+                                        getOptionLabel={option => option.nombre}
+                                        renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
+                                        onChange={handleSelectElemento}
+                                        value={selectedElemento}
+                                    />
+                                </Grid>
+                        }
+
+                        {
+                            usuarioActual.idPerfil === 1004 ?
+                                <Grid item xs={12}>
+                                    <List>
+                                        {
+                                            (elementosNivel.length > 0)
+                                                ? elementosNivel.map((elemento, index) => (
+                                                    <div key={elemento.id}>
+                                                        <ListItem
+                                                            sx={{ backgroundColor: 'none' }}
+
+                                                        >
+                                                            <ListItemText
+                                                                primary={`${elemento.nombre} ${elemento.numero}`}
+                                                            />
+                                                        </ListItem>
+
+                                                        {(index + 1 != elementosNivel.length) && <Divider />}
+                                                    </div>
+                                                ))
+                                                : (
+                                                    <Typography>Ningún elemento añadido</Typography>
+                                                )
+                                        }
+
+                                    </List>
+                                </Grid>
+                                :
+                                <Grid item xs={12}>
+                                    <List>
+
+                                        {
+                                            (elementosNivel.length > 0)
+                                                ? elementosNivel.map((elemento, index) => (
+                                                    <div key={elemento.id}>
+                                                        <ListItem
+                                                            sx={{ backgroundColor: 'none' }}
+                                                            secondaryAction={
+                                                                <React.Fragment>
+                                                                    <Tooltip title="Editar elemento">
+                                                                        <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(elemento.id, elemento.nombre, elemento.numero, elemento.descripcion, elemento.nivel)}>
+                                                                            <EditIcon />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                    <Tooltip title="Eliminar elemento">
+                                                                        <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
+                                                                            <DeleteIcon />
+                                                                        </IconButton>
+                                                                    </Tooltip>
+                                                                </React.Fragment>
+                                                            }
+                                                        >
+                                                            <ListItemText
+                                                                primary={elemento.descripcion !== null ? `${elemento.nombre} ${elemento.descripcion}` : `${elemento.nombre} ${elemento.numero}`}
+                                                            />
+                                                        </ListItem>
+
+                                                        {(index + 1 != elementosNivel.length) && <Divider />}
+                                                    </div>
+                                                ))
+                                                : (
+                                                    <Typography>Ningún elemento añadido</Typography>
+                                                )
+                                        }
+
+                                    </List>
+                                </Grid>
+                        }
+
                     </Grid>
+                </Card>
+            </Grid>
 
-                    {
-                        usuarioActual.idPerfil === 1004 ?
-                            <Grid item xs={12}>
-                                <Autocomplete
-                                    id="elemento"
-                                    options={elementos}
-                                    disabled
-                                    getOptionLabel={option => option.nombre}
-                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
-                                    onChange={handleSelectElemento}
+            <ModalLayout2
+                titulo={ elementDescription !== null ? `Renombrar elemento de planta ${elementName + ' ' + elementDescription}` : `Renombrar elemento de planta ${elementName + ' ' + elementNumero}`}
+                contenido={
+                    <Grid item xs={12}>
+                        <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                            <Grid item xs={3}>
+                                <Typography style={{ marginTop: '10px' }} id="modal-title" variant="h6">
+                                    {elementName}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    sx={{ width: '100%' }}
+                                    name="nombre"
+                                    value={elementDescription !== null ? elementDescription : elementNumero}
+                                    onChange={handleChange}
                                 />
+
                             </Grid>
-                            :
-                            <Grid item xs={12}>
-                                <Autocomplete
-                                    key={key}
-                                    id="elemento"
-                                    options={elementos}
-                                    getOptionLabel={option => option.nombre}
-                                    renderInput={params => <TextField {...params} variant="outlined" label="Elemento" name="elemento" />}
-                                    onChange={handleSelectElemento}
-                                    value={selectedElemento}
-                                />
-                            </Grid>
-                    }
+                        </Grid>
 
-                    {
-                        usuarioActual.idPerfil === 1004 ?
-                            <Grid item xs={12}>
-                                <List>
-                                    {
-                                        (elementosNivel.length > 0)
-                                            ? elementosNivel.map((elemento, index) => (
-                                                <div key={elemento.id}>
-                                                    <ListItem
-                                                        sx={{ backgroundColor: 'none' }}
-
-                                                    >
-                                                        <ListItemText
-                                                            primary={`${elemento.nombre} ${elemento.numero}`}
-                                                        />
-                                                    </ListItem>
-
-                                                    {(index + 1 != elementosNivel.length) && <Divider />}
-                                                </div>
-                                            ))
-                                            : (
-                                                <Typography>Ningún elemento añadido</Typography>
-                                            )
-                                    }
-
-                                </List>
-                            </Grid>
-                            :
-                            <Grid item xs={12}>
-                                <List>
-
-                                    {
-                                        (elementosNivel.length > 0)
-                                            ? elementosNivel.map((elemento, index) => (
-                                                <div key={elemento.id}>
-                                                    <ListItem
-                                                        sx={{ backgroundColor: 'none' }}
-                                                        secondaryAction={
-                                                            <Tooltip title="Eliminar elemento">
-                                                                <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
-                                                                    <DeleteIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        }
-                                                    >
-                                                        <ListItemText
-                                                            primary={`${elemento.nombre} ${elemento.numero}`}
-                                                        />
-                                                    </ListItem>
-
-                                                    {(index + 1 != elementosNivel.length) && <Divider />}
-                                                </div>
-                                            ))
-                                            : (
-                                                <Typography>Ningún elemento añadido</Typography>
-                                            )
-                                    }
-
-                                </List>
-                            </Grid>
-                    }
-
-
-
-
-                </Grid>
-            </Card>
-        </Grid>
+                    </Grid>
+                }
+                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                    peticionPutElemento();
+                })
+                ]}
+                open={openModal}
+                onClose={handleCloseModal}
+            />
+        </>
     )
 }

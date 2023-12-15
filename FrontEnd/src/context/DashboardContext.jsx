@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { getAnalisisId, getElementoPorId, getValorParametros, getParametrosAnalisisPlanta } from "../api";
+import { getAnalisisId, getElementoPorId, getValorParametros, getParametrosAnalisisPlanta, getElementoPlantaPorId } from "../api";
 
 export const DashboardContext = createContext();
 
@@ -39,9 +39,14 @@ export const DashboardProvider = ({ children }) => {
 
     const handleSeleccionarElemento = async (id) => {
 
-        const elemento = await getElementoPorId(id);
+        const elemento = await getElementoPlantaPorId(id);
 
-        setElementoActivo(prev => ({ ...prev, nombre: elemento.nombre + ' ' + elemento.numero, id }));
+        if(elemento.descripcion !== null){
+            setElementoActivo(prev => ({ ...prev, nombre: elemento.nombre + ' ' + elemento.descripcion, id }));
+        }else{
+            setElementoActivo(prev => ({ ...prev, nombre: elemento.nombre + ' ' + elemento.numero, id }));
+        }
+        
         setValoresParametros(listaParametros.filter(param => param.id_Elemento === id));
 
         //parametros Analisisi Ordenados por fecha descendente 

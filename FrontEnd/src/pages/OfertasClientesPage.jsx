@@ -16,7 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos } from "../api";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
@@ -67,6 +67,23 @@ export const OfertasClientesPage = () => {
         delIdUser: null,
         deleted: null,
     });
+
+    const [productoSeleccionado, setProductoSeleccionado] = useState({
+        id: 0,
+        producto: 0,
+        descripcionProducto: '',
+        precio: 0,
+        cantidad: 0,
+        consumidos: 0,
+        pendientes: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null,
+    })
 
     const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
 
@@ -227,8 +244,15 @@ export const OfertasClientesPage = () => {
 
         if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
             ofertaSeleccionada.id = null;
+            productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta
+            productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente
+            productoSeleccionado.producto = ofertaSeleccionada.producto
+            productoSeleccionado.precio = ofertaSeleccionada.precio
+            productoSeleccionado.cantidad = ofertaSeleccionada.unidades
 
             const resp = await postOfertas(ofertaSeleccionada);
+
+            await postOfertasProductos(productoSeleccionado)
 
             abrirCerrarModalInsertar();
             getOferta();

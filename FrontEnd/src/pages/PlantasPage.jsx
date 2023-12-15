@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from '@material-ui/core';
-import { Autocomplete, Typography, Button, Card, Grid, List, ListItemButton, ListItemText, Tooltip, Alert } from '@mui/material';
+import { Autocomplete, Typography, Button, TextField, Card, Grid, List, ListItemButton, ListItemText, Tooltip, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -12,7 +11,7 @@ import { MainLayout } from "../layout/MainLayout";
 import {
     getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente,
     getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente,
-    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente, deleteAnalisisNivelesPlantasCliente, getElementosPlanta, deleteElementosPlanta
+    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente, deleteAnalisisNivelesPlantasCliente, getElementosPlanta, deleteElementosPlanta, getElementoPlantaPorId, postElementosPlanta, putElementosPlanta, getElementos
 } from "../api";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
@@ -36,6 +35,31 @@ export const PlantasPage = () => {
         NumNiveles: '',
         Diagrama: ""
     });
+
+    const [elementoNuevo, setElementoNuevo] = useState({
+        id: 0,
+        nombre: '',
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null
+    });
+
+    const [elementoCambiado, setElementoCambiado] = useState({
+        id: 0,
+        nombre: '',
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null
+    })
+
     const [crearPlanta, setCrearPlanta] = useState(true);
     const [plantaCreada, setPlantaCreada] = useState(false);
     const [niveles, setNiveles] = useState([]);
@@ -45,6 +69,9 @@ export const PlantasPage = () => {
     const [ofertas, setOfertas] = useState([]);
     const [analisis, setAnalisis] = useState([]);
     const [parametros, setParametros] = useState([]);
+    const [elementos, setElementos] = useState([]);
+
+    const [textFieldValue, setTextFieldValue] = useState('');
 
     // Listado de elementos
     const [elementosPlanta, setElementosPlanta] = useState([]);
@@ -59,6 +86,9 @@ export const PlantasPage = () => {
     const [diagramaGuardado, setDiagramaGuardado] = useState(false);
 
     const [estadoEliminarPlanta, setEstadoEliminarPlanta] = useState(false);
+
+    const [errorElemento, setErrorElemento] = useState(false);
+    const [errorElementoCambiado, setErrorElementoCambiado] = useState(false);
 
     /** HOOKS **/
     const navigate = useNavigate();
@@ -85,6 +115,8 @@ export const PlantasPage = () => {
 
         getParametros()
             .then(resp => { setParametros(resp) });
+
+        getElemento();
 
     }, []);
 
@@ -181,6 +213,13 @@ export const PlantasPage = () => {
         }
 
     }, [elementosPlanta]);
+
+    const getElemento = async () => {
+
+        const resp = await getElementos();
+        setElementos(resp);
+
+    }
 
     // FUNCIONES
 
@@ -289,7 +328,7 @@ export const PlantasPage = () => {
                     respNiveles.map(async (nivel) => {
 
                         // Obtenemos los datos del elemento
-                        const resp = await getElementoPorId(nivel.id_Elemento);
+                        const resp = await getElementoPlantaPorId(nivel.id_Elemento);
 
                         // Obtenemos los analisis por este elemento
                         const analisisFiltro = respAnalisis.filter(anali => anali.id_NivelesPlanta === nivel.id)
@@ -321,6 +360,7 @@ export const PlantasPage = () => {
                                 nivel: nivel.nivel,
                                 nombre: resp.nombre,
                                 numero: resp.numero,
+                                descripcion: resp.descripcion,
                                 analisis: analisisObjeto
                             });
 
@@ -368,6 +408,14 @@ export const PlantasPage = () => {
 
     }
 
+    const handleElemento = (e) => {
+        const { name, value } = e.target;
+        setElementoNuevo(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     const handleAnalisis = (event) => {
 
         setElementoSeleccionado({
@@ -379,6 +427,17 @@ export const PlantasPage = () => {
         });
 
     }
+
+    const handleTextFieldChange = event => {
+        const nuevoNombre = event.target.value;
+        setTextFieldValue(nuevoNombre);
+
+        // Actualizar el nombre del elementoNuevo cuando se modifica el TextField
+        setElementoCambiado(prevState => ({
+            ...prevState,
+            nombre: nuevoNombre
+        }));
+    };
 
     const handleSeleccionarElemento = (elemento) => {
         setElementoSeleccionado(elemento);
@@ -452,7 +511,7 @@ export const PlantasPage = () => {
                 }
 
                 // Hacemos un PUT
-                await putElementos(postElemento);
+                await putElementosPlanta(postElemento);
 
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
@@ -467,7 +526,7 @@ export const PlantasPage = () => {
             } else {
 
                 // El elemento no existe. Hacemos POST
-                const respElemento = await postElementos(postElemento);
+                const respElemento = await postElementosPlanta(postElemento);
 
                 // Añadimos el elemento al listado
                 elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
@@ -590,6 +649,100 @@ export const PlantasPage = () => {
 
     };
 
+    const peticionPostElemento = async () => {
+        elementoNuevo.id = null;
+
+        const elementoRepetido = elementos.filter(elem => elem.nombre === elementoNuevo.nombre)
+
+        if (elementoRepetido.length > 0) {
+            setErrorElemento(true)
+        } else {
+            setErrorElemento(false)
+        }
+
+        if (elementoRepetido.length == 0) {
+            const resp = await postElementos(elementoNuevo);
+
+            getElemento();
+            setElementoNuevo({
+                id: 0,
+                nombre: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Elemento Creado',
+                text: `El elemento se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
+    }
+
+    const peticionPutElemento = async () => {
+
+        const elementoRepetido = elementos.filter(elem => elem.nombre === elementoCambiado.nombre)
+
+        if (elementoRepetido.length > 0) {
+            setErrorElementoCambiado(true)
+        } else {
+            setErrorElementoCambiado(false)
+        }
+
+        if (elementoRepetido.length == 0) {
+            const resp = await putElementos(elementoCambiado);
+
+            var elementoModificado = elementos;
+            elementoModificado.map(elemento => {
+                if (elemento.id === elementoCambiado.id) {
+                    elemento = elementoCambiado
+                }
+            });
+
+            getElemento();
+            setElementoCambiado({
+                id: 0,
+                nombre: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            })
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Elemento Modificado',
+                text: `El elemento se ha modificado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
+    }
+
     const handleGuardarDiagrama = async () => {
 
         // Guardamos los datos de la planta
@@ -612,6 +765,22 @@ export const PlantasPage = () => {
             }
         });
 
+    };
+
+    const handleElementoChange = (event, value) => {
+        if (value) {
+            setElementoCambiado({
+                id: value.id,
+                nombre: value.nombre
+            });
+            setTextFieldValue(value.nombre); // Establecer el valor del TextField
+        } else {
+            setElementoCambiado({
+                id: value.id,
+                nombre: ''
+            });
+            setTextFieldValue(''); // Limpiar el valor del TextField si se borra la selección
+        }
     };
 
     const eliminarPlanta = async (id) => {
@@ -761,6 +930,56 @@ export const PlantasPage = () => {
                             </Card>
                         </Grid>
 
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex' }}>
+                                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            sx={{ width: '100%'}}
+                                            name="nombre"
+                                            onChange={handleElemento}
+                                            error={errorElemento}
+                                            helperText={errorElemento ? 'Este elemento ya existe' : ' '}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={3}>
+                                        <Button
+                                            sx={{ ml: 2, marginBottom: '22px'}}
+                                            variant='contained'
+                                            startIcon={<AddIcon />}
+                                            onClick={peticionPostElemento}
+                                        >
+                                            Añadir Elemento de Planta
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={3}>
+                                        <Autocomplete
+                                            id="elemento"
+                                            options={elementos}
+                                            getOptionLabel={option => option.nombre}
+                                            renderInput={params => <TextField {...params} label="Elemento" value={textFieldValue} onChange={handleTextFieldChange} name="nombre" error={errorElementoCambiado} helperText={errorElementoCambiado ? 'Este elemento ya existe' : ' '} />}
+                                            onChange={handleElementoChange}
+                                            value={elementoCambiado}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={3}>
+                                        <Button
+                                            sx={{ width: "50%", marginBottom: '22px' }}
+                                            variant='contained'
+                                            onClick={peticionPutElemento}
+                                        >
+                                            Modificar
+                                        </Button>
+                                    </Grid>
+
+                                </Grid>
+                            </Card>
+                        </Grid>
+
                         {/* APARTADO DE NIVELES */}
                         <Grid item xs={12}>
                             <Grid container spacing={2}>
@@ -771,6 +990,7 @@ export const PlantasPage = () => {
                                             nivel={nivel}
                                             contadorElemento={contadorElemento}
                                             setContadorElemento={setContadorElemento}
+                                            elementos={elementos}
                                             elementosPlanta={elementosPlanta}
                                             setElementosPlanta={setElementosPlanta}
                                             indiceElemento={indiceElemento}

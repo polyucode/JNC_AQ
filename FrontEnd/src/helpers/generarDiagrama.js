@@ -79,7 +79,7 @@ export const useDiagrama = () => {
                     type: 'nodoElemento',
                     data: {
                         id: elemento.id,
-                        label: `${ elemento.nombre } ${ elemento.numero }`,
+                        label: elemento.descripcion !== null ? `${ elemento.nombre } ${ elemento.descripcion }` : `${ elemento.nombre } ${ elemento.numero }`,
                         edges: posNivel
                     },
                     position: { x: separacion, y: posYHijo },

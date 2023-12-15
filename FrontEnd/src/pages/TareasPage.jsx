@@ -191,7 +191,12 @@ export const TareasPage = () => {
       width: 250,
       valueFormatter: (params) => {
         const elemento = elementosplanta.find((elemento) => elemento.id === params.value);
-        return elemento ? elemento.nombre + ' ' + elemento.numero : '';
+
+        if (elemento.descripcion !== null) {
+          return elemento ? elemento.nombre + ' ' + elemento.descripcion : '';
+        } else {
+          return elemento ? elemento.nombre + ' ' + elemento.numero : '';
+        }
       }
     },
     {
