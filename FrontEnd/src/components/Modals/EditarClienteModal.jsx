@@ -16,6 +16,7 @@ import { InsertarContactoModal } from './InsertarContactoModal';
 import { EditarContactoModal } from './EditarContactoModal';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
 import { useUsuarioActual } from '../../hooks/useUsuarioActual';
+import { ModalLayout2 } from '../ModalLayout2';
 
 const token = {
     headers: {
@@ -335,7 +336,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                 <Autocomplete
                     disableClearable={true}
                     id="comarca"
-                    sx={{ marginBottom: '10px'}}
+                    sx={{ marginBottom: '10px' }}
                     options={comarcas}
                     getOptionLabel={option => option.descripcion}
                     defaultValue={comarcaEditar[0]}
@@ -355,139 +356,197 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                 <TextField sx={{ width: '100%', marginBottom: '10px' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
 
-            <Grid container spacing={3}>
+            {usuarioActual.idPerfil === 1 ?
+                <>
+                    <Grid container spacing={3}>
 
-                <Grid item xs={12}>
-                    <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant='h6'>Listado de Contactos</Typography>
-                        {
-                            (rowsIds.length > 0) ?
-                                (
-                                    <Grid item>
-                                        <Button
-                                            sx={{ mr: 2 }}
-                                            color='error'
-                                            variant='contained'
-                                            startIcon={<DeleteIcon />}
-                                            onClick={(event, rowData) => {
-                                                setContactoClienteEliminar(rowsIds)
-                                                abrirCerrarModalEliminar()
-                                            }}
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </Grid>
-                                ) : (
-                                    <Button
-                                        color='success'
-                                        variant='contained'
-                                        startIcon={<AddIcon />}
-                                        onClick={abrirCerrarModalInsertar}
-                                    >Añadir</Button>
-                                )
-                        }
-                    </Card>
-                </Grid>
-                
-                <Grid item xs={12}>
-                    <Card>
-                        <DataGrid
-                            components={{ Toolbar: GridToolbar }}
-                            localeText={DATAGRID_LOCALE_TEXT}
-                            sx={{
-                                width: '100%',
-                                height: 700,
-                                backgroundColor: '#FFFFFF'
-                            }}
-                            rows={rows}
-                            columns={columns}
-                            pageSize={4}
-                            rowsPerPageOptions={[4]}
-                            checkboxSelection
-                            disableSelectionOnClick
-                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                            onRowClick={(contactoSeleccionado, evt) => {
-                                setContactoSeleccionado(contactoSeleccionado.row)
-                                abrirCerrarModalEditar();
-                            }}
-                        />
-                    </Card>
-                </Grid>
-            </Grid>
-
-            <ModalLayout
-                key={`contacto-añadir-${contactoSeleccionado.id}`}
-                titulo="Agregar nuevo contacto"
-                contenido={
-                    <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
-                }
-                botones={[
-                    insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                        abrirCerrarModalInsertar();
-
-                        if (peticionPostContacto()) {
-                            setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
-                        }
-
-                    }, 'success')
-                ]}
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}
-            />
-
-            <ModalLayout
-                key={`contacto-editar-${contactoSeleccionado.id}`}
-                titulo="Editar contacto"
-                contenido={
-                    <EditarContactoModal
-                        contactoSeleccionado={contactoSeleccionado}
-                        change={handleChangeContacto}
-                    />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                    abrirCerrarModalEditar()
-
-                    if (peticionPutContacto()) {
-                        setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
-                    } else {
-                        setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
-                    }
-                })
-                ]}
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}
-            />
-
-            <ModalLayout
-                key={`contacto-eliminar-${contactoSeleccionado.id}`}
-                titulo="Eliminar contacto"
-                contenido={
-                    <>
                         <Grid item xs={12}>
-                            <Typography>Estás seguro que deseas eliminar el contacto?</Typography>
+                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de Contactos</Typography>
+                                {
+                                    (rowsIds.length > 0) ?
+                                        (
+                                            <Grid item>
+                                                <Button
+                                                    sx={{ mr: 2 }}
+                                                    color='error'
+                                                    variant='contained'
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={(event, rowData) => {
+                                                        setContactoClienteEliminar(rowsIds)
+                                                        abrirCerrarModalEliminar()
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                            </Grid>
+                                        ) : (
+                                            <Button
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={<AddIcon />}
+                                                onClick={abrirCerrarModalInsertar}
+                                            >Añadir</Button>
+                                        )
+                                }
+                            </Card>
                         </Grid>
+
                         <Grid item xs={12}>
-                            <Typography><b>{contactoSeleccionado.nombre}</b></Typography>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={4}
+                                    rowsPerPageOptions={[4]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(contactoSeleccionado, evt) => {
+                                        setContactoSeleccionado(contactoSeleccionado.row)
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
                         </Grid>
-                    </>
-                }
-                botones={[
-                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                        abrirCerrarModalEliminar();
+                    </Grid>
 
-                        if (peticionDeleteContacto()) {
-                            setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
+                    <ModalLayout
+                        key={`contacto-añadir-${contactoSeleccionado.id}`}
+                        titulo="Agregar nuevo contacto"
+                        contenido={
+                            <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
                         }
+                        botones={[
+                            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
+                                abrirCerrarModalInsertar();
 
-                    }, 'error'),
-                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
-                ]}
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}
-            />
+                                if (peticionPostContacto()) {
+                                    setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
+                                } else {
+                                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
+                                }
+
+                            }, 'success')
+                        ]}
+                        open={modalInsertar}
+                        onClose={abrirCerrarModalInsertar}
+                    />
+
+                    <ModalLayout
+                        key={`contacto-editar-${contactoSeleccionado.id}`}
+                        titulo="Editar contacto"
+                        contenido={
+                            <EditarContactoModal
+                                contactoSeleccionado={contactoSeleccionado}
+                                change={handleChangeContacto}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            abrirCerrarModalEditar()
+
+                            if (peticionPutContacto()) {
+                                setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
+                            } else {
+                                setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
+                            }
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+
+                    <ModalLayout
+                        key={`contacto-eliminar-${contactoSeleccionado.id}`}
+                        titulo="Eliminar contacto"
+                        contenido={
+                            <>
+                                <Grid item xs={12}>
+                                    <Typography>Estás seguro que deseas eliminar el contacto?</Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography><b>{contactoSeleccionado.nombre}</b></Typography>
+                                </Grid>
+                            </>
+                        }
+                        botones={[
+                            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                abrirCerrarModalEliminar();
+
+                                if (peticionDeleteContacto()) {
+                                    setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
+                                } else {
+                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
+                                }
+
+                            }, 'error'),
+                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                        ]}
+                        open={modalEliminar}
+                        onClose={abrirCerrarModalEliminar}
+                    />
+                </>
+                :
+                <>
+                    <Grid container spacing={3}>
+
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Listado de Contactos</Typography>
+                            </Card>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={4}
+                                    rowsPerPageOptions={[4]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(contactoSeleccionado, evt) => {
+                                        setContactoSeleccionado(contactoSeleccionado.row)
+                                        abrirCerrarModalEditar();
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    <ModalLayout2
+                        key={`contacto-editar-${contactoSeleccionado.id}`}
+                        titulo="Editar contacto"
+                        contenido={
+                            <EditarContactoModal
+                                contactoSeleccionado={contactoSeleccionado}
+                                change={handleChangeContacto}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            abrirCerrarModalEditar()
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+                </>
+
+            }
+
 
         </>
     )

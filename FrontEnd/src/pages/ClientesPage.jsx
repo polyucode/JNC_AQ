@@ -764,6 +764,7 @@ export const ClientesPage = () => {
                     onSelectionModelChange={(ids) => handleSelectRow(ids)}
                     onRowClick={(clienteSeleccionado, evt) => {
                       setClienteSeleccionado(clienteSeleccionado.row)
+                      setComarcaEditar(comarcas.filter(comarca => comarca.descripcion === clienteSeleccionado.row.comarca))
                       abrirCerrarModalEditar();
                     }}
                   />
@@ -777,6 +778,7 @@ export const ClientesPage = () => {
               contenido={
                 <EditarClienteModal
                   clienteSeleccionado={clienteSeleccionado}
+                  comarcaEditar={comarcaEditar}
                   handleChange={handleChange}
                   autocompleteChange={handleAutocompleteChange}
                 />}

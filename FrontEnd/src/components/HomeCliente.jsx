@@ -56,7 +56,6 @@ const HomeCliente = () => {
     const [parametros, setParametros] = useState([]);
     const [tareas, setTareas] = useState([]);
     const [analisis, setAnalisis] = useState([]);
-    const [parametrosAnalisis, setParametrosAnalisis] = useState([]);
     const [tareasFiltradas, setTareasFiltradas] = useState([]);
     const [parametrosAnalisisFiltrados, setParametrosAnalisisFiltrados] = useState([]);
     const [plantaActiva, setPlantaActiva] = useState({});
@@ -89,7 +88,7 @@ const HomeCliente = () => {
 
     // Variables de contexto
     const { user } = useContext(AuthContext);
-    const { elementoActivo, parametroActivo, analisisActivo, valoresParametros, analisisParametros, parametrosFiltrados, setElementoActivo, setAnalisisActivo, handleSeleccionarParametro, handleSeleccionarAnalisis, GetParametrosAnalisisPlanta, GetValoresParametros } = useContext(DashboardContext);
+    const { elementoActivo, parametroActivo, analisisActivo, analisisParametros, parametrosFiltrados, setElementoActivo, setAnalisisActivo, handleSeleccionarParametro, handleSeleccionarAnalisis, GetParametrosAnalisisPlanta, GetValoresParametros, valoresParametrosNoFQ, parametrosFiltradosNoFQ, parametrosAnalisis } = useContext(DashboardContext);
 
 
     useEffect(() => {
@@ -123,9 +122,6 @@ const HomeCliente = () => {
 
         getAnalisis()
             .then(resp => setAnalisis(resp));
-
-        getParametrosAnalisisPlanta()
-            .then(resp => setParametrosAnalisis(resp));
 
         setElementoActivo({})
 
@@ -177,10 +173,10 @@ const HomeCliente = () => {
 
         const nombre = ofertas.filter(oferta => oferta.referencia === clienteSeleccionado.referencia);
         (nombre.length > 0) && setClienteSeleccionado({
-          ...clienteSeleccionado,
-          oferta: nombre[0].numeroOferta
+            ...clienteSeleccionado,
+            oferta: nombre[0].numeroOferta
         })
-    
+
     }, [clienteSeleccionado.referencia])
 
     useEffect(() => {
@@ -660,6 +656,7 @@ const HomeCliente = () => {
 
                                                         // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
                                                         const valoresPorTarea = parametrosFiltrados.filter(analisis => parseInt(analisis.analisis, 10) === row.id);
+
                                                         let fechas = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]; // -1 = no existe registro, 0 = existe, pero no realizado, 1 = existe y realizado
 
                                                         if (valoresPorTarea.length > 0) {
@@ -814,54 +811,99 @@ const HomeCliente = () => {
                                                 </TableHead>
                                                 <TableBody>
                                                     {
-                                                        // Mapeamos todos los parametros
-                                                        parametros.map(row => {
+                                                        analisisActivo.fisicoquimico === true ?
+                                                            // Mapeamos todos los parametros
+                                                            parametros.map(row => {
 
-                                                            // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
-                                                            const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
-                                                            let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                                                                // Obtenemos todos los valores del parametro actual (valores del mismo parametro, enero, febrero, ...)
+                                                                const valoresPorParametro = analisisParametros.filter(param => param.parametro === row.id);
+                                                                let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-                                                            // Mapeamos los valores en un array, y si no hay datos seteamos un 0
-                                                            valoresPorParametro.map(val => {
+                                                                // Mapeamos los valores en un array, y si no hay datos seteamos un 0
+                                                                valoresPorParametro.map(val => {
 
-                                                                const fecha = new Date(val.fecha);
+                                                                    const fecha = new Date(val.fecha);
 
-                                                                if (fecha.getFullYear() === contadorYear2) {
-                                                                    for (let i = 0; i < 12; i++) {
-                                                                        if (fecha.getMonth() === i) {
-                                                                            fechas[i] = val.valor;
+                                                                    if (fecha.getFullYear() === contadorYear2) {
+                                                                        for (let i = 0; i < 12; i++) {
+                                                                            if (fecha.getMonth() === i) {
+                                                                                if(val.valor && typeof val.valor === 'string' && val.valor.includes(',')){
+                                                                                    const nuevoValor = val.valor.replace(',', '.');
+                                                                                    fechas[i] = nuevoValor;
+                                                                                } else{
+                                                                                    fechas[i] = val.valor;
+                                                                                }  
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
 
-                                                            });
+                                                                });
 
-                                                            // Devolvemos los valores
-                                                            return (
-                                                                valoresPorParametro.length > 0 && (
-                                                                    <TableRow
-                                                                        key={row.id}
-                                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                                    >
-                                                                        <TableCell>
-                                                                            <Tooltip title="Ver en la gráfica" placement="right">
-                                                                                {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
-                                                                                {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
-                                                                                <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
-                                                                                    <TimelineIcon />
-                                                                                </IconButton>
-                                                                            </Tooltip>
-                                                                        </TableCell>
-                                                                        <TableCell aligh="left" component="th" scope="row">
-                                                                            {row.nombre}
-                                                                        </TableCell>
-                                                                        {
-                                                                            fechas.map((fecha, index) => <TableCell key={index}>{fecha}</TableCell>)
-                                                                        }
-                                                                    </TableRow>
+                                                                // Devolvemos los valores
+                                                                return (
+                                                                    valoresPorParametro.length > 0 && (
+                                                                        <TableRow
+                                                                            key={row.id}
+                                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                        >
+                                                                            <TableCell>
+                                                                                <Tooltip title="Ver en la gráfica" placement="right">
+                                                                                    {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
+                                                                                    {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
+                                                                                    <IconButton onClick={() => handleTabClick(1, row.nombre, fechas)}>
+                                                                                        <TimelineIcon />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                            </TableCell>
+                                                                            <TableCell aligh="left" component="th" scope="row">
+                                                                                {row.nombre}
+                                                                            </TableCell>
+                                                                            {
+                                                                                fechas.map((fecha, index) => <TableCell key={index}>{fecha}</TableCell>)
+                                                                            }
+                                                                        </TableRow>
+                                                                    )
                                                                 )
+                                                            })
+                                                            :
+                                                            (parametrosFiltradosNoFQ.length > 0 && (analisisActivo.nombre.includes('Legionela') || analisisActivo.nombre.includes('Aerobios'))) && (
+                                                                (() => {
+                                                                    const fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                                                                    // Organizar los resultados por mes
+                                                                    parametrosFiltradosNoFQ.forEach(val => {
+                                                                        const fecha = new Date(val.fecha);
+
+                                                                        if (fecha.getFullYear() === contadorYear2) {
+                                                                            fechas[fecha.getMonth()] = val.resultado;
+                                                                        }
+                                                                    });
+
+                                                                    return (
+                                                                        // Renderizar una fila con los resultados organizados
+                                                                        <TableRow
+                                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                                        >
+                                                                            <TableCell>
+                                                                                <Tooltip title="Ver en la gráfica" placement="right">
+                                                                                    {/* <IconButton onClick={() => handleSeleccionarParametro({ nombre: row.nombre, datos: fechas })}> */}
+                                                                                    {/* Se modifica para que al hacer clic en boton cambie automaticamente de pestaña y pasamos los parametros para dibujar gráfico  */}
+                                                                                    <IconButton onClick={() => handleTabClick(1, analisisActivo.nombre, fechas)}>
+                                                                                        <TimelineIcon />
+                                                                                    </IconButton>
+                                                                                </Tooltip>
+                                                                            </TableCell>
+                                                                            <TableCell align="left" component="th" scope="row">
+                                                                                {analisisActivo.nombre}
+                                                                            </TableCell>
+                                                                            {/* Mostrar los resultados de cada mes */}
+                                                                            {fechas.map((fecha, idx) => (
+                                                                                <TableCell key={idx}>{fecha != "" ? fecha : "0"}</TableCell>
+                                                                            ))}
+                                                                        </TableRow>
+                                                                    )
+                                                                })()
                                                             )
-                                                        })
                                                     }
                                                 </TableBody>
                                             </Table>

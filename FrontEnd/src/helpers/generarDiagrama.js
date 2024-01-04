@@ -22,7 +22,7 @@ export const useDiagrama = () => {
     },[]);
 
     const generarDiagrama = ( numNiveles, elementosPlanta, setNodos2, setLados2 ) => {
-
+        
         // Preparamos las variables necesarias
         const anchoNodoHijo = 144;
         const altoNodoHijo = 30;

@@ -190,12 +190,17 @@ export const TareasPage = () => {
       field: 'elemento',
       width: 250,
       valueFormatter: (params) => {
+
         const elemento = elementosplanta.find((elemento) => elemento.id === params.value);
 
-        if (elemento.descripcion !== null) {
-          return elemento ? elemento.nombre + ' ' + elemento.descripcion : '';
+        if (elemento) {
+          if (elemento.descripcion !== null && elemento.descripcion !== undefined) {
+            return `${elemento.nombre} ${elemento.descripcion}`;
+          } else {
+            return `${elemento.nombre} ${elemento.numero}`;
+          }
         } else {
-          return elemento ? elemento.nombre + ' ' + elemento.numero : '';
+          return '';
         }
       }
     },
@@ -254,15 +259,6 @@ export const TareasPage = () => {
 
   }
 
-  const GetElementoPlanta = async () => {
-
-    const resp = await getElementosPlanta();
-
-    const elemento = Object.entries(resp).map(([key, value]) => (key, value))
-    setElementosPlanta(elemento);
-
-  }
-
   const peticionGet = async () => {
 
     const resp = await getTareas();
@@ -299,7 +295,6 @@ export const TareasPage = () => {
 
   useEffect(() => {
     peticionGet();
-    GetElementoPlanta();
     GetCliente();
     GetTecnicos();
     GetConfNivelPlantaCliente();
@@ -319,6 +314,11 @@ export const TareasPage = () => {
     getParametrosAnalisisPlanta()
       .then(parametros => {
         setParametrosAnalisisPlanta(parametros);
+      })
+
+    getElementosPlanta()
+      .then(elementos => {
+        setElementosPlanta(elementos);
       })
 
   }, [])
@@ -449,9 +449,10 @@ export const TareasPage = () => {
 
       //Creamos los detalles
       var date = new Date(tareaSeleccionada.fecha);
-
+      var day = date.getDay();
       if (tareaSeleccionada.tipo === 1) {
         for (let i = 0; i < 12; i++) {
+          var dia = date.getDate();
 
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
@@ -472,7 +473,9 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 1)
+          date.setMonth(date.getMonth() + 1);
+          date.setDate(Math.min(dia, new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()));
+          date.setHours(1, 0, 0, 0);
           peticionPostVis();
         }
       }
@@ -500,7 +503,7 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 2)
+          date.setMonth(date.getMonth() + 2, day)
           peticionPostVis();
         }
       }
@@ -528,7 +531,7 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 3)
+          date.setMonth(date.getMonth() + 3, day)
           peticionPostVis();
         }
       }
@@ -556,7 +559,7 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 6)
+          date.setMonth(date.getMonth() + 6, day)
           peticionPostVis();
         }
       }
@@ -583,7 +586,7 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 12)
+          date.setMonth(date.getMonth() + 12, day)
           peticionPostVis();
         }
       }
@@ -725,7 +728,6 @@ export const TareasPage = () => {
       const tareaAnalisis = parametrosAnalisisPlanta.filter(param => param.codigoCliente === tarea.codigoCliente && param.oferta === tarea.oferta && param.elemento === tarea.elemento && param.analisis === tarea.analisis)
 
       tareaAnalisis.map(async (an) => {
-        console.log(an, "AN")
         await deleteParametrosAnalisisPlanta(an.id)
       })
 
@@ -1221,6 +1223,35 @@ export const TareasPage = () => {
             <Grid item xs={12}>
               <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant='h6'>Listado de Tareas</Typography>
+                <Grid item xs={4}>
+                  <TextField
+                    label="Filtrar cliente"
+                    variant="outlined"
+                    value={filterText}
+                    onChange={handleFilterChange}
+                    sx={{ width: '50%' }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton>
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Autocomplete
+                    disableClearable={true}
+                    sx={{ width: '50%' }}
+                    id="Oferta"
+                    options={ofertas}
+                    getOptionLabel={option => option.numeroOferta.toString()}
+                    renderInput={(params) => <TextField {...params} label="Filtrar por oferta" name="oferta" />}
+                    onChange={handleFilterOferta}
+                  />
+                </Grid>
               </Card>
             </Grid>
 
@@ -1228,14 +1259,14 @@ export const TareasPage = () => {
             <Grid item xs={12}>
               <Card>
                 <DataGrid
-                  components={{ Toolbar: GridToolbar }}
+                  //components={{ Toolbar: GridToolbar }}
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
                     height: 1000,
                     backgroundColor: '#FFFFFF'
                   }}
-                  rows={rows}
+                  rows={filteredData}
                   columns={columns}
                   pageSize={100}
                   onSelectionModelChange={(ids) => handleSelectRow(ids)}

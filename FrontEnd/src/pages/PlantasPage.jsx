@@ -487,7 +487,8 @@ export const PlantasPage = () => {
             // Preparamos los datos a enviar a la base de datos
             let postElemento = {
                 nombre: elemento.nombre,
-                numero: elemento.numero
+                numero: elemento.numero,
+                descripcion: elemento.descripcion
             }
 
             // Guardamos los registros de los niveles y elementos relacionados al nivel
@@ -773,13 +774,13 @@ export const PlantasPage = () => {
                 id: value.id,
                 nombre: value.nombre
             });
-            setTextFieldValue(value.nombre); // Establecer el valor del TextField
+            setTextFieldValue(value.nombre);
         } else {
             setElementoCambiado({
                 id: value.id,
                 nombre: ''
             });
-            setTextFieldValue(''); // Limpiar el valor del TextField si se borra la selección
+            setTextFieldValue('');
         }
     };
 
@@ -996,6 +997,8 @@ export const PlantasPage = () => {
                                             indiceElemento={indiceElemento}
                                             setIndiceElemento={setIndiceElemento}
                                             confNivelesPlantaCliente={confNivelesPlantaCliente}
+                                            datosGuardados={datosGuardados}
+                                            plantaCreada={plantaCreada}
                                         />
                                     ))
                                 }
@@ -1018,7 +1021,7 @@ export const PlantasPage = () => {
                                                             selected={elementoSeleccionado.id === elemento.id}
                                                             onClick={() => handleSeleccionarElemento(elemento)}
                                                         >
-                                                            <ListItemText primary={elemento.nombre + ' ' + elemento.numero} />
+                                                            <ListItemText primary={elemento.descripcion !== null ? elemento.nombre + ' ' + elemento.descripcion : elemento.nombre + ' ' + elemento.numero} />
                                                         </ListItemButton>
                                                     ))
                                                 }

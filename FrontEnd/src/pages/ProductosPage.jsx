@@ -26,6 +26,9 @@ import { ModalLayout2 } from "../components/ModalLayout2";
 
 import Swal from 'sweetalert2';
 
+import { isNumeric } from 'validator';
+import { replace } from "lodash";
+
 
 const token = {
     headers: {
@@ -81,7 +84,19 @@ export const ProductosPage = () => {
         //Visibles
         { headerName: 'Codigo del Producto', field: 'codigoProducto', width: 500 },
         { headerName: 'Descripcion', field: 'descripcion', width: 500 },
-        { headerName: 'KG', field: 'kg', width: 500}
+        { 
+            headerName: 'KG', 
+            field: 'kg', 
+            width: 500,
+            valueFormatter: (params) => {
+                if (params.value !== 0 && params.value !== null && params.value !== undefined) {
+                    const formattedValue = String(params.value).replace(".", ",");
+                    return formattedValue;
+                } else {
+                    return params.value === 0 ? '0' : '';
+                }
+            }
+        }
 
     ];
 
@@ -115,7 +130,6 @@ export const ProductosPage = () => {
         }
 
         if (productoSeleccionado.codigoProducto != "") {
-            productoSeleccionado.id = null;
 
             const resp = await postProductos(productoSeleccionado);
 
@@ -162,6 +176,13 @@ export const ProductosPage = () => {
         }
 
         if (productoSeleccionado.codigoProducto != "") {
+
+            const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+            if (decimalRegex.test(productoSeleccionado.kg)) {
+                const normalizedValue = normalizeDecimal(productoSeleccionado.kg);
+                productoSeleccionado.kg = Number(normalizedValue.replace(',', '.')) || 0
+            }
+
             const resp = await putProductos(productoSeleccionado);
 
             var productoModificado = data;
@@ -322,6 +343,26 @@ export const ProductosPage = () => {
         }));
     }
 
+    const handleChangeDecimal = (event) => {
+        const { name, value } = event.target;
+        const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+        if (decimalRegex.test(value)) {
+            const normalizedValue = normalizeDecimal(value);
+            setProductoSeleccionado(prevState => ({
+                ...prevState,
+                kg: Number(normalizedValue.replace(',', '.')) || 0
+            }));
+        }
+    };
+
+    const normalizeDecimal = (value) => {
+        if(typeof value !== 'string') {
+            value = String(value);
+        }
+
+        return value.replace('.', ',');
+    };
+
     const handleSelectRow = (ids) => {
 
         if (ids.length > 0) {
@@ -420,9 +461,10 @@ export const ProductosPage = () => {
                         <ModalLayout
                             titulo="Agregar nuevo producto"
                             contenido={
-                                <InsertarProductoModal 
-                                    change={handleChange} 
+                                <InsertarProductoModal
+                                    change={handleChange}
                                     errorProducto={errorProducto}
+                                    handleChangeDecimal={handleChangeDecimal}
                                 />
                             }
                             botones={[
@@ -445,6 +487,7 @@ export const ProductosPage = () => {
                                 productoSeleccionado={productoSeleccionado}
                                 change={handleChange}
                                 errorProducto={errorProducto}
+                                handleChangeDecimal={handleChangeDecimal}
                             />}
                         botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                             peticionPut();

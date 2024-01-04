@@ -8,6 +8,6 @@ namespace AnalisisQuimicos.Core.Entities
     {
         public string CodigoProducto { get; set; }
         public string Descripcion { get; set; }
-        public int? Kg { get; set; }
+        public decimal Kg { get; set; }
     }
 }

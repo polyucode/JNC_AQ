@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete, InputAdornment } from '@mui/material';
 
-export const EditarProductoModal = ({ change:handleChange, productoSeleccionado, errorProducto }) =>{
+export const EditarProductoModal = ({ change:handleChange, productoSeleccionado, errorProducto, handleChangeDecimal }) =>{
 
     return (
         <>
@@ -14,8 +14,7 @@ export const EditarProductoModal = ({ change:handleChange, productoSeleccionado,
             </Grid>
 
             <Grid item xs={ 3 } md={ 4 }>
-                <TextField 
-                    type='number'
+                <TextField
                     sx={{ width: '100%' }} 
                     label="Definir unidad" 
                     name="kg" 
@@ -27,7 +26,7 @@ export const EditarProductoModal = ({ change:handleChange, productoSeleccionado,
                             </InputAdornment>
                         ),
                     }}  
-                    value={productoSeleccionado && productoSeleccionado.kg} 
+                    value={productoSeleccionado && productoSeleccionado.kg}
                 />
             </Grid>
 

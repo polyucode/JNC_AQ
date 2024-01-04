@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete, InputAdornment } from '@mui/material';
 
-export const InsertarProductoModal = ({ change:handleChange, errorProducto }) =>{
+export const InsertarProductoModal = ({ change:handleChange, errorProducto, handleChangeDecimal }) =>{
 
     return (
         <>
@@ -18,7 +18,7 @@ export const InsertarProductoModal = ({ change:handleChange, errorProducto }) =>
                     sx={{ width: '100%' }} 
                     label="Definir unidad" 
                     name="kg" 
-                    onChange={ handleChange }
+                    onChange={ handleChangeDecimal }
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">

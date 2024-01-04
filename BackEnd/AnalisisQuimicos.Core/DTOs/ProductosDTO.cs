@@ -9,7 +9,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Id { get; set; }
         public string CodigoProducto { get; set; }
         public string Descripcion { get; set; }
-        public int? Kg { get; set; }
+        public decimal Kg { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

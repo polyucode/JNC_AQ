@@ -4,7 +4,7 @@ import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton }
 
 import MuiAlert from '@mui/material/Alert';
 
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarOfertaModal } from '../components/Modals/InsertarOfertaModal';
@@ -57,6 +57,7 @@ export const OfertasClientesPage = () => {
         contacto2: '',
         contacto3: '',
         producto: 0,
+        descripcionProducto: '',
         unidades: 0,
         precio: 0,
         addDate: null,
@@ -113,6 +114,7 @@ export const OfertasClientesPage = () => {
     const [errorCodigo, setErrorCodigo] = useState(false);
     const [errorFechaInicio, setErrorFechaInicio] = useState(false);
     const [errorFechaFinal, setErrorFechaFinal] = useState(false);
+    const [errorPrecio, setErrorPrecio] = useState(false);
 
     const [filterText, setFilterText] = useState('');
 
@@ -156,7 +158,19 @@ export const OfertasClientesPage = () => {
             }
         },
         { headerName: 'Unidades', field: 'unidades', width: 200 },
-        { headerName: 'Precio', field: 'precio', width: 200 }
+        {
+            headerName: 'Precio',
+            field: 'precio',
+            width: 200,
+            valueFormatter: (params) => {
+                if (params.value !== 0 && params.value !== null && params.value !== undefined) {
+                    const formattedValue = String(params.value).replace(".", ",");
+                    return formattedValue;
+                } else {
+                    return params.value === 0 ? '0' : '';
+                }
+            }
+        }
     ];
     const getOferta = async () => {
 
@@ -243,12 +257,14 @@ export const OfertasClientesPage = () => {
         }
 
         if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
-            ofertaSeleccionada.id = null;
+            ofertaSeleccionada.id = 0;
+
             productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta
             productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente
             productoSeleccionado.producto = ofertaSeleccionada.producto
             productoSeleccionado.precio = ofertaSeleccionada.precio
             productoSeleccionado.cantidad = ofertaSeleccionada.unidades
+            productoSeleccionado.descripcionProducto = ofertaSeleccionada.descripcionProducto
 
             const resp = await postOfertas(ofertaSeleccionada);
 
@@ -332,56 +348,68 @@ export const OfertasClientesPage = () => {
         }
 
         if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
-            const resp = await putOfertas(ofertaSeleccionada);
 
-            var ofertaModificada = data;
-            ofertaModificada.map(oferta => {
-                if (oferta.id === ofertaSeleccionada.id) {
-                    oferta = ofertaSeleccionada
+            const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+            if (decimalRegex.test(ofertaSeleccionada.precio)) {
+                const normalizedValue = normalizeDecimal(ofertaSeleccionada.precio);
+                const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
+                const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
+                if (decimalPart.length > 2) {
+                    setErrorPrecio(true);
+                } else {
+                    setErrorPrecio(false);
+                    ofertaSeleccionada.precio = Number(normalizedValue.replace(',', '.')) || 0
+                    const resp = await putOfertas(ofertaSeleccionada);
+
+                    var ofertaModificada = data;
+                    ofertaModificada.map(oferta => {
+                        if (oferta.id === ofertaSeleccionada.id) {
+                            oferta = ofertaSeleccionada
+                        }
+                    });
+                    getOferta();
+                    abrirCerrarModalEditar();
+                    setOfertaSeleccionada({
+                        id: 0,
+                        numeroOferta: 0,
+                        pedido: 0,
+                        referencia: '',
+                        codigoCliente: 0,
+                        nombreCliente: '',
+                        descripcion: '',
+                        fechaInicio: null,
+                        fechaFinalizacion: null,
+                        contacto1: '',
+                        contacto2: '',
+                        contacto3: '',
+                        producto: 0,
+                        unidades: 0,
+                        precio: 0,
+                        addDate: null,
+                        addIdUser: null,
+                        modDate: null,
+                        modIdUser: null,
+                        delDate: null,
+                        delIdUser: null,
+                        deleted: null,
+                    })
+
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'info',
+                        title: 'Oferta Editada',
+                        text: `La oferta se ha editado correctamente`,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'animate__animated animate__bounceIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__bounceOut'
+                        }
+                    });
                 }
-            });
-            getOferta();
-            abrirCerrarModalEditar();
-            setOfertaSeleccionada({
-                id: 0,
-                numeroOferta: 0,
-                pedido: 0,
-                referencia: '',
-                codigoCliente: 0,
-                nombreCliente: '',
-                descripcion: '',
-                fechaInicio: null,
-                fechaFinalizacion: null,
-                contacto1: '',
-                contacto2: '',
-                contacto3: '',
-                producto: 0,
-                unidades: 0,
-                precio: 0,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
-
-            Swal.fire({
-                position: 'center',
-                icon: 'info',
-                title: 'Oferta Editada',
-                text: `La oferta se ha editado correctamente`,
-                showConfirmButton: false,
-                timer: 2000,
-                showClass: {
-                    popup: 'animate__animated animate__bounceIn'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__bounceOut'
-                }
-            });
-
+            }
         }
     }
 
@@ -438,6 +466,14 @@ export const OfertasClientesPage = () => {
             }
         });
     }
+
+    const normalizeDecimal = (value) => {
+        if(typeof value !== 'string') {
+            value = String(value);
+        }
+
+        return value.replace('.', ',');
+    };
 
     //Modales
     const abrirCerrarModalInsertar = () => {
@@ -559,6 +595,25 @@ export const OfertasClientesPage = () => {
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
+
+    const handleChangeDecimal = (event) => {
+        const { name, value } = event.target;
+        const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+        if (decimalRegex.test(value)) {
+            const normalizedValue = normalizeDecimal(value);
+            const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
+            const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
+            if (decimalPart.length > 2) {
+                setErrorPrecio(true);
+            } else {
+                setErrorPrecio(false);
+                setOfertaSeleccionada(prevState => ({
+                    ...prevState,
+                    precio: Number(normalizedValue.replace(',', '.')) || 0
+                }));
+            }
+        }
+    };
 
     const handleChangeFecha = e => {
         const { name, value } = e.target;
@@ -694,11 +749,13 @@ export const OfertasClientesPage = () => {
                                         change={handleChange}
                                         handleChangeFecha={handleChangeFecha}
                                         setOfertaSeleccionada={setOfertaSeleccionada}
+                                        handleChangeDecimal={handleChangeDecimal}
                                         errorCodigo={errorCodigo}
                                         errorFechaFinal={errorFechaFinal}
                                         errorFechaInicio={errorFechaInicio}
                                         errorOferta={errorOferta}
                                         errorPedido={errorPedido}
+                                        errorPrecio={errorPrecio}
                                     />
                                 }
                                 botones={[
@@ -732,6 +789,7 @@ export const OfertasClientesPage = () => {
                                     errorFechaInicio={errorFechaInicio}
                                     errorOferta={errorOferta}
                                     errorPedido={errorPedido}
+                                    errorPrecio={errorPrecio}
                                 />}
                             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                 peticionPut();
@@ -814,6 +872,7 @@ export const OfertasClientesPage = () => {
                                             setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
                                             setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
                                             setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
+                                            setProductoEditar(productos.filter(producto => producto.id === ofertaSeleccionada.row.producto))
                                             abrirCerrarModalEditar();
                                         }}
                                     />
@@ -833,6 +892,7 @@ export const OfertasClientesPage = () => {
                                     contacto1Editar={contacto1Editar}
                                     contacto2Editar={contacto2Editar}
                                     contacto3Editar={contacto3Editar}
+                                    productoEditar={productoEditar}
                                 />}
                             botones={[insertarBotonesModal(<AddIcon />, 'Guardar')]}
                             open={modalEditar}

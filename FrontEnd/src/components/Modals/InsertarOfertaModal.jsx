@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getClientes, getContactos, getProductos } from '../../api';
 
-export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, handleChangeAutocomplete, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
+export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, handleChangeAutocomplete, handleChangeDecimal, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta, errorPrecio }) => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]); 
@@ -173,6 +173,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         producto: value.id,
+                        descripcionProducto: value.descripcion
                     }))}
                 />
             </Grid>
@@ -182,7 +183,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Precio" name="precio" type='number' onChange={handleChange} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio" name="precio" onChange={handleChangeDecimal} error={errorPrecio} helperText={errorPrecio ? 'El formato es máximo 2 decimales' : ' '} />
             </Grid>
 
         </>

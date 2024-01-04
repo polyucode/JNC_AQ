@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 import { getProductos } from '../../api';
 
-export const EditarOfertaProductoModal = ({ handleChangeProducto, ofertaProducto, setOfertaProducto, productoEditar, consumos, ofertaSeleccionada }) => {
+export const EditarOfertaProductoModal = ({ handleChangeProducto, ofertaProducto, setOfertaProducto, productoEditar, consumos, ofertaSeleccionada, errorProductoPrecio }) => {
 
     const [productos, setProductos] = useState([]);
     const [consumidos, setConsumidos] = useState(0);
@@ -55,7 +55,7 @@ export const EditarOfertaProductoModal = ({ handleChangeProducto, ofertaProducto
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Precio" name="precio" type='number' onChange={handleChangeProducto} value={ofertaProducto && ofertaProducto.precio} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio" name="precio" onChange={handleChangeProducto} error={errorProductoPrecio} helperText={errorProductoPrecio ? 'El formato es máximo 2 decimales' : ' '} value={ofertaProducto && ofertaProducto.precio} />
             </Grid>
 
             <Grid item xs={6} md={4}>

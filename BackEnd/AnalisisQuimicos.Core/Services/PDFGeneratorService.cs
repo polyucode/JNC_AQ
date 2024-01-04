@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Configuration;
 
 using iTextSharp.text;
 using System.IO;
@@ -51,7 +51,17 @@ namespace AnalisisQuimicos.Core.Services
 
             IEnumerable<ParametrosElementoPlantaCliente> listParametro = _unidadDeTrabajo.ParametrosElementoPlantaClienteRepository.GetParameters(filtro);
 
-            string nombreElemento = elemplanta.Nombre + "_" + elemplanta.Numero;
+            string nombreElemento = "";
+
+            if (elemplanta.Descripcion != null)
+            {
+                nombreElemento = elemplanta.Nombre + "_" + elemplanta.Descripcion;
+            }
+            else
+            {
+                nombreElemento = elemplanta.Nombre + "_" + elemplanta.Numero;
+            }
+            
 
             DateTime fecha = (DateTime)valoresSorted[0].Fecha;
 
@@ -193,7 +203,15 @@ namespace AnalisisQuimicos.Core.Services
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@COLUMNAS", columnasElementos);
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@FILAS", filasParametros);
-            PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", elemplanta.Nombre + " " + elemplanta.Numero);
+            if(elemplanta.Descripcion != null)
+            {
+                PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", elemplanta.Nombre + " " + elemplanta.Descripcion);
+            }
+            else
+            {
+                PaginaHTML_Texto = PaginaHTML_Texto.Replace("@ELEPLANT", elemplanta.Nombre + " " + elemplanta.Numero);
+            }
+            
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@REF", referencia);
 
             PaginaHTML_Texto = PaginaHTML_Texto.Replace("@MET", metodo);
@@ -227,7 +245,7 @@ namespace AnalisisQuimicos.Core.Services
                 pdfDoc.Open();
                 //pdfDoc.Add(new Phrase(""));
 
-                string image = Path.Combine(workingDirectory, @"Resources\", "Logo.bmp");
+                string image = Path.Combine(workingDirectory, @"Resources\", "LogoNuevo.bmp");
 
                 //Agregamos la imagen del banner al documento
                 Image img = Image.GetInstance(image);

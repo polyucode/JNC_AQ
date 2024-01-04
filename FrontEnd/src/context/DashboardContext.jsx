@@ -10,9 +10,11 @@ export const DashboardProvider = ({ children }) => {
 
     const [listaParametros, setListaParametros] = useState([]);
     const [valoresParametros, setValoresParametros] = useState([]);
+    const [valoresParametrosNoFQ, setValoresParametrosNoFQ] = useState([]);
     const [analisisParametros, setAnalisisParametros] = useState([]);
 
     const [parametrosFiltrados, setParametrosFiltrados] = useState([]);
+    const [parametrosFiltradosNoFQ, setParametrosFiltradosNoFQ] = useState([]);
 
     // Valores activos
     const [elementoActivo, setElementoActivo] = useState({});
@@ -48,6 +50,7 @@ export const DashboardProvider = ({ children }) => {
         }
         
         setValoresParametros(listaParametros.filter(param => param.id_Elemento === id));
+        setValoresParametrosNoFQ(parametrosAnalisis.filter(param => param.elemento === id));
 
         //parametros Analisisi Ordenados por fecha descendente 
         setParametrosFiltrados(parametrosAnalisis
@@ -72,9 +75,9 @@ export const DashboardProvider = ({ children }) => {
     const handleSeleccionarAnalisis = async (id) => {
 
         const analisi = await getAnalisisId(id);
-
-        setAnalisisActivo(prev => ({ ...prev, nombre: analisi.nombre, id }));
+        setAnalisisActivo(prev => ({ ...prev, nombre: analisi.nombre, fisicoquimico: analisi.fisicoQuimico, id }));
         setAnalisisParametros(valoresParametros.filter(param => param.id_Analisis === id));
+        setParametrosFiltradosNoFQ(valoresParametrosNoFQ.filter(param => param.analisis === id));
 
     }
 
@@ -98,7 +101,10 @@ export const DashboardProvider = ({ children }) => {
             handleSeleccionarParametro,
             handleSeleccionarAnalisis,
             GetParametrosAnalisisPlanta,
-            GetValoresParametros
+            GetValoresParametros,
+            valoresParametrosNoFQ,
+            parametrosFiltradosNoFQ,
+            parametrosAnalisis
         }}>
             {children}
         </DashboardContext.Provider>

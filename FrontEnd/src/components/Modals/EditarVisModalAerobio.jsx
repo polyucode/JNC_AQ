@@ -86,7 +86,7 @@ export const EditarVisModalAerobio = ({ change: handleChangeInput, analisisSelec
                     disabled
                     defaultValue={elementoTareaEditar[0]}
                     options={elementosAutocomplete}
-                    getOptionLabel={option => (option.nombre + ' ' + option.numero)}
+                    getOptionLabel={option => option.descripcion !== null ? (option.nombre + ' ' + option.descripcion) : (option.nombre + ' ' + option.numero)}
                     sx={{ width: '100%' }}
                     renderInput={(params) => <TextField {...params} label="Elemento" name="elemento" />}
                     onChange={handleChangeInput}

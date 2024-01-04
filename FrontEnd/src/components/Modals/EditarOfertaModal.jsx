@@ -18,8 +18,10 @@ import Swal from 'sweetalert2';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
 import { MostrarConsumoModal } from './MostrarConsumoModal';
 import { ModalLayout3 } from '../ModalLayout3';
+import { useUsuarioActual } from '../../hooks/useUsuarioActual';
+import { ModalLayout2 } from '../ModalLayout2';
 
-export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar, productoEditar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta }) => {
+export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar, productoEditar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta, errorPrecio }) => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
@@ -57,6 +59,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     const [modalEliminar, setModalEliminar] = useState(false);
     const [modalConsumo, setModalConsumo] = useState(false);
 
+    const [errorProductoPrecio, setErrorProductoPrecio] = useState(false);
+
+    const { usuarioActual } = useUsuarioActual();
+
 
     const columns = [
         {
@@ -68,7 +74,19 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 return prod ? prod.descripcion : '';
             }
         },
-        { field: 'precio', headerName: 'Precio Unitario', width: 150 },
+        {
+            field: 'precio',
+            headerName: 'Precio Unitario',
+            width: 150,
+            valueFormatter: (params) => {
+                if (params.value !== 0 && params.value !== null && params.value !== undefined) {
+                    const formattedValue = String(params.value).replace(".", ",");
+                    return formattedValue;
+                } else {
+                    return params.value === 0 ? '0' : '';
+                }
+            }
+        },
         { field: 'cantidad', headerName: 'Estimación consumo', width: 200 },
         {
             field: 'consumidos',
@@ -214,47 +232,61 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
     const peticionPutProducto = async () => {
 
-        const resp = await putOfertasProductos(ofertaProducto);
+        const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+        if (decimalRegex.test(ofertaProducto.precio)) {
+            const normalizedValue = normalizeDecimal(ofertaProducto.precio);
+            const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
+            const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
+            if (decimalPart.length > 2) {
+                setErrorProductoPrecio(true);
+            } else {
+                setErrorProductoPrecio(false);
+                ofertaProducto.precio = Number(normalizedValue.replace(',', '.')) || 0
 
-        var productoModificado = data;
-        productoModificado.map(producto => {
-            if (producto.id === ofertaProducto.id) {
-                producto = ofertaProducto
-            }
-        });
-        peticionGet();
-        abrirCerrarModalEditar();
-        setOfertaProducto({
-            id: 0,
-            producto: 0,
-            descripcionProducto: '',
-            precio: 0,
-            cantidad: 0,
-            consumidos: 0,
-            pendientes: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+                const resp = await putOfertasProductos(ofertaProducto);
 
-        Swal.fire({
-            position: 'center',
-            icon: 'info',
-            title: 'Producto Editado',
-            text: `El producto se ha editado correctamente`,
-            showConfirmButton: false,
-            timer: 2000,
-            showClass: {
-                popup: 'animate__animated animate__bounceIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__bounceOut'
+                var productoModificado = data;
+                productoModificado.map(producto => {
+                    if (producto.id === ofertaProducto.id) {
+                        producto = ofertaProducto
+                    }
+                });
+                peticionGet();
+                abrirCerrarModalEditar();
+                setOfertaProducto({
+                    id: 0,
+                    producto: 0,
+                    descripcionProducto: '',
+                    precio: 0,
+                    cantidad: 0,
+                    consumidos: 0,
+                    pendientes: 0,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                })
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'Producto Editado',
+                    text: `El producto se ha editado correctamente`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                })
             }
-        })
+
+        }
     }
 
     const peticionDeleteProducto = async () => {
@@ -395,6 +427,30 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         }));
 
     }
+
+    const handleChangeDecimal = (event) => {
+        const { name, value } = event.target;
+        const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
+        if (decimalRegex.test(value)) {
+            const normalizedValue = normalizeDecimal(value);
+            const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
+            const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
+            if (decimalPart.length > 2) {
+                setErrorProductoPrecio(true);
+            } else {
+                setErrorProductoPrecio(false);
+                setOfertaProducto(prevState => ({
+                    ...prevState,
+                    precio: Number(normalizedValue.replace(',', '.')) || 0
+                }));
+            }
+        }
+    };
+
+
+    const normalizeDecimal = (value) => {
+        return value.replace('.', ',');
+    };
 
 
     const handleSelectRow = (ids) => {
@@ -569,126 +625,196 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Precio" name="precio" type='number' onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.precio} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio" name="precio" onChange={handleChange} error={errorPrecio} helperText={errorPrecio ? 'El formato es máximo 2 decimales' : ' '} value={ofertaSeleccionada && ofertaSeleccionada.precio} />
             </Grid>
 
-            <Grid container spacing={3}>
+            {usuarioActual.idPerfil === 1 ?
+                <>
+                    <Grid container spacing={3}>
 
-                <Grid item xs={12}>
-                    <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant='h6'>Productos en Cuota de Contrato</Typography>
-                        {
-                            (rowsIds.length > 0) ?
-                                (
-                                    <Grid item>
-                                        <Button
-                                            sx={{ mr: 2 }}
-                                            color='error'
-                                            variant='contained'
-                                            startIcon={<DeleteIcon />}
-                                            onClick={(event, rowData) => {
-                                                setOfertaProductoEliminar(rowsIds)
-                                                abrirCerrarModalEliminar()
-                                            }}
-                                        >
-                                            Eliminar
-                                        </Button>
-                                    </Grid>
-                                ) : (
-                                    <Button
-                                        color='success'
-                                        variant='contained'
-                                        startIcon={<AddIcon />}
-                                        onClick={abrirCerrarModalInsertar}
-                                    >Añadir</Button>
-                                )
-                        }
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Card>
-                        <DataGrid
-                            //components={{ Toolbar: GridToolbar }}
-                            localeText={DATAGRID_LOCALE_TEXT}
-                            sx={{
-                                width: '100%',
-                                height: 700,
-                                backgroundColor: '#FFFFFF'
-                            }}
-                            rows={rows}
-                            columns={columns}
-                            pageSize={6}
-                            rowsPerPageOptions={[6]}
-                            checkboxSelection
-                            disableSelectionOnClick
-                            onSelectionModelChange={(ids) => handleSelectRow(ids)}
-                            onRowClick={(ofertaProducto, evt) => {
-                                const clickedColumn = evt.target.dataset.field;
-                                if (clickedColumn === 'consumidos') {
-                                    setOfertaProducto(ofertaProducto.row)
-                                    abrirCerrarModalConsumo();
-                                } else {
-                                    setOfertaProducto(ofertaProducto.row)
-                                    setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
-                                    abrirCerrarModalEditar();
-                                }
-                            }}
-                        />
-                    </Card>
-                </Grid>
-            </Grid>
-
-            <ModalLayout
-                titulo="Agregar nuevo Producto"
-                contenido={
-                    <InsertarOfertaProductoModal handleChangeProducto={handleChangeProducto} ofertaProducto={ofertaProducto} setOfertaProducto={setOfertaProducto} />
-                }
-                botones={[
-                    insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
-                        peticionPostProducto();
-                    })
-                ]}
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}
-            />
-
-            <ModalLayout
-                titulo="Editar Producto"
-                contenido={
-                    <EditarOfertaProductoModal
-                        handleChangeProducto={handleChangeProducto}
-                        ofertaProducto={ofertaProducto}
-                        setOfertaProducto={setOfertaProducto}
-                        productoEditar={productoEditar2}
-                        consumos={consumos}
-                        ofertaSeleccionada={ofertaSeleccionada}
-                    />}
-                botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                    peticionPutProducto();
-                })
-                ]}
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}
-            />
-
-            <ModalLayout
-                titulo="Eliminar Producto"
-                contenido={
-                    <>
                         <Grid item xs={12}>
-                            <Typography>Estás seguro que deseas eliminar el producto?</Typography>
+                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Productos en Cuota de Contrato</Typography>
+                                {
+                                    (rowsIds.length > 0) ?
+                                        (
+                                            <Grid item>
+                                                <Button
+                                                    sx={{ mr: 2 }}
+                                                    color='error'
+                                                    variant='contained'
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={(event, rowData) => {
+                                                        setOfertaProductoEliminar(rowsIds)
+                                                        abrirCerrarModalEliminar()
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </Button>
+                                            </Grid>
+                                        ) : (
+                                            <Button
+                                                color='success'
+                                                variant='contained'
+                                                startIcon={<AddIcon />}
+                                                onClick={abrirCerrarModalInsertar}
+                                            >Añadir</Button>
+                                        )
+                                }
+                            </Card>
                         </Grid>
-                    </>
-                }
-                botones={[
-                    insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                        peticionDeleteProducto();
-                    }, 'error')
-                ]}
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}
-            />
+
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    //components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={6}
+                                    rowsPerPageOptions={[6]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(ofertaProducto, evt) => {
+                                        const clickedColumn = evt.target.dataset.field;
+                                        if (clickedColumn === 'consumidos') {
+                                            setOfertaProducto(ofertaProducto.row)
+                                            abrirCerrarModalConsumo();
+                                        } else {
+                                            setOfertaProducto(ofertaProducto.row)
+                                            setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
+                                            abrirCerrarModalEditar();
+                                        }
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    <ModalLayout
+                        titulo="Agregar nuevo Producto"
+                        contenido={
+                            <InsertarOfertaProductoModal handleChangeProducto={handleChangeProducto} ofertaProducto={ofertaProducto} setOfertaProducto={setOfertaProducto} handleChangeDecimal={handleChangeDecimal} errorProductoPrecio={errorProductoPrecio} />
+                        }
+                        botones={[
+                            insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                peticionPostProducto();
+                            })
+                        ]}
+                        open={modalInsertar}
+                        onClose={abrirCerrarModalInsertar}
+                    />
+
+                    <ModalLayout
+                        titulo="Editar Producto"
+                        contenido={
+                            <EditarOfertaProductoModal
+                                handleChangeProducto={handleChangeProducto}
+                                ofertaProducto={ofertaProducto}
+                                setOfertaProducto={setOfertaProducto}
+                                productoEditar={productoEditar2}
+                                consumos={consumos}
+                                ofertaSeleccionada={ofertaSeleccionada}
+                                errorProductoPrecio={errorProductoPrecio}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPutProducto();
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+
+                    <ModalLayout
+                        titulo="Eliminar Producto"
+                        contenido={
+                            <>
+                                <Grid item xs={12}>
+                                    <Typography>Estás seguro que deseas eliminar el producto?</Typography>
+                                </Grid>
+                            </>
+                        }
+                        botones={[
+                            insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
+                                peticionDeleteProducto();
+                            }, 'error')
+                        ]}
+                        open={modalEliminar}
+                        onClose={abrirCerrarModalEliminar}
+                    />
+                </>
+                :
+                <>
+                    <Grid container spacing={3}>
+
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                                <Typography variant='h6'>Productos en Cuota de Contrato</Typography>
+                            </Card>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Card>
+                                <DataGrid
+                                    //components={{ Toolbar: GridToolbar }}
+                                    localeText={DATAGRID_LOCALE_TEXT}
+                                    sx={{
+                                        width: '100%',
+                                        height: 700,
+                                        backgroundColor: '#FFFFFF'
+                                    }}
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={6}
+                                    rowsPerPageOptions={[6]}
+                                    checkboxSelection
+                                    disableSelectionOnClick
+                                    onSelectionModelChange={(ids) => handleSelectRow(ids)}
+                                    onRowClick={(ofertaProducto, evt) => {
+                                        const clickedColumn = evt.target.dataset.field;
+                                        if (clickedColumn === 'consumidos') {
+                                            setOfertaProducto(ofertaProducto.row)
+                                            abrirCerrarModalConsumo();
+                                        } else {
+                                            setOfertaProducto(ofertaProducto.row)
+                                            setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
+                                            abrirCerrarModalEditar();
+                                        }
+                                    }}
+                                />
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    <ModalLayout2
+                        titulo="Editar Producto"
+                        contenido={
+                            <EditarOfertaProductoModal
+                                handleChangeProducto={handleChangeProducto}
+                                ofertaProducto={ofertaProducto}
+                                setOfertaProducto={setOfertaProducto}
+                                productoEditar={productoEditar2}
+                                consumos={consumos}
+                                ofertaSeleccionada={ofertaSeleccionada}
+                            />}
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPutProducto();
+                        })
+                        ]}
+                        open={modalEditar}
+                        onClose={abrirCerrarModalEditar}
+                    />
+
+                </>
+
+            }
+
 
             <ModalLayout3
                 titulo="Detalle Consumo"

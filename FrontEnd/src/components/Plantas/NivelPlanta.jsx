@@ -22,7 +22,9 @@ export const NivelPlanta = ({
     indiceElemento,
     setIndiceElemento,
     elementos,
-    confNivelesPlantaCliente
+    confNivelesPlantaCliente,
+    datosGuardados,
+    plantaCreada
 }) => {
 
     //const [elementos, setElementos] = useState([]);
@@ -92,7 +94,8 @@ export const NivelPlanta = ({
             id: indiceElemento,
             nombre: texto,
             numero: 0,
-            nivel: parseInt(nivel, 10)
+            nivel: parseInt(nivel, 10),
+            descripcion: null
         }
 
         // Calculamos el número del elemento
@@ -178,7 +181,7 @@ export const NivelPlanta = ({
         const elementosActualizados = elementosPlanta.map(elemento => {
             if (elemento.id === elementoSeleccionado.id) {
                 return elementoSeleccionado;
-            } else{
+            } else {
                 return elemento;
             }
         });
@@ -292,18 +295,25 @@ export const NivelPlanta = ({
                                                         <ListItem
                                                             sx={{ backgroundColor: 'none' }}
                                                             secondaryAction={
-                                                                <React.Fragment>
-                                                                    <Tooltip title="Editar elemento">
-                                                                        <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(elemento.id, elemento.nombre, elemento.numero, elemento.descripcion, elemento.nivel)}>
-                                                                            <EditIcon />
-                                                                        </IconButton>
-                                                                    </Tooltip>
+                                                                elemento.id > 0 ?
+                                                                    <React.Fragment>
+                                                                        <Tooltip title="Editar elemento">
+                                                                            <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(elemento.id, elemento.nombre, elemento.numero, elemento.descripcion, elemento.nivel)}>
+                                                                                <EditIcon />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                        <Tooltip title="Eliminar elemento">
+                                                                            <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
+                                                                                <DeleteIcon />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                    </React.Fragment>
+                                                                    :
                                                                     <Tooltip title="Eliminar elemento">
                                                                         <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
                                                                             <DeleteIcon />
                                                                         </IconButton>
                                                                     </Tooltip>
-                                                                </React.Fragment>
                                                             }
                                                         >
                                                             <ListItemText
@@ -328,7 +338,7 @@ export const NivelPlanta = ({
             </Grid>
 
             <ModalLayout2
-                titulo={ elementDescription !== null ? `Renombrar elemento de planta ${elementName + ' ' + elementDescription}` : `Renombrar elemento de planta ${elementName + ' ' + elementNumero}`}
+                titulo={elementDescription !== null ? `Renombrar elemento de planta ${elementName + ' ' + elementDescription}` : `Renombrar elemento de planta ${elementName + ' ' + elementNumero}`}
                 contenido={
                     <Grid item xs={12}>
                         <Grid container sx={{ textAlign: 'center', pb: 2 }}>
