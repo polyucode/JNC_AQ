@@ -143,14 +143,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
     }, [])
 
-    useEffect(() => {
-
-        if (data.length > 0) {
-            setRows(data);
-        }
-
-    }, [data]);
-
     const peticionGet = async () => {
 
         const resp = await getOfertasProductos();
@@ -667,14 +659,13 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
                                         height: 700,
                                         backgroundColor: '#FFFFFF'
                                     }}
-                                    rows={rows}
+                                    rows={data}
                                     columns={columns}
                                     pageSize={6}
                                     rowsPerPageOptions={[6]}
@@ -762,7 +753,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',

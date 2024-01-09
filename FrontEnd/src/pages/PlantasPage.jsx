@@ -853,6 +853,10 @@ export const PlantasPage = () => {
         }
     }
 
+    const clientesUnicos = clientes.filter((cliente, index, self) =>
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+    );
+
     return (
         <>
             {usuarioActual.idPerfil === 1 ?
@@ -865,13 +869,28 @@ export const PlantasPage = () => {
                             <Card sx={{ p: 2, display: 'flex' }}>
                                 <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
-                                    {/* Código de Cliente */}
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
+                                            disableClearable={true}
+                                            id="NombreCliente"
+                                            options={clientesUnicos}
+                                            getOptionLabel={option => option.razonSocial}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Nombre Cliente" name="NombreCliente" />}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                NombreCliente: value.razonSocial
+                                            }))}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={2}>
                                         <Autocomplete
                                             disabled={plantaCreada}
                                             disableClearable={true}
                                             id="CodigoCliente"
                                             options={clientes}
+                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente)}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
                                             onChange={handleConfPlantaClienteChange}
@@ -879,7 +898,7 @@ export const PlantasPage = () => {
                                     </Grid>
 
                                     {/* Número de Oferta */}
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <Autocomplete
                                             disabled={plantaCreada}
                                             disableClearable={true}
@@ -937,7 +956,7 @@ export const PlantasPage = () => {
 
                                     <Grid item xs={3}>
                                         <TextField
-                                            sx={{ width: '100%'}}
+                                            sx={{ width: '100%' }}
                                             name="nombre"
                                             onChange={handleElemento}
                                             error={errorElemento}
@@ -947,7 +966,7 @@ export const PlantasPage = () => {
 
                                     <Grid item xs={3}>
                                         <Button
-                                            sx={{ ml: 2, marginBottom: '22px'}}
+                                            sx={{ ml: 2, marginBottom: '22px' }}
                                             variant='contained'
                                             startIcon={<AddIcon />}
                                             onClick={peticionPostElemento}

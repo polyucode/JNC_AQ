@@ -248,6 +248,23 @@ export const MantenimientoTecnicoPage = () => {
         }))
     }
 
+    const onChangeNombreCliente = (e, value, name) => {
+
+        setParametrosSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.razonSocial,
+            codigoCliente: '',
+            oferta: '',
+            idElemento: 0,
+            nombreElemento: '',
+            idAnalisis: 0,
+            nombreAnalisis: '',
+            fecha: null,
+            fechaIso: ''
+        }))
+
+    }
+
     const onChangeCliente = (e, value, name) => {
 
         setParametrosSeleccionado((prevState) => ({
@@ -615,6 +632,10 @@ export const MantenimientoTecnicoPage = () => {
 
     }
 
+    const clientesUnicos = clientes.filter((cliente, index, self) =>
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+    );
+
     return (
         <MainLayout title='Mantenimiento técnico'>
             <Grid container spacing={3}>
@@ -625,25 +646,27 @@ export const MantenimientoTecnicoPage = () => {
                         <CardContent>
                             <Grid container spacing={2}>
 
+                                <Grid item xs={3}>
+                                    <Autocomplete
+                                        disableClearable={true}
+                                        id="codigoCliente"
+                                        options={clientesUnicos}
+                                        getOptionLabel={option => option.razonSocial}
+                                        renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
+                                        onChange={(event, value) => onChangeNombreCliente(event, value, "nombreCliente")}
+                                    />
+                                </Grid>
+
                                 <Grid item xs={2}>
                                     <Autocomplete
                                         disableClearable={true}
                                         id="codigoCliente"
                                         options={clientes}
+                                        inputValue={parametrosSeleccionado.codigoCliente.toString()}
+                                        filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)}
                                         getOptionLabel={option => option.codigo.toString()}
                                         renderInput={params => <TextField {...params} label="Código de cliente" name="codigoCliente" />}
                                         onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={3}>
-                                    <TextField
-                                        sx={{ width: '100%' }}
-                                        label="Nombre del cliente"
-                                        id='nombreCliente'
-                                        name="nombreCliente"
-                                        value={parametrosSeleccionado && parametrosSeleccionado.nombreCliente}
-                                        onChange={handleChange}
                                     />
                                 </Grid>
 

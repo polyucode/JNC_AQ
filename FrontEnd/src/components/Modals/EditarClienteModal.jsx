@@ -17,6 +17,7 @@ import { EditarContactoModal } from './EditarContactoModal';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
 import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 import { ModalLayout2 } from '../ModalLayout2';
+import Swal from 'sweetalert2';
 
 const token = {
     headers: {
@@ -98,14 +99,6 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     }, []);
 
-    useEffect(() => {
-
-        if (data.length > 0) {
-            setRows(data);
-        }
-
-    }, [data]);
-
     const handleChangeContacto = e => {
 
         const { name, value } = e.target;
@@ -122,6 +115,8 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
         setData(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
 
     }
+
+    console.log(data)
 
     const peticionPostContacto = async () => {
 
@@ -147,6 +142,21 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             delDate: null,
             delIdUser: null,
             deleted: null,
+        });
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Contacto Creado',
+            text: `El contacto se ha creado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
         });
 
     }
@@ -178,8 +188,22 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             });
 
             i++;
-
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Contacto Eliminado',
+            text: `El contacto se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
     const peticionPutContacto = async () => {
@@ -209,6 +233,21 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             delDate: null,
             delIdUser: null,
             deleted: null,
+        })
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Contacto Editado',
+            text: `El contacto se ha editado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
         })
 
     }
@@ -395,14 +434,13 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
                                         height: 700,
                                         backgroundColor: '#FFFFFF'
                                     }}
-                                    rows={rows}
+                                    rows={data}
                                     columns={columns}
                                     pageSize={4}
                                     rowsPerPageOptions={[4]}
@@ -425,16 +463,9 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                             <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
                         }
                         botones={[
-                            insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                                abrirCerrarModalInsertar();
-
-                                if (peticionPostContacto()) {
-                                    setSnackData({ open: true, msg: 'Contacto añadido correctamente', severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al añadir el contacto', severity: 'error' })
-                                }
-
-                            }, 'success')
+                            insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                                peticionPostContacto()
+                            })
                         ]}
                         open={modalInsertar}
                         onClose={abrirCerrarModalInsertar}
@@ -449,15 +480,8 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                                 change={handleChangeContacto}
                             />}
                         botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                            abrirCerrarModalEditar()
-
-                            if (peticionPutContacto()) {
-                                setSnackData({ open: true, msg: 'Contacto editado correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al editar el contacto', severity: 'error' })
-                            }
-                        })
-                        ]}
+                            peticionPutContacto()
+                        })]}
                         open={modalEditar}
                         onClose={abrirCerrarModalEditar}
                     />
@@ -477,16 +501,8 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                         }
                         botones={[
                             insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                                abrirCerrarModalEliminar();
-
-                                if (peticionDeleteContacto()) {
-                                    setSnackData({ open: true, msg: `Contacto eliminado correctamente: ${contactoSeleccionado.nombre}`, severity: 'success' });
-                                } else {
-                                    setSnackData({ open: true, msg: 'Ha habido un error al eliminar el contacto', severity: 'error' })
-                                }
-
+                                peticionDeleteContacto()
                             }, 'error'),
-                            insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
                         ]}
                         open={modalEliminar}
                         onClose={abrirCerrarModalEliminar}

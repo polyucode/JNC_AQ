@@ -712,7 +712,6 @@ export const OfertasClientesPage = () => {
                                 <Card>
                                     <DataGrid
                                         key="ofertas"
-                                        //components={{ Toolbar: GridToolbar }}
                                         localeText={DATAGRID_LOCALE_TEXT}
                                         sx={{
                                             width: '100%',

@@ -51,8 +51,6 @@ const tipos = [
     { id: 3, nombre: "Trimestral" },
     { id: 4, nombre: "Semestral" },
     { id: 5, nombre: "Anual" }
-    /*{ id: 6, nombre: "Semanal" },
-    { id: 7, nombre: "Bisemanal" }*/
 ]
 
 
@@ -185,7 +183,6 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
 
             <Grid item xs={6} md={4}>
                 <Autocomplete
-                    //disabled={estadoOperario}
                     disableClearable={true}
                     sx={{ width: '100%', marginTop: '22px' }}
                     id="Operarios"
@@ -199,24 +196,6 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                     }))}
                 />
             </Grid>
-
-            {/*<Grid item xs={12} md={6}>
-                <TextField
-                    disabled={estadoProtocolo}
-                    sx={{ width: '100%' }}
-                    id='protocolo'
-                    label="Protocolo"
-                    select
-                    name="protocolo"
-                    onChange={handleChange}
-                >
-                    {protocolos.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Grid>*/}
 
             <Grid item xs={4} md={8} style={{ display: 'flex' }}>
                 <h3 style={{ width: '30%', marginTop: '22px' }}> Fecha </h3>

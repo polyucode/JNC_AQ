@@ -42,6 +42,7 @@ import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasC
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
+import { AnalisisTable } from "../components/AnalisisTable";
 
 const token = {
     headers: {
@@ -796,7 +797,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -834,7 +835,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -872,7 +873,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -910,7 +911,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -1100,7 +1101,7 @@ export const VisualizacionPage = () => {
                 realizado: false,
                 fechaRealizado: null,
                 observaciones: '',
-                pdf: '',
+                pdf: 0,
                 fechaPdf: null,
                 resultado: '',
                 facturado: false,
@@ -1431,12 +1432,12 @@ export const VisualizacionPage = () => {
         // Crear la cadena de fecha en formato 'YYYY-MM'
         const fechaFormateada = `${año}-${mesFormateado}`;
 
-        if(elementoTareaEditar[0].descripcion !== null){
+        if (elementoTareaEditar[0].descripcion !== null) {
             const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].descripcion), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
-        } else{
+        } else {
             const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
         }
-        
+
     }
 
     const descargarPdfNoFQ = async () => {
@@ -1650,7 +1651,6 @@ export const VisualizacionPage = () => {
 
             const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
-            //setData(data.concat(response.data));
             FisicoQuimicoTorre();
             FisicoQuimicoAlimentacion();
             FisicoQuimicoCondensados();
@@ -2327,7 +2327,7 @@ export const VisualizacionPage = () => {
             setData34(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData35(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
             setData36(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            
+
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
         }
@@ -2380,7 +2380,7 @@ export const VisualizacionPage = () => {
             setData34(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData35(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
             setData36(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            
+
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
         }
@@ -2432,7 +2432,7 @@ export const VisualizacionPage = () => {
             setData34(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData35(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
             setData36(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            
+
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
         }
@@ -2917,78 +2917,23 @@ export const VisualizacionPage = () => {
                                             case 1:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Torre'
+                                                            rowsIds={rowsIds1}
+                                                            rows={rows1}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow1}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Torre</Typography>
-                                                                    {
-                                                                        (rowsIds1.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds1)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows1}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow1(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -3009,8 +2954,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -3037,7 +2980,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar1}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -3063,82 +3005,27 @@ export const VisualizacionPage = () => {
                                                             open={modalEliminar}
                                                             onClose={abrirCerrarModalEliminar}
                                                         />
-
                                                     </>
                                                 )
                                             case 2:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Alimentación</Typography>
-                                                                    {
-                                                                        (rowsIds2.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds2)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows2}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow2(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Alimentación'
+                                                            rowsIds={rowsIds2}
+                                                            rows={rows2}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow2}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         {/* Agregar tarea */}
                                                         <ModalLayout
@@ -3221,74 +3108,22 @@ export const VisualizacionPage = () => {
                                             case 3:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Condensados</Typography>
-                                                                    {
-                                                                        (rowsIds3.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds3)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows3}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow3(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Condensados'
+                                                            rowsIds={rowsIds3}
+                                                            rows={rows3}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow3}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         {/* LISTA DE MODALS */}
 
@@ -3373,78 +3208,23 @@ export const VisualizacionPage = () => {
                                             case 4:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Osmosis'
+                                                            rowsIds={rowsIds4}
+                                                            rows={rows4}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow4}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Osmosis</Typography>
-                                                                    {
-                                                                        (rowsIds4.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds4)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows4}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow4(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -3525,78 +3305,23 @@ export const VisualizacionPage = () => {
                                             case 5:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Rechazo'
+                                                            rowsIds={rowsIds5}
+                                                            rows={rows5}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow5}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Rechazo</Typography>
-                                                                    {
-                                                                        (rowsIds5.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds5)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows5}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow5(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -3617,8 +3342,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -3645,7 +3368,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar1}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -3677,78 +3399,23 @@ export const VisualizacionPage = () => {
                                             case 6:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Producción'
+                                                            rowsIds={rowsIds6}
+                                                            rows={rows6}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow6}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Producción</Typography>
-                                                                    {
-                                                                        (rowsIds6.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds6)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows6}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow6(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -3769,8 +3436,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -3797,7 +3462,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar1}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -3829,78 +3493,23 @@ export const VisualizacionPage = () => {
                                             case 7:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Caldera'
+                                                            rowsIds={rowsIds7}
+                                                            rows={rows7}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow7}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Caldera</Typography>
-                                                                    {
-                                                                        (rowsIds7.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds7)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows7}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow7(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -3921,8 +3530,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -3949,7 +3556,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar1}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -3981,78 +3587,23 @@ export const VisualizacionPage = () => {
                                             case 8:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Descalcificador'
+                                                            rowsIds={rowsIds8}
+                                                            rows={rows8}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow8}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Descalcificador</Typography>
-                                                                    {
-                                                                        (rowsIds8.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds8)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar1}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows8}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow8(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4073,8 +3624,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar1}
                                                             onClose={abrirCerrarModalInsertar1}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4101,7 +3650,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar1}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4133,78 +3681,23 @@ export const VisualizacionPage = () => {
                                             case 9:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Aerobios Torre'
+                                                            rowsIds={rowsIds9}
+                                                            rows={rows9}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow9}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios Torre</Typography>
-                                                                    {
-                                                                        (rowsIds9.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds9)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarAerobio}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows9}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow9(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4225,8 +3718,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarAerobio}
                                                             onClose={abrirCerrarModalInsertarAerobio}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4255,7 +3746,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarAerobio}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4287,78 +3777,23 @@ export const VisualizacionPage = () => {
                                             case 10:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Aerobios ACH'
+                                                            rowsIds={rowsIds10}
+                                                            rows={rows10}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow10}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios ACH</Typography>
-                                                                    {
-                                                                        (rowsIds10.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds10)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarAerobio}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows10}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow10(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4379,8 +3814,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarAerobio}
                                                             onClose={abrirCerrarModalInsertarAerobio}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4409,7 +3842,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarAerobio}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4441,78 +3873,23 @@ export const VisualizacionPage = () => {
                                             case 11:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Aguas Residuales'
+                                                            rowsIds={rowsIds11}
+                                                            rows={rows11}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow11}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aguas Residuales</Typography>
-                                                                    {
-                                                                        (rowsIds11.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds11)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows11}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow11(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4533,8 +3910,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4563,7 +3938,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4595,78 +3969,23 @@ export const VisualizacionPage = () => {
                                             case 12:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Desinfección'
+                                                            rowsIds={rowsIds12}
+                                                            rows={rows12}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow12}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfección</Typography>
-                                                                    {
-                                                                        (rowsIds12.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds12)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows12}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow12(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4687,8 +4006,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4717,7 +4034,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4750,77 +4066,23 @@ export const VisualizacionPage = () => {
                                                 return (
                                                     <>
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfeccion ACH</Typography>
-                                                                    {
-                                                                        (rowsIds13.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds13)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Desinfección ACH'
+                                                            rowsIds={rowsIds13}
+                                                            rows={rows13}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow13}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows13}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow13(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4841,8 +4103,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -4871,7 +4131,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -4903,78 +4162,23 @@ export const VisualizacionPage = () => {
                                             case 14:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Desinfección CI'
+                                                            rowsIds={rowsIds14}
+                                                            rows={rows14}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow14}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfección CI</Typography>
-                                                                    {
-                                                                        (rowsIds14.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds14)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows14}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow14(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -4995,8 +4199,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5025,7 +4227,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5057,78 +4258,23 @@ export const VisualizacionPage = () => {
                                             case 15:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Mediciones'
+                                                            rowsIds={rowsIds15}
+                                                            rows={rows15}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow15}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Mediciones</Typography>
-                                                                    {
-                                                                        (rowsIds15.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds15)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows15}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow15(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5149,8 +4295,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5179,7 +4323,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5211,78 +4354,23 @@ export const VisualizacionPage = () => {
                                             case 16:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Agua Potable / Consumo Humano'
+                                                            rowsIds={rowsIds16}
+                                                            rows={rows16}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow16}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Agua Potable / Consumo Humano</Typography>
-                                                                    {
-                                                                        (rowsIds16.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds16)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows16}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow16(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5303,8 +4391,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5333,7 +4419,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5365,78 +4450,23 @@ export const VisualizacionPage = () => {
                                             case 17:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Legionela Torre'
+                                                            rowsIds={rowsIds17}
+                                                            rows={rows17}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow17}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela Torre</Typography>
-                                                                    {
-                                                                        (rowsIds17.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds17)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarLegionela}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows17}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow17(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5457,8 +4487,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarLegionela}
                                                             onClose={abrirCerrarModalInsertarLegionela}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5487,7 +4515,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarLegionela}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5519,78 +4546,23 @@ export const VisualizacionPage = () => {
                                             case 18:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Legionela ACH'
+                                                            rowsIds={rowsIds18}
+                                                            rows={rows18}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow18}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela ACH</Typography>
-                                                                    {
-                                                                        (rowsIds18.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds18)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarLegionela}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows18}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow18(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5611,8 +4583,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarLegionela}
                                                             onClose={abrirCerrarModalInsertarLegionela}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5641,7 +4611,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarLegionela}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5673,78 +4642,23 @@ export const VisualizacionPage = () => {
                                             case 19:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Legionela CI'
+                                                            rowsIds={rowsIds19}
+                                                            rows={rows19}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow19}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela CI</Typography>
-                                                                    {
-                                                                        (rowsIds19.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds19)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarLegionela}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows19}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow19(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5765,8 +4679,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarLegionela}
                                                             onClose={abrirCerrarModalInsertarLegionela}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5795,7 +4707,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarLegionela}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5827,78 +4738,23 @@ export const VisualizacionPage = () => {
                                             case 20:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Legionela Deposito Aporte'
+                                                            rowsIds={rowsIds20}
+                                                            rows={rows20}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow20}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela Deposito Aporte</Typography>
-                                                                    {
-                                                                        (rowsIds20.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds20)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarLegionela}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows20}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow20(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -5919,8 +4775,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -5949,7 +4803,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarLegionela}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -5981,78 +4834,23 @@ export const VisualizacionPage = () => {
                                             case 21:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Mantenimiento Máquina Frio'
+                                                            rowsIds={rowsIds21}
+                                                            rows={rows21}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow21}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Mantenimiento Maquina Frio</Typography>
-                                                                    {
-                                                                        (rowsIds21.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds21)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows21}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow21(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6073,8 +4871,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6103,7 +4899,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6135,78 +4930,23 @@ export const VisualizacionPage = () => {
                                             case 22:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Control Fugas y Quinquenales'
+                                                            rowsIds={rowsIds22}
+                                                            rows={rows22}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow22}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Control fugas y quinquenales</Typography>
-                                                                    {
-                                                                        (rowsIds22.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds22)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows22}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow22(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6227,8 +4967,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6257,7 +4995,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6289,78 +5026,23 @@ export const VisualizacionPage = () => {
                                             case 23:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Limpieza de bandejas'
+                                                            rowsIds={rowsIds23}
+                                                            rows={rows23}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow23}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza de bandejas</Typography>
-                                                                    {
-                                                                        (rowsIds23.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds23)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows23}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow23(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6381,8 +5063,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6411,7 +5091,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6443,78 +5122,23 @@ export const VisualizacionPage = () => {
                                             case 24:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Limpieza relleno'
+                                                            rowsIds={rowsIds24}
+                                                            rows={rows24}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow24}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza relleno</Typography>
-                                                                    {
-                                                                        (rowsIds24.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds24)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows24}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow24(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6535,8 +5159,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6565,7 +5187,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6597,78 +5218,23 @@ export const VisualizacionPage = () => {
                                             case 25:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Limpieza separador de gotas'
+                                                            rowsIds={rowsIds25}
+                                                            rows={rows25}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow25}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza separador de gotas</Typography>
-                                                                    {
-                                                                        (rowsIds25.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds25)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows25}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow25(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6689,8 +5255,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6719,7 +5283,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6751,78 +5314,23 @@ export const VisualizacionPage = () => {
                                             case 26:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Limpieza de ventanas'
+                                                            rowsIds={rowsIds26}
+                                                            rows={rows26}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow26}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza de ventanas</Typography>
-                                                                    {
-                                                                        (rowsIds26.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds26)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows26}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow26(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6843,8 +5351,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -6873,7 +5379,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -6905,78 +5410,23 @@ export const VisualizacionPage = () => {
                                             case 27:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Revisión Osmosis'
+                                                            rowsIds={rowsIds27}
+                                                            rows={rows27}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow27}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión osmosis</Typography>
-                                                                    {
-                                                                        (rowsIds27.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds27)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows27}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow27(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -6997,8 +5447,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7027,7 +5475,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7059,78 +5506,23 @@ export const VisualizacionPage = () => {
                                             case 28:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Revisión descalcificador'
+                                                            rowsIds={rowsIds28}
+                                                            rows={rows28}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow28}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión descalcificador</Typography>
-                                                                    {
-                                                                        (rowsIds28.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds28)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows28}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow28(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7151,8 +5543,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7181,7 +5571,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7213,77 +5602,23 @@ export const VisualizacionPage = () => {
                                             case 29:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión filtros</Typography>
-                                                                    {
-                                                                        (rowsIds29.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds29)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión filtros'
+                                                            rowsIds={rowsIds29}
+                                                            rows={rows29}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow29}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows29}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow29(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7304,8 +5639,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7334,7 +5667,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7366,77 +5698,23 @@ export const VisualizacionPage = () => {
                                             case 30:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión clorador</Typography>
-                                                                    {
-                                                                        (rowsIds30.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds30)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión clorador'
+                                                            rowsIds={rowsIds30}
+                                                            rows={rows30}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow30}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows30}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow30(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7457,8 +5735,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7487,7 +5763,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7519,78 +5794,23 @@ export const VisualizacionPage = () => {
                                             case 31:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Revisión bomba'
+                                                            rowsIds={rowsIds31}
+                                                            rows={rows31}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow31}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión bomba</Typography>
-                                                                    {
-                                                                        (rowsIds31.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds31)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows31}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow31(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7611,8 +5831,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7641,7 +5859,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7673,78 +5890,23 @@ export const VisualizacionPage = () => {
                                             case 32:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Revisión telecontrol'
+                                                            rowsIds={rowsIds32}
+                                                            rows={rows32}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow32}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión telecontrol</Typography>
-                                                                    {
-                                                                        (rowsIds32.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds32)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows32}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow32(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7765,8 +5927,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7795,7 +5955,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7827,77 +5986,23 @@ export const VisualizacionPage = () => {
                                             case 33:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión fluorescencia</Typography>
-                                                                    {
-                                                                        (rowsIds33.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds33)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión fluorescencia'
+                                                            rowsIds={rowsIds33}
+                                                            rows={rows33}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow33}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows33}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow33(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -7918,8 +6023,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -7948,7 +6051,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -7980,77 +6082,23 @@ export const VisualizacionPage = () => {
                                             case 34:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Hierro múltiple</Typography>
-                                                                    {
-                                                                        (rowsIds34.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds34)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertar}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Hierro Múltiple'
+                                                            rowsIds={rowsIds34}
+                                                            rows={rows34}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow34}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows34}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow34(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -8071,8 +6119,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertar}
                                                             onClose={abrirCerrarModalInsertar}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -8101,7 +6147,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditar}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -8133,78 +6178,23 @@ export const VisualizacionPage = () => {
                                             case 35:
                                                 return (
                                                     <>
+                                                        <AnalisisTable
+                                                            title='Aerobios Múltiple'
+                                                            rowsIds={rowsIds35}
+                                                            rows={rows35}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow35}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios múltiple</Typography>
-                                                                    {
-                                                                        (rowsIds35.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds35)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarAerobio}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows35}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow35(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -8225,8 +6215,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarAerobio}
                                                             onClose={abrirCerrarModalInsertarAerobio}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -8255,7 +6243,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarAerobio}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -8287,77 +6274,23 @@ export const VisualizacionPage = () => {
                                             case 36:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela múltiple</Typography>
-                                                                    {
-                                                                        (rowsIds36.length > 0) ?
-                                                                            (
-                                                                                <Grid item>
-                                                                                    <Button
-                                                                                        sx={{ mr: 2 }}
-                                                                                        color='error'
-                                                                                        variant='contained'
-                                                                                        startIcon={<DeleteIcon />}
-                                                                                        onClick={(event, rowData) => {
-                                                                                            setAnalisisEliminar(rowsIds36)
-                                                                                            abrirCerrarModalEliminar()
-                                                                                        }}
-                                                                                    >
-                                                                                        Eliminar
-                                                                                    </Button>
-                                                                                </Grid>
-                                                                            ) : (
-                                                                                <Button
-                                                                                    color='success'
-                                                                                    variant='contained'
-                                                                                    startIcon={<AddIcon />}
-                                                                                    onClick={abrirCerrarModalInsertarLegionela}
-                                                                                >Añadir</Button>
-                                                                            )
-                                                                    }
-                                                                </Card>
-                                                            </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela Múltiple'
+                                                            rowsIds={rowsIds36}
+                                                            rows={rows36}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow36}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows36}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        checkboxSelection
-                                                                        disableSelectionOnClick
-                                                                        onSelectionModelChange={(ids) => handleSelectRow36(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
-
-                                                        {/* LISTA DE MODALS */}
-
-                                                        {/* Agregar tarea */}
                                                         <ModalLayout
                                                             titulo="Agregar nueva Tarea"
                                                             contenido={
@@ -8378,8 +6311,6 @@ export const VisualizacionPage = () => {
                                                             open={modalInsertarLegionela}
                                                             onClose={abrirCerrarModalInsertarLegionela}
                                                         />
-
-                                                        {/* Modal Editar Tarea*/}
 
                                                         <ModalLayout
                                                             titulo="Editar tarea"
@@ -8408,7 +6339,6 @@ export const VisualizacionPage = () => {
                                                             onClose={abrirCerrarModalEditarLegionela}
                                                         />
 
-                                                        {/* Eliminar tarea */}
                                                         <ModalLayout
                                                             titulo="Eliminar tarea"
                                                             contenido={
@@ -8515,46 +6445,22 @@ export const VisualizacionPage = () => {
                                             case 1:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Torre</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows1}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow1(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Torre'
+                                                            rowsIds={rowsIds1}
+                                                            rows={rows1}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow1}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8585,46 +6491,22 @@ export const VisualizacionPage = () => {
                                             case 2:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Alimentación</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows2}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow2(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Alimentación'
+                                                            rowsIds={rowsIds2}
+                                                            rows={rows2}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow2}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8655,46 +6537,22 @@ export const VisualizacionPage = () => {
                                             case 3:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Condensados</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows3}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow3(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Condensados'
+                                                            rowsIds={rowsIds3}
+                                                            rows={rows3}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow3}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8725,46 +6583,22 @@ export const VisualizacionPage = () => {
                                             case 4:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Osmosis</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows4}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow4(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Osmosis'
+                                                            rowsIds={rowsIds4}
+                                                            rows={rows4}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow4}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8795,46 +6629,22 @@ export const VisualizacionPage = () => {
                                             case 5:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Rechazo</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows5}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow5(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Rechazo'
+                                                            rowsIds={rowsIds5}
+                                                            rows={rows5}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow5}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8865,46 +6675,22 @@ export const VisualizacionPage = () => {
                                             case 6:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Producción</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows6}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow6(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Producción'
+                                                            rowsIds={rowsIds6}
+                                                            rows={rows6}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow6}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -8935,46 +6721,22 @@ export const VisualizacionPage = () => {
                                             case 7:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Caldera</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows7}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow7(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Caldera'
+                                                            rowsIds={rowsIds7}
+                                                            rows={rows7}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow7}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9005,46 +6767,22 @@ export const VisualizacionPage = () => {
                                             case 8:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Físico-Químico Descalcificador</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows8}
-                                                                        columns={columnas1}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow8(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar1();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Físico-Químico Descalcificador'
+                                                            rowsIds={rowsIds8}
+                                                            rows={rows8}
+                                                            columnas={columnas1}
+                                                            handleSelectRow={handleSelectRow8}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar1}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar1}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9075,46 +6813,22 @@ export const VisualizacionPage = () => {
                                             case 9:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios Torre</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows9}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow9(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Aerobios Torre'
+                                                            rowsIds={rowsIds9}
+                                                            rows={rows9}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow9}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9147,46 +6861,22 @@ export const VisualizacionPage = () => {
                                             case 10:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios ACH</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows10}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow10(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Aerobios ACH'
+                                                            rowsIds={rowsIds10}
+                                                            rows={rows10}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow10}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9219,46 +6909,22 @@ export const VisualizacionPage = () => {
                                             case 11:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aguas Residuales</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows11}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow9(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Aguas Residuales'
+                                                            rowsIds={rowsIds11}
+                                                            rows={rows11}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow11}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9291,46 +6957,22 @@ export const VisualizacionPage = () => {
                                             case 12:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfección</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows12}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow12(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Desinfección'
+                                                            rowsIds={rowsIds12}
+                                                            rows={rows12}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow12}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9363,46 +7005,22 @@ export const VisualizacionPage = () => {
                                             case 13:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfeccion ACH</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows13}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow13(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Desinfección ACH'
+                                                            rowsIds={rowsIds13}
+                                                            rows={rows13}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow13}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9435,46 +7053,22 @@ export const VisualizacionPage = () => {
                                             case 14:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Desinfección CI</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows14}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow14(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Desinfección CI'
+                                                            rowsIds={rowsIds14}
+                                                            rows={rows14}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow14}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9507,46 +7101,22 @@ export const VisualizacionPage = () => {
                                             case 15:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Mediciones</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows15}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow15(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Mediciones'
+                                                            rowsIds={rowsIds15}
+                                                            rows={rows15}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow15}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9579,46 +7149,22 @@ export const VisualizacionPage = () => {
                                             case 16:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Agua Potable / Consumo Humano</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows16}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow16(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Agua Potable / Consumo Humano'
+                                                            rowsIds={rowsIds16}
+                                                            rows={rows16}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow16}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9651,46 +7197,22 @@ export const VisualizacionPage = () => {
                                             case 17:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela Torre</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows17}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow17(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela Torre'
+                                                            rowsIds={rowsIds17}
+                                                            rows={rows17}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow17}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9723,46 +7245,22 @@ export const VisualizacionPage = () => {
                                             case 18:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela ACH</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows18}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow18(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela ACH'
+                                                            rowsIds={rowsIds18}
+                                                            rows={rows18}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow18}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9795,46 +7293,22 @@ export const VisualizacionPage = () => {
                                             case 19:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela CI</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows19}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow19(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela CI'
+                                                            rowsIds={rowsIds19}
+                                                            rows={rows19}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow19}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9867,46 +7341,22 @@ export const VisualizacionPage = () => {
                                             case 20:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela Deposito Aporte</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows20}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow20(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela Deposito Aporte'
+                                                            rowsIds={rowsIds20}
+                                                            rows={rows20}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow20}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -9939,46 +7389,22 @@ export const VisualizacionPage = () => {
                                             case 21:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Mantenimiento Maquina Frio</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows21}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow21(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Mantenimiento Máquina Frio'
+                                                            rowsIds={rowsIds21}
+                                                            rows={rows21}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow21}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10011,46 +7437,22 @@ export const VisualizacionPage = () => {
                                             case 22:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Control fugas y quinquenales</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows22}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow22(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Control Fugas y Quinquenales'
+                                                            rowsIds={rowsIds22}
+                                                            rows={rows22}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow22}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10083,46 +7485,22 @@ export const VisualizacionPage = () => {
                                             case 23:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza de bandejas</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows23}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow23(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Limpieza de bandejas'
+                                                            rowsIds={rowsIds23}
+                                                            rows={rows23}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow23}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10155,46 +7533,22 @@ export const VisualizacionPage = () => {
                                             case 24:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza relleno</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows24}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow24(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Limpieza relleno'
+                                                            rowsIds={rowsIds24}
+                                                            rows={rows24}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow24}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10227,46 +7581,22 @@ export const VisualizacionPage = () => {
                                             case 25:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza separador de gotas</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows25}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow25(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Limpieza separador de gotas'
+                                                            rowsIds={rowsIds25}
+                                                            rows={rows25}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow25}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10299,46 +7629,22 @@ export const VisualizacionPage = () => {
                                             case 26:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Limpieza de ventanas</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows26}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow26(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Limpieza de ventanas'
+                                                            rowsIds={rowsIds26}
+                                                            rows={rows26}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow26}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10371,46 +7677,22 @@ export const VisualizacionPage = () => {
                                             case 27:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión osmosis</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows27}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow27(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión Osmosis'
+                                                            rowsIds={rowsIds27}
+                                                            rows={rows27}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow27}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10443,46 +7725,22 @@ export const VisualizacionPage = () => {
                                             case 28:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión descalcificador</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows28}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow28(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión descalcificador'
+                                                            rowsIds={rowsIds28}
+                                                            rows={rows28}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow28}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10515,45 +7773,22 @@ export const VisualizacionPage = () => {
                                             case 29:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión filtros</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows29}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow29(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión filtros'
+                                                            rowsIds={rowsIds29}
+                                                            rows={rows29}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow29}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10586,45 +7821,22 @@ export const VisualizacionPage = () => {
                                             case 30:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión clorador</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows30}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow30(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión clorador'
+                                                            rowsIds={rowsIds30}
+                                                            rows={rows30}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow30}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10657,46 +7869,22 @@ export const VisualizacionPage = () => {
                                             case 31:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión bomba</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows31}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow31(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión bomba'
+                                                            rowsIds={rowsIds31}
+                                                            rows={rows31}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow31}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10729,46 +7917,22 @@ export const VisualizacionPage = () => {
                                             case 32:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión telecontrol</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows32}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow32(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión telecontrol'
+                                                            rowsIds={rowsIds32}
+                                                            rows={rows32}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow32}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10801,45 +7965,22 @@ export const VisualizacionPage = () => {
                                             case 33:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Revisión fluorescencia</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows33}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow33(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Revisión fluorescencia'
+                                                            rowsIds={rowsIds33}
+                                                            rows={rows33}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow33}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10872,45 +8013,22 @@ export const VisualizacionPage = () => {
                                             case 34:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Hierro múltiple</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows34}
-                                                                        columns={columnas}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow34(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditar();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Hierro Múltiple'
+                                                            rowsIds={rowsIds34}
+                                                            rows={rows34}
+                                                            columnas={columnas}
+                                                            handleSelectRow={handleSelectRow34}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditar}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertar}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -10943,46 +8061,22 @@ export const VisualizacionPage = () => {
                                             case 35:
                                                 return (
                                                     <>
-
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Aerobios múltiple</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows35}
-                                                                        columns={columnasAerobios}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow35(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarAerobio();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Aerobios Múltiple'
+                                                            rowsIds={rowsIds35}
+                                                            rows={rows35}
+                                                            columnas={columnasAerobios}
+                                                            handleSelectRow={handleSelectRow35}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarAerobio}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarAerobio}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"
@@ -11015,45 +8109,22 @@ export const VisualizacionPage = () => {
                                             case 36:
                                                 return (
                                                     <>
-                                                        <Grid container spacing={2}>
-                                                            {/* Título y botones de opción */}
-                                                            <Grid item xs={12}>
-                                                                <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-                                                                    <Typography variant='h6'>Legionela múltiple</Typography>
-                                                                </Card>
-                                                            </Grid>
-
-                                                            {/* Tabla donde se muestran los registros de los clientes */}
-                                                            <Grid item xs={12}>
-                                                                <Card>
-                                                                    <DataGrid
-                                                                        //components={{ Toolbar: GridToolbar }}
-                                                                        localeText={DATAGRID_LOCALE_TEXT}
-                                                                        sx={{
-                                                                            width: '100%',
-                                                                            height: 700,
-                                                                            backgroundColor: '#FFFFFF'
-                                                                        }}
-                                                                        rows={rows36}
-                                                                        columns={columnasLegionela}
-                                                                        pageSize={12}
-                                                                        rowsPerPageOptions={[12]}
-                                                                        initialState={{
-                                                                            sorting: {
-                                                                                sortModel: [{ field: 'fecha', sort: 'asc' }]
-                                                                            }
-                                                                        }}
-                                                                        onSelectionModelChange={(ids) => handleSelectRow36(ids)}
-                                                                        onRowClick={(analisisSeleccionado, evt) => {
-                                                                            setAnalisisSeleccionado(analisisSeleccionado.row)
-                                                                            setAnalisisEditar(analisis.filter(analisi => analisi.id === analisisSeleccionado.row.analisis));
-                                                                            setElementoTareaEditar(elementos.filter(elemento => elemento.id === analisisSeleccionado.row.elemento));
-                                                                            abrirCerrarModalEditarLegionela();
-                                                                        }}
-                                                                    />
-                                                                </Card>
-                                                            </Grid>
-                                                        </Grid>
+                                                        <AnalisisTable
+                                                            title='Legionela Múltiple'
+                                                            rowsIds={rowsIds36}
+                                                            rows={rows36}
+                                                            columnas={columnasLegionela}
+                                                            handleSelectRow={handleSelectRow36}
+                                                            setAnalisisEliminar={setAnalisisEliminar}
+                                                            setAnalisisEditar={setAnalisisEditar}
+                                                            setElementoTareaEditar={setElementoTareaEditar}
+                                                            setAnalisisSeleccionado={setAnalisisSeleccionado}
+                                                            abrirCerrarModalEditar={abrirCerrarModalEditarLegionela}
+                                                            abrirCerrarModalEliminar={abrirCerrarModalEliminar}
+                                                            abrirCerrarModalInsertar={abrirCerrarModalInsertarLegionela}
+                                                            analisis={analisis}
+                                                            elementos={elementos}
+                                                        />
 
                                                         <ModalLayout2
                                                             titulo="Editar tarea"

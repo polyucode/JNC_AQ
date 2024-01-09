@@ -558,8 +558,6 @@ export const ClientesPage = () => {
         usuarioActual.idPerfil === 1 ?
           <MainLayout key="clientes" title='Clientes'>
             <Grid container spacing={2}>
-
-              {/* Título y botones de opción */}
               <Grid item xs={12}>
                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='h6'>Listado de clientes</Typography>
@@ -611,11 +609,9 @@ export const ClientesPage = () => {
                 </Card>
               </Grid>
 
-              {/* Tabla donde se muestran los registros de los clientes */}
               <Grid item xs={12}>
                 <Card>
                   <DataGrid
-                    //components={{ Toolbar: GridToolbar }}
                     localeText={DATAGRID_LOCALE_TEXT}
                     sx={{
                       width: '100%',
@@ -624,7 +620,6 @@ export const ClientesPage = () => {
                     }}
                     rows={filteredData}
                     columns={columns}
-                    pageSize={100}
                     checkboxSelection
                     disableSelectionOnClick
                     onSelectionModelChange={(ids) => handleSelectRow(ids)}
@@ -639,9 +634,6 @@ export const ClientesPage = () => {
 
             </Grid>
 
-            {/* LISTA DE MODALS */}
-
-            {/* Agregar cliente */}
             <ModalLayout
               titulo="Agregar nuevo cliente"
               contenido={
@@ -665,10 +657,6 @@ export const ClientesPage = () => {
               open={modalInsertar}
               onClose={abrirCerrarModalInsertar}
             />
-
-
-
-            {/* Modal Editar Cliente*/}
 
             <ModalLayout
               titulo="Editar cliente"
@@ -694,7 +682,6 @@ export const ClientesPage = () => {
               onClose={abrirCerrarModalEditar}
             />
 
-            {/* Eliminar cliente */}
             <ModalLayout
               titulo="Eliminar cliente"
               contenido={
@@ -721,7 +708,6 @@ export const ClientesPage = () => {
 
             <Grid container spacing={2}>
 
-              {/* Título y botones de opción */}
               <Grid item xs={12}>
                 <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant='h6'>Listado de clientes</Typography>
@@ -751,7 +737,6 @@ export const ClientesPage = () => {
               <Grid item xs={12}>
                 <Card>
                   <DataGrid
-                    //components={{ Toolbar: GridToolbar }}
                     localeText={DATAGRID_LOCALE_TEXT}
                     sx={{
                       width: '100%',

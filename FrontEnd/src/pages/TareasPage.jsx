@@ -447,12 +447,19 @@ export const TareasPage = () => {
 
       const response = await postTareas(tareaSeleccionada);
 
-      //Creamos los detalles
       var date = new Date(tareaSeleccionada.fecha);
-      var day = date.getDay();
+
       if (tareaSeleccionada.tipo === 1) {
-        for (let i = 0; i < 12; i++) {
-          var dia = date.getDate();
+        for (let i = 0; i <= 12; i++) {
+
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+
+          var monthFormatted = month < 10 ? '0' + month : month;
+          var dayFormatted = day < 10 ? '0' + day : day;
+
+          var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
 
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
@@ -463,7 +470,7 @@ export const TareasPage = () => {
           analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
           analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
           analisisSeleccionado.analisis = response.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.fecha = fechaFormateada;
           analisisSeleccionado.recogido = false;
           analisisSeleccionado.realizado = false;
           analisisSeleccionado.operario = response.operario;
@@ -474,13 +481,20 @@ export const TareasPage = () => {
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
           date.setMonth(date.getMonth() + 1);
-          date.setDate(Math.min(dia, new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()));
-          date.setHours(1, 0, 0, 0);
           peticionPostVis();
         }
       }
       if (tareaSeleccionada.tipo === 2) {
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i <= 6; i++) {
+
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+
+          var monthFormatted = month < 10 ? '0' + month : month;
+          var dayFormatted = day < 10 ? '0' + day : day;
+
+          var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
 
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
@@ -491,7 +505,7 @@ export const TareasPage = () => {
           analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
           analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
           analisisSeleccionado.analisis = response.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.fecha = fechaFormateada;
           analisisSeleccionado.recogido = false;
           analisisSeleccionado.fechaRecogido = null;
           analisisSeleccionado.realizado = false;
@@ -503,12 +517,21 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 2, day)
+          date.setMonth(date.getMonth() + 2)
           peticionPostVis();
         }
       }
       if (tareaSeleccionada.tipo === 3) {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i <= 4; i++) {
+
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+
+          var monthFormatted = month < 10 ? '0' + month : month;
+          var dayFormatted = day < 10 ? '0' + day : day;
+
+          var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
 
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
@@ -519,7 +542,7 @@ export const TareasPage = () => {
           analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
           analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
           analisisSeleccionado.analisis = response.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.fecha = fechaFormateada;
           analisisSeleccionado.recogido = false;
           analisisSeleccionado.fechaRecogido = null;
           analisisSeleccionado.realizado = false;
@@ -531,12 +554,21 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 3, day)
+          date.setMonth(date.getMonth() + 3)
           peticionPostVis();
         }
       }
       if (tareaSeleccionada.tipo === 4) {
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i <= 2; i++) {
+
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+
+          var monthFormatted = month < 10 ? '0' + month : month;
+          var dayFormatted = day < 10 ? '0' + day : day;
+
+          var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
 
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
@@ -547,7 +579,7 @@ export const TareasPage = () => {
           analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
           analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
           analisisSeleccionado.analisis = response.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.fecha = fechaFormateada;
           analisisSeleccionado.recogido = false;
           analisisSeleccionado.fechaRecogido = null;
           analisisSeleccionado.realizado = false;
@@ -559,12 +591,22 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 6, day)
+          date.setMonth(date.getMonth() + 6)
           peticionPostVis();
         }
       }
       if (tareaSeleccionada.tipo === 5) {
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i <= 1; i++) {
+
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+
+          var monthFormatted = month < 10 ? '0' + month : month;
+          var dayFormatted = day < 10 ? '0' + day : day;
+
+          var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
+
           analisisSeleccionado.id = 0;
           analisisSeleccionado.codigoCliente = response.codigoCliente;
           analisisSeleccionado.nombreCliente = response.nombreCliente;
@@ -574,7 +616,7 @@ export const TareasPage = () => {
           analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
           analisisSeleccionado.periodo = date.toLocaleDateString('es', { year: 'numeric', month: 'short' });
           analisisSeleccionado.analisis = response.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
+          analisisSeleccionado.fecha = fechaFormateada;
           analisisSeleccionado.recogido = false;
           analisisSeleccionado.fechaRecogido = null;
           analisisSeleccionado.realizado = false;
@@ -586,37 +628,10 @@ export const TareasPage = () => {
           analisisSeleccionado.numeroFacturado = "";
           analisisSeleccionado.cancelado = false;
           analisisSeleccionado.comentarios = "";
-          date.setMonth(date.getMonth() + 12, day)
+          date.setFullYear(date.getFullYear() + 1);
           peticionPostVis();
         }
       }
-      /*if (tareaSeleccionada.tipo === 6) {
-        for (let i = 0; i < 48; i++) {
-          analisisSeleccionado.id = 0;
-          analisisSeleccionado.codigoCliente = response.data.data.codigoCliente;
-          analisisSeleccionado.nombreCliente = response.data.data.nombreCliente;
-          analisisSeleccionado.oferta = response.data.data.oferta;
-          analisisSeleccionado.pedido = response.data.data.pedido;
-          analisisSeleccionado.elemento = response.data.data.elemento;
-          analisisSeleccionado.nombreElemento = tareaSeleccionada.nombreElemento;
-          analisisSeleccionado.periodo = "";
-          analisisSeleccionado.analisis = response.data.data.analisis;
-          analisisSeleccionado.fecha = date.toJSON();
-          analisisSeleccionado.recogido = false;
-          analisisSeleccionado.fechaRecogido = null;
-          analisisSeleccionado.realizado = false;
-          analisisSeleccionado.fechaRealizado = null;
-          analisisSeleccionado.operario = response.data.data.operario;
-          analisisSeleccionado.protocolo = response.data.data.protocolo;
-          analisisSeleccionado.observaciones = "";
-          analisisSeleccionado.facturado = false;
-          analisisSeleccionado.numeroFacturado = "";
-          analisisSeleccionado.cancelado = false;
-          analisisSeleccionado.comentarios = "";
-          date.setDate(date.getDay() + 7)
-          peticionPostVis();
-        }
-      }*/
 
       abrirCerrarModalInsertar();
       peticionGet();

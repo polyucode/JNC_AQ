@@ -51,9 +51,6 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
     const [operarios, setOperarios] = useState([]);
     const [nombreAnalisis, setNombreAnalisis] = useState([]);
 
-    console.log(analisis, "ANALISIS")
-    console.log(analisisid, "ANALISISID")
-
     useEffect(() => {
 
         getUsuarios(operarios => {

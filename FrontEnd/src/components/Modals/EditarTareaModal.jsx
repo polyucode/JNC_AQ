@@ -22,6 +22,7 @@ import { EditarDetalleModal } from './EditarDetalleModal';
 import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, getAnalisis, 
     getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios 
 } from '../../api';
+import Swal from 'sweetalert2';
 
 const token = {
     headers: {
@@ -249,15 +250,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
 
     }, []);
 
-    useEffect(() => {
-
-        if (data.length > 0) {
-            setRows(data);
-        }
-
-    }, [data]);
-
-
     function formateandofechas(fecha) {
         if(fecha !== null){
             const fecha1 = new Date(fecha)
@@ -425,8 +417,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         analisisSeleccionado.elemento = tareaSeleccionada.elemento;
         analisisSeleccionado.operario = tareaSeleccionada.operario;
 
-        console.log(analisisSeleccionado)
-
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
         console.log(resp)
@@ -461,6 +451,21 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             delDate: null,
             delIdUser: null,
             deleted: null,
+        });
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Tarea Creada',
+            text: `La tarea se ha creado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
         });
 
     }
@@ -508,6 +513,21 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             deleted: null,
         });
 
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Tarea Editada',
+            text: `La tarea se ha editado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        })
+
     }
 
     const peticionDelete = async () => {
@@ -550,6 +570,21 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
 
             i++;
         }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Tarea Eliminada',
+            text: `La tarea se ha eliminado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
     }
 
     const handleSelectRow = (ids) => {
@@ -563,16 +598,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         setRowsIds(ids);
 
     }
-
-    const handleSnackClose = (event, reason) => {
-
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackData({ open: false, msg: '', severity: 'info' });
-
-    };
 
     return (
         <>
@@ -722,13 +747,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
 
             <Grid container spacing={2}>
 
-                <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                    <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                        {snackData.msg}
-                    </Alert>
-                </Snackbar>
-
-                {/* Título y botones de opción */}
                 <Grid item xs={12}>
                     <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
                         <Typography variant='h6'>Detalles de la tarea</Typography>
@@ -761,18 +779,16 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     </Card>
                 </Grid>
 
-                {/* Tabla donde se muestran el detalle de la tarea */}
                 <Grid item xs={12}>
                     <Card>
                         <DataGrid
-                            components={{ Toolbar: GridToolbar }}
                             localeText={DATAGRID_LOCALE_TEXT}
                             sx={{
                                 width: '100%',
                                 height: 700,
                                 backgroundColor: '#FFFFFF'
                             }}
-                            rows={rows}
+                            rows={data}
                             columns={columns}
                             initialState={{
                                 sorting: {
@@ -807,21 +823,14 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     />
                 }
                 botones={[
-                    insertarBotonesModal(<AddIcon />, 'Añadir', async () => {
-                        abrirCerrarModalInsertar();
-
-                        if (peticionPost()) {
-                            setSnackData({ open: true, msg: 'Detalle añadido correctamente', severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al añadir el detalle de la tarea', severity: 'error' })
-                        }
-
-                    }, 'success')
+                    insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
+                        peticionPost()
+                    })
                 ]}
                 open={modalInsertar}
                 onClose={abrirCerrarModalInsertar}
             />
-            {/* Modal Editar Detalle*/}
+
             <ModalLayout
                 titulo="Editar detalle"
                 contenido={
@@ -838,20 +847,12 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                         elementos={elementos}
                     />}
                 botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                    abrirCerrarModalEditar()
-
-                    if (peticionPut()) {
-                        setSnackData({ open: true, msg: 'Detalle editado correctamente', severity: 'success' });
-                    } else {
-                        setSnackData({ open: true, msg: 'Ha habido un error al editar el detalle', severity: 'error' })
-                    }
-                })
-                ]}
+                    peticionPut()
+                })]}
                 open={modalEditar}
                 onClose={abrirCerrarModalEditar}
             />
 
-            {/* Eliminar detalle */}
             <ModalLayout
                 titulo="Eliminar detalle"
                 contenido={
@@ -863,16 +864,8 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                 }
                 botones={[
                     insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
-                        abrirCerrarModalEliminar();
-
-                        if (peticionDelete()) {
-                            setSnackData({ open: true, msg: `Detalle eliminado correctamente`, severity: 'success' });
-                        } else {
-                            setSnackData({ open: true, msg: 'Ha habido un error al eliminar el detalle', severity: 'error' })
-                        }
-
-                    }, 'error'),
-                    insertarBotonesModal(<CancelIcon />, 'Cancelar', () => abrirCerrarModalEliminar(), 'success')
+                        peticionDelete()
+                    }, 'error')
                 ]}
                 open={modalEliminar}
                 onClose={abrirCerrarModalEliminar}
