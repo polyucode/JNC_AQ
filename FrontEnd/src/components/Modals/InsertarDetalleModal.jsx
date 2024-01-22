@@ -47,7 +47,7 @@ const protocolos = [
     }
 ]
 
-export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado, analisisEditar, elementoTareaEditar }) => {
+export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handleChangeFecha, setAnalisisSeleccionado, analisisSeleccionado, analisisEditar, elementoTareaEditar }) => {
 
     const [operarios, setOperarios] = useState([]);
 
@@ -75,7 +75,7 @@ export const InsertarDetalleModal = ({ handleChangeDet, tareaSeleccionada, handl
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].numero} />
+                <TextField sx={{ width: '100%' }} disabled label="Elemento" name="elemento" onChange={handleChangeDet} value={elementoTareaEditar[0].descripcion != null ? elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].descripcion : elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].numero} />
             </Grid>
 
             <Grid item xs={6} md={6}>

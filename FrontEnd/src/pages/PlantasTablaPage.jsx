@@ -316,12 +316,9 @@ export const PlantasTablaPage = () => {
 
         const lista = confNivelesPlantasCliente.filter(planta => planta.codigoCliente === parametrosSeleccionado.codigoCliente && planta.oferta === parametrosSeleccionado.oferta && planta.id_Elemento === parametrosSeleccionado.idElemento);
 
-        console.log(lista)
         lista.map(analisis => {
             opcionesFiltradasAnalisis.push(confAnalisisNivelesPlantasCliente.filter(anal => anal.id_NivelesPlanta === analisis.id && !anal.deleted));
         })
-
-        console.log(opcionesFiltradasAnalisis)
 
         opcionesFiltradasAnalisis.map(nomAnalisis => {
             nomAnalisis.map(anal => {
@@ -763,6 +760,7 @@ export const PlantasTablaPage = () => {
 
                                         <Grid item>
                                             <Button
+                                                disabled={parametrosSeleccionado.nombreAnalisis === ""}
                                                 color='success'
                                                 variant='contained'
                                                 startIcon={<NoteAddIcon />}
@@ -806,6 +804,21 @@ export const PlantasTablaPage = () => {
 
                                         <TableBody>
                                             {
+                                                parametrosFiltrados.length > 0 ?
+                                                    tipoParametros.map((parametro, index) => (
+                                                        <LineaParametro
+                                                            key={index}
+                                                            parametros={tipoParametros}
+                                                            indice={index}
+                                                            limInf={handleLimitInferior}
+                                                            limSup={handleLimitSuperior}
+                                                            unidades={handleUnidad}
+                                                            activar={handleActivo}
+                                                            verInsp={handleVerInspector}
+                                                            disabled={abroPlantilla}
+                                                        />
+                                                    ))
+                                                :
                                                 tipoParametros.map((parametro, index) => (
                                                     <LineaParametro
                                                         key={index}
@@ -816,7 +829,7 @@ export const PlantasTablaPage = () => {
                                                         unidades={handleUnidad}
                                                         activar={handleActivo}
                                                         verInsp={handleVerInspector}
-                                                        disabled={abroPlantilla}
+                                                        disabled={parametrosSeleccionado.nombreAnalisis === ""}
                                                     />
                                                 ))
                                             }

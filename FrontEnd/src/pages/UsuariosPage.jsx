@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
-import { deleteUsuarios, getClientes, getFicheros, getPerfiles, getUsuarios, postUsuarios, putUsuarios, subirFirma } from "../api";
+import { deleteUsuarios, getClientes, getFicheros, getPerfiles, getUsuarios, getUsuariosById, postUsuarios, putUsuarios, subirFirma } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -128,7 +128,9 @@ export const UsuariosPage = () => {
   const peticionGet = async () => {
 
     const resp = await getUsuarios();
-    setUsuarios(resp);
+    const usuariosFiltrados = resp.filter(usuario => !usuario.deleted);
+
+    setUsuarios(usuariosFiltrados);
 
   }
 
@@ -310,10 +312,15 @@ export const UsuariosPage = () => {
   // Borrar el usuario
   const peticionDelete = async () => {
 
+    console.log(UsuarioEliminar, "USUARIO ELIMINAR")
     var i = 0;
     while (i < UsuarioEliminar.length) {
 
-      const resp = await deleteUsuarios(UsuarioEliminar[i]);
+      const resp = await getUsuariosById(UsuarioEliminar[i]);
+
+      resp.deleted = true;
+
+      await putUsuarios(resp);
 
       peticionGet();
       abrirCerrarModalEliminar();

@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
 
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
 
@@ -20,7 +15,7 @@ import { ModalLayout } from "../ModalLayout";
 import { InsertarDetalleModal } from './InsertarDetalleModal';
 import { EditarDetalleModal } from './EditarDetalleModal';
 import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, getAnalisis, 
-    getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios 
+    getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios, getElementosPlanta 
 } from '../../api';
 import Swal from 'sweetalert2';
 
@@ -83,8 +78,6 @@ const tipos = [
     { id: 3, nombre: "Trimestral" },
     { id: 4, nombre: "Semestral" },
     { id: 5, nombre: "Anual" }
-    /*{ id: 6, nombre: "Semanal" },
-    { id: 7, nombre: "Bisemanal" }*/
 ]
 
 export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, errorFecha }) => {
@@ -148,7 +141,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
     const columns = [
-        //visibles
         { headerName: 'Periodo', field: 'periodo', width: 150 },
         { 
             headerName: 'Fecha', 
@@ -231,7 +223,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                 setOfertas(ofertas);
             })
 
-        getElementos()
+        getElementosPlanta()
             .then(elementos => {
                 setElementos(elementos);
             })
@@ -416,7 +408,10 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         analisisSeleccionado.pedido = tareaSeleccionada.pedido;
         analisisSeleccionado.elemento = tareaSeleccionada.elemento;
         analisisSeleccionado.operario = tareaSeleccionada.operario;
-
+        if(analisisSeleccionado.nombreElemento != null || analisisSeleccionado.nombreElemento != ""){
+            analisisSeleccionado.nombreElemento = elementoTareaEditar[0].descripcion != null ? elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].descripcion : elementoTareaEditar[0].nombre + " " + elementoTareaEditar[0].numero;
+        }
+        
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
         console.log(resp)
@@ -817,6 +812,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                         tareaSeleccionada={tareaSeleccionada}
                         handleChangeFecha={handleChangeDetFecha}
                         setAnalisisSeleccionado={setAnalisisSeleccionado}
+                        analisisSeleccionado={analisisSeleccionado}
                         analisis={analisis}
                         elementoTareaEditar={elementoTareaEditar}
                         analisisEditar={analisisEditar}

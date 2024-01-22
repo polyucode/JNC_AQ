@@ -116,8 +116,6 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     }
 
-    console.log(data)
-
     const peticionPostContacto = async () => {
 
         contactoSeleccionado.id = null;

@@ -72,7 +72,12 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
         setNombreAnalisis(analisi.nombre)
 
         const elemento = elementos.find((el) => el.id === tareaSeleccionada.elemento)
-        setNombreElemento(elemento.nombre + ' ' + elemento.numero)
+        if(elemento.descripcion != null){
+            setNombreElemento(elemento.nombre + ' ' + elemento.descripcion)
+        } else{
+            setNombreElemento(elemento.nombre + ' ' + elemento.numero)
+        }
+        
 
     }, [analisis, elementos])
 
