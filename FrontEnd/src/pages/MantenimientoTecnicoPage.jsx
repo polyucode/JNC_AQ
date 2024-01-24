@@ -159,19 +159,6 @@ export const MantenimientoTecnicoPage = () => {
 
     }, [parametrosFront])
 
-    // Obtenemos el nombre del cliente al cambiar su código
-    useEffect(() => {
-
-        const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
-        (nombre.length > 0) && setParametrosSeleccionado({
-            ...parametrosSeleccionado,
-            nombreCliente: nombre[0].razonSocial,
-            oferta: '',
-
-        })
-
-    }, [parametrosSeleccionado.codigoCliente])
-
     useEffect(() => {
 
         opcionesFiltradasAnalisis = [];

@@ -41,6 +41,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
         cargo: '',
         comentarios: '',
         idCliente: "",
+        correo: false,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -75,6 +76,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
         { field: 'email', headerName: 'Email', width: 200 },
         { field: 'cargo', headerName: 'Cargo', width: 200 },
         { field: 'comentarios', headerName: 'Comentarios', width: 350 },
+        { field: 'correo', headerName: 'Correo', type: 'boolean', width: 150 }
     ]
 
     // Obtener la lista de Comarcas
@@ -107,6 +109,14 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
 
+    }
+
+    const handleChangeCheckbox = e => {
+        const { name, value, checked } = e.target
+        setContactoSeleccionado(prevState => ({
+            ...prevState,
+            [name]: checked
+        }))
     }
 
     const peticionGet = async () => {
@@ -458,7 +468,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                         key={`contacto-añadir-${contactoSeleccionado.id}`}
                         titulo="Agregar nuevo contacto"
                         contenido={
-                            <InsertarContactoModal change={handleChangeContacto} cliente={clienteSeleccionado} />
+                            <InsertarContactoModal change={handleChangeContacto} handleChangeCheckbox={handleChangeCheckbox} cliente={clienteSeleccionado} />
                         }
                         botones={[
                             insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
@@ -476,6 +486,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                             <EditarContactoModal
                                 contactoSeleccionado={contactoSeleccionado}
                                 change={handleChangeContacto}
+                                handleChangeCheckbox={handleChangeCheckbox}
                             />}
                         botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                             peticionPutContacto()
@@ -519,7 +530,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    components={{ Toolbar: GridToolbar }}
+                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',

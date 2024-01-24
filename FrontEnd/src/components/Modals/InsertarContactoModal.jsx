@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Autocomplete } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { getComarcas, getPoblaciones, getProvincias } from '../../api';
 
-export const InsertarContactoModal = ({ change:handleChange, autocompleteChange, cliente }) =>{
+export const InsertarContactoModal = ({ change:handleChange, handleChangeCheckbox, autocompleteChange, cliente }) =>{
 
     // Declaramos variables necesarias
     const [comarcas, setComarcas] = useState([]);
@@ -63,6 +65,10 @@ export const InsertarContactoModal = ({ change:handleChange, autocompleteChange,
 
             <Grid item xs={ 12 } md={ 12 }>
                 <TextField sx={{ width: '100%' }} label="Comentarios" name="comentarios" onChange={ handleChange } />
+            </Grid>
+
+            <Grid item xs={ 12 } md={ 12 }>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} label="Envío automático de análisis" name="correo" onChange={handleChangeCheckbox} />
             </Grid>
 
         </>

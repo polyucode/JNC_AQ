@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete } from '@mui/material';
+import { Grid, Button, TextField, Autocomplete } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { getPerfiles } from '../../api';
 
-export const EditarContactoModal = ({ change:handleChangeContacto, contactoSeleccionado }) =>{
+export const EditarContactoModal = ({ change:handleChangeContacto, handleChangeCheckbox, contactoSeleccionado }) =>{
 
     const [perfiles, setPerfiles] = useState([]);
 
@@ -39,6 +41,10 @@ export const EditarContactoModal = ({ change:handleChangeContacto, contactoSelec
 
             <Grid item xs={ 6 } md={ 12 }>
                 <TextField sx={{ width: '100%' }} label="Comentarios" name="comentarios" onChange={ handleChangeContacto } value={contactoSeleccionado && contactoSeleccionado.comentarios} />
+            </Grid>
+
+            <Grid item xs={ 12 } md={ 12 }>
+                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={contactoSeleccionado.correo} label="Envío automático de análisis" name="correo" onChange={handleChangeCheckbox} />
             </Grid>
         </>
     )

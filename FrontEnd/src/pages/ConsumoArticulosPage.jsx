@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card, Typography, Button, TextField } from '@mui/material';
-import axios from "axios";
+import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
 
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio } from "../api";
+import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio, getClientes } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -53,6 +45,7 @@ export const ConsumoArticulosPage = () => {
     const [consumoSeleccionado, setConsumoSeleccionado] = useState({
         id: 0,
         oferta: 0,
+        nombreCliente: '',
         fecha: null,
         producto: 0,
         descripcionProducto: '',
@@ -90,12 +83,16 @@ export const ConsumoArticulosPage = () => {
     const [errorFecha, setErrorFecha] = useState(false);
     const [errorCantidad, setErrorCantidad] = useState(false);
 
+    const [filterText, setFilterText] = useState('');
+    const [filterOferta, setFilterOferta] = useState(0);
+
     const { usuarioActual } = useUsuarioActual();
 
     const columnas = [
 
         //Visibles
         { headerName: 'Oferta', field: 'oferta', width: 150 },
+        { headerName: 'Nombre Cliente', field: 'nombreCliente', width: 250 },
         {
             headerName: 'Fecha',
             field: 'fecha',
@@ -111,9 +108,9 @@ export const ConsumoArticulosPage = () => {
                 }
             }
         },
-        { 
-            field: 'producto', 
-            headerName: 'Producto', 
+        {
+            field: 'producto',
+            headerName: 'Producto',
             width: 200,
             valueFormatter: (params) => {
                 const prod = productos.find((producto) => producto.id === params.value);
@@ -122,14 +119,14 @@ export const ConsumoArticulosPage = () => {
         },
         { headerName: 'Cantidad', field: 'cantidad', width: 150 },
         { headerName: 'Numero Albaran', field: 'albaran', width: 150 },
-        { 
-            headerName: 'Metodo Entrega', 
-            field: 'modoEnvio', 
+        {
+            headerName: 'Metodo Entrega',
+            field: 'modoEnvio',
             width: 200,
             valueFormatter: (params) => {
                 const env = modoEnvio.find((envio) => envio.id === params.value);
                 return env ? env.nombre : '';
-            } 
+            }
         },
         { headerName: 'Observaciones', field: 'observaciones', width: 400 }
     ];
@@ -158,6 +155,11 @@ export const ConsumoArticulosPage = () => {
         getModoEnvio()
             .then(envio => {
                 setModoEnvio(envio);
+            })
+
+        getClientes()
+            .then(cliente => {
+                setClientes(cliente);
             })
 
     }, [])
@@ -456,6 +458,19 @@ export const ConsumoArticulosPage = () => {
 
     }
 
+    const handleFilterChange = (event) => {
+        setFilterText(event.target.value);
+    };
+
+    const handleFilterOferta = (event) => {
+        setFilterOferta(parseInt(event.target.innerText));
+    };
+
+    const filteredData = rows.filter(item =>
+        item.nombreCliente.toLowerCase().includes(filterText.toLowerCase()) &&
+        (filterOferta !== 0 ? item.oferta === filterOferta : true)
+    );
+
     const handleSnackClose = (event, reason) => {
 
         if (reason === 'clickaway') {
@@ -477,12 +492,41 @@ export const ConsumoArticulosPage = () => {
                     <Grid item xs={12}>
                         <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
                             <Typography variant='h6'>Listado de Consumos</Typography>
+                            <Grid item xs={4}>
+                                <TextField
+                                    label="Filtrar cliente"
+                                    variant="outlined"
+                                    value={filterText}
+                                    onChange={handleFilterChange}
+                                    sx={{ width: '50%' }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton>
+                                                    <SearchIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    sx={{ width: '50%' }}
+                                    id="Oferta"
+                                    options={ofertas}
+                                    getOptionLabel={option => option.numeroOferta.toString()}
+                                    renderInput={(params) => <TextField {...params} label="Filtrar por oferta" name="oferta" />}
+                                    onChange={handleFilterOferta}
+                                />
+                            </Grid>
                             {
                                 (rowsIds.length > 0) ?
                                     (
                                         <Grid item>
                                             <Button
-                                                sx={{ mr: 2 }}
+                                                sx={{ height: '40px' }}
                                                 color='error'
                                                 variant='contained'
                                                 startIcon={<DeleteIcon />}
@@ -496,6 +540,7 @@ export const ConsumoArticulosPage = () => {
                                         </Grid>
                                     ) : (
                                         <Button
+                                            sx={{ height: '40px' }}
                                             color='success'
                                             variant='contained'
                                             startIcon={<AddIcon />}
@@ -510,14 +555,13 @@ export const ConsumoArticulosPage = () => {
                     <Grid item xs={12}>
                         <Card>
                             <DataGrid
-                                //components={{ Toolbar: GridToolbar }}
                                 localeText={DATAGRID_LOCALE_TEXT}
                                 sx={{
                                     width: '100%',
                                     height: 1000,
                                     backgroundColor: '#FFFFFF'
                                 }}
-                                rows={rows}
+                                rows={filteredData}
                                 columns={columnas}
                                 checkboxSelection
                                 disableSelectionOnClick
@@ -526,6 +570,7 @@ export const ConsumoArticulosPage = () => {
                                     setConsumoSeleccionado(consumoSeleccionado.row)
                                     setProductoEditar(productos.filter(producto => producto.id === consumoSeleccionado.row.producto))
                                     setOfertaEditar(ofertas.filter(oferta => oferta.numeroOferta === consumoSeleccionado.row.oferta))
+                                    setClienteEditar(clientes.filter(cliente => cliente.razonSocial === consumoSeleccionado.row.nombreCliente))
                                     setModoEnvioEditar(modoEnvio.filter(envio => envio.id === consumoSeleccionado.row.modoEnvio))
                                     abrirCerrarModalEditar();
                                 }}
@@ -533,16 +578,15 @@ export const ConsumoArticulosPage = () => {
                         </Card>
                     </Grid>
 
-                    {/* LISTA DE MODALS */}
-
-                    {/* Agregar consumo */}
                     <ModalLayout
                         titulo="Agregar nuevo consumo"
                         contenido={
                             <InsertarConsumoModal
                                 change={handleChange}
                                 setConsumoSeleccionado={setConsumoSeleccionado}
+                                consumoSeleccionado={consumoSeleccionado}
                                 ofertas={ofertas}
+                                clientes={clientes}
                                 productos={productos}
                                 errorCantidad={errorCantidad}
                                 errorFecha={errorFecha}
@@ -575,8 +619,10 @@ export const ConsumoArticulosPage = () => {
                             modoEnvioEditar={modoEnvioEditar}
                             ofertas={ofertas}
                             productos={productos}
+                            clientes={clientes}
                             errorFecha={errorFecha}
                             errorCantidad={errorCantidad}
+                            clienteEditar={clienteEditar}
                         />}
                     botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                         peticionPut();

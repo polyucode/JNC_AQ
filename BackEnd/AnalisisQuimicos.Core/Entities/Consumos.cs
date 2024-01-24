@@ -6,6 +6,7 @@ namespace AnalisisQuimicos.Core.Entities
     public partial class Consumos : BaseEntity
     {
         public int? Oferta { get; set; }
+        public string NombreCliente { get; set; }
         public DateTime? Fecha { get; set; }
         public int? Producto { get; set; }
         public string DescripcionProducto { get; set; }

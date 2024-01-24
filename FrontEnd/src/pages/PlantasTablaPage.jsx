@@ -284,17 +284,6 @@ export const PlantasTablaPage = () => {
             .then(resp => setValoresParametros(resp));
     }, []);
 
-    // Efecto que selecciona el nombre del cliente cuando cambia el código
-    useEffect(() => {
-
-        const nombre = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente);
-        (nombre.length > 0) && setParametrosSeleccionado({
-            ...parametrosSeleccionado,
-            nombreCliente: nombre[0].razonSocial,
-        })
-
-    }, [parametrosSeleccionado.codigoCliente, clientes]);
-
     // Efecto para preparar el listado de elementos en el autocompletado
     useEffect(() => {
 
@@ -340,7 +329,7 @@ export const PlantasTablaPage = () => {
     }, [parametros]);
 
     useEffect(() => {
-        if(parametrosFiltrados.length > 0){
+        if (parametrosFiltrados.length > 0) {
             setAbroPlantilla(true)
         }
     }, [parametrosFiltrados])
@@ -634,6 +623,10 @@ export const PlantasTablaPage = () => {
         }));
     }
 
+    const clientesUnicos = clientes.filter((cliente, index, self) =>
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+    );
+
     return (
         <MainLayout title="Parametrización de planta">
 
@@ -644,12 +637,33 @@ export const PlantasTablaPage = () => {
                     <Card sx={{ p: 2, display: 'flex' }}>
                         <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    disableClearable={true}
+                                    id="codigoCliente"
+                                    options={clientesUnicos}
+                                    getOptionLabel={option => option.razonSocial}
+                                    renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
+                                    onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                        ...prevState,
+                                        nombreCliente: value.razonSocial,
+                                        codigoCliente: '',
+                                        oferta: '',
+                                        idElemento: 0,
+                                        nombreElemento: '',
+                                        idAnalisis: 0,
+                                        nombreAnalisis: ''
+                                    }))}
+                                />
+                            </Grid>
+
                             <Grid item xs={2}>
                                 <Autocomplete
                                     disableClearable={true}
                                     id="codigoCliente"
                                     inputValue={parametrosSeleccionado.codigoCliente.toString()}
                                     options={clientes}
+                                    filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)}
                                     getOptionLabel={option => option.codigo.toString()}
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
@@ -661,17 +675,6 @@ export const PlantasTablaPage = () => {
                                         idAnalisis: 0,
                                         nombreAnalisis: ''
                                     }))}
-                                />
-                            </Grid>
-
-                            <Grid item xs={3}>
-                                <TextField
-                                    id='nombreCliente'
-                                    label="Nombre Cliente"
-                                    sx={{ width: '100%' }}
-                                    value={parametrosSeleccionado && parametrosSeleccionado.nombreCliente}
-                                    name="nombreCliente"
-                                    onChange={handleChange}
                                 />
                             </Grid>
 
@@ -714,7 +717,7 @@ export const PlantasTablaPage = () => {
                                     id="analisis"
                                     inputValue={parametrosSeleccionado.nombreAnalisis}
                                     options={analisisAutocomplete}
-                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 7 || an.id === 8 )}
+                                    filterOptions={options => analisisAutocomplete.filter(an => an.id === 1 || an.id === 2 || an.id === 3 || an.id === 4 || an.id === 5 || an.id === 6 || an.id === 7 || an.id === 8)}
                                     getOptionLabel={option => option.nombre}
                                     renderInput={(params) => <TextField {...params} name="idAnalisis" label="Analisis FQ" />}
                                     onChange={(event, value) => onChangeAnalisis(event, value, "idAnalisis")}
@@ -818,20 +821,20 @@ export const PlantasTablaPage = () => {
                                                             disabled={abroPlantilla}
                                                         />
                                                     ))
-                                                :
-                                                tipoParametros.map((parametro, index) => (
-                                                    <LineaParametro
-                                                        key={index}
-                                                        parametros={tipoParametros}
-                                                        indice={index}
-                                                        limInf={handleLimitInferior}
-                                                        limSup={handleLimitSuperior}
-                                                        unidades={handleUnidad}
-                                                        activar={handleActivo}
-                                                        verInsp={handleVerInspector}
-                                                        disabled={parametrosSeleccionado.nombreAnalisis === ""}
-                                                    />
-                                                ))
+                                                    :
+                                                    tipoParametros.map((parametro, index) => (
+                                                        <LineaParametro
+                                                            key={index}
+                                                            parametros={tipoParametros}
+                                                            indice={index}
+                                                            limInf={handleLimitInferior}
+                                                            limSup={handleLimitSuperior}
+                                                            unidades={handleUnidad}
+                                                            activar={handleActivo}
+                                                            verInsp={handleVerInspector}
+                                                            disabled={parametrosSeleccionado.nombreAnalisis === ""}
+                                                        />
+                                                    ))
                                             }
                                         </TableBody>
 

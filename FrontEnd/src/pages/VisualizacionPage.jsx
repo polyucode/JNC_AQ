@@ -2288,6 +2288,19 @@ export const VisualizacionPage = () => {
     }
 
 
+    const onChangeNombreCliente = (e, value, name) => {
+
+        setAnalisisSeleccionado((prevState) => ({
+            ...prevState,
+            [name]: value.razonSocial,
+            codigoCliente: '',
+            oferta: '',
+            elemento: '',
+            nombreElemento: ''
+        }))
+
+    }
+
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
@@ -2834,15 +2847,9 @@ export const VisualizacionPage = () => {
         setRowsIds36(ids);
     }
 
-    const handleSnackClose = (event, reason) => {
-
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackData({ open: false, msg: '', severity: 'info' });
-
-    };
+    const clientesUnicos = clientes.filter((cliente, index, self) =>
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+    );
 
     return (
         <>
@@ -2854,25 +2861,24 @@ export const VisualizacionPage = () => {
                         <div className="datos">
                             <Autocomplete
                                 disableClearable={true}
+                                id="codigoCliente"
+                                sx={{ width: 250 }}
+                                options={clientesUnicos}
+                                getOptionLabel={option => option.razonSocial}
+                                renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
+                                onChange={(event, value) => onChangeNombreCliente(event, value, "nombreCliente")}
+                            />
+                            <Autocomplete
+                                disableClearable={true}
                                 id="Cliente"
                                 name="codigoCliente"
                                 options={clientes}
+                                inputValue={analisisSeleccionado.codigoCliente.toString()}
                                 getOptionLabel={option => option.codigo}
+                                filterOptions={options => clientes.filter(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente)}
                                 sx={{ width: 250 }}
                                 renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                                 onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
-                            />
-                            <TextField
-                                id='nombreCliente'
-                                label="Nombre Cliente"
-                                sx={{ width: 250 }}
-                                style={{ marginTop: '15px' }}
-                                value={analisisSeleccionado && analisisSeleccionado.nombreCliente}
-                                name="nombreCliente"
-                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
-                                    ...prevState,
-                                    nombreCliente: value.razonSocial
-                                }))}
                             />
                             <Autocomplete
                                 disableClearable={true}
