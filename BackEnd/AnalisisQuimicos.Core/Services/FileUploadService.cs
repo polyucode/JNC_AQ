@@ -83,6 +83,65 @@ namespace AnalisisQuimicos.Core.Services
             }
         }
 
+        public async Task<int> UploadTask(IFormFile file, string mode, int id)
+        {
+            string workingDirectory = Environment.CurrentDirectory;
+
+            string path = Path.Combine(workingDirectory, "Archivos");
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path = Path.Combine(path, file.FileName);
+
+            using (Stream fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+                fileStream.Close();
+            }
+
+            int indiceDelUltimoPunto = file.FileName.LastIndexOf('.');
+
+            string _nombre = file.FileName.Substring(0, indiceDelUltimoPunto);
+            string _extension = file.FileName.Substring(indiceDelUltimoPunto + 1, file.FileName.Length - indiceDelUltimoPunto - 1);
+
+            Files newFile = new Files()
+            {
+                Name = _nombre,
+                Format = _extension,
+                Path = path
+            };
+
+            try
+            {
+                await _unidadDeTrabajo.FilesRepository.UploadTask(newFile);
+
+                if(id != 0)
+                {
+                    switch (mode)
+                    {
+                        case "pdf":
+
+                            Tareas tareas = _unidadDeTrabajo.TareasRepository.GetById(id).Result;
+
+                            tareas.Pdf = newFile.Id;
+
+                            _unidadDeTrabajo.TareasRepository.Update(tareas);
+
+                            break;
+                    }
+                }
+
+                return newFile.Id;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public async Task<Files> Download(int id)
         {
             return await _unidadDeTrabajo.FilesRepository.Download(id);
