@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { getAnalisis, getClientes, getElementos, getOfertas, getUsuarios } from '../../api';
 
 const protocolos = [
@@ -55,7 +56,25 @@ const tipos = [
 
 
 
-export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, elementosAutocomplete, analisisAutocomplete, errorAnalisis, errorCodigo, errorElemento, errorFecha, errorOferta, errorOperario, errorPeriodo }) => {
+export const InsertarTareaModal = 
+({ 
+    change: handleChange, 
+    tareaSeleccionada, 
+    handleChangeFecha, 
+    setTareaSeleccionada, 
+    handleChangeAnalisis, 
+    elementosAutocomplete, 
+    analisisAutocomplete, 
+    errorAnalisis, 
+    errorCodigo,
+    errorElemento,
+    errorFecha, 
+    errorOferta, 
+    errorOperario, 
+    errorPeriodo,
+    handlePdf,
+    fileChange
+}) => {
 
     // Declaramos variables necesarias
     const [clientes, setClientes] = useState([]);
@@ -86,12 +105,12 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
             .then(analisis => {
                 setAnalisis(analisis)
             })
-        
+
         getUsuarios()
             .then(operarios => {
                 setOperarios(operarios)
             })
-        
+
     }, []);
 
     return (
@@ -226,6 +245,24 @@ export const InsertarTareaModal = ({ change: handleChange, autocompleteChange, t
                         tipo: value.id
                     }))}
                 />
+            </Grid>
+
+            <Grid item xs={6} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%', padding: '15px' }}
+                    name="observaciones"
+                    onChange={handleChange}
+                />
+            </Grid>
+
+            <Grid item xs={4} md={3}>
+                <div class="file-select" id="src-file3" >
+                    <input type="file" name="src-file3" label="PDF instrucciones" onChange={handlePdf} />
+                </div>
+                <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
             </Grid>
 
         </>

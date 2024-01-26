@@ -16,7 +16,7 @@ import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout } from "../components/ModalLayout";
-import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas, getParametrosAnalisisPlanta, getTareaById, deleteParametrosAnalisisPlanta } from "../api";
+import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas, getParametrosAnalisisPlanta, getTareaById, deleteParametrosAnalisisPlanta, subirPdf, getFicheros, subirPdfTareas } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -72,6 +72,8 @@ export const TareasPage = () => {
     nombreAnalisis: "",
     fecha: null,
     tipo: 0,
+    observaciones: '',
+    pdf: 0,
     addDate: null,
     addIdUser: null,
     modDate: null,
@@ -139,6 +141,7 @@ export const TareasPage = () => {
   const [analisis, setAnalisis] = useState([]);
   const [ofertas, setOfertas] = useState([]);
   const [operarios, setOperarios] = useState([]);
+  const [ficheros, setFicheros] = useState([]);
 
   const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
 
@@ -170,6 +173,8 @@ export const TareasPage = () => {
 
   const [filterText, setFilterText] = useState('');
   const [filterOferta, setFilterOferta] = useState(0);
+
+  const [fileChange, setFileChange] = useState(null);
 
   const { usuarioActual } = useUsuarioActual();
 
@@ -236,7 +241,17 @@ export const TareasPage = () => {
           return date;
         }
       }
-    }
+    },
+    { headerName: 'Observaciones', field: 'observaciones', width: 150 },
+    {
+      headerName: 'PDF',
+      field: 'pdf',
+      width: 700,
+      valueFormatter: (params) => {
+        const fich = ficheros.find((fichero) => fichero.id === params.value)
+        return fich ? fich.name : '';
+      }
+    },
 
   ];
 
@@ -319,6 +334,11 @@ export const TareasPage = () => {
     getElementosPlanta()
       .then(elementos => {
         setElementosPlanta(elementos);
+      })
+    
+    getFicheros()
+      .then(fichero => {
+        setFicheros(fichero);
       })
 
   }, [])
@@ -444,6 +464,14 @@ export const TareasPage = () => {
 
     if (tareaSeleccionada.tipo != 0 && tareaSeleccionada.fecha != null && tareaSeleccionada.operario != 0 && tareaSeleccionada.analisis != 0 && tareaSeleccionada.elemento != 0 && tareaSeleccionada.oferta != 0 && tareaSeleccionada.codigoCliente != 0) {
       tareaSeleccionada.id = 0;
+
+      if (fileChange != null) {
+        const resp = await subirPdfTareas(tareaSeleccionada.id, fileChange)
+        console.log(resp, "RESP")
+        if (resp) {
+          tareaSeleccionada.pdf = resp.data
+        }
+      }
 
       const response = await postTareas(tareaSeleccionada);
 
@@ -683,6 +711,14 @@ export const TareasPage = () => {
     }
 
     if (tareaSeleccionada.fecha != "") {
+
+      if (fileChange != null) {
+        const resp = await subirPdf(tareaSeleccionada.id, fileChange)
+        if (resp) {
+          tareaSeleccionada.pdf = resp.data
+        }
+      }
+
       const resp = await putTareas(tareaSeleccionada);
 
       var tareaModificada = data;
@@ -861,6 +897,10 @@ export const TareasPage = () => {
     setFilterOferta(parseInt(event.target.innerText));
   };
 
+  const handlePdf = e => {
+    setFileChange(e.target.files[0])
+  }
+
   const filteredData = rows.filter(item =>
     item.nombreCliente.toLowerCase().includes(filterText.toLowerCase()) &&
     (filterOferta !== 0 ? item.oferta === filterOferta : true)
@@ -885,18 +925,6 @@ export const TareasPage = () => {
       analisis: parseInt(value.id),
       nombreAnalisis: value.nombre
     }))
-
-    /*if (value.nombre === "Desinfecciones" || value.nombre === "Desinfeccion ACS" || value.nombre === "Mantenimiento Maq Frio" || value.nombre === "Mediciones" || value.nombre === "Control Fuga Gas" || value.nombre === "Agua Potable" || value.nombre === "Revision de Bandeja") {
-      setEstadoOperario(false)
-    } else {
-      setEstadoOperario(true)
-    }
-
-    if (value.nombre === "Desinfecciones") {
-      setEstadoProtocolo(false)
-    } else {
-      setEstadoProtocolo(true)
-    }*/
   }
 
   //modal insertar mantenimientocab
@@ -1133,7 +1161,6 @@ export const TareasPage = () => {
                     setTipoTareaEditar(tipos.filter(tipo => tipo.id === tareaSeleccionada.row.tipo));
                     setTecnicoTareaEditar(operarios.filter(operario => operario.id === tareaSeleccionada.row.operario));
                     setAnalisisEditar(analisis.filter(analisi => analisi.id === tareaSeleccionada.row.analisis));
-
                     abrirCerrarModalEditar();
                   }}
                 />
@@ -1154,8 +1181,6 @@ export const TareasPage = () => {
                 handleChangeFecha={handleChangeFecha}
                 setTareaSeleccionada={setTareaSeleccionada}
                 handleChangeAnalisis={handleChangeAnalisis}
-                //estadoProtocolo={estadoProtocolo}
-                //estadoOperario={estadoOperario}
                 elementosAutocomplete={elementosAutocomplete}
                 analisisAutocomplete={analisisAutocomplete}
                 errorAnalisis={errorAnalisis}
@@ -1165,6 +1190,8 @@ export const TareasPage = () => {
                 errorOferta={errorOferta}
                 errorOperario={errorOperario}
                 errorPeriodo={errorPeriodo}
+                handlePdf={handlePdf}
+                fileChange={fileChange}
               />
             }
             botones={[
@@ -1188,8 +1215,6 @@ export const TareasPage = () => {
                 handleChangeFecha={handleChangeFecha}
                 setTareaSeleccionada={setTareaSeleccionada}
                 handleChangeAnalisis={handleChangeAnalisis}
-                //estadoProtocolo={estadoProtocolo}
-                //estadoOperario={estadoOperario}
                 codigoClienteEditar={clienteTareaEditar}
                 tipoTareaEditar={tipoTareaEditar}
                 tecnicoTareaEditar={tecnicoTareaEditar}

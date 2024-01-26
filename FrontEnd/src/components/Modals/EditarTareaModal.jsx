@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
+import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 import MuiAlert from '@mui/material/Alert';
 
@@ -414,8 +415,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         
         const resp = await postParametrosAnalisisPlanta(analisisSeleccionado);
 
-        console.log(resp)
-
         abrirCerrarModalInsertar();
         peticionGet();
         setAnalisisSeleccionado({
@@ -738,6 +737,25 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                         tipo: value.id
                     }))}
                 />
+            </Grid>
+
+            <Grid item xs={6} md={6}>
+                <p> Observaciones </p>
+                <TextareaAutosize
+                    aria-label="empty textarea"
+                    minRows={8}
+                    style={{ width: '100%', padding: '15px' }}
+                    name="observaciones"
+                    onChange={handleChange}
+                    value={tareaSeleccionada && tareaSeleccionada.observaciones}
+                />
+            </Grid>
+
+            <Grid item xs={4} md={3}>
+                <div class="file-select" id="src-file3" >
+                    <input type="file" name="src-file3" label="PDF instrucciones" onChange={handlePdf} />
+                </div>
+                <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
             </Grid>
 
             <Grid container spacing={2}>

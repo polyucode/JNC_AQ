@@ -58,6 +58,17 @@ export const subirPdf = async ( id, archivo ) => {
     
 }
 
+export const subirPdfTareas = async ( id, archivo ) => {
+
+    const formData = new FormData();
+
+    formData.append('file', archivo);
+    
+    const resp = await instance.post(`/FileUpload/uploadTask/pdf/${id}`, formData);
+    return resp;
+    
+}
+
 export const getFicheros = async () => {
 
     const resp = await instance.get('/files');

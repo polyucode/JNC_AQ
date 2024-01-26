@@ -74,3 +74,7 @@ div.datos2 {
   #src-file2::before {
     content: 'Seleccionar Firma';
   }
+
+  #src-file3::before {
+    content: 'PDF instrucciones';
+  }
