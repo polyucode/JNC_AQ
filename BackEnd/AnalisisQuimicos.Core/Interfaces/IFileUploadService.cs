@@ -10,6 +10,7 @@ namespace AnalisisQuimicos.Core.Interfaces
     public interface IFileUploadService
     {
         Task<int> Upload(IFormFile file, string mode, int id);
+        Task<int> UploadTask(IFormFile file, string mode, int id);
         Task<Files> Download(int id);
     }
 }
