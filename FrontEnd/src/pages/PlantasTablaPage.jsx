@@ -7,7 +7,6 @@ import { useParserFront } from "../hooks/useParserFront";
 import { useParserBack } from "../hooks/useParserBack";
 import TaskIcon from '@mui/icons-material/Task';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-//import CreateIcon from '@mui/icons-material/Create';
 import { useLocation } from "react-router-dom";
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
@@ -396,15 +395,15 @@ export const PlantasTablaPage = () => {
         const { name, checked } = e.target;
 
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
-        setTipoParametros(prev => (prev.map(parametro => {
-
-            if (name === parametro.nombre) {
-                return { ...parametro, activo: checked };
-            } else {
-                return parametro;
-            }
-
-        })));
+        setTipoParametros(prev => (
+            prev.map(parametro => {
+                if (name === parametro.nombre) {
+                    return { ...parametro, activo: checked, verInspector: checked }; // Activa "Ver Inspector" al activar "Activo"
+                } else {
+                    return parametro;
+                }
+            })
+        ));
 
     }
 

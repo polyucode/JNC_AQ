@@ -315,6 +315,7 @@ export const TareasPage = () => {
     GetConfNivelPlantaCliente();
     GetAnalisisNivelesPlantasCliente();
     GetAnalisi();
+    GetFichero();
 
     getOfertas()
       .then(ofertas => {
@@ -334,11 +335,6 @@ export const TareasPage = () => {
     getElementosPlanta()
       .then(elementos => {
         setElementosPlanta(elementos);
-      })
-    
-    getFicheros()
-      .then(fichero => {
-        setFicheros(fichero);
       })
 
   }, [])
@@ -418,6 +414,14 @@ export const TareasPage = () => {
 
   }, [operarios, tipos])
 
+  const GetFichero = async () => {
+
+    const resp = await getFicheros();
+
+    const fichero = Object.entries(resp).map(([key, value]) => (key, value));
+    setFicheros(fichero);
+  }
+
   const peticionPost = async () => {
 
     if (tareaSeleccionada.codigoCliente != 0) {
@@ -467,7 +471,6 @@ export const TareasPage = () => {
 
       if (fileChange != null) {
         const resp = await subirPdfTareas(tareaSeleccionada.id, fileChange)
-        console.log(resp, "RESP")
         if (resp) {
           tareaSeleccionada.pdf = resp.data
         }
@@ -663,6 +666,7 @@ export const TareasPage = () => {
 
       abrirCerrarModalInsertar();
       peticionGet();
+      GetFichero();
       setTareaSeleccionada({
         id: 0,
         codigoCliente: 0,
@@ -713,7 +717,8 @@ export const TareasPage = () => {
     if (tareaSeleccionada.fecha != "") {
 
       if (fileChange != null) {
-        const resp = await subirPdf(tareaSeleccionada.id, fileChange)
+        const resp = await subirPdfTareas(tareaSeleccionada.id, fileChange)
+        console.log(resp)
         if (resp) {
           tareaSeleccionada.pdf = resp.data
         }
@@ -728,6 +733,7 @@ export const TareasPage = () => {
         }
       });
       peticionGet();
+      GetFichero();
       abrirCerrarModalEditar();
       setTareaSeleccionada({
         id: 0,
@@ -1140,7 +1146,6 @@ export const TareasPage = () => {
             <Grid item xs={12}>
               <Card>
                 <DataGrid
-                  //components={{ Toolbar: GridToolbar }}
                   localeText={DATAGRID_LOCALE_TEXT}
                   sx={{
                     width: '100%',
@@ -1223,6 +1228,8 @@ export const TareasPage = () => {
                 elementoTareaEditar={elementoTareaEditar}
                 analisisEditar={analisisEditar}
                 errorFecha={errorFecha}
+                handlePdf={handlePdf}
+                fileChange={fileChange}
               />}
             botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
               peticionPut();

@@ -1,4 +1,5 @@
 import { instance } from '.';
+import { getFileById } from './files';
 
 export const generarPdf = async ( valores ) => {
 
@@ -42,6 +43,25 @@ export const bajarPdfNoFQ = async ( id, codigo, elemento, analisis, fecha ) => {
     link.click();
 
     // clean up "a" element & remove ObjectURL
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+
+}
+
+export const bajarPdfInstrucciones = async ( id, codigo, elemento, analisis, fecha ) => {
+
+    const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
+
+    const resp2 = await getFileById(id)
+
+    const href = URL.createObjectURL(resp.data);
+
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', `${resp2.name}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+
     document.body.removeChild(link);
     URL.revokeObjectURL(href);
 

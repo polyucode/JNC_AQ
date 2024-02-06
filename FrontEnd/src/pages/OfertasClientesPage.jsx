@@ -14,9 +14,10 @@ import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos } from "../api";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente, getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente, postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
@@ -94,6 +95,12 @@ export const OfertasClientesPage = () => {
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [plantas, setPlantas] = useState([]);
+    const [parametrosAnalisis, setParametrosAnalisis] = useState([]);
+    const [elementosPlanta, setElementosPlanta] = useState([]);
+    const [tareas, setTareas] = useState([]);
+    const [nivelesPlanta, setNivelesPlanta] = useState([]);
+    const [analisisPlanta, setAnalisisPlanta] = useState([]);
     const [clientesTable, setClientesTable] = useState({});
 
     const [contacto1Editar, setContacto1Editar] = useState([]);
@@ -117,6 +124,10 @@ export const OfertasClientesPage = () => {
     const [errorPrecio, setErrorPrecio] = useState(false);
 
     const [filterText, setFilterText] = useState('');
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const [ofertaNueva, setOfertaNueva] = useState(0);
 
     const columns = [
 
@@ -172,6 +183,7 @@ export const OfertasClientesPage = () => {
             }
         }
     ];
+
     const getOferta = async () => {
 
         const resp = await getOfertas();
@@ -198,6 +210,37 @@ export const OfertasClientesPage = () => {
             .then(productos => {
                 setProductos(productos);
             })
+
+        getConfPlantaCliente()
+            .then(planta => {
+                setPlantas(planta);
+            })
+
+        getConfNivelesPlantasCliente()
+            .then(nivel => {
+                setNivelesPlanta(nivel);
+            })
+
+        getElementosPlanta()
+            .then(elemento => {
+                setElementosPlanta(elemento);
+            })
+
+        getAnalisisNivelesPlantasCliente()
+            .then(analisi => {
+                setAnalisisPlanta(analisi);
+            })
+
+        getTareas()
+            .then(tarea => {
+                setTareas(tarea);
+            })
+
+        getParametrosAnalisisPlanta()
+            .then(parametro => {
+                setParametrosAnalisis(parametro);
+            })
+
     }, [])
 
     useEffect(() => {
@@ -468,7 +511,7 @@ export const OfertasClientesPage = () => {
     }
 
     const normalizeDecimal = (value) => {
-        if(typeof value !== 'string') {
+        if (typeof value !== 'string') {
             value = String(value);
         }
 
@@ -587,6 +630,203 @@ export const OfertasClientesPage = () => {
         }
     }
 
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleClonOferta = () => {
+        setOpenModal(true);
+    };
+
+    const handleChangeOferta = (event) => {
+
+        setOfertaNueva(parseInt(event.target.value))
+    }
+
+    const clonarOferta = async (oferta) => {
+
+        const nivelesOferta = nivelesPlanta.filter(nivel => nivel.oferta === ofertaSeleccionada.numeroOferta)
+
+        const plantaOferta = plantas.filter(planta => planta.oferta === ofertaSeleccionada.numeroOferta)
+
+        const plantaClonada = { ...plantaOferta[0] };
+
+        plantaClonada.id = 0;
+        plantaClonada.oferta = oferta;
+
+        const respPlanta = await postConfPlantaCliente(plantaClonada);
+
+        nivelesOferta.map(async (nivel) => {
+
+            const elementosOferta = elementosPlanta.filter(elem => elem.id === nivel.id_Elemento)
+
+            const elementosClonados = { ...elementosOferta[0] };
+
+            elementosClonados.id = 0;
+            elementosClonados.oferta = oferta;
+
+            const resp = await postElementosPlanta(elementosClonados);
+
+            const nivelClonado = { ...nivel }
+
+            nivelClonado.id = 0;
+            nivelClonado.oferta = oferta;
+            nivelClonado.id_Elemento = resp.id;
+            nivelClonado.id_Planta = respPlanta.id
+
+            const respNiveles = await postConfNivelesPlantasCliente(nivelClonado)
+
+            const analisisOferta = analisisPlanta.filter(anal => anal.id_NivelesPlanta === nivel.id)
+
+            const analisisClonados = [...analisisOferta];
+
+            analisisClonados.map(async (anal) => {
+
+                anal.id = 0
+                anal.id_NivelesPlanta = respNiveles.id
+                await postAnalisisNivelesPlantasCliente(anal)
+
+            })
+
+            const tareasPorElemento = parametrosAnalisis.filter(parametro => parametro.elemento === nivel.id_Elemento);
+            const tareasPorElementoClonados = [...tareasPorElemento];
+
+            tareasPorElementoClonados.map(async (tarea) => {
+
+                tarea.id = 0;
+                tarea.oferta = oferta;
+
+                var fecha = new Date(tarea.fecha);
+                var year = fecha.getFullYear() + 1;
+                var month = fecha.getMonth() + 1;
+                var day = fecha.getDate();
+
+                var monthFormatted = month < 10 ? '0' + month : month;
+                var dayFormatted = day < 10 ? '0' + day : day;
+
+                var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
+
+                tarea.fecha = fechaFormateada;
+                fecha.setFullYear(fecha.getFullYear() + 1);
+                tarea.periodo = fecha.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+                tarea.elemento = resp.id;
+                tarea.cancelado = false;
+                tarea.facturado = false;
+                tarea.fechaPdf = null;
+                tarea.fechaRealizado = null;
+                tarea.fechaRecogido = null;
+                tarea.numeroFacturado = "";
+                tarea.observaciones = "";
+                tarea.operario = null;
+                tarea.pdf = 0;
+                tarea.realizado = false;
+                tarea.recibido = false;
+                tarea.recogido = false;
+                tarea.resultado = "";
+                await postParametrosAnalisisPlanta(tarea)
+            })
+
+            const tareasAnalisis = tareas.filter(tarea => tarea.elemento === nivel.id_Elemento);
+            const tareasAnalisisClonados = [...tareasAnalisis];
+
+            tareasAnalisisClonados.map(async (analisi) => {
+
+                analisi.id = 0;
+                analisi.oferta = oferta;
+
+                var fecha = new Date(analisi.fecha);
+                var year = fecha.getFullYear() + 1;
+                var month = fecha.getMonth() + 1;
+                var day = fecha.getDate();
+                var monthFormatted = month < 10 ? '0' + month : month;
+                var dayFormatted = day < 10 ? '0' + day : day;
+                var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
+                analisi.fecha = fechaFormateada;
+                analisi.elemento = resp.id;
+                analisi.operario = null;
+                analisi.observaciones = "";
+                analisi.pdf = null;
+
+                await postTareas(analisi)
+            })
+
+        })
+
+        const ofertaClonada = { ...ofertaSeleccionada };
+
+        // Sumar un año a la propiedad fechaInicio
+        ofertaClonada.fechaInicio = new Date(ofertaClonada.fechaInicio);
+        ofertaClonada.fechaFinalizacion = new Date(ofertaClonada.fechaFinalizacion);
+
+        var yearFI = ofertaClonada.fechaInicio.getFullYear() + 1;
+        var monthFI = ofertaClonada.fechaInicio.getMonth() + 1;
+        var dayFI = ofertaClonada.fechaInicio.getDate();
+
+        var yearFF = ofertaClonada.fechaFinalizacion.getFullYear() + 1;
+        var monthFF = ofertaClonada.fechaFinalizacion.getMonth() + 1;
+        var dayFF = ofertaClonada.fechaFinalizacion.getDate();
+
+        var monthFormatted = monthFI < 10 ? '0' + monthFI : monthFI;
+        var dayFormatted = dayFI < 10 ? '0' + dayFI : dayFI;
+
+        var monthFormattedFF = monthFF < 10 ? '0' + monthFF : monthFF;
+        var dayFormattedFF = dayFF < 10 ? '0' + dayFF : dayFF;
+
+        var fechaFormateada = yearFI + '-' + monthFormatted + '-' + dayFormatted;
+        var fechaFormateadaFF = yearFF + '-' + monthFormattedFF + '-' + dayFormattedFF;
+
+        ofertaClonada.fechaInicio = fechaFormateada;
+        ofertaClonada.fechaFinalizacion = fechaFormateadaFF;
+
+        // Establecer el id en 0
+        ofertaClonada.id = 0;
+        ofertaClonada.numeroOferta = oferta;
+        await postOfertas(ofertaClonada)
+
+        getOferta();
+        handleCloseModal()
+        abrirCerrarModalEditar();
+        setOfertaSeleccionada({
+            id: 0,
+            numeroOferta: 0,
+            pedido: 0,
+            referencia: '',
+            codigoCliente: 0,
+            nombreCliente: '',
+            descripcion: '',
+            fechaInicio: null,
+            fechaFinalizacion: null,
+            contacto1: '',
+            contacto2: '',
+            contacto3: '',
+            producto: 0,
+            unidades: 0,
+            precio: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null,
+        })
+
+        Swal.fire({
+            position: 'center',
+            icon: 'info',
+            title: 'Oferta Clonada',
+            text: `La oferta se ha clonado correctamente`,
+            showConfirmButton: false,
+            timer: 2000,
+            showClass: {
+                popup: 'animate__animated animate__bounceIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__bounceOut'
+            }
+        });
+
+    }
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -790,9 +1030,11 @@ export const OfertasClientesPage = () => {
                                     errorPedido={errorPedido}
                                     errorPrecio={errorPrecio}
                                 />}
-                            botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                                peticionPut();
-                            })
+                            botones={[
+                                insertarBotonesModal(<CancelIcon />, 'Clonar Oferta', () => handleClonOferta()),
+                                insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                                    peticionPut();
+                                })
                             ]}
                             open={modalEditar}
                             onClose={abrirCerrarModalEditar}
@@ -819,6 +1061,31 @@ export const OfertasClientesPage = () => {
                             ]}
                             open={modalEliminar}
                             onClose={abrirCerrarModalEliminar}
+                        />
+
+                        <ModalLayout2
+                            titulo="Nuevo numero de oferta"
+                            contenido={
+                                <Grid item xs={12}>
+                                    <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                sx={{ width: '100%' }}
+                                                type="number"
+                                                name="ofertaNueva"
+                                                onChange={handleChangeOferta}
+                                            />
+                                        </Grid>
+                                    </Grid>
+
+                                </Grid>
+                            }
+                            botones={[insertarBotonesModal(<AddIcon />, 'Clonar', async () => {
+                                clonarOferta(ofertaNueva);
+                            })
+                            ]}
+                            open={openModal}
+                            onClose={handleCloseModal}
                         />
                     </MainLayout>
                     :

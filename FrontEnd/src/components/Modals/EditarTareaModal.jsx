@@ -81,7 +81,7 @@ const tipos = [
     { id: 5, nombre: "Anual" }
 ]
 
-export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, errorFecha }) => {
+export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSeleccionada, handleChangeFecha, setTareaSeleccionada, handleChangeAnalisis, estadoProtocolo, estadoOperario, codigoClienteEditar, tecnicoTareaEditar, tipoTareaEditar, elementosAutocomplete, analisisAutocomplete, elementoTareaEditar, analisisEditar, errorFecha, handlePdf, fileChange }) => {
 
 
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -136,8 +136,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     const [elementos, setElementos] = useState([]);
     const [analisis, setAnalisis] = useState([]);
     const [operarios, setOperarios] = useState([]);
-
-    const [fileChange, setFileChange] = useState(null);
 
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
 
@@ -279,10 +277,6 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
             ...prevState,
             [name]: checked
         }))
-    }
-
-    const handlePdf = e => {
-        setFileChange(e.target.files[0])
     }
 
     //modal insertar detalle

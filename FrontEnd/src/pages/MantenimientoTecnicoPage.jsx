@@ -27,7 +27,7 @@ import { AuthContext } from "../context/AuthContext";
 import {
     getConfNivelesPlantasCliente, getParametrosElementoPlantaClienteConFiltros, getUsuarios, getClientes, getElementos, getOfertas,
     getParametros, getFilasParametros, putValorParametros, getAnalisis, getAnalisisNivelesPlantasCliente, getParametrosAnalisisPlanta, generarPdf,
-    getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta, postValorParametros, getElementosPlanta
+    getParametrosAnalisisFiltrados, putParametrosAnalisisPlanta, postValorParametros, getElementosPlanta, getAnalisisId, bajarPdf, getTareas, bajarPdfInstrucciones, getContactos
 } from "../api";
 
 const token = {
@@ -53,6 +53,9 @@ export const MantenimientoTecnicoPage = () => {
     const [analisis, setAnalisis] = useState([]);
     const [operarios, setOperarios] = useState([]);
     const [parametros, setParametros] = useState([]);
+    const [tareas, setTareas] = useState([]);
+    const [contactos, setContactos] = useState([]);
+    const [contactosCliente, setContactosCliente] = useState([]);
     const [parametrosElemento, setParametrosElemento] = useState([]);
     const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
     const [tareaAnalisisPlanta, setTareaAnalisisPlanta] = useState({});
@@ -82,6 +85,8 @@ export const MantenimientoTecnicoPage = () => {
         valor: '',
         metodo: '1. 18'
     })
+
+    const [parametrosFiltrados, setParametrosFiltrados] = useState([]);
 
     const [data, setData] = useState([]);
     const [dataParametros, setDataParametros] = useState([]);
@@ -125,6 +130,15 @@ export const MantenimientoTecnicoPage = () => {
         getAnalisis()
             .then(resp => setAnalisis(resp));
 
+        getTareas()
+            .then(tarea => {
+                setTareas(tarea)
+            })
+        
+        getContactos()
+            .then(contacto => {
+                setContactos(contacto)
+            })
 
         getUsuarios()
             .then(operarios => {
@@ -298,6 +312,10 @@ export const MantenimientoTecnicoPage = () => {
 
     const onChangeAnalisis = (e, value, name) => {
 
+        if (e.target.innerText !== "") {
+            setParametrosFiltrados(tareas.filter(tarea => tarea.codigoCliente === parametrosSeleccionado.codigoCliente && tarea.oferta === parametrosSeleccionado.oferta && tarea.elemento === parametrosSeleccionado.idElemento && tarea.analisis === value.id))
+        }
+
         setParametrosSeleccionado((prevState) => ({
             ...prevState,
             [name]: value.id,
@@ -337,6 +355,8 @@ export const MantenimientoTecnicoPage = () => {
     const guardarPDF = async () => {
 
         const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parametro.valor, metodo: parametrosSeleccionado.metodo }))
+
+        //setContactosCliente(contactos.filter(cont => cont.codigoCliente === parametrosSeleccionado.codigoCliente))
 
         const fechaActual = Date.now();
         const hoy = new Date(fechaActual);
@@ -450,8 +470,29 @@ export const MantenimientoTecnicoPage = () => {
                 return row;
             }
         })));
+    }
+
+    const descargarPdf = async () => {
+
+        const resp = await getAnalisisId(parametrosSeleccionado.idAnalisis)
+
+        const fecha = new Date(parametrosSeleccionado.fecha); // Convertir la cadena a un objeto de fecha
+
+        // Obtener año y mes de la fecha
+        const año = fecha.getFullYear();
+        const mes = fecha.getMonth() + 1; // Los meses van de 0 a 11, por lo que se suma 1
+
+        // Formatear el mes para asegurarse de que siempre tenga dos dígitos (por ejemplo, '08' en lugar de '8')
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+
+        // Crear la cadena de fecha en formato 'YYYY-MM'
+        const fechaFormateada = `${año}-${mesFormateado}`;
+
+        const response = await bajarPdfInstrucciones(parametrosFiltrados[0].pdf, parametrosFiltrados[0].codigoCliente, parametrosFiltrados[0].elemento , resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
 
     }
+
+    console.log(parametrosFiltrados)
 
     const guardarParametros = async () => {
 
@@ -749,7 +790,11 @@ export const MantenimientoTecnicoPage = () => {
                                         onChange={(event, value) => onChangeFecha(event, value, "fecha")}
                                     />
                                 </Grid>
-
+                                {parametrosFiltrados.length > 0 &&
+                                    <Grid item xs={2} md={2}>
+                                        <button style={{ display: 'inline-block', width: '200px', height: '40px', backgroundColor: '#545355', borderRadius: '6px', color: 'white', fontSize: '15px'}} onClick={descargarPdf}>PDF Instrucciones</button>
+                                    </Grid>
+                                }
                             </Grid>
                         </CardContent>
                     </Card>
