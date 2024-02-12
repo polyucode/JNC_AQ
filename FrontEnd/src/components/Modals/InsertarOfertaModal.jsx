@@ -50,6 +50,7 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                     disableClearable={true}
                     id="CodigoCliente"
                     options={clientes}
+                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                     getOptionLabel={option => option.codigo.toString()}
                     sx={{ width: '100%', marginTop: '25px' }}
                     renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}

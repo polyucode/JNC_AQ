@@ -312,7 +312,6 @@ export const UsuariosPage = () => {
   // Borrar el usuario
   const peticionDelete = async () => {
 
-    console.log(UsuarioEliminar, "USUARIO ELIMINAR")
     var i = 0;
     while (i < UsuarioEliminar.length) {
 

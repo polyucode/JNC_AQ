@@ -7,6 +7,12 @@ export const getParametrosAnalisisPlanta = async () => {
 
 }
 
+export const getParametrosAnalisisById = async ( id ) => {
+
+    const resp = await instance.get(`/parametrosanalisisplanta/${id}`);
+    return resp.data.data;
+}
+
 export const putParametrosAnalisisPlanta = async ( analisis ) => {
     
     const resp = await instance.put('/parametrosanalisisplanta', analisis);

@@ -854,7 +854,7 @@ export const PlantasPage = () => {
     }
 
     const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
     );
 
     return (
@@ -890,7 +890,7 @@ export const PlantasPage = () => {
                                             disableClearable={true}
                                             id="CodigoCliente"
                                             options={clientes}
-                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente)}
+                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente && !cliente.deleted)}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
                                             onChange={handleConfPlantaClienteChange}
@@ -904,7 +904,7 @@ export const PlantasPage = () => {
                                             disableClearable={true}
                                             id="Oferta"
                                             options={ofertas}
-                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
+                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente && !oferta.deleted)}
                                             getOptionLabel={option => option.numeroOferta.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Número de Oferta" name="Oferta" />}
                                             onChange={handleConfPlantaClienteChange}

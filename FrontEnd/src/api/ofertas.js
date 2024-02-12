@@ -7,6 +7,12 @@ export const getOfertas = async () => {
 
 }
 
+export const getOfertaById = async ( id ) => {
+
+    const resp = await instance.get(`/ofertasclientes/${id}`);
+    return resp.data.data;
+}
+
 export const putOfertas = async ( oferta ) => {
 
     const resp = await instance.put(`/ofertasclientes?id=${ oferta.id }`, oferta);

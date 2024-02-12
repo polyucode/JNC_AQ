@@ -492,8 +492,6 @@ export const MantenimientoTecnicoPage = () => {
 
     }
 
-    console.log(parametrosFiltrados)
-
     const guardarParametros = async () => {
 
         // Recorremos parametro por parametro para hacer una petición POST
@@ -661,7 +659,7 @@ export const MantenimientoTecnicoPage = () => {
     }
 
     const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
     );
 
     return (
@@ -691,7 +689,7 @@ export const MantenimientoTecnicoPage = () => {
                                         id="codigoCliente"
                                         options={clientes}
                                         inputValue={parametrosSeleccionado.codigoCliente.toString()}
-                                        filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)}
+                                        filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente && !cliente.deleted)}
                                         getOptionLabel={option => option.codigo.toString()}
                                         renderInput={params => <TextField {...params} label="Código de cliente" name="codigoCliente" />}
                                         onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
@@ -704,7 +702,7 @@ export const MantenimientoTecnicoPage = () => {
                                         id="codigoOferta"
                                         options={ofertas.sort((a, b) => b.numeroOferta - a.numeroOferta)}
                                         inputValue={parametrosSeleccionado.oferta.toString()}
-                                        filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
+                                        filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente && !oferta.deleted)}
                                         getOptionLabel={option => option.numeroOferta.toString()}
                                         renderInput={params => <TextField {...params} label="Código de oferta" name="oferta" />}
                                         onChange={(event, value) => onChangeOferta(event, value, "oferta")}
@@ -784,7 +782,7 @@ export const MantenimientoTecnicoPage = () => {
                                         id="fecha"
                                         inputValue={parametrosSeleccionado.fechaIso}
                                         options={parametrosAnalisisPlanta.sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
-                                        filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado).sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
+                                        filterOptions={options => parametrosAnalisisPlanta.filter(cliente => cliente.codigoCliente === parametrosSeleccionado.codigoCliente && cliente.oferta === parametrosSeleccionado.oferta && cliente.elemento === parametrosSeleccionado.idElemento && cliente.analisis === parametrosSeleccionado.idAnalisis && cliente.realizado === parametrosSeleccionado.realizado && !cliente.deleted).sort((a, b) => new Date(a.fechas).getTime() > new Date(b.fechas).getTime())}
                                         getOptionLabel={option => new Date(option.fecha).toLocaleDateString()}
                                         renderInput={(params) => <TextField {...params} name="fecha" />}
                                         onChange={(event, value) => onChangeFecha(event, value, "fecha")}

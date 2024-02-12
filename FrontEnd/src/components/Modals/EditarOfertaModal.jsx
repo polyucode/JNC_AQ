@@ -478,6 +478,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
+                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                     getOptionLabel={option => option.codigo.toString()}
                     defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%', marginTop: '25px' }}

@@ -8,6 +8,13 @@ export const getClientes = async () => {
 
 }
 
+export const getClienteById = async ( id ) => {
+
+    const resp = await instance.get(`/cliente/${id}`);
+    return resp.data.data;
+    
+}
+
 export const putCliente = async ( cliente ) => {
 
     const resp = await instance.put(`/cliente?id=${ cliente.id }`, cliente);

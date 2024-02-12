@@ -17,7 +17,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
+import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas, getClienteById } from '../api';
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
 
 import Swal from 'sweetalert2';
@@ -164,7 +164,8 @@ export const ClientesPage = () => {
   const peticionGet = async () => {
 
     const resp = await getClientes();
-    setData(resp)
+    const clientesFiltrados = resp.filter(cliente => !cliente.deleted);
+    setData(clientesFiltrados)
 
   }
 
@@ -348,7 +349,10 @@ export const ClientesPage = () => {
     var i = 0;
     while (i < ClienteEliminar.length) {
 
-      const resp = await deleteCliente(ClienteEliminar[i]);
+      const resp = await getClienteById(ClienteEliminar[i]);
+      resp.deleted = true;
+
+      await putCliente(resp);
 
       peticionGet();
       abrirCerrarModalEliminar();

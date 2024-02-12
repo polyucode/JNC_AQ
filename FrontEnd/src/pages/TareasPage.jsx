@@ -16,7 +16,7 @@ import { InsertarTareaModal } from '../components/Modals/InsertarTareaModal';
 import { EditarTareaModal } from '../components/Modals/EditarTareaModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import { ModalLayout } from "../components/ModalLayout";
-import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas, getParametrosAnalisisPlanta, getTareaById, deleteParametrosAnalisisPlanta, subirPdf, getFicheros, subirPdfTareas } from "../api";
+import { getOfertas, deleteTareas, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getTareas, getUsuarios, postParametrosAnalisisPlanta, postTareas, putTareas, getParametrosAnalisisPlanta, getTareaById, deleteParametrosAnalisisPlanta, subirPdf, getFicheros, subirPdfTareas, putParametrosAnalisisPlanta } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -277,7 +277,8 @@ export const TareasPage = () => {
   const peticionGet = async () => {
 
     const resp = await getTareas();
-    setData(resp);
+    const tareasFiltradas = resp.filter(tarea => !tarea.deleted);
+    setData(tareasFiltradas);
 
   }
 
@@ -781,14 +782,16 @@ export const TareasPage = () => {
     while (i < TareaEliminar.length) {
 
       const tarea = await getTareaById(TareaEliminar[i])
+      tarea.deleted = true;
 
       const tareaAnalisis = parametrosAnalisisPlanta.filter(param => param.codigoCliente === tarea.codigoCliente && param.oferta === tarea.oferta && param.elemento === tarea.elemento && param.analisis === tarea.analisis)
 
       tareaAnalisis.map(async (an) => {
-        await deleteParametrosAnalisisPlanta(an.id)
+        an.deleted = true;
+        await putParametrosAnalisisPlanta(an)
       })
 
-      const resp = await deleteTareas(TareaEliminar[i]);
+      const resp = await putTareas(tarea)
 
       peticionGet();
       abrirCerrarModalEliminar();
@@ -1107,6 +1110,7 @@ export const TareasPage = () => {
                     sx={{ width: '50%' }}
                     id="Oferta"
                     options={ofertas}
+                    filterOptions={options => ofertas.filter(oferta => !oferta.deleted)}
                     getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Filtrar por oferta" name="oferta" />}
                     onChange={handleFilterOferta}

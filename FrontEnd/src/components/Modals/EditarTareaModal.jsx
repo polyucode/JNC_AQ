@@ -16,7 +16,7 @@ import { ModalLayout } from "../ModalLayout";
 import { InsertarDetalleModal } from './InsertarDetalleModal';
 import { EditarDetalleModal } from './EditarDetalleModal';
 import { deleteParametrosAnalisisPlanta, postParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, getAnalisis, 
-    getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios, getElementosPlanta 
+    getClientes, getElementos, getOfertas, getParametrosAnalisisPlanta, getUsuarios, getElementosPlanta, getParametrosAnalisisById, putParametrosAnalisisPlanta 
 } from '../../api';
 import Swal from 'sweetalert2';
 
@@ -206,7 +206,8 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
     const peticionGet = async () => {
 
         const resp = await getParametrosAnalisisPlanta();
-        setData(resp.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis));
+        const tareasFiltradas = resp.filter(tarea => !tarea.deleted);
+        setData(tareasFiltradas.filter(analisi => analisi.codigoCliente === tareaSeleccionada.codigoCliente && analisi.oferta === tareaSeleccionada.oferta && analisi.elemento === tareaSeleccionada.elemento && analisi.analisis === tareaSeleccionada.analisis));
 
     }
 
@@ -523,7 +524,10 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
         var i = 0;
         while (i < AnalisisEliminar.length) {
 
-            const resp = await deleteParametrosAnalisisPlanta(AnalisisEliminar[i]);
+            const resp = await getParametrosAnalisisById(AnalisisEliminar[i]);
+            resp.deleted = true;
+
+            await putParametrosAnalisisPlanta(resp)
 
             peticionGet();
             abrirCerrarModalEliminar();
@@ -594,6 +598,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
+                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                     getOptionLabel={option => option.codigo.toString()}
                     defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%' }}
@@ -629,7 +634,7 @@ export const EditarTareaModal = ({ handleChange, autocompleteChange, tareaSelecc
                     id="Oferta"
                     inputValue={tareaSeleccionada.oferta.toString()}
                     options={ofertas}
-                    filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente)}
+                    filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === tareaSeleccionada.codigoCliente && !oferta.deleted)}
                     getOptionLabel={option => option.numeroOferta.toString()}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({

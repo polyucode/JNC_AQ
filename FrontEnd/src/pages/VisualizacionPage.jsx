@@ -38,7 +38,7 @@ import { EditarVisModal1 } from "../components/Modals/EditarVisModal1";
 import { EditarVisModalAerobio } from "../components/Modals/EditarVisModalAerobio";
 import { EditarVisModalLegionela } from "../components/Modals/EditarVisModalLegionela";
 import { EditarVisModalOperario } from "../components/Modals/EditarVisModalOperario";
-import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros, getAnalisisId } from "../api";
+import { deleteParametrosAnalisisPlanta, getAnalisis, getAnalisisNivelesPlantasCliente, getClientes, getConfNivelesPlantasCliente, getElementosPlanta, getEntregas, getOfertas, getParametrosAnalisisPlanta, getUsuarios, postParametrosAnalisisPlanta, putParametrosAnalisisPlanta, putParametrosAnalisisPlantaPorId, bajarPdf, bajarPdfNoFQ, subirPdf, getFicheros, getAnalisisId, getParametrosAnalisisById } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -1169,7 +1169,8 @@ export const VisualizacionPage = () => {
     const GetParametrosAnalisisPlanta = async () => {
 
         const resp = await getParametrosAnalisisPlanta();
-        setData(resp);
+        const parametrosFiltrados = resp.filter(analisi => !analisi.deleted)
+        setData(parametrosFiltrados);
 
     }
 
@@ -1199,221 +1200,183 @@ export const VisualizacionPage = () => {
     }
 
     const FisicoQuimicoTorre = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData1(resp.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData1(resp.filter(analisis => analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoAlimentacion = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData2(resp.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData2(resp.filter(analisis => analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoCondensados = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData3(resp.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData3(resp.filter(analisis => analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoOsmosis = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData4(resp.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData4(resp.filter(analisis => analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoRechazo = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData5(resp.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData5(resp.filter(analisis => analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoProduccion = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData6(resp.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData6(resp.filter(analisis => analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoCaldera = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData7(resp.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData7(resp.filter(analisis => analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const FisicoQuimicoDescalcificador = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData8(resp.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData8(resp.filter(analisis => analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const AerobiosTorre = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData9(resp.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData9(resp.filter(analisis => analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const AerobiosACH = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData10(resp.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData10(resp.filter(analisis => analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const AguasResiduales = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData11(resp.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData11(resp.filter(analisis => analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const Desinfeccion = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData12(resp.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData12(resp.filter(analisis => analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const DesinfeccionACH = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData13(resp.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData13(resp.filter(analisis => analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const DesinfeccionCI = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData14(resp.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData14(resp.filter(analisis => analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const Mediciones = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData15(resp.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData15(resp.filter(analisis => analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const AguaPotable = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData16(resp.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData16(resp.filter(analisis => analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LegionelaTorre = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData17(resp.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData17(resp.filter(analisis => analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LegionelaACH = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData18(resp.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData18(resp.filter(analisis => analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LegionelaCI = async () => {
-
         const resp = await getParametrosAnalisisPlanta();
-        setData19(resp.filter(analisis => analisis.analisis === 19 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-
+        setData19(resp.filter(analisis => analisis.analisis === 19 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LegionelaDeposito = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData20(resp.filter(analisis => analisis.analisis === 20 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData20(resp.filter(analisis => analisis.analisis === 20 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const MantenimientoMaqFrio = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData21(resp.filter(analisis => analisis.analisis === 21 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData21(resp.filter(analisis => analisis.analisis === 21 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const ControlFugas = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData22(resp.filter(analisis => analisis.analisis === 22 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData22(resp.filter(analisis => analisis.analisis === 22 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LimpiezaBandejas = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData23(resp.filter(analisis => analisis.analisis === 23 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData23(resp.filter(analisis => analisis.analisis === 23 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LimpiezaRelleno = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData24(resp.filter(analisis => analisis.analisis === 24 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData24(resp.filter(analisis => analisis.analisis === 24 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LimpiezaSeparador = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData25(resp.filter(analisis => analisis.analisis === 25 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData25(resp.filter(analisis => analisis.analisis === 25 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LimpiezaVentana = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData26(resp.filter(analisis => analisis.analisis === 26 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData26(resp.filter(analisis => analisis.analisis === 26 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionOsmosis = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData27(resp.filter(analisis => analisis.analisis === 27 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData27(resp.filter(analisis => analisis.analisis === 27 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionDescalcificador = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData28(resp.filter(analisis => analisis.analisis === 28 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData28(resp.filter(analisis => analisis.analisis === 28 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionFiltros = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData29(resp.filter(analisis => analisis.analisis === 29 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData29(resp.filter(analisis => analisis.analisis === 29 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionClorador = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData30(resp.filter(analisis => analisis.analisis === 30 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData30(resp.filter(analisis => analisis.analisis === 30 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionBomba = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData31(resp.filter(analisis => analisis.analisis === 31 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData31(resp.filter(analisis => analisis.analisis === 31 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionTelecontrol = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData32(resp.filter(analisis => analisis.analisis === 32 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData32(resp.filter(analisis => analisis.analisis === 32 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const RevisionFluorescencia = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData33(resp.filter(analisis => analisis.analisis === 33 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData33(resp.filter(analisis => analisis.analisis === 33 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const HierroMultiple = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData34(resp.filter(analisis => analisis.analisis === 34 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData34(resp.filter(analisis => analisis.analisis === 34 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const AerobiosMultiple = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData35(resp.filter(analisis => analisis.analisis === 35 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData35(resp.filter(analisis => analisis.analisis === 35 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const LegionelaMultiple = async () => {
         const resp = await getParametrosAnalisisPlanta();
-        setData36(resp.filter(analisis => analisis.analisis === 36 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+        setData36(resp.filter(analisis => analisis.analisis === 36 && analisis.oferta === analisisSeleccionado.oferta && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
     }
 
     const descargarPdf = async () => {
@@ -1433,9 +1396,9 @@ export const VisualizacionPage = () => {
         const fechaFormateada = `${año}-${mesFormateado}`;
 
         if (elementoTareaEditar[0].descripcion !== null) {
-            const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].descripcion), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
+            await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].descripcion), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
         } else {
-            const response = await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
+            await bajarPdf(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
         }
 
     }
@@ -1457,51 +1420,51 @@ export const VisualizacionPage = () => {
         const fechaFormateada = `${año}-${mesFormateado}`;
 
         if (elementoTareaEditar[0].descripcion !== null) {
-            const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].descripcion), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
+            await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].descripcion), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
         } else {
-            const response = await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
+            await bajarPdfNoFQ(analisisSeleccionado.pdf, analisisSeleccionado.codigoCliente, (elementoTareaEditar[0].nombre + '' + elementoTareaEditar[0].numero), resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
         }
 
 
     }
 
     function FiltrarData() {
-        setData1(data.filter(analisis => analisis.analisis === 1))
-        setData2(data.filter(analisis => analisis.analisis === 2))
-        setData3(data.filter(analisis => analisis.analisis === 3))
-        setData4(data.filter(analisis => analisis.analisis === 4))
-        setData5(data.filter(analisis => analisis.analisis === 5))
-        setData6(data.filter(analisis => analisis.analisis === 6))
-        setData7(data.filter(analisis => analisis.analisis === 7))
-        setData8(data.filter(analisis => analisis.analisis === 8))
-        setData9(data.filter(analisis => analisis.analisis === 9))
-        setData10(data.filter(analisis => analisis.analisis === 10))
-        setData11(data.filter(analisis => analisis.analisis === 11))
-        setData12(data.filter(analisis => analisis.analisis === 12))
-        setData13(data.filter(analisis => analisis.analisis === 13))
-        setData14(data.filter(analisis => analisis.analisis === 14))
-        setData15(data.filter(analisis => analisis.analisis === 15))
-        setData16(data.filter(analisis => analisis.analisis === 16))
-        setData17(data.filter(analisis => analisis.analisis === 17))
-        setData18(data.filter(analisis => analisis.analisis === 18))
-        setData19(data.filter(analisis => analisis.analisis === 19))
-        setData20(data.filter(analisis => analisis.analisis === 20))
-        setData21(data.filter(analisis => analisis.analisis === 21))
-        setData22(data.filter(analisis => analisis.analisis === 22))
-        setData23(data.filter(analisis => analisis.analisis === 23))
-        setData24(data.filter(analisis => analisis.analisis === 24))
-        setData25(data.filter(analisis => analisis.analisis === 25))
-        setData26(data.filter(analisis => analisis.analisis === 26))
-        setData27(data.filter(analisis => analisis.analisis === 27))
-        setData28(data.filter(analisis => analisis.analisis === 28))
-        setData29(data.filter(analisis => analisis.analisis === 29))
-        setData30(data.filter(analisis => analisis.analisis === 30))
-        setData31(data.filter(analisis => analisis.analisis === 31))
-        setData32(data.filter(analisis => analisis.analisis === 32))
-        setData33(data.filter(analisis => analisis.analisis === 33))
-        setData34(data.filter(analisis => analisis.analisis === 34))
-        setData35(data.filter(analisis => analisis.analisis === 35))
-        setData36(data.filter(analisis => analisis.analisis === 36))
+        setData1(data.filter(analisis => analisis.analisis === 1 && !analisis.deleted))
+        setData2(data.filter(analisis => analisis.analisis === 2 && !analisis.deleted))
+        setData3(data.filter(analisis => analisis.analisis === 3 && !analisis.deleted))
+        setData4(data.filter(analisis => analisis.analisis === 4 && !analisis.deleted))
+        setData5(data.filter(analisis => analisis.analisis === 5 && !analisis.deleted))
+        setData6(data.filter(analisis => analisis.analisis === 6 && !analisis.deleted))
+        setData7(data.filter(analisis => analisis.analisis === 7 && !analisis.deleted))
+        setData8(data.filter(analisis => analisis.analisis === 8 && !analisis.deleted))
+        setData9(data.filter(analisis => analisis.analisis === 9 && !analisis.deleted))
+        setData10(data.filter(analisis => analisis.analisis === 10 && !analisis.deleted))
+        setData11(data.filter(analisis => analisis.analisis === 11 && !analisis.deleted))
+        setData12(data.filter(analisis => analisis.analisis === 12 && !analisis.deleted))
+        setData13(data.filter(analisis => analisis.analisis === 13 && !analisis.deleted))
+        setData14(data.filter(analisis => analisis.analisis === 14 && !analisis.deleted))
+        setData15(data.filter(analisis => analisis.analisis === 15 && !analisis.deleted))
+        setData16(data.filter(analisis => analisis.analisis === 16 && !analisis.deleted))
+        setData17(data.filter(analisis => analisis.analisis === 17 && !analisis.deleted))
+        setData18(data.filter(analisis => analisis.analisis === 18 && !analisis.deleted))
+        setData19(data.filter(analisis => analisis.analisis === 19 && !analisis.deleted))
+        setData20(data.filter(analisis => analisis.analisis === 20 && !analisis.deleted))
+        setData21(data.filter(analisis => analisis.analisis === 21 && !analisis.deleted))
+        setData22(data.filter(analisis => analisis.analisis === 22 && !analisis.deleted))
+        setData23(data.filter(analisis => analisis.analisis === 23 && !analisis.deleted))
+        setData24(data.filter(analisis => analisis.analisis === 24 && !analisis.deleted))
+        setData25(data.filter(analisis => analisis.analisis === 25 && !analisis.deleted))
+        setData26(data.filter(analisis => analisis.analisis === 26 && !analisis.deleted))
+        setData27(data.filter(analisis => analisis.analisis === 27 && !analisis.deleted))
+        setData28(data.filter(analisis => analisis.analisis === 28 && !analisis.deleted))
+        setData29(data.filter(analisis => analisis.analisis === 29 && !analisis.deleted))
+        setData30(data.filter(analisis => analisis.analisis === 30 && !analisis.deleted))
+        setData31(data.filter(analisis => analisis.analisis === 31 && !analisis.deleted))
+        setData32(data.filter(analisis => analisis.analisis === 32 && !analisis.deleted))
+        setData33(data.filter(analisis => analisis.analisis === 33 && !analisis.deleted))
+        setData34(data.filter(analisis => analisis.analisis === 34 && !analisis.deleted))
+        setData35(data.filter(analisis => analisis.analisis === 35 && !analisis.deleted))
+        setData36(data.filter(analisis => analisis.analisis === 36 && !analisis.deleted))
     }
 
     useEffect(() => {
@@ -1962,6 +1925,7 @@ export const VisualizacionPage = () => {
                     analisi = analisisSeleccionado
                 }
             });
+            GetParametrosAnalisisPlanta();
             FisicoQuimicoTorre();
             FisicoQuimicoAlimentacion();
             FisicoQuimicoCondensados();
@@ -1970,7 +1934,6 @@ export const VisualizacionPage = () => {
             FisicoQuimicoProduccion();
             FisicoQuimicoCaldera();
             FisicoQuimicoDescalcificador();
-            GetParametrosAnalisisPlanta();
             abrirCerrarModalEditar1();
             setAnalisisSeleccionado({
                 id: 0,
@@ -2195,8 +2158,12 @@ export const VisualizacionPage = () => {
 
         while (i < analisisEliminar.length) {
 
-            const resp = await deleteParametrosAnalisisPlanta(analisisEliminar[i]);
+            const resp = await getParametrosAnalisisById(analisisEliminar[i]);
+            resp.deleted = true;
 
+            await putParametrosAnalisisPlanta(resp)
+
+            GetParametrosAnalisisPlanta();
             FisicoQuimicoTorre();
             FisicoQuimicoAlimentacion();
             FisicoQuimicoCondensados();
@@ -2233,7 +2200,6 @@ export const VisualizacionPage = () => {
             HierroMultiple();
             AerobiosMultiple();
             LegionelaMultiple();
-            GetParametrosAnalisisPlanta();
             abrirCerrarModalEliminar();
             setAnalisisSeleccionado({
                 id: 0,
@@ -2304,42 +2270,42 @@ export const VisualizacionPage = () => {
     const onChangeCliente = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData13(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData14(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData15(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData16(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData17(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData18(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData19(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 19 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData20(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 20 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData21(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 21 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData22(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 22 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData23(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 23 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData24(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 24 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData25(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 25 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData26(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 26 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData27(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 27 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData28(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 28 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData29(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 29 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData30(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 30 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData31(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 31 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData32(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 32 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData33(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 33 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData34(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData35(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
-            setData36(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData2(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData3(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData4(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData5(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData6(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData7(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData8(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData9(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData10(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData11(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData12(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData13(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData14(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData15(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData16(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData17(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData18(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData19(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 19 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData20(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 20 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData21(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 21 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData22(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 22 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData23(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 23 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData24(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 24 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData25(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 25 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData26(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 26 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData27(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 27 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData28(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 28 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData29(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 29 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData30(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 30 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData31(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 31 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData32(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 32 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData33(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 33 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData34(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData35(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData36(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
 
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.codigoCliente === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.oferta === analisisSeleccionado.oferta && analisis.elemento === analisisSeleccionado.elemento))
@@ -2357,42 +2323,42 @@ export const VisualizacionPage = () => {
     const onChangeOferta = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData13(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData14(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData15(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData16(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData17(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData18(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData19(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 19 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData20(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 20 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData21(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 21 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData22(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 22 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData23(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 23 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData24(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 24 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData25(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 25 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData26(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 26 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData27(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 27 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData28(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 28 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData29(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 29 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData30(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 30 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData31(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 31 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData32(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 32 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData33(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 33 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData34(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData35(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
-            setData36(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
+            setData1(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData2(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData3(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData4(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData5(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData6(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData7(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData8(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData9(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData10(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData11(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData12(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData13(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData14(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData15(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData16(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData17(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData18(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData19(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 19 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData20(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 20 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData21(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 21 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData22(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 22 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData23(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 23 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData24(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 24 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData25(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 25 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData26(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 26 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData27(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 27 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData28(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 28 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData29(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 29 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData30(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 30 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData31(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 31 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData32(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 32 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData33(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 33 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData34(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData35(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
+            setData36(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento && !analisis.deleted))
 
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.oferta === parseInt(e.target.textContent) && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.elemento === analisisSeleccionado.elemento))
@@ -2409,42 +2375,42 @@ export const VisualizacionPage = () => {
     const onChangeElemento = (e, value, name) => {
 
         if (e.target.textContent !== "") {
-            setData1(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData2(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData3(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData4(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData5(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData6(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData7(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData8(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData9(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData10(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData11(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData12(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData13(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData14(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData15(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData16(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData17(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData18(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData19(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 19 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData20(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 20 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData21(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 21 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData22(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 22 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData23(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 23 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData24(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 24 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData25(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 25 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData26(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 26 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData27(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 27 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData28(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 28 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData29(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 29 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData30(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 30 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData31(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 31 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData32(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 32 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData33(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 33 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData34(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData35(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
-            setData36(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
+            setData1(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 1 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData2(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 2 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData3(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 3 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData4(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 4 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData5(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 5 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData6(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 6 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData7(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 7 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData8(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 8 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData9(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 9 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData10(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 10 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData11(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 11 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData12(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 12 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData13(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 13 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData14(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 14 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData15(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 15 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData16(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 16 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData17(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 17 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData18(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 18 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData19(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 19 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData20(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 20 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData21(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 21 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData22(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 22 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData23(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 23 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData24(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 24 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData25(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 25 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData26(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 26 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData27(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 27 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData28(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 28 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData29(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 29 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData30(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 30 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData31(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 31 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData32(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 32 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData33(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 33 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData34(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 34 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData35(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 35 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
+            setData36(data.filter(analisis => analisis.elemento === value.id && analisis.analisis === 36 && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta && !analisis.deleted))
 
             setDataTablas(opcionesFiltradasAnalisis)
             //setDataOtros(data.filter(analisis => analisis.elemento === e.target.textContent && analisis.analisis !== "Físico-Químico Torre" && analisis.analisis && "Físico-Químico Aporte" && analisis.analisis !== "Físico-Químico Alimentación" && analisis.analisis !== "Físico-Químico Rechazo" && analisis.analisis !== "Físico-Químico Condensados" && analisis.analisis !== "Físico-Químico Caldera" && analisis.analisis !== "Aerobios" && analisis.analisis !== "Legionela" && analisis.analisis !== "Aguas Residuales" && analisis.analisis !== "Desinfecciones" && analisis.analisis !== "Osmosis" && analisis.analisis !== "AguaPozo" && analisis.analisis !== "Desinfección ACS" && analisis.analisis !== "Mantenimiento Maq Frio" && analisis.analisis !== "Mediciones" && analisis.analisis !== "Control Fuga Gas" && analisis.analisis !== "Agua Potable" && analisis.analisis !== "Revisión de Bandeja" && analisis.codigoCliente === analisisSeleccionado.codigoCliente && analisis.oferta === analisisSeleccionado.oferta))
@@ -2848,7 +2814,7 @@ export const VisualizacionPage = () => {
     }
 
     const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
     );
 
     return (
@@ -2875,7 +2841,7 @@ export const VisualizacionPage = () => {
                                 options={clientes}
                                 inputValue={analisisSeleccionado.codigoCliente.toString()}
                                 getOptionLabel={option => option.codigo}
-                                filterOptions={options => clientes.filter(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente)}
+                                filterOptions={options => clientes.filter(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente && !cliente.deleted)}
                                 sx={{ width: 250 }}
                                 renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
                                 onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
@@ -2886,7 +2852,7 @@ export const VisualizacionPage = () => {
                                 options={oferta}
                                 inputValue={analisisSeleccionado.oferta}
                                 getOptionLabel={option => option.numeroOferta}
-                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente)}
+                                filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === analisisSeleccionado.codigoCliente && !oferta.deleted)}
                                 sx={{ width: 250 }}
                                 renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
                                 onChange={(event, value) => onChangeOferta(event, value, "oferta")}

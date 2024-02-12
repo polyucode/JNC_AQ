@@ -17,7 +17,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente, getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente, postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas } from "../api";
+import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente, getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente, postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas, getOfertaById } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
@@ -187,7 +187,8 @@ export const OfertasClientesPage = () => {
     const getOferta = async () => {
 
         const resp = await getOfertas();
-        setData(resp);
+        const ofertasFiltrados = resp.filter(oferta => !oferta.deleted);
+        setData(ofertasFiltrados);
 
     }
 
@@ -461,7 +462,12 @@ export const OfertasClientesPage = () => {
         var i = 0;
         while (i < OfertaEliminar.length) {
 
-            const resp = await deleteOfertas(OfertaEliminar[i]);
+            const resp = await getOfertaById(OfertaEliminar[i]);
+            resp.deleted = true;
+
+            await putOfertas(resp)
+
+            //const resp = await deleteOfertas(OfertaEliminar[i]);
 
             getOferta();
             abrirCerrarModalEliminar();

@@ -623,7 +623,7 @@ export const PlantasTablaPage = () => {
     }
 
     const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
+        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
     );
 
     return (
@@ -662,7 +662,7 @@ export const PlantasTablaPage = () => {
                                     id="codigoCliente"
                                     inputValue={parametrosSeleccionado.codigoCliente.toString()}
                                     options={clientes}
-                                    filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)}
+                                    filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente && !cliente.deleted)}
                                     getOptionLabel={option => option.codigo.toString()}
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
@@ -683,7 +683,7 @@ export const PlantasTablaPage = () => {
                                     id="Oferta"
                                     inputValue={parametrosSeleccionado.oferta.toString()}
                                     options={oferta}
-                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente)}
+                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente && !oferta.deleted)}
                                     getOptionLabel={option => option.numeroOferta.toString()}
                                     renderInput={(params) => <TextField {...params} name="oferta" label="Código oferta" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
