@@ -7,6 +7,12 @@ export const getConsumos = async () => {
     
 }
 
+export const getConsumosById = async ( id ) => {
+
+    const resp = await instance.get(`/consumos/${ id }`);
+    return resp.data.data;
+}
+
 export const putConsumos = async ( consumo ) => {
 
     const resp = await instance.put(`/consumos?id=${ consumo.id }`, consumo);

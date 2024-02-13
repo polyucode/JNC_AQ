@@ -681,6 +681,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -749,6 +751,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -809,6 +813,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -959,6 +965,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -997,6 +1005,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -1034,6 +1044,8 @@ export const TareasPage = () => {
         nombreAnalisis: "",
         fecha: null,
         tipo: 0,
+        observaciones: '',
+        pdf: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -1218,8 +1230,8 @@ export const TareasPage = () => {
             titulo="Editar tarea"
             contenido={
               <EditarTareaModal
+                handleChange={handleChange}
                 tareaSeleccionada={tareaSeleccionada}
-                change={handleChange}
                 autocompleteChange={handleAutocompleteChange}
                 handleChangeFecha={handleChangeFecha}
                 setTareaSeleccionada={setTareaSeleccionada}

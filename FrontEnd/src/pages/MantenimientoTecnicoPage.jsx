@@ -356,8 +356,6 @@ export const MantenimientoTecnicoPage = () => {
 
         const valoresParametrosParseado = valoresParametros.map((parametro) => ({ ...parametro, fecha: parametrosSeleccionado.fecha, valor: parametro.valor, metodo: parametrosSeleccionado.metodo }))
 
-        //setContactosCliente(contactos.filter(cont => cont.codigoCliente === parametrosSeleccionado.codigoCliente))
-
         const fechaActual = Date.now();
         const hoy = new Date(fechaActual);
 

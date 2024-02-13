@@ -15,7 +15,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio, getClientes } from "../api";
+import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio, getClientes, getConsumosById } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 
 import Swal from 'sweetalert2';
@@ -135,7 +135,8 @@ export const ConsumoArticulosPage = () => {
     const peticionGet = async () => {
 
         const resp = await getConsumos();
-        setData(resp);
+        const consumosFiltrados = resp.filter(consumo => !consumo.deleted);
+        setData(consumosFiltrados);
 
     }
 
@@ -306,7 +307,11 @@ export const ConsumoArticulosPage = () => {
         var i = 0;
         while (i < ConsumoEliminar.length) {
 
-            const resp = await deleteConsumos(ConsumoEliminar[i]);
+            const resp = await getConsumosById(ConsumoEliminar[i]);
+            resp.deleted = true;
+
+            await putConsumos(resp);
+            
             peticionGet();
             abrirCerrarModalEliminar();
             setConsumoSeleccionado({

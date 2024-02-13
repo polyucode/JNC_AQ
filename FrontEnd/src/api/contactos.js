@@ -7,6 +7,12 @@ export const getContactos = async () => {
 
 }
 
+export const getContactosById = async ( id ) => {
+    
+    const resp = await instance.get(`/clientescontactos/${ id }`)
+    return resp.data.data;
+}
+
 export const putContactos = async ( contacto ) => {
 
     const resp = await instance.put(`/clientescontactos?id=${ contacto.id }`, contacto);

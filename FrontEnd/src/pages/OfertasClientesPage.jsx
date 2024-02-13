@@ -15,6 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import CancelIcon from '@mui/icons-material/Cancel';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 import { ModalLayout, ModalPopup } from "../components/ModalLayout";
 import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente, getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente, postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas, getOfertaById } from "../api";
@@ -1037,7 +1038,7 @@ export const OfertasClientesPage = () => {
                                     errorPrecio={errorPrecio}
                                 />}
                             botones={[
-                                insertarBotonesModal(<CancelIcon />, 'Clonar Oferta', () => handleClonOferta()),
+                                insertarBotonesModal(<FileCopyIcon />, 'Clonar Oferta', () => handleClonOferta()),
                                 insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                                     peticionPut();
                                 })
@@ -1073,11 +1074,10 @@ export const OfertasClientesPage = () => {
                             titulo="Nuevo numero de oferta"
                             contenido={
                                 <Grid item xs={12}>
-                                    <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                    <Grid container sx={{ textAlign: 'center' }}>
                                         <Grid item xs={4}>
                                             <TextField
-                                                sx={{ width: '100%' }}
-                                                type="number"
+                                                sx={{ width: '100%'}}
                                                 name="ofertaNueva"
                                                 onChange={handleChangeOferta}
                                             />
@@ -1086,7 +1086,7 @@ export const OfertasClientesPage = () => {
 
                                 </Grid>
                             }
-                            botones={[insertarBotonesModal(<AddIcon />, 'Clonar', async () => {
+                            botones={[insertarBotonesModal(<FileCopyIcon />, 'Clonar', async () => {
                                 clonarOferta(ofertaNueva);
                             })
                             ]}

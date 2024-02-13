@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getContactos, getClientes, getProductos, getOfertasProductos, putOfertasProductos, deleteOfertasProductos, postOfertasProductos, getConsumos } from '../../api';
+import { getContactos, getClientes, getProductos, getOfertasProductos, putOfertasProductos, deleteOfertasProductos, postOfertasProductos, getConsumos, getOfertasProductosById } from '../../api';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { GridToolbar } from '@mui/x-data-grid-premium';
@@ -146,7 +146,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     const peticionGet = async () => {
 
         const resp = await getOfertasProductos();
-        setData(resp.filter(oferta => oferta.oferta === ofertaSeleccionada.numeroOferta))
+        setData(resp.filter(oferta => oferta.oferta === ofertaSeleccionada.numeroOferta && !oferta.deleted))
 
     }
 
@@ -286,7 +286,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         var i = 0;
         while (i < OfertaProductoEliminar.length) {
 
-            const resp = await deleteOfertasProductos(OfertaProductoEliminar[i]);
+            const resp = await getOfertasProductosById(OfertaProductoEliminar[i]);
+            resp.deleted = true;
+
+            await putOfertasProductos(resp)
 
             peticionGet();
             abrirCerrarModalEliminar();

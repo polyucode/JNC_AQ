@@ -7,6 +7,12 @@ export const getProductos = async () => {
 
 }
 
+export const getProductosById = async ( id ) => {
+
+    const resp = await instance.get(`/productos/${ id }`);
+    return resp.data.data;
+}
+
 export const postProductos = async ( producto ) => {
 
     const resp = await instance.post('/productos', producto);

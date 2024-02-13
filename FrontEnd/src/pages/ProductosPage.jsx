@@ -20,7 +20,7 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
 import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteProductos, getProductos, postProductos, putProductos } from "../api";
+import { deleteProductos, getProductos, getProductosById, postProductos, putProductos } from "../api";
 import { useUsuarioActual } from "../hooks/useUsuarioActual";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
@@ -103,7 +103,8 @@ export const ProductosPage = () => {
     const peticionGet = async () => {
 
         const resp = await getProductos();
-        setData(resp);
+        const productosFiltrados = resp.filter(producto => !producto.deleted);
+        setData(productosFiltrados);
 
     }
 
@@ -230,7 +231,10 @@ export const ProductosPage = () => {
         var i = 0;
         while (i < ProductoEliminar.length) {
 
-            const resp = await deleteProductos(ProductoEliminar[i]);
+            const resp = await getProductosById(ProductoEliminar[i]);
+            resp.deleted = true;
+
+            await putProductos(resp);
 
             abrirCerrarModalEliminar();
             peticionGet();

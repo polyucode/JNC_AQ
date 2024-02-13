@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos, getContactos } from '../../api';
+import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos, getContactos, getContactosById } from '../../api';
 
 import { ModalLayout } from "../ModalLayout";
 
@@ -122,7 +122,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     const peticionGet = async () => {
 
         const resp = await getContactos();
-        setData(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo))
+        setData(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo && !contacto.deleted))
 
     }
 
@@ -174,7 +174,10 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
         var i = 0;
         while (i < ContactoClienteEliminar.length) {
 
-            const resp = await deleteContactos(ContactoClienteEliminar[i]);
+            const resp = await getContactosById(ContactoClienteEliminar[i]);
+            resp.deleted = true;
+
+            await putContactos(resp);
 
             peticionGet();
             abrirCerrarModalEliminar();
