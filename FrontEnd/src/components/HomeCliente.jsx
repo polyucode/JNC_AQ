@@ -35,6 +35,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { isNull } from 'lodash';
 
+import { DocumentosAgrupados } from './DocumentosAgrupados/DocumentosAgrupados';
+
 import { useUsuarioActual } from '../hooks/useUsuarioActual';
 
 //David pestanyes
@@ -945,63 +947,7 @@ const HomeCliente = () => {
                                             <Grid item xs={12}>
                                                 <Card style={{ height: '600px', overflowY: 'auto' }}>
                                                     <CardContent sx={{ p: 2 }}>
-
-                                                        <Grid container spacing={2}>
-
-                                                            <Grid item xs={12} sx={{ pb: 2 }}>
-                                                                <Typography variant="h6">PDF'S</Typography>
-                                                            </Grid>
-
-                                                            <Grid item xs={12}>
-                                                                <TableContainer component={Paper}>
-                                                                    <Table sx={{ minWidth: 650 }}>
-                                                                        <TableHead>
-                                                                            <TableRow>
-                                                                                <TableCell width="50px;"></TableCell>
-                                                                                <TableCell onClick={() => manejarOrdenColumnaPDF('fecha')} align="left" width="100px;">
-                                                                                    Fecha
-                                                                                    {ordenColumnaPDF === 'fecha' && (ordenAscendentePDF ? ' ▲' : ' ▼')}
-                                                                                </TableCell>
-                                                                                <TableCell>PDF</TableCell>
-                                                                            </TableRow>
-                                                                        </TableHead>
-                                                                        <TableBody>
-                                                                            {
-                                                                                elementoActivo.nombre &&
-                                                                                // Mapeamos todos los parametros                                                                            
-                                                                                //ficherosAnalisis.map(row => {
-                                                                                //parametrosPDF.map(row => {
-                                                                                datosOrdenadosPDF.map(row => {
-                                                                                    return (
-                                                                                        <TableRow>
-                                                                                            <TableCell>
-                                                                                                <Tooltip title="Descargar PDF" placement="right">
-                                                                                                    {/* <IconButton onClick={() => bajarPdfNoFQ(row.pdf)}> */}
-                                                                                                    <IconButton onClick={() => bajarPdfDashBoard(row.pdf, buscaNombreFicheroPorId(row.pdf))}>
-                                                                                                        <DownloadPDF_Icon />
-                                                                                                    </IconButton>
-                                                                                                </Tooltip>
-                                                                                            </TableCell>
-                                                                                            <TableCell>
-                                                                                                {new Date(row.fecha).toLocaleDateString()}
-                                                                                            </TableCell>
-                                                                                            <TableCell>
-                                                                                                {/* {row.pdf} */}
-                                                                                                {buscaNombreFicheroPorId(row.pdf)}
-                                                                                            </TableCell>
-                                                                                        </TableRow>
-                                                                                    )
-                                                                                }
-                                                                                )
-
-                                                                            }
-                                                                        </TableBody>
-                                                                    </Table>
-                                                                </TableContainer>
-                                                            </Grid>
-
-                                                        </Grid>
-
+                                                        <DocumentosAgrupados idUsuario={user.idPerfil} planta = {plantaActiva} cliente={clienteSeleccionado} elementoActivo ={elementoActivo.nombre}/>
                                                     </CardContent>
                                                 </Card>
                                             </Grid>

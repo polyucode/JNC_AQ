@@ -16,6 +16,8 @@ using System.util;
 using AnalisisQuimicos.Core.Entities;
 using System.Globalization;
 using AnalisisQuimicos.Core.QueryFilters;
+using System.Net.Mail;
+using System.Net;
 
 namespace AnalisisQuimicos.Core.Services
 {
@@ -277,6 +279,7 @@ namespace AnalisisQuimicos.Core.Services
                 Format = _extension,
                 Path = path
             };
+            SendEmailToClient((int)valores[0].CodigoCliente, newFile);
 
             try
             {
@@ -286,8 +289,58 @@ namespace AnalisisQuimicos.Core.Services
             {
                 throw e;
             }
+        }
+
+        private void SendEmailToClient(int codigoCliente, Files documentoPDF)
+        {
+            try
+            {
+                var clientes = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)codigoCliente);
+                foreach (var cliente in clientes)
+                {
+                    if ((bool)!cliente.Correo)
+                    {
+                        continue;
+                    }
+                    var fromAddress = new MailAddress("gemma@jnegre.com", "Gemma");
+                    var toAddress = new MailAddress(cliente.Email, cliente.Nombre);
+                    const string fromPassword = "G3mm42022";
+                    string subject = "Pdf Físico-Químico";
+                    string body = "";
+
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.serviciodecorreo.es",
+                        Port = 587,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                        EnableSsl = true
+                    };
+                    var email = new MailMessage(fromAddress, toAddress);
+                    email.Body = body;
+                    email.Subject = subject;
+                    Attachment attachment = new Attachment(documentoPDF.Path);
+                    email.Attachments.Add(attachment);
+
+                    //using (var message = new MailMessage(fromAddress, toAddress)
+                    //{
+                    //    Subject = subject,
+                    //    Body = body
+                    //})
+                    //{
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    smtp.Send(email);
+                    //}
+                }
 
 
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

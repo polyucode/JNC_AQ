@@ -146,5 +146,83 @@ namespace AnalisisQuimicos.Core.Services
         {
             return await _unidadDeTrabajo.FilesRepository.Download(id);
         }
+
+        public async Task<string> DownloadFolderSchema(string clientName, string clientCode, string clientOffer, string accionType)
+        {
+            try
+            {
+                string respuesta = await _unidadDeTrabajo.FilesRepository.DownloadFolderSchema(clientName, clientCode, clientOffer, accionType);
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                return "";
+            }
+        }
+
+        public async Task<bool> ChangeFolderName(string path, string oldName, string newName)
+        {
+            try
+            {
+                bool respuesta = await _unidadDeTrabajo.FilesRepository.ChangeFolderName(path, oldName, newName);
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateNewFolder(string path, string folderName)
+        {
+            try
+            {
+                bool respuesta = await _unidadDeTrabajo.FilesRepository.CreateNewFolder(path, folderName);
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteFolder(string path)
+        {
+            try
+            {
+                bool respuesta = await _unidadDeTrabajo.FilesRepository.DeleteFolder(path);
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteFile(string path, string fileName)
+        {
+            try
+            {
+                bool respuesta = await _unidadDeTrabajo.FilesRepository.DeleteFile(path, fileName);
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UploadFileByPath(string path, string fileName, IFormFile file)
+        {
+            try
+            {
+                bool respuesta = await _unidadDeTrabajo.FilesRepository.UploadFileByPath(path, fileName, file);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

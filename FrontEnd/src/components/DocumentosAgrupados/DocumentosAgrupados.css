@@ -1,0 +1,35 @@
+.contenedor-carpeta{
+    width: 100%;
+    display: flex;
+    flex-direction:row;
+}
+
+.titulo-carpeta{
+    width: auto;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.botones-carpeta{
+    width: auto;
+}
+.contenedor-ficheros{
+    margin-left: 1rem;
+    margin-top: 0.75rem;
+}
+
+.fichero-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.fichero-row:hover{
+    background-color: gainsboro;
+}
+
+.titulo-fichero{
+    width: auto;
+    vertical-align: bottom;
+    align-self: center;
+}
+

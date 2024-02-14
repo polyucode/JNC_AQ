@@ -1,16 +1,16 @@
 import { instance } from '.';
 import { getFileById } from './files';
 
-export const generarPdf = async ( valores ) => {
+export const generarPdf = async (valores) => {
 
     const resp = await instance.post('/PDFGenerator', valores);
     return resp.data;
 
 }
 
-export const bajarPdf = async ( id, codigo, elemento, analisis, fecha ) => {
+export const bajarPdf = async (id, codigo, elemento, analisis, fecha) => {
 
-    const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
+    const resp = await instance.get(`/fileupload/download/${id}`, { responseType: 'blob' });
 
     // create file link in browser's memory
     const href = URL.createObjectURL(resp.data);
@@ -28,13 +28,13 @@ export const bajarPdf = async ( id, codigo, elemento, analisis, fecha ) => {
 
 }
 
-export const bajarPdfNoFQ = async ( id, codigo, elemento, analisis, fecha ) => {
+export const bajarPdfNoFQ = async (id, codigo, elemento, analisis, fecha) => {
 
-    const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
+    const resp = await instance.get(`/fileupload/download/${id}`, { responseType: 'blob' });
 
     // create file link in browser's memory
     const href = URL.createObjectURL(resp.data);
-    
+
     // create "a" HTML element with href to file & click
     const link = document.createElement('a');
     link.href = href;
@@ -48,9 +48,9 @@ export const bajarPdfNoFQ = async ( id, codigo, elemento, analisis, fecha ) => {
 
 }
 
-export const bajarPdfInstrucciones = async ( id, codigo, elemento, analisis, fecha ) => {
+export const bajarPdfInstrucciones = async (id, codigo, elemento, analisis, fecha) => {
 
-    const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
+    const resp = await instance.get(`/fileupload/download/${id}`, { responseType: 'blob' });
 
     const resp2 = await getFileById(id)
 
@@ -67,26 +67,26 @@ export const bajarPdfInstrucciones = async ( id, codigo, elemento, analisis, fec
 
 }
 
-export const subirPdf = async ( id, archivo ) => {
+export const subirPdf = async (id, archivo) => {
 
     const formData = new FormData();
 
     formData.append('file', archivo);
-    
+
     const resp = await instance.post(`/FileUpload/upload/pdf/${id}`, formData);
     return resp;
-    
+
 }
 
-export const subirPdfTareas = async ( id, archivo ) => {
+export const subirPdfTareas = async (id, archivo) => {
 
     const formData = new FormData();
 
     formData.append('file', archivo);
-    
+
     const resp = await instance.post(`/FileUpload/uploadTask/pdf/${id}`, formData);
     return resp;
-    
+
 }
 
 export const getFicheros = async () => {
@@ -96,25 +96,52 @@ export const getFicheros = async () => {
 
 }
 
-export const getFicherosById = async ( pdf ) => {
+export const getFicherosById = async (pdf) => {
 
-    const resp = await instance.get(`/files/?Id=${ pdf }`)
+    const resp = await instance.get(`/files/?Id=${pdf}`)
     return resp.data.data;
-    
+
 }
 
 //Descargar PDF desde Dashboard
-export const bajarPdfDashBoard = async ( id, nombre) => {
+export const bajarPdfDashBoard = async (id, nombre) => {
 
-    const resp = await instance.get(`/fileupload/download/${ id }`, { responseType: 'blob' });
-    
+    const resp = await instance.get(`/fileupload/download/${id}`, { responseType: 'blob' });
+
     // create file link in browser's memory
     const href = URL.createObjectURL(resp.data);
-    
+
     // create "a" HTML element with href to file & click
     const link = document.createElement('a');
     link.href = href;
     link.setAttribute('download', `${nombre}.pdf`); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+
+    // clean up "a" element & remove ObjectURL
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+
+}
+
+//Descargar esquema de carpetas
+export const bajarEsquemaCarpetas = async (nombreCliente, codigoCliente, codigoOferta, tipoAccion) => {
+    const resp = await instance.get(`/fileupload/DownloadFolderSchema/${nombreCliente}/${codigoCliente}/${codigoOferta}/${tipoAccion}`);
+    return resp;
+}
+
+export const descargarArchivoPorRuta = async (path, nombreArchivo) => {
+
+    const resp = await instance.get(`/fileupload/DownloadFileByPath/${encodeURI(path)}/${nombreArchivo}`, { responseType: 'blob' });
+
+    console.log(resp)
+    // create file link in browser's memory
+    const href = URL.createObjectURL(resp.data);
+
+    // create "a" HTML element with href to file & click
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', `${nombreArchivo}`); //or any other extension
     document.body.appendChild(link);
     link.click();
 
