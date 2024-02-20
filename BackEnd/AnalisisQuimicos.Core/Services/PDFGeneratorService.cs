@@ -305,8 +305,8 @@ namespace AnalisisQuimicos.Core.Services
                     var fromAddress = new MailAddress("gemma@jnegre.com", "Gemma");
                     var toAddress = new MailAddress(cliente.Email, cliente.Nombre);
                     const string fromPassword = "G3mm42022";
-                    string subject = "Pdf Físico-Químico";
-                    string body = "";
+                    string subject = "Pdf Anàlisis F/Q";
+                    string body = "Benvolguts,\n\n\n\nAdjunt els hi fem arribar el següent informe F/Q.\n\n\n\nPer qualsevol dubte quedem a la seva disposició.\n\n\n\nGràcies";
 
                     var smtp = new SmtpClient
                     {
@@ -323,16 +323,8 @@ namespace AnalisisQuimicos.Core.Services
                     email.Subject = subject;
                     Attachment attachment = new Attachment(documentoPDF.Path);
                     email.Attachments.Add(attachment);
-
-                    //using (var message = new MailMessage(fromAddress, toAddress)
-                    //{
-                    //    Subject = subject,
-                    //    Body = body
-                    //})
-                    //{
                     System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                     smtp.Send(email);
-                    //}
                 }
 
 
