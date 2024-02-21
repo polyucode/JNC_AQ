@@ -270,9 +270,6 @@ export const PlantasTablaPage = () => {
         getParametrosAnalisisPlanta()
             .then(resp => setParametrosAnalisisPlanta(resp));
 
-        getParametrosElementoPlantaCliente()
-            .then(resp => setParametrosElementoPlanta(resp));
-
         getConfNivelesPlantasCliente()
             .then(resp => setConfNivelesPlantasCliente(resp));
 
@@ -281,6 +278,8 @@ export const PlantasTablaPage = () => {
 
         getValorParametros()
             .then(resp => setValoresParametros(resp));
+
+        GetParametrosElementoPlantaCliente();
     }, []);
 
     // Efecto para preparar el listado de elementos en el autocompletado
@@ -332,6 +331,11 @@ export const PlantasTablaPage = () => {
             setAbroPlantilla(true)
         }
     }, [parametrosFiltrados])
+
+    const GetParametrosElementoPlantaCliente = async () => {
+        const resp = await getParametrosElementoPlantaCliente();
+        setParametrosElementoPlanta(resp);
+    }
 
     /*** FUNCIONES ***/
 
@@ -427,7 +431,6 @@ export const PlantasTablaPage = () => {
 
     async function valorParametros() {
 
-
         tipoParametros.map((parametro) => {
             if (parametro.activo == true) {
                 const param2 = {
@@ -465,6 +468,7 @@ export const PlantasTablaPage = () => {
         setAbroPlantilla(false)
         const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
+        console.log(resp, "RESP")
         const datosMapeados = resp.map(datos => {
 
             // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
@@ -493,11 +497,34 @@ export const PlantasTablaPage = () => {
 
     const guardarPlantilla = async () => {
 
-        valorParametros()
+        const resp2 = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
-        const resp = await tipoParametros.map(async (parametro) => {
+        if (resp2.length > 0) {
 
-            if (parametro.dbId) {
+            valorParametros()
+
+            const datosMapeados = resp2.map(datos => {
+
+                // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
+                const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
+
+                // Devolvemos la linea mapeada
+                return {
+                    dbId: datos.id,
+                    id: datos.parametro,
+                    nombre: tipoParametros[indiceElemento].nombre,
+                    limInf: datos.limInf,
+                    limSup: datos.limSup,
+                    unidades: datos.unidades,
+                    activo: datos.activo,
+                    verInspector: datos.verInspector
+                }
+
+            });
+
+            const datosOrdenados = datosMapeados.sort((a, b) => a.id - b.id);
+
+            const resp = await datosOrdenados.map(async (parametro) => {
                 const param = {
                     id: parametro.dbId,
                     Parametro: parametro.id,
@@ -522,8 +549,48 @@ export const PlantasTablaPage = () => {
                 }
 
                 await putParametrosElementoPlantaCliente(param)
+            })
+
+            if (resp) {
+
+                GetParametrosElementoPlantaCliente();
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'Parámetros guardados',
+                    text: `Los parámetros del elemento han sido guardados`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
 
             } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error al guardar',
+                    text: `Error al guardar los parametros del elemento`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
+            }
+        } else {
+
+            valorParametros()
+
+            const resp = tipoParametros.map(async (parametro) => {
 
                 const param = {
                     Parametro: parametro.id,
@@ -548,43 +615,43 @@ export const PlantasTablaPage = () => {
                 }
 
                 await postParametrosElementoPlantaCliente(param);
+            })
+
+            if (resp) {
+
+                GetParametrosElementoPlantaCliente();
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'Parámetros guardados',
+                    text: `Los parámetros del elemento han sido guardados`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error al guardar',
+                    text: `Error al guardar los parametros del elemento`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
             }
-
-
-        });
-
-        if (resp) {
-
-            Swal.fire({
-                position: 'center',
-                icon: 'info',
-                title: 'Parámetros guardados',
-                text: `Los parámetros del elemento han sido guardados`,
-                showConfirmButton: false,
-                timer: 2000,
-                showClass: {
-                    popup: 'animate__animated animate__bounceIn'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__bounceOut'
-                }
-            });
-
-        } else {
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Error al guardar',
-                text: `Error al guardar los parametros del elemento`,
-                showConfirmButton: false,
-                timer: 2000,
-                showClass: {
-                    popup: 'animate__animated animate__bounceIn'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__bounceOut'
-                }
-            });
         }
     }
 
