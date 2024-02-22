@@ -332,6 +332,30 @@ export const PlantasTablaPage = () => {
         }
     }, [parametrosFiltrados])
 
+    useEffect(() => {
+
+        if (parametrosSeleccionado.codigoCliente != 0) {
+            const codigo = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)[0];
+            setParametrosSeleccionado({
+                ...parametrosSeleccionado,
+                nombreCliente: codigo.razonSocial
+            });
+        }
+
+    }, [parametrosSeleccionado.codigoCliente]);
+
+    useEffect(() => {
+
+        if (parametrosSeleccionado.nombreCliente != "") {
+            const nombre = clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)[0];
+            setParametrosSeleccionado({
+                ...parametrosSeleccionado,
+                codigoCliente: nombre.codigo
+            });
+        }
+
+    }, [parametrosSeleccionado.nombreCliente]);
+
     const GetParametrosElementoPlantaCliente = async () => {
         const resp = await getParametrosElementoPlantaCliente();
         setParametrosElementoPlanta(resp);
@@ -707,12 +731,14 @@ export const PlantasTablaPage = () => {
                                 <Autocomplete
                                     disableClearable={true}
                                     id="codigoCliente"
-                                    options={clientesUnicos}
+                                    options={clientes}
+                                    value={clientes.find(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente) || null}
+                                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                     getOptionLabel={option => option.razonSocial}
                                     renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
-                                        nombreCliente: value.razonSocial,
+                                        nombreCliente: value ? value.razonSocial : null,
                                         codigoCliente: '',
                                         oferta: '',
                                         idElemento: 0,
@@ -727,14 +753,15 @@ export const PlantasTablaPage = () => {
                                 <Autocomplete
                                     disableClearable={true}
                                     id="codigoCliente"
-                                    inputValue={parametrosSeleccionado.codigoCliente.toString()}
                                     options={clientes}
-                                    filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente && !cliente.deleted)}
+                                    value={clientes.find(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente) || null}
+                                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                     getOptionLabel={option => option.codigo.toString()}
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
-                                        codigoCliente: parseInt(value.codigo),
+                                        codigoCliente: value ? parseInt(value.codigo) : null,
+                                        nombreCliente: value ? value.razonSocial : null,
                                         oferta: '',
                                         idElemento: 0,
                                         nombreElemento: '',

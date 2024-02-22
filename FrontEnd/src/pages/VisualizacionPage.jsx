@@ -601,6 +601,30 @@ export const VisualizacionPage = () => {
 
     useEffect(() => {
 
+        if (analisisSeleccionado.codigoCliente != 0) {
+            const codigo = clientes.filter(cliente => cliente.codigo === analisisSeleccionado.codigoCliente)[0];
+            setAnalisisSeleccionado({
+                ...analisisSeleccionado,
+                nombreCliente: codigo.razonSocial
+            });
+        }
+
+    }, [analisisSeleccionado.codigoCliente]);
+
+    useEffect(() => {
+
+        if (analisisSeleccionado.nombreCliente != "") {
+            const nombre = clientes.filter(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente)[0];
+            setAnalisisSeleccionado({
+                ...analisisSeleccionado,
+                codigoCliente: nombre.codigo
+            });
+        }
+
+    }, [analisisSeleccionado.nombreCliente]);
+
+    useEffect(() => {
+
         if (data1.length > 0) {
             setRows1(data1);
         }
@@ -2829,22 +2853,37 @@ export const VisualizacionPage = () => {
                                 disableClearable={true}
                                 id="codigoCliente"
                                 sx={{ width: 250 }}
-                                options={clientesUnicos}
+                                options={clientes}
+                                value={clientes.find(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente) || null}
+                                filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                 getOptionLabel={option => option.razonSocial}
                                 renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
-                                onChange={(event, value) => onChangeNombreCliente(event, value, "nombreCliente")}
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    nombreCliente: value ? value.razonSocial : null,
+                                    oferta: '',
+                                    elemento: '',
+                                    nombreElemento: ''
+                                }))}
                             />
                             <Autocomplete
                                 disableClearable={true}
                                 id="Cliente"
                                 name="codigoCliente"
                                 options={clientes}
-                                inputValue={analisisSeleccionado.codigoCliente.toString()}
+                                value={clientes.find(cliente => cliente.codigo === analisisSeleccionado.codigoCliente) || null}
                                 getOptionLabel={option => option.codigo}
-                                filterOptions={options => clientes.filter(cliente => cliente.razonSocial === analisisSeleccionado.nombreCliente && !cliente.deleted)}
+                                filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                 sx={{ width: 250 }}
                                 renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" />}
-                                onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
+                                onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                                    ...prevState,
+                                    codigoCliente: value ? parseInt(value.codigo) : null,
+                                    nombreCliente: value ? value.razonSocial : null,
+                                    oferta: '',
+                                    elemento: '',
+                                    nombreElemento: ''
+                                }))}
                             />
                             <Autocomplete
                                 disableClearable={true}

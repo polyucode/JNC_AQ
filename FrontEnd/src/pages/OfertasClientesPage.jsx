@@ -269,6 +269,15 @@ export const OfertasClientesPage = () => {
 
     }, [ofertaSeleccionada.codigoCliente])
 
+    useEffect(() => {
+
+        const codigo = clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente);
+        (codigo.length > 0) && setOfertaSeleccionada({
+            ...ofertaSeleccionada,
+            codigoCliente: codigo[0].codigo
+        })
+    }, [ofertaSeleccionada.nombreCliente])
+
     const peticionPost = async () => {
 
         if (ofertaSeleccionada.numeroOferta != 0) {

@@ -134,7 +134,7 @@ export const MantenimientoTecnicoPage = () => {
             .then(tarea => {
                 setTareas(tarea)
             })
-        
+
         getContactos()
             .then(contacto => {
                 setContactos(contacto)
@@ -194,6 +194,30 @@ export const MantenimientoTecnicoPage = () => {
 
     }, [parametrosSeleccionado.idElemento])
 
+    useEffect(() => {
+
+        if (parametrosSeleccionado.codigoCliente != 0) {
+            const codigo = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)[0];
+            setParametrosSeleccionado({
+                ...parametrosSeleccionado,
+                nombreCliente: codigo.razonSocial
+            });
+        }
+
+    }, [parametrosSeleccionado.codigoCliente]);
+
+    useEffect(() => {
+
+        if (parametrosSeleccionado.nombreCliente != "") {
+            const nombre = clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)[0];
+            setParametrosSeleccionado({
+                ...parametrosSeleccionado,
+                codigoCliente: nombre.codigo
+            });
+        }
+
+    }, [parametrosSeleccionado.nombreCliente]);
+
     /*** FUNCIONES ***/
 
     const handleChange = e => {
@@ -247,39 +271,6 @@ export const MantenimientoTecnicoPage = () => {
             ...prevState,
             [name]: value
         }))
-    }
-
-    const onChangeNombreCliente = (e, value, name) => {
-
-        setParametrosSeleccionado((prevState) => ({
-            ...prevState,
-            [name]: value.razonSocial,
-            codigoCliente: '',
-            oferta: '',
-            idElemento: 0,
-            nombreElemento: '',
-            idAnalisis: 0,
-            nombreAnalisis: '',
-            fecha: null,
-            fechaIso: ''
-        }))
-
-    }
-
-    const onChangeCliente = (e, value, name) => {
-
-        setParametrosSeleccionado((prevState) => ({
-            ...prevState,
-            [name]: value.codigo,
-            oferta: '',
-            idElemento: 0,
-            nombreElemento: '',
-            idAnalisis: 0,
-            nombreAnalisis: '',
-            fecha: null,
-            fechaIso: ''
-        }))
-
     }
 
     const onChangeOferta = (e, value, name) => {
@@ -486,7 +477,7 @@ export const MantenimientoTecnicoPage = () => {
         // Crear la cadena de fecha en formato 'YYYY-MM'
         const fechaFormateada = `${año}-${mesFormateado}`;
 
-        const response = await bajarPdfInstrucciones(parametrosFiltrados[0].pdf, parametrosFiltrados[0].codigoCliente, parametrosFiltrados[0].elemento , resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
+        const response = await bajarPdfInstrucciones(parametrosFiltrados[0].pdf, parametrosFiltrados[0].codigoCliente, parametrosFiltrados[0].elemento, resp.nombre, fechaFormateada, { headers: { 'Content-type': 'application/pdf' } });
 
     }
 
@@ -674,10 +665,22 @@ export const MantenimientoTecnicoPage = () => {
                                     <Autocomplete
                                         disableClearable={true}
                                         id="codigoCliente"
-                                        options={clientesUnicos}
+                                        options={clientes}
+                                        value={clientes.find(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente) || null}
+                                        filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                         getOptionLabel={option => option.razonSocial}
                                         renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
-                                        onChange={(event, value) => onChangeNombreCliente(event, value, "nombreCliente")}
+                                        onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            nombreCliente: value ? value.razonSocial : null,
+                                            oferta: '',
+                                            idElemento: 0,
+                                            nombreElemento: '',
+                                            idAnalisis: 0,
+                                            nombreAnalisis: '',
+                                            fecha: null,
+                                            fechaIso: ''
+                                        }))}
                                     />
                                 </Grid>
 
@@ -686,11 +689,22 @@ export const MantenimientoTecnicoPage = () => {
                                         disableClearable={true}
                                         id="codigoCliente"
                                         options={clientes}
-                                        inputValue={parametrosSeleccionado.codigoCliente.toString()}
-                                        filterOptions={options => clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente && !cliente.deleted)}
+                                        value={clientes.find(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente) || null}
+                                        filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                         getOptionLabel={option => option.codigo.toString()}
                                         renderInput={params => <TextField {...params} label="Código de cliente" name="codigoCliente" />}
-                                        onChange={(event, value) => onChangeCliente(event, value, "codigoCliente")}
+                                        onChange={(event, value) => setParametrosSeleccionado(prevState => ({
+                                            ...prevState,
+                                            codigoCliente: value ? parseInt(value.codigo) : null,
+                                            nombreCliente: value ? value.razonSocial : null,
+                                            oferta: '',
+                                            idElemento: 0,
+                                            nombreElemento: '',
+                                            idAnalisis: 0,
+                                            nombreAnalisis: '',
+                                            fecha: null,
+                                            fechaIso: ''
+                                        }))}
                                     />
                                 </Grid>
 
@@ -788,7 +802,7 @@ export const MantenimientoTecnicoPage = () => {
                                 </Grid>
                                 {parametrosFiltrados.length > 0 &&
                                     <Grid item xs={2} md={2}>
-                                        <button style={{ display: 'inline-block', width: '200px', height: '40px', backgroundColor: '#545355', borderRadius: '6px', color: 'white', fontSize: '15px'}} onClick={descargarPdf}>PDF Instrucciones</button>
+                                        <button style={{ display: 'inline-block', width: '200px', height: '40px', backgroundColor: '#545355', borderRadius: '6px', color: 'white', fontSize: '15px' }} onClick={descargarPdf}>PDF Instrucciones</button>
                                     </Grid>
                                 }
                             </Grid>

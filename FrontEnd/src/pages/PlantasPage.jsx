@@ -133,6 +133,18 @@ export const PlantasPage = () => {
 
     }, [confPlantaCliente.CodigoCliente]);
 
+    useEffect(() => {
+
+        if (confPlantaCliente.NombreCliente != "") {
+            const clienteSeleccionado = clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente)[0];
+            setConfPlantaCliente({
+                ...confPlantaCliente,
+                CodigoCliente: clienteSeleccionado.codigo
+            });
+        }
+
+    }, [confPlantaCliente.NombreCliente]);
+
     // Convierte los datos del diagrama en un string para almacenar en la base de datos
     useEffect(() => {
 
@@ -874,12 +886,14 @@ export const PlantasPage = () => {
                                             disabled={plantaCreada}
                                             disableClearable={true}
                                             id="NombreCliente"
-                                            options={clientesUnicos}
+                                            options={clientes}
+                                            value={clientes.find(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente) || null}
+                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                             getOptionLabel={option => option.razonSocial}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Nombre Cliente" name="NombreCliente" />}
                                             onChange={(event, value) => setConfPlantaCliente(prevState => ({
                                                 ...prevState,
-                                                NombreCliente: value.razonSocial
+                                                NombreCliente: value ? value.razonSocial : null
                                             }))}
                                         />
                                     </Grid>
@@ -890,10 +904,15 @@ export const PlantasPage = () => {
                                             disableClearable={true}
                                             id="CodigoCliente"
                                             options={clientes}
-                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente && !cliente.deleted)}
+                                            value={clientes.find(cliente => cliente.codigo === confPlantaCliente.CodigoCliente) || null}
+                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
-                                            onChange={handleConfPlantaClienteChange}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                CodigoCliente: value ? parseInt(value.codigo) : null,
+                                                NombreCliente: value ? value.razonSocial : null,
+                                            }))}
                                         />
                                     </Grid>
 

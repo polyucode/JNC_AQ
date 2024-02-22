@@ -120,13 +120,14 @@ export const InsertarTareaModal =
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
+                    value={clientes.find(cliente => cliente.codigo === tareaSeleccionada.codigoCliente) || null}
                     filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                     getOptionLabel={option => option.codigo.toString()}
                     sx={{ width: '100%', marginTop: '22px' }}
                     renderInput={(params) => <TextField {...params} label="Codigo Cliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setTareaSeleccionada(prevState => ({
                         ...prevState,
-                        codigoCliente: parseInt(value.codigo),
+                        codigoCliente: value ? parseInt(value.codigo) : null,
                         pedido: 0,
                         elemento: 0
                     }))}
@@ -134,13 +135,22 @@ export const InsertarTareaModal =
             </Grid>
 
             <Grid item xs={3} md={4}>
-                <TextField
-                    id='nombreCliente'
-                    label="Nombre Cliente"
-                    sx={{ width: '100%' }}
-                    value={tareaSeleccionada && tareaSeleccionada.nombreCliente}
-                    name="nombreCliente"
-                    onChange={handleChange}
+            <Autocomplete
+                    disableClearable={true}
+                    id="nombreCliente"
+                    options={clientes}
+                    value={clientes.find(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente) || null}
+                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                    getOptionLabel={option => option.razonSocial}
+                    sx={{ width: '100%'}}
+                    renderInput={(params) => <TextField {...params} label="Nombre Cliente" name="nombreCliente" />}
+                    onChange={(event, value) => setTareaSeleccionada(prevState => ({
+                        ...prevState,
+                        codigoCliente: value ? parseInt(value.codigo) : null,
+                        nombreCliente: value ? value.razonSocial : null,
+                        pedido: 0,
+                        elemento: 0
+                    }))}
                 />
             </Grid>
 
@@ -260,7 +270,7 @@ export const InsertarTareaModal =
             </Grid>
 
             <Grid item xs={4} md={3}>
-                <div class="file-select" id="src-file3" >
+                <div className="file-select" id="src-file3" >
                     <input type="file" name="src-file3" label="PDF instrucciones" onChange={handlePdf} />
                 </div>
                 <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>

@@ -50,13 +50,14 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
                     disableClearable={true}
                     id="CodigoCliente"
                     options={clientes}
+                    value={clientes.find(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente) || null}
                     filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                     getOptionLabel={option => option.codigo.toString()}
                     sx={{ width: '100%', marginTop: '25px' }}
                     renderInput={(params) => <TextField {...params} label="CodigoCliente" name="codigoCliente" error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />}
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
-                        codigoCliente: parseInt(value.codigo),
+                        codigoCliente: value ? parseInt(value.codigo) : null,
                         contacto1: '',
                         contacto2: '',
                         contacto3: ''
@@ -65,13 +66,23 @@ export const InsertarOfertaModal = ({ change: handleChange, autocompleteChange, 
             </Grid>
 
             <Grid item xs={6} md={6}>
-                <TextField
-                    sx={{ width: '100%' }}
-                    label="Nombre del cliente"
-                    id='nombreCliente'
-                    name="nombreCliente"
-                    value={ofertaSeleccionada && ofertaSeleccionada.nombreCliente}
-                    onChange={handleChange}
+            <Autocomplete
+                    disableClearable={true}
+                    id="nombreCliente"
+                    options={clientes}
+                    value={clientes.find(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente) || null}
+                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                    getOptionLabel={option => option.razonSocial}
+                    sx={{ width: '100%'}}
+                    renderInput={(params) => <TextField {...params} label="Nombre Cliente" name="nombreCliente" />}
+                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                        ...prevState,
+                        codigoCliente: value ? parseInt(value.codigo) : null,
+                        nombreCliente: value ? value.razonSocial : null,
+                        contacto1: '',
+                        contacto2: '',
+                        contacto3: ''
+                    }))}
                 />
             </Grid>
 

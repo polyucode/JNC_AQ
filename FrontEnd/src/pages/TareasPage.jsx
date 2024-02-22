@@ -367,6 +367,17 @@ export const TareasPage = () => {
     })
 
   }, [tareaSeleccionada.oferta])
+  
+
+  useEffect(() => {
+
+    const codigo = clientes.filter(cliente => cliente.razonSocial === tareaSeleccionada.nombreCliente);
+    (codigo.length > 0) && setTareaSeleccionada({
+      ...tareaSeleccionada,
+      nombreCliente: codigo[0].razonSocial
+    })
+
+  }, [tareaSeleccionada.nombreCliente])
 
 
   useEffect(() => {
