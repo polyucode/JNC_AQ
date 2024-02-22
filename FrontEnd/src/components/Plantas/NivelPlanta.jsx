@@ -124,9 +124,10 @@ export const NivelPlanta = ({
 
     }
 
-    const handleDeleteElemento = async (id) => {
+    const handleDeleteElemento = async (id, elemento) => {
 
         if (id > 0) {
+
             const respAnalisis = await getAnalisisNivelesPlantasCliente();
 
             const respNiveles = await getConfNivelesPlantasCliente();
@@ -154,7 +155,20 @@ export const NivelPlanta = ({
             }
         }
 
+        if (contadorElemento[elemento.nombre]) {
+            normalizarContador(elemento.nombre, elemento.numero)
+        }
         setElementosPlanta(elementosPlanta.filter(elemento => elemento.id != id));
+    }
+
+    const normalizarContador = (nombre, numero) => {
+        if (contadorElemento[nombre] === numero) {
+            setContadorElemento({
+                ...contadorElemento,
+                [nombre]: contadorElemento[nombre] - 1
+            });
+            // elemento.numero = contadorElemento[nombre] - 1;
+        }
     }
 
     const handleChange = (event) => {
@@ -303,14 +317,14 @@ export const NivelPlanta = ({
                                                                             </IconButton>
                                                                         </Tooltip>
                                                                         <Tooltip title="Eliminar elemento">
-                                                                            <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
+                                                                            <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id, elemento)}>
                                                                                 <DeleteIcon />
                                                                             </IconButton>
                                                                         </Tooltip>
                                                                     </React.Fragment>
                                                                     :
                                                                     <Tooltip title="Eliminar elemento">
-                                                                        <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id)}>
+                                                                        <IconButton color="error" edge="end" aria-label="delete" onClick={() => handleDeleteElemento(elemento.id, elemento)}>
                                                                             <DeleteIcon />
                                                                         </IconButton>
                                                                     </Tooltip>

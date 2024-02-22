@@ -93,6 +93,8 @@ export const MantenimientoTecnicoPage = () => {
 
     const [nombreOperario, setNombreOperario] = useState([]);
 
+    const [tareaPlantillaAbierta, setTareaPlantillaAbierta] = useState({});
+
     const { usuarioActual } = useUsuarioActual();
 
     const GetConfNivelesPlantasCliente = async () => {
@@ -399,6 +401,8 @@ export const MantenimientoTecnicoPage = () => {
                 let mesActual = new Date().getMonth();
                 let fechas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+                const tareaPlantillaSeleccionada = tareas.filter(tarea => tarea.codigoCliente === parametrosSeleccionado.codigoCliente && tarea.oferta === parametrosSeleccionado.oferta && tarea.elemento === parametrosSeleccionado.idElemento && tarea.analisis === resp2[0].analisis)
+                setTareaPlantillaAbierta(tareaPlantillaSeleccionada[0]);
                 // Mapeamos los valores en un array, y si no hay datos seteamos un 0
                 valoresPorParametro.map(val => {
 
@@ -854,13 +858,30 @@ export const MantenimientoTecnicoPage = () => {
                                         {
                                             (parametrosElemento.length > 0) ? (
                                                 <>
-                                                    <TextField
-                                                        label="Metodo Analítico"
-                                                        id='metodo'
-                                                        name="metodo"
-                                                        onChange={handleChange}
-                                                        value={parametrosSeleccionado && parametrosSeleccionado.metodo}
-                                                    />
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={3} md={3}>
+                                                            <TextField
+                                                                label="Metodo Analítico"
+                                                                id='metodo'
+                                                                name="metodo"
+                                                                onChange={handleChange}
+                                                                value={parametrosSeleccionado && parametrosSeleccionado.metodo}
+                                                            />
+                                                        </Grid>
+
+                                                        <Grid item xs={3} md={5}>
+                                                            <p> Observaciones </p>
+                                                            <TextareaAutosize
+                                                                aria-label="empty textarea"
+                                                                minRows={4}
+                                                                contentEditable={false}
+                                                                style={{ width: '100%', padding: '15px' }}
+                                                                name="observaciones"
+                                                                value={tareaPlantillaAbierta.observaciones}
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+
                                                     <TableContainer>
                                                         <Table size="small">
 

@@ -183,6 +183,30 @@ const HomeCliente = () => {
 
     useEffect(() => {
 
+        if (clienteSeleccionado.codigoCliente != 0) {
+            const codigo = clientes.filter(cliente => cliente.codigo === clienteSeleccionado.codigoCliente)[0];
+            setClienteSeleccionado({
+                ...clienteSeleccionado,
+                nombreCliente: codigo.razonSocial
+            });
+        }
+
+    }, [clienteSeleccionado.codigoCliente]);
+
+    useEffect(() => {
+
+        if (clienteSeleccionado.nombreCliente != "") {
+            const nombre = clientes.filter(cliente => cliente.razonSocial === clienteSeleccionado.nombreCliente)[0];
+            setClienteSeleccionado({
+                ...clienteSeleccionado,
+                codigoCliente: nombre.codigo
+            });
+        }
+
+    }, [clienteSeleccionado.nombreCliente]);
+
+    useEffect(() => {
+
         const nombre = ofertas.filter(oferta => oferta.descripcion === clienteSeleccionado.descripcion);
         (nombre.length > 0) && setClienteSeleccionado({
             ...clienteSeleccionado,
@@ -438,13 +462,14 @@ const HomeCliente = () => {
                                         <Autocomplete
                                             disableClearable={true}
                                             id="nombreCliente"
-                                            options={clientesUnicos}
+                                            options={clientes}
+                                            value={clientes.find(cliente => cliente.razonSocial === clienteSeleccionado.nombreCliente) || null}
+                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                             getOptionLabel={option => option.razonSocial}
                                             renderInput={params => <TextField {...params} label="Nombre Cliente" name="nombreCliente" />}
                                             onChange={(event, value) => setClienteSeleccionado(prevState => ({
                                                 ...prevState,
-                                                nombreCliente: value.razonSocial,
-                                                codigoCliente: '',
+                                                nombreCliente: value ? value.razonSocial : null,
                                                 oferta: ''
                                             }))}
                                         />
@@ -454,12 +479,14 @@ const HomeCliente = () => {
                                             disableClearable={true}
                                             id="clientes"
                                             options={clientes}
-                                            filterOptions={options => clientes.filter(cliente => cliente.razonSocial === clienteSeleccionado.nombreCliente)}
+                                            value={clientes.find(cliente => cliente.codigo === clienteSeleccionado.codigoCliente) || null}
+                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} label="Código Cliente" name="codigoCliente" />}
                                             onChange={(event, value) => setClienteSeleccionado(prevState => ({
                                                 ...prevState,
-                                                codigoCliente: parseInt(value.codigo),
+                                                codigoCliente: value ? parseInt(value.codigo) : null,
+                                                nombreCliente: value ? value.razonSocial : null,
                                                 oferta: ''
                                             }))}
                                         />
