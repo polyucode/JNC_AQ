@@ -276,8 +276,7 @@ export const PlantasTablaPage = () => {
         getAnalisisNivelesPlantasCliente()
             .then(resp => setConfAnalisisNivelesPlantasCliente(resp));
 
-        getValorParametros()
-            .then(resp => setValoresParametros(resp));
+        GetValorParametros();
 
         GetParametrosElementoPlantaCliente();
     }, []);
@@ -359,6 +358,11 @@ export const PlantasTablaPage = () => {
     const GetParametrosElementoPlantaCliente = async () => {
         const resp = await getParametrosElementoPlantaCliente();
         setParametrosElementoPlanta(resp);
+    }
+
+    const GetValorParametros = async () => {
+        const resp = await getValorParametros();
+        setValoresParametros(resp);
     }
 
     /*** FUNCIONES ***/
@@ -478,7 +482,6 @@ export const PlantasTablaPage = () => {
                 }
 
                 const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
-
                 if (valorFiltrado.length == 0) {
                     const resp = postValorParametros(param2);
                     return resp;
@@ -492,7 +495,6 @@ export const PlantasTablaPage = () => {
         setAbroPlantilla(false)
         const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
-        console.log(resp, "RESP")
         const datosMapeados = resp.map(datos => {
 
             // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
@@ -521,36 +523,14 @@ export const PlantasTablaPage = () => {
 
     const guardarPlantilla = async () => {
 
+        valorParametros()
         const resp2 = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         if (resp2.length > 0) {
 
-            valorParametros()
-
-            const datosMapeados = resp2.map(datos => {
-
-                // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
-                const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
-
-                // Devolvemos la linea mapeada
-                return {
-                    dbId: datos.id,
-                    id: datos.parametro,
-                    nombre: tipoParametros[indiceElemento].nombre,
-                    limInf: datos.limInf,
-                    limSup: datos.limSup,
-                    unidades: datos.unidades,
-                    activo: datos.activo,
-                    verInspector: datos.verInspector
-                }
-
-            });
-
-            const datosOrdenados = datosMapeados.sort((a, b) => a.id - b.id);
-
-            const resp = await datosOrdenados.map(async (parametro) => {
+            const resp = tipoParametros.map(async (parametro) => {
                 const param = {
-                    id: parametro.dbId,
+                    id: 0,
                     Parametro: parametro.id,
                     CodigoCliente: parametrosSeleccionado.codigoCliente,
                     NombreCliente: parametrosSeleccionado.nombreCliente,
@@ -572,12 +552,16 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
+                const registro  = resp2.find(item => item.parametro === parametro.id)
+                param.id = registro.id
+
                 await putParametrosElementoPlantaCliente(param)
             })
 
             if (resp) {
 
                 GetParametrosElementoPlantaCliente();
+                GetValorParametros();
 
                 Swal.fire({
                     position: 'center',
@@ -612,8 +596,6 @@ export const PlantasTablaPage = () => {
             }
         } else {
 
-            valorParametros()
-
             const resp = tipoParametros.map(async (parametro) => {
 
                 const param = {
@@ -644,6 +626,7 @@ export const PlantasTablaPage = () => {
             if (resp) {
 
                 GetParametrosElementoPlantaCliente();
+                GetValorParametros();
 
                 Swal.fire({
                     position: 'center',
@@ -712,10 +695,6 @@ export const PlantasTablaPage = () => {
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
-
-    const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
-    );
 
     return (
         <MainLayout title="Parametrización de planta">

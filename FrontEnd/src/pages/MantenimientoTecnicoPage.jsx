@@ -829,7 +829,7 @@ export const MantenimientoTecnicoPage = () => {
                 <Grid item xs={12}>
                     <Card>
                         {
-                            (parametrosSeleccionado.idAnalisis === 7 || parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18) && tareaAnalisisPlanta.codigoCliente ?
+                            (parametrosSeleccionado.idAnalisis === 9 || parametrosSeleccionado.idAnalisis === 10 || parametrosSeleccionado.idAnalisis === 12 || parametrosSeleccionado.idAnalisis === 13 || parametrosSeleccionado.idAnalisis === 14 || parametrosSeleccionado.idAnalisis === 15 || parametrosSeleccionado.idAnalisis === 16 || parametrosSeleccionado.idAnalisis === 17 || parametrosSeleccionado.idAnalisis === 18 || parametrosSeleccionado.idAnalisis === 19 || parametrosSeleccionado.idAnalisis === 20 || parametrosSeleccionado.idAnalisis === 21 || parametrosSeleccionado.idAnalisis === 22 || parametrosSeleccionado.idAnalisis === 23 || parametrosSeleccionado.idAnalisis === 24 || parametrosSeleccionado.idAnalisis === 25 || parametrosSeleccionado.idAnalisis === 26 || parametrosSeleccionado.idAnalisis === 27 || parametrosSeleccionado.idAnalisis === 28 || parametrosSeleccionado.idAnalisis === 29 || parametrosSeleccionado.idAnalisis === 30 || parametrosSeleccionado.idAnalisis === 31 || parametrosSeleccionado.idAnalisis === 32 || parametrosSeleccionado.idAnalisis === 33 || parametrosSeleccionado.idAnalisis === 34 || parametrosSeleccionado.idAnalisis === 35 || parametrosSeleccionado.idAnalisis === 36) && tareaAnalisisPlanta.codigoCliente ?
                                 (<CardContent style={{ padding: '30px', margin: '15px' }}>
                                     <Grid container spacing={4}>
                                         <Grid item xs={4}>
@@ -847,9 +847,6 @@ export const MantenimientoTecnicoPage = () => {
                                                 defaultValue={tareaAnalisisPlanta.observaciones}
                                             />
                                         </Grid>
-                                    </Grid>
-                                    <Grid container spacing={4}>
-
                                     </Grid>
                                 </CardContent>
                                 ) :
