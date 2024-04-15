@@ -38,30 +38,30 @@ namespace AnalisisQuimicos.Api.Controllers
         public async Task<IActionResult> GetById(int id)
 
         {
-            var analisis = await _parametros.GetById(id);
-            var ParametrosDTO = _mapper.Map<ParametrosDTO>(analisis);
-            var response = new ApiResponses<ParametrosDTO>(ParametrosDTO);
+            var parametro = await _parametros.GetById(id);
+            var ParametrosDTO = _mapper.Map<Parametros>(parametro);
+            var response = new ApiResponses<Parametros>(ParametrosDTO);
             return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert(Parametros ParametrosDTO)
         {
-            var analisis = _mapper.Map<Parametros>(ParametrosDTO);
+            var parametros = _mapper.Map<Parametros>(ParametrosDTO);
 
-            await _parametros.Add(analisis);
+            await _parametros.Add(parametros);
 
-            ParametrosDTO = _mapper.Map<Parametros>(_parametros);
+            ParametrosDTO = _mapper.Map<Parametros>(parametros);
             var response = new ApiResponses<Parametros>(ParametrosDTO);
             return Ok(response);
         }
 
         [HttpPut]
-        public void Update(int id, ParametrosDTO ParametrosDTO)
+        public void Update(int id, Parametros Parametros)
         {
-            var analisis = _mapper.Map<Parametros>(ParametrosDTO);
+            var parametro = _mapper.Map<Parametros>(Parametros);
 
-            _parametros.Update(analisis);
+            _parametros.Update(parametro);
 
         }
 

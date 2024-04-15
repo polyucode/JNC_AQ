@@ -25,8 +25,6 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.Property(e => e.Unidad).HasColumnName("Unidad");
 
-            builder.Property(e => e.Personalizado).HasColumnName("Personalizado");
-
         }
     }
 }

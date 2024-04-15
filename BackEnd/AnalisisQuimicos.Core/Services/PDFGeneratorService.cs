@@ -296,38 +296,39 @@ namespace AnalisisQuimicos.Core.Services
             try
             {
                 var clientes = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente((int)codigoCliente);
-                foreach (var cliente in clientes)
+                if(clientes.Count() > 0)
                 {
-                    if ((bool)!cliente.Correo)
+                    foreach (var cliente in clientes)
                     {
-                        continue;
+                        if ((bool)!cliente.Correo)
+                        {
+                            continue;
+                        }
+                        var fromAddress = new MailAddress("gemma@jnegre.com", "Gemma");
+                        var toAddress = new MailAddress(cliente.Email, cliente.Nombre);
+                        const string fromPassword = "G3mm42022";
+                        string subject = "Pdf Anàlisis F/Q";
+                        string body = "Benvolguts,\n\n\n\nAdjunt els hi fem arribar el següent informe F/Q.\n\n\n\nPer qualsevol dubte quedem a la seva disposició.\n\n\n\nGràcies";
+
+                        var smtp = new SmtpClient
+                        {
+                            Host = "smtp.serviciodecorreo.es",
+                            Port = 587,
+                            DeliveryMethod = SmtpDeliveryMethod.Network,
+
+                            UseDefaultCredentials = false,
+                            Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                            EnableSsl = true
+                        };
+                        var email = new MailMessage(fromAddress, toAddress);
+                        email.Body = body;
+                        email.Subject = subject;
+                        Attachment attachment = new Attachment(documentoPDF.Path);
+                        email.Attachments.Add(attachment);
+                        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        smtp.Send(email);
                     }
-                    var fromAddress = new MailAddress("gemma@jnegre.com", "Gemma");
-                    var toAddress = new MailAddress(cliente.Email, cliente.Nombre);
-                    const string fromPassword = "G3mm42022";
-                    string subject = "Pdf Anàlisis F/Q";
-                    string body = "Benvolguts,\n\n\n\nAdjunt els hi fem arribar el següent informe F/Q.\n\n\n\nPer qualsevol dubte quedem a la seva disposició.\n\n\n\nGràcies";
-
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.serviciodecorreo.es",
-                        Port = 587,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-
-                        UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
-                        EnableSsl = true
-                    };
-                    var email = new MailMessage(fromAddress, toAddress);
-                    email.Body = body;
-                    email.Subject = subject;
-                    Attachment attachment = new Attachment(documentoPDF.Path);
-                    email.Attachments.Add(attachment);
-                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    smtp.Send(email);
                 }
-
-
             }
             catch (Exception ex)
             {
