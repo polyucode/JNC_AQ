@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { MainLayout } from "../layout/MainLayout";
@@ -12,15 +12,16 @@ import { ModalLayout2 } from '../components/ModalLayout2';
 
 // Table MUI
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarClienteModal } from '../components/Modals/InsertarClienteModal';
 import { EditarClienteModal } from '../components/Modals/EditarClienteModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas, getClienteById } from '../api';
-import { useUsuarioActual } from '../hooks/useUsuarioActual';
+import { getPoblaciones, getProvincias, putCliente, postCliente, deleteCliente, getClientes, getComarcas } from '../api';
 
 import Swal from 'sweetalert2';
+import { AuthContext } from '../context/AuthContext';
+
+import { TailSpin } from 'react-loader-spinner';
 
 export const ClientesPage = () => {
 
@@ -28,11 +29,10 @@ export const ClientesPage = () => {
 
   //variables
   const [modalInsertar, setModalInsertar] = useState(false);
-
   const [modalEditar, setModalEditar] = useState(false);
-
   const [modalEliminar, setModalEliminar] = useState(false);
 
+  const [cargando, setCargando] = useState(false);
 
   // Modal detalle 
 
@@ -71,9 +71,10 @@ export const ClientesPage = () => {
 
   const [comarcaEditar, setComarcaEditar] = useState([]);
 
-  const { usuarioActual } = useUsuarioActual();
+  const { user } = useContext(AuthContext);
 
   const [errorCodigo, setErrorCodigo] = useState(false);
+  const [errorCodigoRepetido, setErrorCodigoRepetido] = useState(false);
   const [errorTelefono, setErrorTelefono] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorDireccion, setErrorDireccion] = useState(false);
@@ -98,24 +99,18 @@ export const ClientesPage = () => {
   ]
 
   const GetPoblacion = async () => {
-
     const resp = await getPoblaciones();
     setPoblacion(resp);
-
   }
 
   const GetProvincia = async () => {
-
     const resp = await getProvincias();
     setProvincia(resp);
-
   }
 
   const GetComarcas = async () => {
-
     const resp = await getComarcas();
     setComarcas(resp);
-
   }
 
   // Efectos de React
@@ -132,6 +127,8 @@ export const ClientesPage = () => {
 
     if (data.length > 0) {
       setRows(data);
+    } else {
+      setRows([]);
     }
 
   }, [data]);
@@ -147,7 +144,7 @@ export const ClientesPage = () => {
         provincia: prov[0].descripcion,
         poblacion: ''
       })
-    } else if (clienteSeleccionado.cp.length == 0 || clienteSeleccionado.cp.length == 1) {
+    } else if (clienteSeleccionado.cp.length === 0 || clienteSeleccionado.cp.length === 1) {
       setClienteSeleccionado({
         ...clienteSeleccionado,
         provincia: ''
@@ -171,71 +168,56 @@ export const ClientesPage = () => {
 
   const peticionPost = async () => {
 
-    if (clienteSeleccionado.codigo != 0) {
+    const clienteRepetido = data.filter(cliente => cliente.codigo === clienteSeleccionado.codigo)
+
+    if (clienteRepetido.length > 0) {
+      setErrorCodigoRepetido(true)
+    } else {
+      setErrorCodigoRepetido(false)
+    }
+
+    if (clienteSeleccionado.codigo !== 0) {
       setErrorCodigo(false)
     } else {
       setErrorCodigo(true)
     }
 
-    if (clienteSeleccionado.razonSocial != "") {
+    if (clienteSeleccionado.razonSocial !== "") {
       setErrorNombre(false)
     } else {
       setErrorNombre(true)
     }
 
-    if (clienteSeleccionado.telefono != "") {
+    if (clienteSeleccionado.telefono !== "") {
       setErrorTelefono(false)
     } else {
       setErrorTelefono(true)
     }
 
-    if (clienteSeleccionado.direccion != "") {
+    if (clienteSeleccionado.direccion !== "") {
       setErrorDireccion(false)
     } else {
       setErrorDireccion(true)
     }
 
-    if (clienteSeleccionado.cp != "") {
+    if (clienteSeleccionado.cp !== "") {
       setErrorCP(false)
     } else {
       setErrorCP(true)
     }
 
-    if (clienteSeleccionado.email != "") {
+    if (clienteSeleccionado.email !== "") {
       setErrorEmail(false)
     } else {
       setErrorEmail(true)
     }
 
-    if (clienteSeleccionado.codigo != 0 && clienteSeleccionado.razonSocial != "" && clienteSeleccionado.telefono != "" && clienteSeleccionado.direccion != "" && clienteSeleccionado.cp != "" && clienteSeleccionado.email != "") {
+    if (clienteSeleccionado.codigo !== 0 && clienteRepetido.length === 0 && clienteSeleccionado.razonSocial !== "" && clienteSeleccionado.telefono !== "" && clienteSeleccionado.direccion !== "" && clienteSeleccionado.cp !== "" && clienteSeleccionado.email !== "") {
       clienteSeleccionado.id = null;
 
-      const resp = await postCliente(clienteSeleccionado);
+      await postCliente(clienteSeleccionado);
 
-      abrirCerrarModalInsertar();
       peticionGet();
-      setClienteSeleccionado({
-        id: 0,
-        codigo: 0,
-        cif: '',
-        razonSocial: '',
-        telefono: '',
-        movil: '',
-        email: '',
-        direccion: '',
-        poblacion: '',
-        provincia: '',
-        cp: '',
-        comarca: '',
-        idSector: 0,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-      })
 
       Swal.fire({
         position: 'center',
@@ -252,48 +234,73 @@ export const ClientesPage = () => {
         }
       });
     }
+
+    if (clienteRepetido.length > 0) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Código Repetido',
+        text: `Este código ya está siendo utilizado, introduzca otro código`,
+        showConfirmButton: false,
+        timer: 3000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    }
   }
 
   const peticionPut = async () => {
 
-    if (clienteSeleccionado.codigo != 0) {
+    const clienteRepetido = data.filter(cliente => cliente.codigo === clienteSeleccionado.codigo && clienteSeleccionado.id !== cliente.id)
+
+    if (clienteRepetido.length > 0) {
+      setErrorCodigoRepetido(true)
+    } else {
+      setErrorCodigoRepetido(false)
+    }
+
+    if (clienteSeleccionado.codigo !== 0) {
       setErrorCodigo(false)
     } else {
       setErrorCodigo(true)
     }
 
-    if (clienteSeleccionado.razonSocial != "") {
+    if (clienteSeleccionado.razonSocial !== "") {
       setErrorNombre(false)
     } else {
       setErrorNombre(true)
     }
 
-    if (clienteSeleccionado.telefono != "") {
+    if (clienteSeleccionado.telefono !== "") {
       setErrorTelefono(false)
     } else {
       setErrorTelefono(true)
     }
 
-    if (clienteSeleccionado.direccion != "") {
+    if (clienteSeleccionado.direccion !== "") {
       setErrorDireccion(false)
     } else {
       setErrorDireccion(true)
     }
 
-    if (clienteSeleccionado.cp != "") {
+    if (clienteSeleccionado.cp !== "") {
       setErrorCP(false)
     } else {
       setErrorCP(true)
     }
 
-    if (clienteSeleccionado.email != "") {
+    if (clienteSeleccionado.email !== "") {
       setErrorEmail(false)
     } else {
       setErrorEmail(true)
     }
 
-    if (clienteSeleccionado.codigo != 0 && clienteSeleccionado.razonSocial != "" && clienteSeleccionado.telefono != "" && clienteSeleccionado.direccion != "" && clienteSeleccionado.cp != "" && clienteSeleccionado.email != "") {
-      const resp = await putCliente(clienteSeleccionado);
+    if (clienteSeleccionado.codigo !== 0 && clienteRepetido.length === 0 && clienteSeleccionado.razonSocial !== "" && clienteSeleccionado.telefono !== "" && clienteSeleccionado.direccion !== "" && clienteSeleccionado.cp !== "" && clienteSeleccionado.email !== "") {
+      await putCliente(clienteSeleccionado);
 
       var clienteModificado = data;
       clienteModificado.map(cliente => {
@@ -302,29 +309,6 @@ export const ClientesPage = () => {
         }
       });
       peticionGet();
-      abrirCerrarModalEditar();
-      setClienteSeleccionado({
-        id: 0,
-        codigo: 0,
-        cif: '',
-        razonSocial: '',
-        telefono: '',
-        movil: '',
-        email: '',
-        direccion: '',
-        poblacion: '',
-        provincia: '',
-        cp: '',
-        comarca: '',
-        idSector: 0,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-      })
 
       Swal.fire({
         position: 'center',
@@ -342,66 +326,94 @@ export const ClientesPage = () => {
       })
 
     }
+
+    if (clienteRepetido.length > 0) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Código Repetido',
+        text: `Este código ya está siendo utilizado, introduzca otro código`,
+        showConfirmButton: false,
+        timer: 3000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    }
   }
 
   const peticionDelete = async () => {
 
-    var i = 0;
-    while (i < ClienteEliminar.length) {
+    abrirCerrarModalEliminar()
+    setCargando(true);
 
-      const resp = await getClienteById(ClienteEliminar[i]);
-      resp.deleted = true;
+    try {
+      var i = 0;
+      while (i < ClienteEliminar.length) {
 
-      await putCliente(resp);
+        await deleteCliente(ClienteEliminar[i]);
+
+        setClienteSeleccionado({
+          id: 0,
+          codigo: 0,
+          cif: '',
+          razonSocial: '',
+          telefono: '',
+          movil: '',
+          email: '',
+          direccion: '',
+          poblacion: '',
+          provincia: '',
+          cp: '',
+          comarca: '',
+          idSector: 0,
+          addDate: null,
+          addIdUser: null,
+          modDate: null,
+          modIdUser: null,
+          delDate: null,
+          delIdUser: null,
+          deleted: null,
+        })
+        i++;
+
+      }
 
       peticionGet();
-      abrirCerrarModalEliminar();
-      setClienteSeleccionado({
-        id: 0,
-        codigo: 0,
-        cif: '',
-        razonSocial: '',
-        telefono: '',
-        movil: '',
-        email: '',
-        direccion: '',
-        poblacion: '',
-        provincia: '',
-        cp: '',
-        comarca: '',
-        idSector: 0,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-      })
 
-      i++;
-
+      Swal.fire({
+        position: 'center',
+        icon: 'info',
+        title: 'Cliente Eliminado',
+        text: `El cliente se ha eliminado correctamente`,
+        showConfirmButton: false,
+        timer: 2000,
+        showClass: {
+          popup: 'animate__animated animate__bounceIn'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__bounceOut'
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al borrar al cliente',
+        showConfirmButton: true,
+      });
+    } finally {
+      setCargando(false)
     }
 
-    Swal.fire({
-      position: 'center',
-      icon: 'info',
-      title: 'Cliente Eliminado',
-      text: `El cliente se ha eliminado correctamente`,
-      showConfirmButton: false,
-      timer: 2000,
-      showClass: {
-        popup: 'animate__animated animate__bounceIn'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__bounceOut'
-      }
-    });
   }
 
   const handleChange = e => {
 
-    const { name, value } = e.target;
     setClienteSeleccionado(prevState => ({
       ...prevState,
       [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
@@ -421,6 +433,7 @@ export const ClientesPage = () => {
   const abrirCerrarModalInsertar = () => {
     setErrorCP(false)
     setErrorCodigo(false)
+    setErrorCodigoRepetido(false)
     setErrorDireccion(false)
     setErrorEmail(false)
     setErrorNombre(false)
@@ -459,6 +472,7 @@ export const ClientesPage = () => {
   const abrirCerrarModalEditar = () => {
     setErrorCP(false)
     setErrorCodigo(false)
+    setErrorCodigoRepetido(false)
     setErrorDireccion(false)
     setErrorEmail(false)
     setErrorNombre(false)
@@ -498,6 +512,7 @@ export const ClientesPage = () => {
   const abrirCerrarModalEliminar = () => {
     setErrorCP(false)
     setErrorCodigo(false)
+    setErrorCodigoRepetido(false)
     setErrorDireccion(false)
     setErrorEmail(false)
     setErrorNombre(false)
@@ -559,7 +574,7 @@ export const ClientesPage = () => {
   return (
     <>
       {
-        usuarioActual.idPerfil === 1 ?
+        user.idPerfil === 1 ?
           <MainLayout key="clientes" title='Clientes'>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -612,7 +627,18 @@ export const ClientesPage = () => {
                   }
                 </Card>
               </Grid>
-
+              {cargando && (
+                <div className="spinner-overlay">
+                  <TailSpin
+                    height="80"
+                    width="80"
+                    color="#4fa94d"
+                    ariaLabel="tail-spin-loading"
+                    radius="1"
+                    visible={true}
+                  />
+                </div>
+              )}
               <Grid item xs={12}>
                 <Card>
                   <DataGrid
@@ -651,6 +677,7 @@ export const ClientesPage = () => {
                   errorDireccion={errorDireccion}
                   errorEmail={errorEmail}
                   errorTelefono={errorTelefono}
+                  errorCodigoRepetido={errorCodigoRepetido}
                 />
               }
               botones={[
@@ -677,6 +704,7 @@ export const ClientesPage = () => {
                   errorDireccion={errorDireccion}
                   errorEmail={errorEmail}
                   errorTelefono={errorTelefono}
+                  errorCodigoRepetido={errorCodigoRepetido}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
                 peticionPut();
@@ -689,14 +717,22 @@ export const ClientesPage = () => {
             <ModalLayout
               titulo="Eliminar cliente"
               contenido={
-                <>
+                rowsIds.length > 1 ? (
                   <Grid item xs={12}>
-                    <Typography>Estás seguro que deseas eliminar el cliente?</Typography>
+                    <Typography>
+                      ¿Estás seguro que deseas eliminar los <b>{rowsIds.length}</b> clientes seleccionados?
+                    </Typography>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Typography><b>{clienteSeleccionado.razonSocial}</b></Typography>
-                  </Grid>
-                </>
+                ) : (
+                  <>
+                    <Grid item xs={12}>
+                      <Typography>Estás seguro que deseas eliminar el cliente?</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography><b>{clienteSeleccionado.razonSocial}</b></Typography>
+                    </Grid>
+                  </>
+                )
               }
               botones={[
                 insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
@@ -767,9 +803,10 @@ export const ClientesPage = () => {
               contenido={
                 <EditarClienteModal
                   clienteSeleccionado={clienteSeleccionado}
-                  comarcaEditar={comarcaEditar}
                   handleChange={handleChange}
                   autocompleteChange={handleAutocompleteChange}
+                  comarcaEditar={comarcaEditar}
+                  setClienteSeleccionado={setClienteSeleccionado}
                 />}
               botones={[insertarBotonesModal(<AddIcon />, 'Guardar')]}
               open={modalEditar}

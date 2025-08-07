@@ -1,30 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Grid, Button, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
+import { Grid, TextField, FormControlLabel, Checkbox, Autocomplete, Typography } from '@mui/material';
 import { getPerfiles, getClientes } from '../../api';
 
-export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, errorPerfil, errorNombre, clientesUnicos}) => {
+export const EditarUsuarioModal = ({ change: handleChange, handleChangeContraseña, handleChangePerfil, handleChangeCheckbox, estadoCliente, usuarioSeleccionado, handlePdf, setUsuarioSeleccionado, perfilUsuario, clienteUsuario, fileChange, errorPerfil, errorNombre, errorContraseña, clientesUnicos }) => {
 
     const [perfiles, setPerfiles] = useState([]);
-    const [clientes, setClientes] = useState([]);
 
     useEffect(() => {
 
         getPerfiles()
-            .then(perfil => {
-                setPerfiles(perfil);
-            })
+            .then(resp => setPerfiles(resp.filter(perfil => !perfil.deleted)))
             .catch(err => console.log('Ha habido un error:', err));
 
-        getClientes()
-            .then(clientes => {
-                setClientes(clientes);
-            })
     }, []);
 
     return (
         <>
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%', marginTop: '20px' }} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Nombre" name="nombre" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.nombre} error={errorNombre} helperText={errorNombre ? 'Este campo es obligatorio' : ' '} />
             </Grid>
 
             <Grid item xs={6} md={5}>
@@ -32,11 +25,35 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} label="Teléfono" name="telefono" type="number" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.telefono} />
+                <TextField
+                    sx={{
+                        width: '100%',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }}
+                    label="Teléfono"
+                    name="telefono"
+                    type="number"
+                    onChange={handleChange}
+                    value={usuarioSeleccionado && usuarioSeleccionado.telefono}
+                />
             </Grid>
 
             <Grid item xs={6} md={4}>
                 <TextField sx={{ width: '100%' }} label="Usuario" name="usuario" onChange={handleChange} value={usuarioSeleccionado && usuarioSeleccionado.usuario} />
+            </Grid>
+
+            <Grid item xs={4} md={4}>
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Contraseña" name="password" type="password" onChange={handleChangeContraseña} error={errorContraseña} helperText={errorContraseña ? 'Este campo tiene que ser mayor de 3 caracteres' : ' '} />
             </Grid>
 
             <Grid item xs={4}>
@@ -55,7 +72,7 @@ export const EditarUsuarioModal = ({ change: handleChange, handleChangePerfil, h
                     disableClearable={true}
                     id="CboPerfiles"
                     options={perfiles}
-                    style={{ marginTop: '20px'}}
+                    style={{ marginTop: '25px' }}
                     defaultValue={perfilUsuario[0]}
                     getOptionLabel={option => option.nombre}
                     renderInput={params => <TextField {...params} label="Perfil" name="idPerfil" error={errorPerfil} helperText={errorPerfil ? 'Este campo es obligatorio' : ' '} />}

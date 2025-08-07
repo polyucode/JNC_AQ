@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { MainLayout } from "../layout/MainLayout";
 import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
 
-import MuiAlert from '@mui/material/Alert';
-
-import { DataGrid, gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
+import { DataGrid } from '@mui/x-data-grid';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarOfertaModal } from '../components/Modals/InsertarOfertaModal';
 import { EditarOfertaModal } from '../components/Modals/EditarOfertaModal';
@@ -14,25 +11,24 @@ import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
-import CancelIcon from '@mui/icons-material/Cancel';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-import { deleteOfertas, getClientes, getOfertas, postOfertas, putOfertas, getContactos, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente, getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente, postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas, getOfertaById } from "../api";
-import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { ModalLayout } from "../components/ModalLayout";
+import {
+    getClientes, getOfertas, postOfertas, putOfertas, getProductos, postOfertasProductos, getConfPlantaCliente, getConfNivelesPlantasCliente,
+    getElementosPlanta, postElementosPlanta, postConfNivelesPlantasCliente, getAnalisisNivelesPlantasCliente, postConfPlantaCliente,
+    postAnalisisNivelesPlantasCliente, getTareas, getParametrosAnalisisPlanta, postParametrosAnalisisPlanta, postTareas,
+    getParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente, getValorParametros, postValorParametros,
+    putConfPlantaCliente, putOfertasProductos, getOfertasProductos, insertContactosOferta, putOfertasContactos, postOfertasContactos,
+    getOfertasContactos, deleteOfertas
+} from "../api";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
 import Swal from 'sweetalert2';
 
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { TailSpin } from 'react-loader-spinner';
+import './MantenimientoTecnico.css';
+import { AuthContext } from "../context/AuthContext";
 
 export const OfertasClientesPage = () => {
 
@@ -55,13 +51,6 @@ export const OfertasClientesPage = () => {
         descripcion: '',
         fechaInicio: null,
         fechaFinalizacion: null,
-        contacto1: '',
-        contacto2: '',
-        contacto3: '',
-        producto: 0,
-        descripcionProducto: '',
-        unidades: 0,
-        precio: 0,
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -71,29 +60,8 @@ export const OfertasClientesPage = () => {
         deleted: null,
     });
 
-    const [productoSeleccionado, setProductoSeleccionado] = useState({
-        id: 0,
-        producto: 0,
-        descripcionProducto: '',
-        precio: 0,
-        cantidad: 0,
-        consumidos: 0,
-        pendientes: 0,
-        addDate: null,
-        addIdUser: null,
-        modDate: null,
-        modIdUser: null,
-        delDate: null,
-        delIdUser: null,
-        deleted: null,
-    })
-
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-
-    const [ofertaEditar, setOfertaEditar] = useState([]);
     const [OfertaEliminar, setOfertaEliminar] = useState([]);
 
-    const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [productos, setProductos] = useState([]);
     const [plantas, setPlantas] = useState([]);
@@ -102,33 +70,33 @@ export const OfertasClientesPage = () => {
     const [tareas, setTareas] = useState([]);
     const [nivelesPlanta, setNivelesPlanta] = useState([]);
     const [analisisPlanta, setAnalisisPlanta] = useState([]);
-    const [clientesTable, setClientesTable] = useState({});
-
-    const [contacto1Editar, setContacto1Editar] = useState([]);
-    const [contacto2Editar, setContacto2Editar] = useState([]);
-    const [contacto3Editar, setContacto3Editar] = useState([]);
+    const [parametrosElemento, setParametrosElemento] = useState([]);
+    const [valorParametros, setValorParametros] = useState([]);
+    const [productosAsociados, setProductosAsociados] = useState([]);
+    const [contactosAsociados, setContactosAsociados] = useState([]);
 
     const [clienteCodigoEditar, setClientesCodigoEditar] = useState([]);
-    const [productoEditar, setProductoEditar] = useState([]);
-
-    const [articulos, setArticulos] = useState([]);
 
     const [data, setData] = useState([]);
 
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
     const [errorOferta, setErrorOferta] = useState(false);
     const [errorPedido, setErrorPedido] = useState(false);
     const [errorCodigo, setErrorCodigo] = useState(false);
     const [errorFechaInicio, setErrorFechaInicio] = useState(false);
     const [errorFechaFinal, setErrorFechaFinal] = useState(false);
-    const [errorPrecio, setErrorPrecio] = useState(false);
 
     const [filterText, setFilterText] = useState('');
 
     const [openModal, setOpenModal] = useState(false);
 
     const [ofertaNueva, setOfertaNueva] = useState(0);
+
+    const [ofertaContactosSeleccionados, setOfertaContactosSeleccionados] = useState([]);
+    const [ofertaProductosSeleccionados, setOfertaProductosSeleccionados] = useState([]);
+
+    const [cargando, setCargando] = useState(false);
 
     const columns = [
 
@@ -157,9 +125,6 @@ export const OfertasClientesPage = () => {
                 return date.toLocaleDateString();
             }
         },
-        { headerName: 'Contacto1', field: 'contacto1', width: 200 },
-        { headerName: 'Contacto2', field: 'contacto2', width: 200 },
-        { headerName: 'Contacto3', field: 'contacto3', width: 200 },
         {
             headerName: 'Producto',
             field: 'producto',
@@ -193,163 +158,108 @@ export const OfertasClientesPage = () => {
 
     }
 
-    const getCliente = async () => {
-
-        const resp = await getClientes()
-        const cliente = Object.entries(resp).map(([key, value]) => (key, value))
-        setClientes(cliente);
-
-    }
-
     useEffect(() => {
         getOferta();
-        getCliente();
-        getContactos()
-            .then(contactos => {
-                setContactos(contactos);
-            })
+        getClientes()
+            .then(resp => setClientes(resp.filter(cliente => !cliente.deleted)));
+
         getProductos()
-            .then(productos => {
-                setProductos(productos);
-            })
+            .then(resp => setProductos(resp.filter(producto => !producto.deleted)));
 
         getConfPlantaCliente()
-            .then(planta => {
-                setPlantas(planta);
-            })
+            .then(resp => setPlantas(resp.filter(planta => !planta.deleted)));
 
         getConfNivelesPlantasCliente()
-            .then(nivel => {
-                setNivelesPlanta(nivel);
-            })
+            .then(resp => setNivelesPlanta(resp.filter(nivel => !nivel.deleted)));
 
         getElementosPlanta()
-            .then(elemento => {
-                setElementosPlanta(elemento);
-            })
+            .then(resp => setElementosPlanta(resp.filter(elem => !elem.deleted)));
 
         getAnalisisNivelesPlantasCliente()
-            .then(analisi => {
-                setAnalisisPlanta(analisi);
-            })
+            .then(resp => setAnalisisPlanta(resp.filter(an => !an.deleted)));
 
         getTareas()
-            .then(tarea => {
-                setTareas(tarea);
-            })
+            .then(resp => setTareas(resp.filter(tarea => !tarea.deleted)));
 
         getParametrosAnalisisPlanta()
-            .then(parametro => {
-                setParametrosAnalisis(parametro);
-            })
+            .then(resp => setParametrosAnalisis(resp.filter(param => !param.deleted)));
 
+        getParametrosElementoPlantaCliente()
+            .then(resp => setParametrosElemento(resp.filter(param => !param.deleted)));
+
+        getValorParametros()
+            .then(resp => setValorParametros(resp.filter(valor => !valor.deleted)));
+
+        getOfertasProductos()
+            .then(resp => setProductosAsociados(resp.filter(prod => !prod.deleted)))
+
+        getOfertasContactos()
+            .then(resp => setContactosAsociados(resp.filter(cont => !cont.deleted)))
     }, [])
 
     useEffect(() => {
         if (data.length > 0) {
             setRows(data);
+        } else {
+            setRows([]);
         }
     }, [data]);
 
-    useEffect(() => {
-
-        const lookupClientes = {};
-        clientes.map(fila => lookupClientes[fila.id] = fila.codigo);
-        setClientesTable(lookupClientes);
-
-    }, [clientes])
-
-    useEffect(() => {
-
-        const nombre = clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.codigoCliente);
-        (nombre.length > 0) && setOfertaSeleccionada({
-            ...ofertaSeleccionada,
-            nombreCliente: nombre[0].razonSocial
-        })
-
-    }, [ofertaSeleccionada.codigoCliente])
-
-    useEffect(() => {
-
-        const codigo = clientes.filter(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente);
-        (codigo.length > 0) && setOfertaSeleccionada({
-            ...ofertaSeleccionada,
-            codigoCliente: codigo[0].codigo
-        })
-    }, [ofertaSeleccionada.nombreCliente])
-
     const peticionPost = async () => {
 
-        if (ofertaSeleccionada.numeroOferta != 0) {
+        const ofertaRepetida = data.filter(of => of.numeroOferta === ofertaSeleccionada.numeroOferta && !of.deleted)
+
+        if (ofertaSeleccionada.numeroOferta !== 0) {
             setErrorOferta(false)
         } else {
             setErrorOferta(true)
         }
 
-        if (ofertaSeleccionada.pedido != 0) {
+        if (ofertaSeleccionada.pedido !== 0) {
             setErrorPedido(false)
         } else {
             setErrorPedido(true)
         }
 
-        if (ofertaSeleccionada.codigoCliente != 0) {
+        if (ofertaSeleccionada.codigoCliente !== 0) {
             setErrorCodigo(false)
         } else {
             setErrorCodigo(true)
         }
 
-        if (ofertaSeleccionada.fechaInicio != null) {
+        if (ofertaSeleccionada.fechaInicio !== null) {
             setErrorFechaInicio(false)
         } else {
             setErrorFechaInicio(true)
         }
 
-        if (ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+        if (ofertaSeleccionada.fechaFinalizacion !== null && ofertaSeleccionada.fechaFinalizacion >= ofertaSeleccionada.fechaInicio) {
             setErrorFechaFinal(false)
         } else {
             setErrorFechaFinal(true)
         }
 
-        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+        if (ofertaRepetida.length === 0 && ofertaSeleccionada.numeroOferta !== 0 && ofertaSeleccionada.pedido !== 0 && ofertaSeleccionada.codigoCliente !== 0 && ofertaSeleccionada.fechaInicio !== null && ofertaSeleccionada.fechaFinalizacion !== null && ofertaSeleccionada.fechaFinalizacion >= ofertaSeleccionada.fechaInicio) {
             ofertaSeleccionada.id = 0;
-
-            productoSeleccionado.oferta = ofertaSeleccionada.numeroOferta
-            productoSeleccionado.codigoCliente = ofertaSeleccionada.codigoCliente
-            productoSeleccionado.producto = ofertaSeleccionada.producto
-            productoSeleccionado.precio = ofertaSeleccionada.precio
-            productoSeleccionado.cantidad = ofertaSeleccionada.unidades
-            productoSeleccionado.descripcionProducto = ofertaSeleccionada.descripcionProducto
 
             const resp = await postOfertas(ofertaSeleccionada);
 
-            await postOfertasProductos(productoSeleccionado)
+            const decimalRegex = /^-?\d+([.,]\d{1,2})?$/;
 
-            abrirCerrarModalInsertar();
+            if (ofertaProductosSeleccionados.length > 0) {
+                ofertaProductosSeleccionados.map(async producto => {
+                    if (decimalRegex.test(producto.precio)) {
+                        const normalizedValue = normalizeDecimal(producto.precio);
+                        producto.precio = Number(normalizedValue.replace(',', '.')) || 0
+                    }
+                    producto.idOferta = resp.data.data.id
+                    await postOfertasProductos(producto);
+                })
+            }
+
+            await insertContactosOferta(ofertaContactosSeleccionados, ofertaSeleccionada.numeroOferta);
+
             getOferta();
-            setOfertaSeleccionada({
-                id: 0,
-                numeroOferta: 0,
-                pedido: 0,
-                referencia: '',
-                codigoCliente: 0,
-                nombreCliente: '',
-                descripcion: '',
-                fechaInicio: null,
-                fechaFinalizacion: null,
-                contacto1: '',
-                contacto2: '',
-                contacto3: '',
-                producto: 0,
-                unidades: 0,
-                precio: 0,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
 
             Swal.fire({
                 position: 'center',
@@ -365,165 +275,215 @@ export const OfertasClientesPage = () => {
                     popup: 'animate__animated animate__bounceOut'
                 }
             });
-
+        } else if (ofertaRepetida.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: `Este número de oferta ya existe`,
+                showConfirmButton: true
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: `Faltan valores obligatorios por introducir`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
     }
 
     const peticionPut = async () => {
 
-        if (ofertaSeleccionada.numeroOferta != 0) {
+        const ofertaRepetida = data.filter(of => of.numeroOferta === ofertaSeleccionada.numeroOferta && of.id !== ofertaSeleccionada.id && !of.deleted)
+
+        if (ofertaSeleccionada.numeroOferta !== 0) {
             setErrorOferta(false)
         } else {
             setErrorOferta(true)
         }
 
-        if (ofertaSeleccionada.pedido != 0) {
+        if (ofertaSeleccionada.pedido !== 0) {
             setErrorPedido(false)
         } else {
             setErrorPedido(true)
         }
 
-        if (ofertaSeleccionada.codigoCliente != 0) {
+        if (ofertaSeleccionada.codigoCliente !== 0) {
             setErrorCodigo(false)
         } else {
             setErrorCodigo(true)
         }
 
-        if (ofertaSeleccionada.fechaInicio != null) {
+        if (ofertaSeleccionada.fechaInicio !== null) {
             setErrorFechaInicio(false)
         } else {
             setErrorFechaInicio(true)
         }
 
-        if (ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+        if (ofertaSeleccionada.fechaFinalizacion !== null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
             setErrorFechaFinal(false)
         } else {
             setErrorFechaFinal(true)
         }
 
-        if (ofertaSeleccionada.numeroOferta != 0 && ofertaSeleccionada.pedido != 0 && ofertaSeleccionada.codigoCliente != 0 && ofertaSeleccionada.fechaInicio != null && ofertaSeleccionada.fechaFinalizacion != null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
+        if (ofertaRepetida.length === 0 && ofertaSeleccionada.numeroOferta !== 0 && ofertaSeleccionada.pedido !== 0 && ofertaSeleccionada.codigoCliente !== 0 && ofertaSeleccionada.fechaInicio !== null && ofertaSeleccionada.fechaFinalizacion !== null && ofertaSeleccionada.fechaFinalizacion > ofertaSeleccionada.fechaInicio) {
 
-            const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
-            if (decimalRegex.test(ofertaSeleccionada.precio)) {
-                const normalizedValue = normalizeDecimal(ofertaSeleccionada.precio);
-                const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
-                const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
-                if (decimalPart.length > 2) {
-                    setErrorPrecio(true);
-                } else {
-                    setErrorPrecio(false);
-                    ofertaSeleccionada.precio = Number(normalizedValue.replace(',', '.')) || 0
-                    const resp = await putOfertas(ofertaSeleccionada);
+            await putOfertas(ofertaSeleccionada);
 
-                    var ofertaModificada = data;
-                    ofertaModificada.map(oferta => {
-                        if (oferta.id === ofertaSeleccionada.id) {
-                            oferta = ofertaSeleccionada
-                        }
-                    });
-                    getOferta();
-                    abrirCerrarModalEditar();
-                    setOfertaSeleccionada({
-                        id: 0,
-                        numeroOferta: 0,
-                        pedido: 0,
-                        referencia: '',
-                        codigoCliente: 0,
-                        nombreCliente: '',
-                        descripcion: '',
-                        fechaInicio: null,
-                        fechaFinalizacion: null,
-                        contacto1: '',
-                        contacto2: '',
-                        contacto3: '',
-                        producto: 0,
-                        unidades: 0,
-                        precio: 0,
-                        addDate: null,
-                        addIdUser: null,
-                        modDate: null,
-                        modIdUser: null,
-                        delDate: null,
-                        delIdUser: null,
-                        deleted: null,
-                    })
+            const decimalRegex = /^-?\d+([.,]\d{1,2})?$/;
 
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'info',
-                        title: 'Oferta Editada',
-                        text: `La oferta se ha editado correctamente`,
-                        showConfirmButton: false,
-                        timer: 2000,
-                        showClass: {
-                            popup: 'animate__animated animate__bounceIn'
-                        },
-                        hideClass: {
-                            popup: 'animate__animated animate__bounceOut'
-                        }
-                    });
+            var ofertaModificada = data;
+            ofertaModificada.map(oferta => {
+                if (oferta.id === ofertaSeleccionada.id) {
+                    oferta = ofertaSeleccionada
                 }
+            });
+            getOferta();
+
+            if (ofertaProductosSeleccionados.length > 0) {
+                ofertaProductosSeleccionados.map(async producto => {
+                    if (producto.id !== 0) {
+                        if (decimalRegex.test(producto.precio)) {
+                            const normalizedValue = normalizeDecimal(producto.precio);
+                            producto.precio = Number(normalizedValue.replace(',', '.')) || 0
+                        }
+                        await putOfertasProductos(producto)
+                    }
+                    else {
+                        if (decimalRegex.test(producto.precio)) {
+                            const normalizedValue = normalizeDecimal(producto.precio);
+                            producto.precio = Number(normalizedValue.replace(',', '.')) || 0
+                        }
+                        await postOfertasProductos(producto);
+                    }
+                })
             }
+
+            if (ofertaContactosSeleccionados.length > 0) {
+                ofertaContactosSeleccionados.map(async contacto => {
+                    if (contacto.id !== 0) {
+                        await putOfertasContactos(contacto)
+                    }
+                    else {
+                        await postOfertasContactos(contacto);
+                    }
+                })
+            }
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Oferta Editada',
+                text: `La oferta se ha editado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else if (ofertaRepetida.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: `Este número de oferta ya existe`,
+                showConfirmButton: true
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: `Faltan datos obligatorios por introducir`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
     }
 
     const peticionDelete = async () => {
+        abrirCerrarModalEliminar();
+        setCargando(true);
 
-        var i = 0;
-        while (i < OfertaEliminar.length) {
+        try {
 
-            const resp = await getOfertaById(OfertaEliminar[i]);
-            resp.deleted = true;
+            var i = 0
+            while (i < OfertaEliminar.length) {
 
-            await putOfertas(resp)
+                await deleteOfertas(OfertaEliminar[i]);
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    referencia: '',
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: '',
+                    fechaFinalizacion: '',
+                    contacto1: '',
+                    contacto2: '',
+                    contacto3: '',
+                    producto: 0,
+                    unidades: 0,
+                    precio: 0,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                });
 
-            //const resp = await deleteOfertas(OfertaEliminar[i]);
+                i++;
+            }
 
             getOferta();
-            abrirCerrarModalEliminar();
-            setOfertaSeleccionada({
-                id: 0,
-                numeroOferta: 0,
-                pedido: 0,
-                referencia: '',
-                codigoCliente: 0,
-                nombreCliente: '',
-                descripcion: '',
-                fechaInicio: '',
-                fechaFinalizacion: '',
-                contacto1: '',
-                contacto2: '',
-                contacto3: '',
-                producto: 0,
-                unidades: 0,
-                precio: 0,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Oferta Eliminada',
+                text: 'La oferta se ha eliminado correctamente',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
             });
-
-            i++;
-
+        } catch (error) {
+            console.error("Error al borrar la oferta", error);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al borrar la oferta',
+                showConfirmButton: true,
+            });
+        } finally {
+            setCargando(false);
         }
-
-        Swal.fire({
-            position: 'center',
-            icon: 'info',
-            title: 'Oferta Eliminada',
-            text: `La oferta se ha eliminado correctamente`,
-            showConfirmButton: false,
-            timer: 2000,
-            showClass: {
-                popup: 'animate__animated animate__bounceIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__bounceOut'
-            }
-        });
     }
 
     const normalizeDecimal = (value) => {
@@ -655,221 +615,241 @@ export const OfertasClientesPage = () => {
     };
 
     const handleChangeOferta = (event) => {
-
         setOfertaNueva(parseInt(event.target.value))
     }
 
     const clonarOferta = async (oferta) => {
 
-        const nivelesOferta = nivelesPlanta.filter(nivel => nivel.oferta === ofertaSeleccionada.numeroOferta)
+        const ofertaRepetida = data.filter(of => of.numeroOferta === oferta && !of.deleted)
 
-        const plantaOferta = plantas.filter(planta => planta.oferta === ofertaSeleccionada.numeroOferta)
+        if (ofertaRepetida.length === 0) {
+            handleCloseModal();
+            abrirCerrarModalEditar();
+            setCargando(true);
 
-        const plantaClonada = { ...plantaOferta[0] };
+            try {
 
-        plantaClonada.id = 0;
-        plantaClonada.oferta = oferta;
+                //await cloneOferta(ofertaSeleccionada.id, oferta)
 
-        const respPlanta = await postConfPlantaCliente(plantaClonada);
+                const nivelesOferta = nivelesPlanta.filter(nivel => nivel.oferta === ofertaSeleccionada.numeroOferta);
+                const plantaOferta = plantas.filter(planta => planta.oferta === ofertaSeleccionada.numeroOferta);
+                const diagramaParseado = JSON.parse(plantaOferta[0].diagrama);
+                const plantaClonada = { ...plantaOferta[0], id: 0, oferta, diagrama: "" };
 
-        nivelesOferta.map(async (nivel) => {
+                const respPlanta = await postConfPlantaCliente(plantaClonada);
 
-            const elementosOferta = elementosPlanta.filter(elem => elem.id === nivel.id_Elemento)
+                await Promise.all(nivelesOferta.map(async (nivel) => {
+                    const elementosOferta = elementosPlanta.filter(elem => elem.id === nivel.id_Elemento);
+                    const parametrosOferta = parametrosElemento.filter(parametro => parametro.oferta === ofertaSeleccionada.numeroOferta && parametro.id_Elemento === nivel.id_Elemento);
+                    const elementosClonados = { ...elementosOferta[0], id: 0, oferta };
 
-            const elementosClonados = { ...elementosOferta[0] };
+                    const respElemento = await postElementosPlanta(elementosClonados);
 
-            elementosClonados.id = 0;
-            elementosClonados.oferta = oferta;
+                    diagramaParseado.nodos.forEach(param => {
+                        if (param.type === 'nodoElemento' && param.data.id === elementosOferta[0].id) {
+                            param.data.id = respElemento.id;
+                        }
+                    });
 
-            const resp = await postElementosPlanta(elementosClonados);
+                    const nivelClonado = { ...nivel, id: 0, oferta, id_Elemento: respElemento.id, id_Planta: respPlanta.id };
+                    const respNiveles = await postConfNivelesPlantasCliente(nivelClonado);
 
-            const nivelClonado = { ...nivel }
+                    const analisisOferta = analisisPlanta.filter(anal => anal.id_NivelesPlanta === nivel.id);
+                    const tareasPorElemento = parametrosAnalisis.filter(parametro => parametro.elemento === nivel.id_Elemento);
+                    const tareasAnalisis = tareas.filter(tarea => tarea.elemento === nivel.id_Elemento);
+                    const valoresOferta = valorParametros.filter(valor => valor.id_Elemento === nivel.id_Elemento);
 
-            nivelClonado.id = 0;
-            nivelClonado.oferta = oferta;
-            nivelClonado.id_Elemento = resp.id;
-            nivelClonado.id_Planta = respPlanta.id
+                    await Promise.all([
+                        ...analisisOferta.map(anal => {
+                            anal.id = 0;
+                            anal.id_NivelesPlanta = respNiveles.id;
+                            return postAnalisisNivelesPlantasCliente(anal);
+                        }),
+                        ...tareasPorElemento.map(tarea => {
+                            tarea.id = 0;
+                            tarea.oferta = oferta;
 
-            const respNiveles = await postConfNivelesPlantasCliente(nivelClonado)
+                            var fecha = new Date(tarea.fecha);
+                            var year = fecha.getFullYear() + 1;
+                            var month = fecha.getMonth() + 1;
+                            var day = fecha.getDate();
 
-            const analisisOferta = analisisPlanta.filter(anal => anal.id_NivelesPlanta === nivel.id)
+                            var monthFormatted = month < 10 ? '0' + month : month;
+                            var dayFormatted = day < 10 ? '0' + day : day;
 
-            const analisisClonados = [...analisisOferta];
+                            var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
 
-            analisisClonados.map(async (anal) => {
+                            tarea.fecha = fechaFormateada;
+                            fecha.setFullYear(fecha.getFullYear() + 1);
+                            tarea.periodo = fecha.toLocaleDateString('es', { year: 'numeric', month: 'short' });
+                            tarea.elemento = respElemento.id;
+                            tarea.cancelado = false;
+                            tarea.facturado = false;
+                            tarea.fechaPdf = null;
+                            tarea.fechaRealizado = null;
+                            tarea.fechaRecogido = null;
+                            tarea.numeroFacturado = "";
+                            tarea.observaciones = "";
+                            tarea.pdf = 0;
+                            tarea.realizado = false;
+                            tarea.recibido = false;
+                            tarea.recogido = false;
+                            tarea.resultado = "";
+                            tarea.noValido = false;
+                            tarea.incorrecto = false;
+                            tarea.textoCorreo = "";
 
-                anal.id = 0
-                anal.id_NivelesPlanta = respNiveles.id
-                await postAnalisisNivelesPlantasCliente(anal)
+                            return postParametrosAnalisisPlanta(tarea);
+                        }),
+                        ...tareasAnalisis.map(analisi => {
+                            analisi.id = 0;
+                            analisi.oferta = oferta;
 
-            })
+                            var fecha = new Date(analisi.fecha);
+                            var year = fecha.getFullYear() + 1;
+                            var month = fecha.getMonth() + 1;
+                            var day = fecha.getDate();
+                            var monthFormatted = month < 10 ? '0' + month : month;
+                            var dayFormatted = day < 10 ? '0' + day : day;
+                            var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
+                            analisi.fecha = fechaFormateada;
 
-            const tareasPorElemento = parametrosAnalisis.filter(parametro => parametro.elemento === nivel.id_Elemento);
-            const tareasPorElementoClonados = [...tareasPorElemento];
+                            analisi.elemento = respElemento.id;
+                            return postTareas(analisi);
+                        }),
+                        ...valoresOferta.map(valor => {
+                            if (valor.fecha == null) {
+                                valor.id = 0;
+                                valor.oferta = oferta;
+                                valor.id_Elemento = respElemento.id;
+                                return postValorParametros(valor);
+                            }
+                        }),
+                        ...parametrosOferta.map(param => {
+                            param.id = 0;
+                            param.oferta = oferta;
+                            param.id_Elemento = respElemento.id;
+                            return postParametrosElementoPlantaCliente(param);
+                        })
+                    ]);
 
-            tareasPorElementoClonados.map(async (tarea) => {
+                    const stringed = JSON.stringify(diagramaParseado);
+                    respPlanta.diagrama = stringed;
+                    await putConfPlantaCliente(respPlanta);
+                }));
 
-                tarea.id = 0;
-                tarea.oferta = oferta;
+                const ofertaClonada = { ...ofertaSeleccionada, id: 0, numeroOferta: oferta };
 
-                var fecha = new Date(tarea.fecha);
-                var year = fecha.getFullYear() + 1;
-                var month = fecha.getMonth() + 1;
-                var day = fecha.getDate();
+                ofertaClonada.fechaInicio = new Date(ofertaClonada.fechaInicio);
+                ofertaClonada.fechaFinalizacion = new Date(ofertaClonada.fechaFinalizacion);
 
-                var monthFormatted = month < 10 ? '0' + month : month;
-                var dayFormatted = day < 10 ? '0' + day : day;
+                var yearFI = ofertaClonada.fechaInicio.getFullYear() + 1;
+                var monthFI = ofertaClonada.fechaInicio.getMonth() + 1;
+                var dayFI = ofertaClonada.fechaInicio.getDate();
 
-                var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
+                var yearFF = ofertaClonada.fechaFinalizacion.getFullYear() + 1;
+                var monthFF = ofertaClonada.fechaFinalizacion.getMonth() + 1;
+                var dayFF = ofertaClonada.fechaFinalizacion.getDate();
 
-                tarea.fecha = fechaFormateada;
-                fecha.setFullYear(fecha.getFullYear() + 1);
-                tarea.periodo = fecha.toLocaleDateString('es', { year: 'numeric', month: 'short' });
-                tarea.elemento = resp.id;
-                tarea.cancelado = false;
-                tarea.facturado = false;
-                tarea.fechaPdf = null;
-                tarea.fechaRealizado = null;
-                tarea.fechaRecogido = null;
-                tarea.numeroFacturado = "";
-                tarea.observaciones = "";
-                tarea.operario = null;
-                tarea.pdf = 0;
-                tarea.realizado = false;
-                tarea.recibido = false;
-                tarea.recogido = false;
-                tarea.resultado = "";
-                await postParametrosAnalisisPlanta(tarea)
-            })
+                var monthFormatted = monthFI < 10 ? '0' + monthFI : monthFI;
+                var dayFormatted = dayFI < 10 ? '0' + dayFI : dayFI;
 
-            const tareasAnalisis = tareas.filter(tarea => tarea.elemento === nivel.id_Elemento);
-            const tareasAnalisisClonados = [...tareasAnalisis];
+                var monthFormattedFF = monthFF < 10 ? '0' + monthFF : monthFF;
+                var dayFormattedFF = dayFF < 10 ? '0' + dayFF : dayFF;
 
-            tareasAnalisisClonados.map(async (analisi) => {
+                var fechaFormateada = yearFI + '-' + monthFormatted + '-' + dayFormatted;
+                var fechaFormateadaFF = yearFF + '-' + monthFormattedFF + '-' + dayFormattedFF;
 
-                analisi.id = 0;
-                analisi.oferta = oferta;
+                ofertaClonada.fechaInicio = fechaFormateada;
+                ofertaClonada.fechaFinalizacion = fechaFormateadaFF;
 
-                var fecha = new Date(analisi.fecha);
-                var year = fecha.getFullYear() + 1;
-                var month = fecha.getMonth() + 1;
-                var day = fecha.getDate();
-                var monthFormatted = month < 10 ? '0' + month : month;
-                var dayFormatted = day < 10 ? '0' + day : day;
-                var fechaFormateada = year + '-' + monthFormatted + '-' + dayFormatted;
-                analisi.fecha = fechaFormateada;
-                analisi.elemento = resp.id;
-                analisi.operario = null;
-                analisi.observaciones = "";
-                analisi.pdf = null;
+                const resp = await postOfertas(ofertaClonada);
 
-                await postTareas(analisi)
-            })
+                const productosOferta = productosAsociados.filter(producto => producto.idOferta === ofertaSeleccionada.id);
+                const contactosOferta = contactosAsociados.filter(contacto => contacto.idOferta === ofertaSeleccionada.id)
 
-        })
+                await Promise.all([
+                    ...productosOferta.map(producto => {
+                        producto.id = 0;
+                        producto.idOferta = resp.data.data.id;
+                        return postOfertasProductos(producto);
+                    }),
+                    ...contactosOferta.map(contacto => {
+                        contacto.id = 0;
+                        contacto.idOferta = resp.data.data.id;
+                        return postOfertasContactos(contacto);
+                    })
+                ]);
 
-        const ofertaClonada = { ...ofertaSeleccionada };
+                getOferta();
+                setOfertaSeleccionada({
+                    id: 0,
+                    numeroOferta: 0,
+                    pedido: 0,
+                    referencia: '',
+                    codigoCliente: 0,
+                    nombreCliente: '',
+                    descripcion: '',
+                    fechaInicio: null,
+                    fechaFinalizacion: null,
+                    contacto1: '',
+                    contacto2: '',
+                    contacto3: '',
+                    producto: 0,
+                    unidades: 0,
+                    precio: 0,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null,
+                });
 
-        // Sumar un año a la propiedad fechaInicio
-        ofertaClonada.fechaInicio = new Date(ofertaClonada.fechaInicio);
-        ofertaClonada.fechaFinalizacion = new Date(ofertaClonada.fechaFinalizacion);
-
-        var yearFI = ofertaClonada.fechaInicio.getFullYear() + 1;
-        var monthFI = ofertaClonada.fechaInicio.getMonth() + 1;
-        var dayFI = ofertaClonada.fechaInicio.getDate();
-
-        var yearFF = ofertaClonada.fechaFinalizacion.getFullYear() + 1;
-        var monthFF = ofertaClonada.fechaFinalizacion.getMonth() + 1;
-        var dayFF = ofertaClonada.fechaFinalizacion.getDate();
-
-        var monthFormatted = monthFI < 10 ? '0' + monthFI : monthFI;
-        var dayFormatted = dayFI < 10 ? '0' + dayFI : dayFI;
-
-        var monthFormattedFF = monthFF < 10 ? '0' + monthFF : monthFF;
-        var dayFormattedFF = dayFF < 10 ? '0' + dayFF : dayFF;
-
-        var fechaFormateada = yearFI + '-' + monthFormatted + '-' + dayFormatted;
-        var fechaFormateadaFF = yearFF + '-' + monthFormattedFF + '-' + dayFormattedFF;
-
-        ofertaClonada.fechaInicio = fechaFormateada;
-        ofertaClonada.fechaFinalizacion = fechaFormateadaFF;
-
-        // Establecer el id en 0
-        ofertaClonada.id = 0;
-        ofertaClonada.numeroOferta = oferta;
-        await postOfertas(ofertaClonada)
-
-        getOferta();
-        handleCloseModal()
-        abrirCerrarModalEditar();
-        setOfertaSeleccionada({
-            id: 0,
-            numeroOferta: 0,
-            pedido: 0,
-            referencia: '',
-            codigoCliente: 0,
-            nombreCliente: '',
-            descripcion: '',
-            fechaInicio: null,
-            fechaFinalizacion: null,
-            contacto1: '',
-            contacto2: '',
-            contacto3: '',
-            producto: 0,
-            unidades: 0,
-            precio: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
-
-        Swal.fire({
-            position: 'center',
-            icon: 'info',
-            title: 'Oferta Clonada',
-            text: `La oferta se ha clonado correctamente`,
-            showConfirmButton: false,
-            timer: 2000,
-            showClass: {
-                popup: 'animate__animated animate__bounceIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__bounceOut'
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'Oferta Clonada',
+                    text: `La oferta se ha clonado correctamente`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
+            } catch (error) {
+                console.error("Error al clonar la oferta", error);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al clonar la oferta',
+                    showConfirmButton: true,
+                });
+            } finally {
+                setCargando(false);
             }
-        });
-
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: 'Este número de oferta ya existe. Introduzca otro',
+                showConfirmButton: true,
+            });
+        }
     }
 
     const handleChange = e => {
-        const { name, value } = e.target;
         setOfertaSeleccionada(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
     }
-
-    const handleChangeDecimal = (event) => {
-        const { name, value } = event.target;
-        const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
-        if (decimalRegex.test(value)) {
-            const normalizedValue = normalizeDecimal(value);
-            const decimalSeparator = normalizedValue.includes(',') ? ',' : '.';
-            const decimalPart = normalizedValue.split(decimalSeparator)[1] || '';
-            if (decimalPart.length > 2) {
-                setErrorPrecio(true);
-            } else {
-                setErrorPrecio(false);
-                setOfertaSeleccionada(prevState => ({
-                    ...prevState,
-                    precio: Number(normalizedValue.replace(',', '.')) || 0
-                }));
-            }
-        }
-    };
 
     const handleChangeFecha = e => {
         const { name, value } = e.target;
@@ -877,14 +857,6 @@ export const OfertasClientesPage = () => {
             ...prevState,
             [name]: value
         }))
-    }
-
-    const handleChangePrecio = e => {
-        const { name, value } = e.target;
-        setOfertaSeleccionada(prevState => ({
-            ...prevState,
-            [e.target.name]: e.target.name === 'price' ? parseFloat(e.target.value) : e.target.value
-        }));
     }
 
     const handleSelectRow = (ids) => {
@@ -908,7 +880,7 @@ export const OfertasClientesPage = () => {
     return (
         <>
             {
-                usuarioActual.idPerfil === 1 ?
+                user.idPerfil === 1 ?
                     <MainLayout title="Ofertas">
                         <Grid container spacing={2}>
                             {/* Título y botones de opción */}
@@ -962,7 +934,18 @@ export const OfertasClientesPage = () => {
                                     }
                                 </Card>
                             </Grid>
-
+                            {cargando && (
+                                <div className="spinner-overlay">
+                                    <TailSpin
+                                        height="80"
+                                        width="80"
+                                        color="#4fa94d"
+                                        ariaLabel="tail-spin-loading"
+                                        radius="1"
+                                        visible={true}
+                                    />
+                                </div>
+                            )}
                             {/* Tabla donde se muestran los registros de los clientes */}
                             <Grid item xs={12}>
                                 <Card>
@@ -982,10 +965,6 @@ export const OfertasClientesPage = () => {
                                         onRowClick={(ofertaSeleccionada, evt) => {
                                             setOfertaSeleccionada(ofertaSeleccionada.row)
                                             setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
-                                            setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
-                                            setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
-                                            setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
-                                            setProductoEditar(productos.filter(producto => producto.id === ofertaSeleccionada.row.producto))
                                             abrirCerrarModalEditar();
                                         }}
                                     />
@@ -1004,13 +983,13 @@ export const OfertasClientesPage = () => {
                                         change={handleChange}
                                         handleChangeFecha={handleChangeFecha}
                                         setOfertaSeleccionada={setOfertaSeleccionada}
-                                        handleChangeDecimal={handleChangeDecimal}
                                         errorCodigo={errorCodigo}
                                         errorFechaFinal={errorFechaFinal}
                                         errorFechaInicio={errorFechaInicio}
                                         errorOferta={errorOferta}
                                         errorPedido={errorPedido}
-                                        errorPrecio={errorPrecio}
+                                        setOfertaContactosSeleccionados={setOfertaContactosSeleccionados}
+                                        setOfertaProductosSeleccionados={setOfertaProductosSeleccionados}
                                     />
                                 }
                                 botones={[
@@ -1033,18 +1012,16 @@ export const OfertasClientesPage = () => {
                                 <EditarOfertaModal
                                     ofertaSeleccionada={ofertaSeleccionada}
                                     setOfertaSeleccionada={setOfertaSeleccionada}
+                                    handleChangeFecha={handleChangeFecha}
                                     change={handleChange}
                                     codigoClienteEditar={clienteCodigoEditar}
-                                    contacto1Editar={contacto1Editar}
-                                    contacto2Editar={contacto2Editar}
-                                    contacto3Editar={contacto3Editar}
-                                    productoEditar={productoEditar}
                                     errorCodigo={errorCodigo}
                                     errorFechaFinal={errorFechaFinal}
                                     errorFechaInicio={errorFechaInicio}
                                     errorOferta={errorOferta}
                                     errorPedido={errorPedido}
-                                    errorPrecio={errorPrecio}
+                                    setOfertaContactosSeleccionados={setOfertaContactosSeleccionados}
+                                    setOfertaProductosSeleccionados={setOfertaProductosSeleccionados}
                                 />}
                             botones={[
                                 insertarBotonesModal(<FileCopyIcon />, 'Clonar Oferta', () => handleClonOferta()),
@@ -1061,14 +1038,22 @@ export const OfertasClientesPage = () => {
                             key={`oferta-eliminar-${ofertaSeleccionada.id}`}
                             titulo="Eliminar oferta"
                             contenido={
-                                <>
+                                rowsIds.length > 1 ? (
                                     <Grid item xs={12}>
-                                        <Typography>Estás seguro que deseas eliminar la oferta?</Typography>
+                                        <Typography>
+                                            ¿Estás seguro que deseas eliminar las <b>{rowsIds.length}</b> ofertas seleccionadas?
+                                        </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography><b>{ofertaSeleccionada.numeroOferta}</b></Typography>
-                                    </Grid>
-                                </>
+                                ) : (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <Typography>Estás seguro que deseas eliminar la oferta?</Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography><b>{ofertaSeleccionada.numeroOferta}</b></Typography>
+                                        </Grid>
+                                    </>
+                                )
                             }
                             botones={[
                                 insertarBotonesModal(<DeleteIcon />, 'Eliminar', async () => {
@@ -1080,15 +1065,35 @@ export const OfertasClientesPage = () => {
                         />
 
                         <ModalLayout2
-                            titulo="Nuevo numero de oferta"
+                            titulo="Nuevo Número de Oferta"
                             contenido={
                                 <Grid item xs={12}>
                                     <Grid container sx={{ textAlign: 'center' }}>
                                         <Grid item xs={4}>
                                             <TextField
-                                                sx={{ width: '100%'}}
+                                                sx={{
+                                                    width: '100%',
+                                                    marginTop: '25px',
+                                                    '& input[type=number]': {
+                                                        MozAppearance: 'textfield',
+                                                        '&::-webkit-outer-spin-button': {
+                                                            WebkitAppearance: 'none',
+                                                            margin: 0
+                                                        },
+                                                        '&::-webkit-inner-spin-button': {
+                                                            WebkitAppearance: 'none',
+                                                            margin: 0
+                                                        }
+                                                    }
+                                                }}
                                                 name="ofertaNueva"
+                                                type="number"
                                                 onChange={handleChangeOferta}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === '.' || e.key === ',' || e.key === '-' || e.key === 'e') {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
                                             />
                                         </Grid>
                                     </Grid>
@@ -1137,7 +1142,6 @@ export const OfertasClientesPage = () => {
                             <Grid item xs={12}>
                                 <Card>
                                     <DataGrid
-                                        //components={{ Toolbar: GridToolbar }}
                                         localeText={DATAGRID_LOCALE_TEXT}
                                         sx={{
                                             width: '100%',
@@ -1150,10 +1154,6 @@ export const OfertasClientesPage = () => {
                                         onRowClick={(ofertaSeleccionada, evt) => {
                                             setOfertaSeleccionada(ofertaSeleccionada.row)
                                             setClientesCodigoEditar(clientes.filter(cliente => cliente.codigo === ofertaSeleccionada.row.codigoCliente));
-                                            setContacto1Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto1))
-                                            setContacto2Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto2))
-                                            setContacto3Editar(contactos.filter(contacto => contacto.nombre === ofertaSeleccionada.row.contacto3))
-                                            setProductoEditar(productos.filter(producto => producto.id === ofertaSeleccionada.row.producto))
                                             abrirCerrarModalEditar();
                                         }}
                                     />
@@ -1170,10 +1170,13 @@ export const OfertasClientesPage = () => {
                                     setOfertaSeleccionada={setOfertaSeleccionada}
                                     change={handleChange}
                                     codigoClienteEditar={clienteCodigoEditar}
-                                    contacto1Editar={contacto1Editar}
-                                    contacto2Editar={contacto2Editar}
-                                    contacto3Editar={contacto3Editar}
-                                    productoEditar={productoEditar}
+                                    errorCodigo={errorCodigo}
+                                    errorFechaFinal={errorFechaFinal}
+                                    errorFechaInicio={errorFechaInicio}
+                                    errorOferta={errorOferta}
+                                    errorPedido={errorPedido}
+                                    setOfertaContactosSeleccionados={setOfertaContactosSeleccionados}
+                                    setOfertaProductosSeleccionados={setOfertaProductosSeleccionados}
                                 />}
                             botones={[insertarBotonesModal(<AddIcon />, 'Guardar')]}
                             open={modalEditar}

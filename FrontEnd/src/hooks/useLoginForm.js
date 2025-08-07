@@ -6,7 +6,7 @@ import { postToken } from '../api';
 
 export const useLoginForm = () => {
 
-    const { login } = useContext( AuthContext );
+    const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [loginData, setLoginData] = useState({
@@ -26,7 +26,7 @@ export const useLoginForm = () => {
             errorMessage: ''
         })
 
-    }, [ loginData ]);
+    }, [loginData]);
 
     const handleChange = ({ target }) => {
 
@@ -39,8 +39,16 @@ export const useLoginForm = () => {
 
     }
 
-    const handleSubmit = async ( event ) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (loginData.usuario.trim().length === 0 || loginData.contrasena.trim().length === 0) {
+            setLoginError({
+                error: true,
+                errorMessage: 'Por favor, completa todos los campos'
+            });
+            return;
+        }
 
         // Seteamos los valores de los campos
         const loginValues = {
@@ -48,47 +56,51 @@ export const useLoginForm = () => {
             Password: loginData.contrasena
         }
 
-        const data = await postToken(loginValues);
-        
-        // Revisamos si los campos están rellenados
-        if( loginData.usuario.length < 2 || loginData.contrasena.length < 2 || data.data.item2.activo == false) {
-
-            setLoginError({
-                ...loginError,
-                error: true,
-                errorMessage: 'No existe el usuario o el usuario no está activo'
-            });
-            return;
-
-        }
-
-
         try {
 
+            const response = await postToken(loginValues);
+            const data = response.data
+
+            // Validación adicional si el usuario no está activo
+            if (!data.item2?.activo) {
+                setLoginError({
+                    error: true,
+                    errorMessage: 'El usuario no está activo'
+                });
+                return;
+            }
+
             // Seteamos el token en el localStorage
-            localStorage.setItem( 'token', data.data.token );
-            localStorage.setItem( 'usuarioActual', JSON.stringify( data.data.item2 ) );
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('usuarioActual', JSON.stringify(data.item2));
 
             // Despachamos la acción
-            login( data.data.item2 );
+            login(data.item2);
 
             // Redireccionamos al usuario
             navigate('/', {
                 replace: true
             });
-            
-        } catch ( error ) {
+
+        } catch (error) {
+
+            let message = 'Error inesperado al iniciar sesión';
+
+            if (error.response?.status === 401 || error.response?.status === 404) {
+                message = error.response.data?.message || 'Usuario o contraseña incorrectos';
+            } else if (error.message) {
+                message = error.message;
+            }
 
             setLoginError({
-                ...loginError,
                 error: true,
-                errorMessage: error.message
+                errorMessage: message
             });
 
-            console.error( error );
+            console.error('Login error:', error);
 
         }
-    
+
     }
 
     return {

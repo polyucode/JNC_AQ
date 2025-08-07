@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel } from "@mui/material"
 import { useEffect } from "react";
 import { useState } from "react"
 
-export const CheckBoxAnalisis = ({ label, name, onChange, elementoSeleccionado, elementosPlanta, usuarioActual }) => {
+export const CheckBoxAnalisis = ({ label, name, onChange, elementoSeleccionado, elementosPlanta, user }) => {
 
     const [checked, setChecked] = useState(false);
 
@@ -27,7 +27,7 @@ export const CheckBoxAnalisis = ({ label, name, onChange, elementoSeleccionado, 
     return (
         <>
             {
-                usuarioActual.idPerfil === 1004 ?
+                user.idPerfil === 1004 ?
                     <FormControlLabel
                         control={
                             <Checkbox

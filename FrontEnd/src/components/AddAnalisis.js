@@ -12,8 +12,6 @@ export const AddAnalisis = ({ guardarAnalisis, verAnalisis }) => {
 
     const [inputValue, setInputValue] = useState();
 
-    console.log(verAnalisis)
-
     const cambiarValue = e => {
         setInputValue(e.target.value)
     }

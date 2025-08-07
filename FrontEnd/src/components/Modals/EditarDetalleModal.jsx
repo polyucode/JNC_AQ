@@ -3,68 +3,14 @@ import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 
-import MenuItem from '@mui/material/MenuItem';
-import { getUsuarios } from '../../api';
+import { ObservacionesElementos } from '../ObservacionesElementos/ObservacionesElementos';
+import { ComentariosElementos } from '../ComentariosElementos/ComentariosElementos';
 
+export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheckbox, handlePdf, fileChange, analisis, elementos, operarios, operarioEditar, observaciones, setObservaciones, observacion, setObservacion, observacionEditar, setObservacionEditar }) => {
 
-const protocolos = [
-    {
-        value: 'Desinfeccion Parado 4B',
-        label: 'Desinfeccion Parado 4B'
-    },
-    {
-        value: 'Desinfeccion Continuo 4B',
-        label: 'Desinfeccion Continuo 4B'
-    },
-    {
-        value: 'Desinfeccion limpieza parado',
-        label: 'Desinfeccion limpieza parado'
-    },
-    {
-        value: 'Desinfeccion limpieza continuo',
-        label: 'Desinfeccion limpieza continuo'
-    },
-    {
-        value: 'Desinfeccion Protocolo 4C',
-        label: 'Desinfeccion Protocolo 4C'
-    },
-    {
-        value: 'Desinfeccion de aporte',
-        label: 'Desinfeccion de aporte'
-    },
-    {
-        value: 'Desinfeccion contraincendios',
-        label: 'Desinfeccion contraincendios'
-    },
-    {
-        value: 'Desinfeccion parado fuente ornamental',
-        label: 'Desinfeccion parado fuente ornamental'
-    },
-    {
-        value: 'Desinfeccion ACS (termico)',
-        label: 'Desinfeccion ACS (termico)'
-    },
-    {
-        value: 'Desinfeccion AFCH (cloracion)',
-        label: 'Desinfeccion AFCH (cloracion)'
-    }
-]
-
-export const EditarDetalleModal = ({ change: handleChangeDet, analisisSeleccionado, tareaSeleccionada, setAnalisisSeleccionado, handleChangeCheckbox, handlePdf, fileChange, analisis, elementos }) => {
-
-    const [operarios, setOperarios] = useState([]);
     const [nombreAnalisis, setNombreAnalisis] = useState([]);
     const [nombreElemento, setNombreElemento] = useState([]);
-
-    useEffect(() => {
-
-        getUsuarios()
-            .then(operarios => {
-                setOperarios(operarios);
-            })
-    }, [])
 
     useEffect(() => {
 
@@ -72,27 +18,27 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
         setNombreAnalisis(analisi.nombre)
 
         const elemento = elementos.find((el) => el.id === tareaSeleccionada.elemento)
-        if(elemento.descripcion != null){
+        if (elemento.descripcion !== null) {
             setNombreElemento(elemento.nombre + ' ' + elemento.descripcion)
-        } else{
+        } else {
             setNombreElemento(elemento.nombre + ' ' + elemento.numero)
         }
-        
+
 
     }, [analisis, elementos])
 
     function formateandofechas(fecha) {
-        if(fecha !== null){
+        if (fecha !== null) {
             const fecha1 = new Date(fecha)
 
             const fecha2 = fecha1.getFullYear() +
                 '-' + String(fecha1.getMonth() + 1).padStart(2, '0') +
                 '-' + String(fecha1.getDate()).padStart(2, '0')
-    
+
             return fecha2
-        } else{
+        } else {
             return null
-        }       
+        }
     }
 
     return (
@@ -102,7 +48,7 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreCliente}  />
+                <TextField sx={{ width: '100%' }} disabled label="Nombre Cliente" name="nombreCliente" onChange={handleChangeDet} value={tareaSeleccionada && tareaSeleccionada.nombreCliente} />
             </Grid>
 
             <Grid item xs={6} md={4}>
@@ -139,31 +85,11 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={12} md={5} style={{ display: 'flex' }}>
-            </Grid>
-
-            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
-                <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.recogido} label="Recogido" name="recogido" onChange={handleChangeCheckbox} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-                <TextField
-                    id="fechaRecogido"
-                    type="date"
-                    name="fechaRecogido"
-                    sx={{ width: '100%' }}
-                    onChange={handleChangeDet}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={analisisSeleccionado && formateandofechas(analisisSeleccionado.fechaRecogido)}
-                />
-            </Grid>
-
             <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.realizado} label="Realizado" name="realizado" onChange={handleChangeCheckbox} />
             </Grid>
             <Grid item xs={6} md={4} style={{ display: 'flex' }}>
-                
+
                 <TextField
                     id="fechaRealizado"
                     type="date"
@@ -178,15 +104,16 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
             </Grid>
 
             <Grid item xs={7} md={12}>
-                <p> Observaciones </p>
-                <TextareaAutosize
-                    aria-label="empty textarea"
-                    minRows={8}
-                    style={{ width: '100%' }}
-                    name="observaciones"
-                    onChange={handleChangeDet}
-                    defaultValue={analisisSeleccionado.observaciones}
-                />
+                <ObservacionesElementos
+                    idElemento={tareaSeleccionada.elemento}
+                    observaciones={observaciones}
+                    setObservaciones={setObservaciones}
+                    observacion={observacion}
+                    setObservacion={setObservacion}
+                    observacionEditar={observacionEditar}
+                    setObservacionEditar={setObservacionEditar}
+                >
+                </ObservacionesElementos>
             </Grid>
 
             <Grid item xs={8} md={4}>
@@ -194,9 +121,6 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                     <input type="file" name="src-file" aria-label="Archivo" onChange={handlePdf} />
                 </div>
                 <Typography> {fileChange ? fileChange.name : "Seleccionar un archivo"} </Typography>
-                {/*<Button variant="contained" component="label" sx={{ width: '40%', marginRight: '15px' }} onClick={subidaPdf()}>
-                    Subir PDF
-                </Button>*/}
             </Grid>
 
             <Grid item xs={12} md={3}>
@@ -217,25 +141,39 @@ export const EditarDetalleModal = ({ change: handleChangeDet, analisisSelecciona
                 />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.facturado} label="Facturado" name="facturado" onChange={handleChangeCheckbox} />
             </Grid>
 
-            <Grid item xs={4} md={5}>
+            <Grid item xs={4} md={4}>
                 <TextField sx={{ width: '100%' }} name="numeroFacturado" label="Numero Factura" onChange={handleChangeDet} value={analisisSeleccionado && analisisSeleccionado.numeroFacturado} />
+            </Grid>
+
+            <Grid item xs={4} md={5}>
+                <Autocomplete
+                    disableClearable={true}
+                    sx={{ width: '100%' }}
+                    id="Operarios"
+                    options={operarios}
+                    defaultValue={operarioEditar[0]}
+                    filterOptions={options => operarios.filter(cliente => cliente.idPerfil === 1004)}
+                    getOptionLabel={option => option.nombre + ' ' + option.apellidos}
+                    renderInput={(params) => <TextField {...params} label="Operario" name="operario" />}
+                    onChange={(event, value) => setAnalisisSeleccionado(prevState => ({
+                        ...prevState,
+                        operario: value.id
+                    }))}
+                />
             </Grid>
 
             <Grid item xs={7} md={12}>
                 <FormControlLabel control={<Checkbox />} sx={{ width: '100%' }} checked={analisisSeleccionado.cancelado} label="Cancelado" name="cancelado" onChange={handleChangeCheckbox} />
-                <p> Comentario </p>
-                <TextareaAutosize
-                    aria-label="empty textarea"
-                    minRows={8}
-                    style={{ width: '100%' }}
-                    name="comentarios"
-                    defaultValue={analisisSeleccionado.comentarios}
-                    onChange={handleChangeDet}
-                />
+                <ComentariosElementos
+                    idTarea={tareaSeleccionada.id}
+                    idElemento={tareaSeleccionada.elemento}
+                    idAnalisis={tareaSeleccionada.analisis}
+                    nombreAnalisis={nombreAnalisis}>
+                </ComentariosElementos>
             </Grid>
 
         </>

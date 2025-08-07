@@ -23,7 +23,7 @@ export const postConfPlantaCliente = async ( confPlantaCliente ) => {
 
 export const putConfPlantaCliente = async ( confPlantaCliente ) => {
 
-    const resp = await instance.put('/confplantascliente', confPlantaCliente);
+    const resp = await instance.put(`/confplantascliente`, confPlantaCliente);
 
 }
 

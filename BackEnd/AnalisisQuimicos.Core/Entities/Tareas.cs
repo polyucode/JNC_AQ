@@ -12,12 +12,10 @@ namespace AnalisisQuimicos.Core.Entities
         public int? Pedido { get; set; }
         public int? Operario { get; set; }
         public string Protocolo { get; set; }
-        public int? Elemento { get; set; }
-        public int? Analisis { get; set; }
+        public int Elemento { get; set; }
+        public int Analisis { get; set; }
         public DateTime? Fecha { get; set; }
         public int? Tipo { get; set; }
-        public string Observaciones { get; set; }
-        public int? Pdf { get; set; }
 
     }
 }

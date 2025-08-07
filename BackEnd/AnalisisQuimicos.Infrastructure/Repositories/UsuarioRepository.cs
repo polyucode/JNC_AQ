@@ -14,7 +14,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
 
         public async Task<Usuarios> GetLoginByCredentials(UserLogin userLogin)
         {
-            return await _entities.FirstOrDefaultAsync(x => x.Usuario == userLogin.User);
+            return await _entities.FirstOrDefaultAsync(x => x.Usuario == userLogin.User && x.Deleted != true);
         }
 
         public async Task<Usuarios> GetUsuariosByClient(int idClient)

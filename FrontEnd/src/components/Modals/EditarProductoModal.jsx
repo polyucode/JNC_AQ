@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete, InputAdornment } from '@mui/material';
+import { Grid, TextField, InputAdornment } from '@mui/material';
 
 export const EditarProductoModal = ({ change:handleChange, productoSeleccionado, errorProducto, handleChangeDecimal }) =>{
 

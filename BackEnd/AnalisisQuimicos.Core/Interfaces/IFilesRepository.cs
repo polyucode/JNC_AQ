@@ -12,8 +12,11 @@ namespace AnalisisQuimicos.Core.Interfaces
         Task<Files> Download(int id);
 
         Task<int> Upload(Files file);
+        Task<int> UploadFiles(Files file);
 
         Task<int> UploadTask(Files file);
+
+        Task<bool> SendEmailNoFQ(int codigoCliente, string texto, int analisis, IFormFile file);
 
         Task<string> DownloadFolderSchema(string clientName, string clientCode, string clientOffer, string accionType);
 

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { getContactos, getClientes, getProductos, getOfertasProductos, putOfertasProductos, deleteOfertasProductos, postOfertasProductos, getConsumos, getOfertasProductosById } from '../../api';
+import { getContactos, getClientes, getProductos, getConsumos, getOfertasProductosById, getOfertasProductos, getOfertasProductosByOfertaId, 
+    postOfertasProductos, putOfertasProductos, getOfertasContactosByOfertaId
+ } from '../../api';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { InsertarOfertaProductoModal } from './InsertarOfertaProductoModal';
 import { EditarOfertaProductoModal } from './EditarOfertaProductoModal';
 
@@ -18,24 +18,31 @@ import Swal from 'sweetalert2';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
 import { MostrarConsumoModal } from './MostrarConsumoModal';
 import { ModalLayout3 } from '../ModalLayout3';
-import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 import { ModalLayout2 } from '../ModalLayout2';
+import { AuthContext } from '../../context/AuthContext';
 
-export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, contacto1Editar, contacto2Editar, contacto3Editar, productoEditar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta, errorPrecio }) => {
+import '../../pages/OfertasClientes.css'
+
+export const EditarOfertaModal = ({ change: handleChange, ofertaSeleccionada, setOfertaSeleccionada, handleChangeFecha, codigoClienteEditar, errorCodigo, errorFechaFinal, errorFechaInicio, errorPedido, errorOferta, setOfertaContactosSeleccionados, setOfertaProductosSeleccionados }) => {
 
     const [contactos, setContactos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [productos, setProductos] = useState([]);
     const [consumos, setConsumos] = useState([]);
+    const [ofertaContactos, setOfertaContactos] = useState([]);
+    const [productosAsociados, setProductosAsociados] = useState([]);
+
+    const [inputCodigoCliente, setInputCodigoCliente] = useState('');
+    const [inputNombreCliente, setInputNombreCliente] = useState('');
 
     const [productoEditar2, setProductoEditar2] = useState([]);
 
     const [ofertaProducto, setOfertaProducto] = useState({
         id: 0,
-        producto: 0,
-        descripcionProducto: '',
+        idOferta: 0,
+        idProducto: 0,
         precio: 0,
-        cantidad: 0,
+        unidades: 0,
         consumidos: 0,
         pendientes: 0,
         addDate: null,
@@ -52,7 +59,6 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     const [data, setData] = useState([]);
 
     const [rowsIds, setRowsIds] = useState([]);
-    const [rows, setRows] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalEditar, setModalEditar] = useState(false);
@@ -61,14 +67,14 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
     const [errorProductoPrecio, setErrorProductoPrecio] = useState(false);
 
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
 
     const columns = [
         {
-            field: 'producto',
+            field: 'idProducto',
             headerName: 'Productos',
-            width: 200,
+            width: 350,
             valueFormatter: (params) => {
                 const prod = productos.find((producto) => producto.id === params.value);
                 return prod ? prod.descripcion : '';
@@ -87,13 +93,13 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 }
             }
         },
-        { field: 'cantidad', headerName: 'Estimación consumo', width: 200 },
+        { field: 'unidades', headerName: 'Unidades', width: 150 },
         {
             field: 'consumidos',
             headerName: 'Consumidos',
-            width: 200,
+            width: 150,
             valueGetter: (params) => {
-                const ofertaProductoKey = `${params.row.oferta}_${params.row.producto}`;
+                const ofertaProductoKey = `${ofertaSeleccionada.numeroOferta}_${params.row.idProducto}`;
                 const consumoInfo = consumos[ofertaProductoKey];
                 return consumoInfo ? consumoInfo.totalCantidad : 0;
             }
@@ -103,15 +109,15 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             headerName: 'Pendientes',
             width: 200,
             valueGetter: (params) => {
-                const cantidad = params.row.cantidad; // Valor de la columna Cantidad
-                const ofertaProductoKey = `${params.row.oferta}_${params.row.producto}`;
+                const cantidad = params.row.unidades;
+                const ofertaProductoKey = `${ofertaSeleccionada.numeroOferta}_${params.row.idProducto}`;
                 const consumoInfo = consumos[ofertaProductoKey];
-                const consumidos = consumoInfo ? consumoInfo.totalCantidad : 0; // Valor de la columna Consumidos
-
-                // Realizar la resta entre Cantidad y Consumidos para obtener Pendientes
+                const consumidos = consumoInfo ? consumoInfo.totalCantidad : 0;
                 const pendientes = cantidad - consumidos;
-
-                return pendientes >= 0 ? pendientes : ''; // Devolver el resultado, si es negativo devuelve un string vacío
+                return pendientes >= 0 ? pendientes : pendientes;
+            },
+            cellClassName: (params) => {
+                return params.value < 0 ? 'negative-value' : '';
             }
         },
     ]
@@ -121,32 +127,43 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         peticionGet();
 
         getContactos()
-            .then(contactos => {
-                setContactos(contactos);
-            })
+            .then(resp => setContactos(resp.filter(contacto => !contacto.deleted)));
 
         getClientes()
-            .then(clientes => {
-                setClientes(clientes);
-            })
+            .then(resp => setClientes(resp.filter(cliente => !cliente.deleted)));
 
         getProductos()
-            .then(productos => {
-                setProductos(productos);
-            })
+            .then(resp => setProductos(resp.filter(producto => !producto.deleted)));
 
         getConsumos()
             .then(consumos => {
-                const sumByOfferAndProduct = sumarCantidadesPorOfertaYProducto(consumos);
+                const consumosFiltrados = consumos.filter(consumo => !consumo.deleted)
+                const sumByOfferAndProduct = sumarCantidadesPorOfertaYProducto(consumosFiltrados);
                 setConsumos(sumByOfferAndProduct);
             })
+        getOfertasContactosByOfertaId(ofertaSeleccionada.id)
+            .then(ofertaContactos => {
+                const ofertaContactoFiltrada = ofertaContactos.filter(oferta => !oferta.deleted)
+                setOfertaContactos(ofertaContactoFiltrada);
+                setOfertaContactosSeleccionados(ofertaContactoFiltrada);
+            });
+
+        GetOfertasProductosByOfertaId(ofertaSeleccionada.id)
 
     }, [])
+
+    const GetOfertasProductosByOfertaId = async (id) => {
+
+        const resp = await getOfertasProductosByOfertaId(id)
+        const ofertaProductoFiltrada = resp.filter(oferta => !oferta.deleted)
+        setProductosAsociados(ofertaProductoFiltrada)
+        setOfertaProductosSeleccionados(ofertaProductoFiltrada);
+    }
 
     const peticionGet = async () => {
 
         const resp = await getOfertasProductos();
-        setData(resp.filter(oferta => oferta.oferta === ofertaSeleccionada.numeroOferta && !oferta.deleted))
+        setData(resp.filter(oferta => oferta.idOferta === ofertaSeleccionada.id && !oferta.deleted))
 
     }
 
@@ -181,30 +198,12 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
     const peticionPostProducto = async () => {
 
-        ofertaProducto.id = null;
-        ofertaProducto.codigoCliente = ofertaSeleccionada.codigoCliente;
-        ofertaProducto.oferta = ofertaSeleccionada.numeroOferta;
+        ofertaProducto.id = 0;
+        ofertaProducto.idOferta = ofertaSeleccionada.id;
 
-        const resp = await postOfertasProductos(ofertaProducto);
-
-        abrirCerrarModalInsertar();
+        await postOfertasProductos(ofertaProducto);
         peticionGet();
-        setOfertaProducto({
-            id: 0,
-            producto: 0,
-            descripcionProducto: '',
-            precio: 0,
-            cantidad: 0,
-            consumidos: 0,
-            pendientes: 0,
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
+        GetOfertasProductosByOfertaId(ofertaSeleccionada.id)
 
         Swal.fire({
             position: 'center',
@@ -235,7 +234,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                 setErrorProductoPrecio(false);
                 ofertaProducto.precio = Number(normalizedValue.replace(',', '.')) || 0
 
-                const resp = await putOfertasProductos(ofertaProducto);
+                await putOfertasProductos(ofertaProducto);
 
                 var productoModificado = data;
                 productoModificado.map(producto => {
@@ -244,23 +243,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     }
                 });
                 peticionGet();
-                abrirCerrarModalEditar();
-                setOfertaProducto({
-                    id: 0,
-                    producto: 0,
-                    descripcionProducto: '',
-                    precio: 0,
-                    cantidad: 0,
-                    consumidos: 0,
-                    pendientes: 0,
-                    addDate: null,
-                    addIdUser: null,
-                    modDate: null,
-                    modIdUser: null,
-                    delDate: null,
-                    delIdUser: null,
-                    deleted: null,
-                })
+                GetOfertasProductosByOfertaId(ofertaSeleccionada.id)
 
                 Swal.fire({
                     position: 'center',
@@ -292,11 +275,12 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             await putOfertasProductos(resp)
 
             peticionGet();
+            GetOfertasProductosByOfertaId(ofertaSeleccionada.id)
             abrirCerrarModalEliminar();
             setOfertaProducto({
                 id: 0,
-                producto: 0,
-                descripcionProducto: '',
+                idOferta: 0,
+                idProducto: 0,
                 precio: 0,
                 cantidad: 0,
                 consumidos: 0,
@@ -334,8 +318,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         if (modalInsertar) {
             setOfertaProducto({
                 id: 0,
-                producto: 0,
-                descripcionProducto: '',
+                idOferta: 0,
+                idProducto: 0,
                 precio: 0,
                 cantidad: 0,
                 consumidos: 0,
@@ -359,8 +343,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         if (modalEditar) {
             setOfertaProducto({
                 id: 0,
-                producto: 0,
-                descripcionProducto: '',
+                idOferta: 0,
+                idProducto: 0,
                 precio: 0,
                 cantidad: 0,
                 consumidos: 0,
@@ -385,8 +369,8 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         if (modalEliminar) {
             setOfertaProducto({
                 id: 0,
-                producto: 0,
-                descripcionProducto: '',
+                idOferta: 0,
+                idProducto: 0,
                 precio: 0,
                 cantidad: 0,
                 consumidos: 0,
@@ -414,17 +398,27 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
     }
 
     const handleChangeProducto = e => {
-
-        const { name, value } = e.target;
         setOfertaProducto(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
         }));
-
     }
 
-    const handleChangeDecimal = (event) => {
+    const handleChangeProductoAsociado = (event, producto) => {
         const { name, value } = event.target;
+        let productosModificado = productosAsociados.map((elemento) => {
+            if (elemento.idProducto === producto.idProducto) {
+                return { ...elemento, [name]: event.target.type === 'number' ? parseInt(value) : value };
+            }
+            return elemento;
+        });
+
+        setProductosAsociados(productosModificado);
+        setOfertaProductosSeleccionados(productosModificado);
+    };
+
+    const handleChangeDecimal = (event) => {
+        const { value } = event.target;
         const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
         if (decimalRegex.test(value)) {
             const normalizedValue = normalizeDecimal(value);
@@ -444,6 +438,10 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
 
 
     const normalizeDecimal = (value) => {
+        if (typeof value !== 'string') {
+            value = String(value);
+        }
+
         return value.replace('.', ',');
     };
 
@@ -457,11 +455,194 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
         }
         setRowsIds(ids);
     }
+    //AMF INI
+    function filtrarCodigoCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputCodigoCliente === '') {
+                return true;
+            } else {
+                if (cliente.codigo?.toString().indexOf(inputCodigoCliente) >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function filtrarNombreCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputNombreCliente === '') {
+                return true;
+            } else {
+                const nombreClienteLowerCase = cliente.razonSocial ? cliente.razonSocial.toString().toLowerCase() : '';
+                const inputNombreClienteLowerCase = inputNombreCliente.toLowerCase();
+                return nombreClienteLowerCase.includes(inputNombreClienteLowerCase);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function handleCambiarContactoSeleccionado(contacto, nuevoContacto) {
+        let contactosModificado = [];
+        if (nuevoContacto === null) {
+            contactosModificado = ofertaContactos.filter((element) => element.idContacto !== contacto.idContacto)
+        } else {
+            ofertaContactos.map((elemento) => {
+                if (elemento.idContacto === contacto.idContacto) {
+                    elemento.idContacto = nuevoContacto.id;
+                }
+                contactosModificado.push(elemento);
+            })
+        }
+
+        // const contactoModificado = ofertaContactos.filter((element) => element.idContacto === contacto.idContacto)[0].idContacto = nuevoContacto.id;
+        setOfertaContactos(contactosModificado);
+        setOfertaContactosSeleccionados(contactosModificado);
+
+    }
+
+    function handleAddContacto() {
+
+        if (contactos.filter((contacto) => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && !contacto.deleted).length === ofertaContactos.length) {
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Error',
+                text: `No hay mas contactos disponibles`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+            return;
+        }
+
+        let contactoVacio = {
+            id: 0,
+            idOferta: ofertaSeleccionada.id,
+            idContacto: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdDate: null,
+            deleted: false
+        }
+        let users = [];
+        ofertaContactos.map((e) => {
+            users.push(e)
+        })
+        users.push(contactoVacio)
+        setOfertaContactos(users);
+        setOfertaContactosSeleccionados(users);
+    }
+    function comprobarContactoSeleccionado(contacto, options) {
+        if (contacto.codigoCliente === ofertaSeleccionada.codigoCliente) {
+            let idsContactosSeleccionados = [];
+            ofertaContactos.map((oferCon) => {
+                idsContactosSeleccionados.push(oferCon.idContacto);
+            })
+            if (idsContactosSeleccionados.includes(contacto.id)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function handleAddProducto() {
+
+        let productoVacio = {
+            id: 0,
+            idOferta: ofertaSeleccionada.id,
+            idProducto: 0,
+            unidades: 0,
+            precio: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdDate: null,
+            deleted: false
+        }
+        let productos = [];
+        productosAsociados.map((e) => {
+            productos.push(e)
+        })
+        productos.push(productoVacio)
+        setProductosAsociados(productos);
+        setOfertaProductosSeleccionados(productos)
+    }
+
+    function comprobarProductoSeleccionado(producto, options) {
+        let idsProductosSeleccionados = [];
+        productosAsociados.map((prod) => {
+            idsProductosSeleccionados.push(prod.idProducto);
+        })
+        if (idsProductosSeleccionados.includes(producto.id)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function handleCambiarProductoSeleccionado(producto, nuevoProducto) {
+        let productosModificado = [];
+        if (nuevoProducto === null) {
+            productosModificado = productosAsociados.filter((element) => element.idProducto !== producto.idProducto)
+        } else {
+            productosAsociados.map((elemento) => {
+                if (elemento.idProducto === producto.idProducto) {
+                    elemento.idProducto = nuevoProducto.id;
+                }
+                productosModificado.push(elemento);
+            })
+        }
+
+        setProductosAsociados(productosModificado);
+        setOfertaProductosSeleccionados(productosModificado)
+
+    }
 
     return (
         <>
             <Grid item xs={3} md={4}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Numero Oferta" name="numeroOferta" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta} error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />
+                <TextField
+                    sx={{
+                        width: '100%',
+                        marginTop: '25px',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }}
+                    label="Numero Oferta"
+                    name="numeroOferta"
+                    type="number"
+                    onChange={handleChange}
+                    value={ofertaSeleccionada && ofertaSeleccionada.numeroOferta}
+                    error={errorOferta}
+                    helperText={errorOferta ? 'Este campo es obligatorio' : ' '}
+                />
             </Grid>
 
             <Grid item xs={6} md={5}>
@@ -469,7 +650,30 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Pedido" name="pedido" type="number" onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.pedido} error={errorPedido} helperText={errorPedido ? 'Este campo es obligatorio' : ' '} />
+                <TextField
+                    sx={{
+                        width: '100%',
+                        marginTop: '25px',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }}
+                    label="Pedido"
+                    name="pedido"
+                    type="number"
+                    onChange={handleChange}
+                    value={ofertaSeleccionada && ofertaSeleccionada.pedido}
+                    error={errorPedido}
+                    helperText={errorPedido ? 'Este campo es obligatorio' : ' '}
+                />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -481,7 +685,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     disableClearable={true}
                     id="CboClientes"
                     options={clientes}
-                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                    filterOptions={options => clientes.filter((cliente) => filtrarCodigoCliente(cliente))}
                     getOptionLabel={option => option.codigo.toString()}
                     defaultValue={codigoClienteEditar[0]}
                     sx={{ width: '100%', marginTop: '25px' }}
@@ -489,21 +693,33 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     onChange={(event, value) => setOfertaSeleccionada(prevState => ({
                         ...prevState,
                         codigoCliente: parseInt(value.codigo),
-                        contacto1: '',
-                        contacto2: '',
-                        contacto3: ''
+                        nombreCliente: value ? value.razonSocial : null
                     }))}
+                    onInputChange={(event, newInputValue) => {
+                        setInputCodigoCliente(newInputValue);
+                    }}
+                    inputValue={inputCodigoCliente}
                 />
             </Grid>
 
             <Grid item xs={6} md={6}>
-                <TextField
-                    id='nombreCliente'
-                    label="Nombre Cliente"
+                <Autocomplete
+                    disableClearable={true}
+                    id="nombreCliente"
+                    options={clientes}
+                    value={clientes.find(cliente => cliente.razonSocial === ofertaSeleccionada.nombreCliente && !cliente.deleted) || null}
+                    filterOptions={options => clientes.filter((cliente) => filtrarNombreCliente(cliente))}
+                    onInputChange={(event, newInputValue) => {
+                        setInputNombreCliente(newInputValue);
+                    }}
+                    getOptionLabel={option => option.razonSocial}
                     sx={{ width: '100%' }}
-                    value={ofertaSeleccionada && ofertaSeleccionada.nombreCliente}
-                    name="nombreCliente"
-                    onChange={handleChange}
+                    renderInput={(params) => <TextField {...params} label="Nombre Cliente" name="nombreCliente" />}
+                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
+                        ...prevState,
+                        codigoCliente: value ? parseInt(value.codigo) : null,
+                        nombreCliente: value ? value.razonSocial : null
+                    }))}
                 />
             </Grid>
 
@@ -544,92 +760,128 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     helperText={errorFechaFinal ? 'Introduzca una fecha mayor que la de inicio' : ' '}
                 />
             </Grid>
-
-            <Grid item xs={4} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="contacto1"
-                    inputValue={ofertaSeleccionada.contacto1}
-                    options={contactos}
-                    defaultValue={contacto1Editar[0]}
-                    filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto2)}
-                    getOptionLabel={option => option.nombre}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto1" label="Contacto 1" />}
-                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                        ...prevState,
-                        contacto1: value.nombre
-                    }))}
-                />
+            <Grid item xs={12} md={12}>
+                <Button
+                    sx={{ mr: 2 }}
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                        handleAddContacto();
+                    }}
+                >
+                    Añadir contacto
+                </Button>
             </Grid>
+            {
+                ofertaContactos.map((ofertaContacto, index) => {
+                    let con = contactos.filter(contacto => contacto.id === ofertaContacto.idContacto)[0];
+                    if (con !== undefined) {
+                        return <Grid item xs={4} md={4}>
+                            <Autocomplete
+                                key={con.id}
+                                inputValue={con.nombre}
+                                options={contactos}
+                                defaultValue={con.nombre}
+                                filterOptions={options => contactos.filter(contacto => comprobarContactoSeleccionado(contacto, options) && !contacto.deleted)}
+                                getOptionLabel={(option) => option.nombre || ''}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} name="contacto" label="Contacto" />}
+                                onChange={(event, value) => handleCambiarContactoSeleccionado(ofertaContacto, value)}
+                            />
+                        </Grid>
+                    } else {
+                        return <Grid item xs={4} md={4}>
+                            <Autocomplete
+                                key={index}
+                                options={contactos}
+                                filterOptions={options => contactos.filter(contacto => comprobarContactoSeleccionado(contacto) && !contacto.deleted)}
+                                getOptionLabel={(option) => option.nombre || ''}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} name="contacto" label="Contacto" />}
+                                onChange={(event, value) => handleCambiarContactoSeleccionado(ofertaContacto, value)}
+                            />
+                        </Grid>
+                    }
 
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="contacto2"
-                    inputValue={ofertaSeleccionada.contacto2}
-                    options={contactos}
-                    defaultValue={contacto2Editar[0]}
-                    filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
-                    getOptionLabel={option => option.nombre}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto2" label="Contacto 2" />}
-                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                        ...prevState,
-                        contacto2: value.nombre
-                    }))}
-                />
+                })
+            }
+
+            <Grid item xs={12} md={12}>
+                <Button
+                    sx={{ mr: 2 }}
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                        handleAddProducto();
+                    }}
+                >
+                    Añadir Producto
+                </Button>
+
             </Grid>
+            {
+                productosAsociados.map((producto, index) => {
+                    let pro = productos.filter(prod => prod.id === producto.idProducto)[0];
+                    return (
+                        <React.Fragment key={index}>
+                            <Grid item xs={6} md={4}>
+                                <Autocomplete
+                                    key={pro ? pro.id : index}
+                                    disableClearable={true}
+                                    id="producto"
+                                    options={productos}
+                                    inputValue={pro ? pro.descripcion : ''}
+                                    filterOptions={options => productos.filter(producto => comprobarProductoSeleccionado(producto, options) && !producto.deleted)}
+                                    getOptionLabel={option => option.descripcion}
+                                    sx={{ width: '100%' }}
+                                    renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
+                                    onChange={(event, value) => handleCambiarProductoSeleccionado(producto, value)}
+                                />
+                            </Grid>
 
+                            <Grid item xs={6} md={4}>
+                                <TextField
+                                    sx={{ 
+                                        width: '100%',  
+                                        '& input[type=number]': {
+                                            MozAppearance: 'textfield',
+                                            '&::-webkit-outer-spin-button': {
+                                                WebkitAppearance: 'none',
+                                                margin: 0
+                                            },
+                                            '&::-webkit-inner-spin-button': {
+                                                WebkitAppearance: 'none',
+                                                margin: 0
+                                            }
+                                        }
+                                    }} 
+                                    label="Unidades"
+                                    name="unidades"
+                                    type='number'
+                                    onChange={(event) => handleChangeProductoAsociado(event, producto)}
+                                    value={producto.unidades || ''}
+                                />
+                            </Grid>
 
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="contacto3"
-                    inputValue={ofertaSeleccionada.contacto3}
-                    options={contactos}
-                    defaultValue={contacto3Editar[0]}
-                    filterOptions={options => contactos.filter(contacto => contacto.codigoCliente === ofertaSeleccionada.codigoCliente && contacto.nombre !== ofertaSeleccionada.contacto1)}
-                    getOptionLabel={option => option.nombre}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="contacto3" label="Contacto 3" />}
-                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                        ...prevState,
-                        contacto3: value.nombre
-                    }))}
-                />
-            </Grid>
+                            <Grid item xs={6} md={4}>
+                                <TextField
+                                    sx={{ width: '100%' }}
+                                    label="Precio Unitario"
+                                    name="precio"
+                                    onChange={(event) => handleChangeProductoAsociado(event, producto)}
+                                    value={(producto && producto.precio) || ''}
+                                />
+                            </Grid>
+                        </React.Fragment>
+                    )
 
-            <Grid item xs={6} md={4}>
-                <Autocomplete
-                    disableClearable={true}
-                    id="producto"
-                    options={productos}
-                    defaultValue={productoEditar[0]}
-                    getOptionLabel={option => option.descripcion}
-                    sx={{ width: '100%' }}
-                    renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
-                    onChange={(event, value) => setOfertaSeleccionada(prevState => ({
-                        ...prevState,
-                        producto: value.id,
-                    }))}
-                />
-            </Grid>
+                })
+            }
 
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Unidades" name="unidades" type='number' onChange={handleChange} value={ofertaSeleccionada && ofertaSeleccionada.unidades} />
-            </Grid>
-
-            <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio" name="precio" onChange={handleChange} error={errorPrecio} helperText={errorPrecio ? 'El formato es máximo 2 decimales' : ' '} value={ofertaSeleccionada && ofertaSeleccionada.precio} />
-            </Grid>
-
-            {usuarioActual.idPerfil === 1 ?
+            {user.idPerfil === 1 ?
                 <>
                     <Grid container spacing={3}>
 
                         <Grid item xs={12}>
-                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between' }}>
+                            <Card sx={{ p: 4, display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
                                 <Typography variant='h6'>Productos en Cuota de Contrato</Typography>
                                 {
                                     (rowsIds.length > 0) ?
@@ -669,7 +921,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                                         height: 700,
                                         backgroundColor: '#FFFFFF'
                                     }}
-                                    rows={data}
+                                    rows={productosAsociados}
                                     columns={columns}
                                     pageSize={6}
                                     rowsPerPageOptions={[6]}
@@ -680,10 +932,11 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                                         const clickedColumn = evt.target.dataset.field;
                                         if (clickedColumn === 'consumidos') {
                                             setOfertaProducto(ofertaProducto.row)
+                                            setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.idProducto))
                                             abrirCerrarModalConsumo();
                                         } else {
                                             setOfertaProducto(ofertaProducto.row)
-                                            setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.producto))
+                                            setProductoEditar2(productos.filter(producto => producto.id === ofertaProducto.row.idProducto))
                                             abrirCerrarModalEditar();
                                         }
                                     }}
@@ -695,7 +948,12 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                     <ModalLayout
                         titulo="Agregar nuevo Producto"
                         contenido={
-                            <InsertarOfertaProductoModal handleChangeProducto={handleChangeProducto} ofertaProducto={ofertaProducto} setOfertaProducto={setOfertaProducto} handleChangeDecimal={handleChangeDecimal} errorProductoPrecio={errorProductoPrecio} />
+                            <InsertarOfertaProductoModal 
+                                handleChangeProducto={handleChangeProducto}
+                                setOfertaProducto={setOfertaProducto}
+                                handleChangeDecimal={handleChangeDecimal}
+                                errorProductoPrecio={errorProductoPrecio}
+                            />
                         }
                         botones={[
                             insertarBotonesModal(<AddIcon />, 'Insertar', async () => {
@@ -763,7 +1021,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
                                         height: 700,
                                         backgroundColor: '#FFFFFF'
                                     }}
-                                    rows={rows}
+                                    rows={productosAsociados}
                                     columns={columns}
                                     pageSize={6}
                                     rowsPerPageOptions={[6]}
@@ -813,7 +1071,7 @@ export const EditarOfertaModal = ({ change: handleChange, autocompleteChange, of
             <ModalLayout3
                 titulo="Detalle Consumo"
                 contenido={
-                    <MostrarConsumoModal ofertaProducto={ofertaProducto} />
+                    <MostrarConsumoModal ofertaProducto={ofertaProducto} ofertaSeleccionada={ofertaSeleccionada} productoEditar={productoEditar2} />
                 }
                 open={modalConsumo}
                 onClose={abrirCerrarModalConsumo}

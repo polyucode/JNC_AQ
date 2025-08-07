@@ -1,0 +1,27 @@
+.comentarios-elementos-contenedor {
+    max-height: 200px; /* Define la altura máxima del contenedor */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    border: 1px solid black; /* Opcional: Añade un borde para visualizar mejor el contenedor */
+    padding: 10px; /* Opcional: Añade padding para el contenido */
+}
+
+.comentario-escrito {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.formulario-comentario {
+    flex-grow: 1; /* El formulario ocupa todo el espacio disponible */
+}
+
+.checkboxes {
+    display: flex;
+}
+
+.observacion-escrita{
+    margin: 0;
+    width: 100%;
+    height: 3rem;
+    padding: 5px;
+}

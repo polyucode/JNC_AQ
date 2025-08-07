@@ -15,11 +15,16 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
 
             builder.ToTable("GES_OfertasProductos");
 
+            builder.Property(e => e.IdOferta).HasColumnName("IdOferta");
+            builder.Property(e => e.IdProducto).HasColumnName("IdProducto");
+            builder.Property(e => e.Unidades).HasColumnName("Unidades");
+            builder.Property(e => e.Precio).HasColumnName("Precio");
             builder.Property(e => e.AddDate).HasColumnType("datetime");
 
             builder.Property(e => e.DelDate).HasColumnType("datetime");
 
             builder.Property(e => e.ModDate).HasColumnType("datetime");
+
 
         }
     }

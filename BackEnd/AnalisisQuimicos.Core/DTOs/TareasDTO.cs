@@ -17,8 +17,6 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Analisis { get; set; }
         public DateTime? Fecha { get; set; }      
         public int? Tipo { get; set; }
-        public string Observaciones { get; set; }
-        public int? Pdf { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

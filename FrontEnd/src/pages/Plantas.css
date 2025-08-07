@@ -15,6 +15,10 @@ button {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;
 }
+
+.react-flow__attribution {
+    display: none;
+}
 /* input[type=text] {
     padding: 5px 15px;
     border: 1px solid #DBDBDB;

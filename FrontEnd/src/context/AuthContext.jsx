@@ -20,10 +20,11 @@ export const AuthProvider = ({ children }) => {
 
     const login = ( user ) => {
 
+        // Save user to localStorage
+        localStorage.setItem('usuarioActual', JSON.stringify(user));
+        
         const action = { type: types.login, payload: user };
         dispatch( action );
-
-        window.location.reload();
 
     }
 

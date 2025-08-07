@@ -3,7 +3,8 @@ import { instance } from '.';
 
 export const renombrarCarpeta = async (path, oldName, newName) =>{
 
-    const resp = await instance.post(`/fileupload/ChangeFolderName/${encodeURI(path)}/${oldName}/${newName}`);
+    const encodedPath = path ? encodeURI(path) : "root";  // Usamos "root" como valor especial si el path está vacío
+    const resp = await instance.post(`/fileupload/ChangeFolderName/${encodedPath}/${encodeURI(oldName)}/${encodeURI(newName)}`);
     return resp;
 }
 

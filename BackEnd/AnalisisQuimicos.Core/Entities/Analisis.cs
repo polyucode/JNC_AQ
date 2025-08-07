@@ -6,6 +6,6 @@ namespace AnalisisQuimicos.Core.Entities
     public partial class Analisis : BaseEntity
     {
         public string Nombre { get; set; }
-        public bool? FisicoQuimico { get; set; }
+        public int? Tipo { get; set; }
     }
 }

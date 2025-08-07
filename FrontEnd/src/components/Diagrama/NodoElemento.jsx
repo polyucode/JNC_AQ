@@ -1,28 +1,47 @@
 import { Card, CardContent, Typography } from '@mui/material';
-import { useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
+import './NodoElemento.css'
+import { GetIconoElementoPlanta } from '../../api';
 
-export const NodoElemento = ({ data }) => {
-
+function NodoElemento({ data }) {
+    const [logo, setLogo] = useState("");
+    GetIconoElementoPlanta(data.id).then(resp =>{
+        setLogo(resp);
+    });
     const onChange = useCallback((evt) => {
         console.log(evt.target.value);
     }, []);
 
     return (
-        <Card sx={{ height: '100%', backgroundColor: '#ffffff' }} variant='outlined'>
-            <CardContent sx={{ p: 1 }}>
+        <>
+            <Card sx={{ height: '100%', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'row' }} variant='outlined'>
                 {
-                    (data.edges === 0 || data.edges === 1) && (
-                        <Handle type="source" position={ Position.Right } id={ data.label.replace(' ', '-') } />
+                    logo!==""?(
+                        <img className='icono-nodo' src={`data:image/png;base64, ${logo}`} alt="Logo" />
+                    ):(
+                        <div className="icono-nodo"></div>
                     )
                 }
-                <Typography sx={{ fontSize: 10 }}>{ data.label }</Typography>
-                {
-                    (data.edges === 1 || data.edges === 2) && (
-                        <Handle type="target" position={ Position.Left } />
-                    )
-                }
-            </CardContent>
-        </Card>
+
+                <CardContent sx={{ p: 1 }} className='contenido-nodo' >
+                    {/* <Handle type="source" position={Position.Top} /> */}
+                    {
+                        (data.edges === 0 || data.edges === 1) && (
+                            <Handle type="source" position={Position.Right} id={data.label.replace(' ', '-')} />
+                        )
+                    }
+                    {/* <Handle type="source" position={Position.Bottom} /> */}
+                    <Typography sx={{ fontSize: 8 }}>{data.label}</Typography>
+                    {
+                        (data.edges === 1 || data.edges === 2) && (
+                            <Handle type="target" position={Position.Left} />
+                        )
+                    }
+                </CardContent>
+            </Card>
+        </>
     )
 }
+
+export default memo(NodoElemento);

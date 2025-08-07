@@ -1,99 +1,82 @@
-import { TableRow, TableCell, TextField, InputAdornment } from '@mui/material';
-import { useUsuarioActual } from '../../hooks/useUsuarioActual';
+import { TableRow, TableCell, TextField, InputAdornment, Box } from '@mui/material';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
-export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre, limite }) => {
+export const ParametroMantenimiento = ({ indice, parametros, onChange, nombre, limite, parametroCalculado }) => {
 
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
     return (
         <>
             {
-                (parametros[0].id_Operario !== usuarioActual.id && usuarioActual.idPerfil === 1004) ? (
-                    <TableRow>
+                <TableRow>
+                    <TableCell component="th" scope="row">
+                        {nombre}
+                    </TableCell>
+                    <TableCell>
+                        <TextField
+                            id={indice.toString()}
+                            error={
+                                (() => {
+                                    const valor = parseFloat(parametros[indice].valor.replace(',', '.'));
+                                    const limSup = parseFloat(limite.limSup.toString().replace(',', '.'));
+                                    const limInf = parseFloat(limite.limInf.toString().replace(',', '.'));
 
-                        <TableCell component="th" scope="row">
-                            {nombre}
-                        </TableCell>
+                                    return (limSup !== 0 || limInf !== 0) && (valor > limSup || valor < limInf) && parametros[indice].valor !== "";
+                                })()
+                            }
+                            name="valor"
+                            size="small"
+                            sx={{ width: "250px" }}
+                            defaultValue={parametros[indice].valor}
+                            onChange={(e, id) => onChange(e, parametros[indice].parametro)}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
+                            }}
+                        />
+                    </TableCell>
+                    {
+                        parametros[indice].dosMeses.map((row, index) => {
+                            const isError = (() => {
 
-                        <TableCell>
-                            <TextField
-                                id={indice.toString()}
-                                error={(parametros[indice].valor > limite.limSup || parametros[indice].valor < limite.limInf) ? true : false}
-                                name="valor"
-                                disabled
-                                size="small"
-                                sx={{ width: "250px" }}
-                                defaultValue={parametros[indice].valor}
-                                onChange={(e, id) => onChange(e, parametros[indice].parametro)}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
-                                }}
-                            />
-                        </TableCell>
+                                if (row == "") return false;
+                                
+                                const valor = row != "" && parseFloat(row.replace(',', '.'));
+                                const limSup = parseFloat(limite.limSup.toString().replace(',', '.'));
+                                const limInf = parseFloat(limite.limInf.toString().replace(',', '.'));
 
-                        {
-                            parametros[indice].dosMeses.map((row, index) => (
+                                return (limSup !== 0 || limInf !== 0) && (valor > limSup || valor < limInf) && row !== "";
+                            })();
+
+                            return (
                                 <TableCell key={index}>
-                                    <TextField
-                                        id={index.toString()}
-                                        name="valor"
-                                        type="number"
-                                        sx={{ width: "250px" }}
-                                        size="small"
-                                        defaultValue={row}
-                                        disabled
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
+                                    <Box
+                                        sx={{
+                                            position: "relative",
+                                            width: "230px",
+                                            border: isError ? "1px solid red" : "none", // Agrega un borde rojo si hay error
+                                            borderRadius: "4px",
+                                            padding: "0px"
                                         }}
-                                    />
+                                    >
+                                        <TextField
+                                            id={index.toString()}
+                                            name="valor"
+                                            sx={{ width: "100%" }}
+                                            size="small"
+                                            value={row != "" ? row : ""}
+                                            disabled
+                                            InputProps={{
+                                                endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
+                                            }}
+                                        />
+                                    </Box>
                                 </TableCell>
-                            ))
-                        }
+                            );
+                        })
+                    }
 
-                    </TableRow>
-                )
-                    :
-                    <TableRow>
-
-                        <TableCell component="th" scope="row">
-                            {nombre}
-                        </TableCell>
-
-                        <TableCell>
-                            <TextField
-                                id={indice.toString()}
-                                error={(parametros[indice].valor > limite.limSup || parametros[indice].valor < limite.limInf) ? true : false}
-                                name="valor"
-                                size="small"
-                                sx={{ width: "250px" }}
-                                defaultValue={parametros[indice].valor}
-                                onChange={(e, id) => onChange(e, parametros[indice].parametro)}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
-                                }}
-                            />
-                        </TableCell>
-
-                        {
-                            parametros[indice].dosMeses.map((row, index) => (
-                                <TableCell key={index}>
-                                    <TextField
-                                        id={index.toString()}
-                                        name="valor"
-                                        type="number"
-                                        sx={{ width: "250px" }}
-                                        size="small"
-                                        defaultValue={row}
-                                        disabled
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">{parametros[indice].unidad}</InputAdornment>
-                                        }}
-                                    />
-                                </TableCell>
-                            ))
-                        }
-
-                    </TableRow>
+                </TableRow>
             }
         </>
 

@@ -14,8 +14,8 @@ namespace AnalisisQuimicos.Core.DTOs
         public int? Id_Elemento { get; set; }
         public int? Id_Analisis { get; set; }
         public bool? EsPlantilla { get; set; }
-        public int? LimInf { get; set; }
-        public int? LimSup { get; set; }
+        public decimal LimInf { get; set; }
+        public decimal LimSup { get; set; }
         public string Unidades { get; set; }
         public bool? Activo { get; set; }
         public bool? VerInspector { get; set; }

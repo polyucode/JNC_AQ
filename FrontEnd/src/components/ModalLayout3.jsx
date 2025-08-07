@@ -1,7 +1,6 @@
 import { Modal, Fade, Grid, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import '../App.css';
-import { useUsuarioActual } from '../hooks/useUsuarioActual';
 
 const style = {
   position: 'absolute',
@@ -14,10 +13,6 @@ const style = {
 };
 
 export const ModalLayout3 = ({ titulo, contenido, botones, open, onClose }) => {
-
-const { usuarioActual } = useUsuarioActual();
-
-{/* ()=>peticionPost() */}
 
     return (
       <Modal open={ open } onClose={ onClose } >

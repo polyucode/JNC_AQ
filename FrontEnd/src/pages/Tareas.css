@@ -1,0 +1,25 @@
+.file-container {
+    position: relative;
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%; /* Ensure it takes full width of the grid item */
+    box-sizing: border-box;
+    overflow-wrap: break-word; /* This property ensures that the text will break and wrap into the next line */
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+  
+  .file-name {
+    color: red;
+    white-space: pre-wrap; /* This ensures that the text preserves spaces and breaks as in the HTML */
+    word-wrap: break-word; /* This ensures that long words break to fit within the width of the container */
+  }
+
+  .src-file{
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }

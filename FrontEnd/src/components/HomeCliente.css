@@ -34,6 +34,10 @@ div.home-calendario-mantenimiento {
     margin-bottom: 32px;
 }
 
+.react-flow__attribution {
+    display: none;
+}
+
 /* div.home-grafico {
     height: 500px;
 } */

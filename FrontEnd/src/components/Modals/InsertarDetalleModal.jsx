@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete, Typography } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import { Grid, TextField, Autocomplete, Typography, TextareaAutosize } from '@mui/material';
 import { getUsuarios } from '../../api';
 
 const protocolos = [

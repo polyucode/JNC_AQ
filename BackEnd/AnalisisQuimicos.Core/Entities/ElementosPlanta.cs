@@ -10,6 +10,6 @@ namespace AnalisisQuimicos.Core.Entities
         public string Descripcion { get; set; }
         public bool? VerInsp { get; set; }
         public bool? Maestro { get; set; }
-
+        public string NombreIcono { get; set; }
     }
 }

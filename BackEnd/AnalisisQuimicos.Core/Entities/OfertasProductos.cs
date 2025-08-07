@@ -6,15 +6,9 @@ namespace AnalisisQuimicos.Core.Entities
 {
     public partial class OfertasProductos : BaseEntity
     {
-        public int? CodigoCliente { get; set; }
-        public int? Oferta { get; set; }
-        public int? Producto { get; set; }
-        public string DescripcionProducto { get; set; }
-        public int? Cantidad { get; set; }
+        public int IdOferta { set; get; }
+        public int IdProducto { set; get; }
+        public int? Unidades { get; set; }
         public decimal Precio { get; set; }
-        public int? StockMin { get; set; }
-        public int? StockMax { get; set; }
-        public string ADR { get; set; }
-        public string Portes { get; set; }
     }
 }

@@ -1,39 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Grid, Card, Typography, Button, TextField, Autocomplete } from '@mui/material';
-import { deleteContactos, getComarcas, getPoblaciones, getProvincias, postContactos, putContactos, getContactos, getContactosById } from '../../api';
+import { getComarcas, postContactos, putContactos, getContactos, getContactosById } from '../../api';
 
 import { ModalLayout } from "../ModalLayout";
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 
 import { InsertarContactoModal } from './InsertarContactoModal';
 import { EditarContactoModal } from './EditarContactoModal';
 import { insertarBotonesModal } from '../../helpers/insertarBotonesModal';
-import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 import { ModalLayout2 } from '../ModalLayout2';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../context/AuthContext';
 
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
-
-export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSeleccionado, comarcaEditar, setClienteSeleccionado, errorCP, errorCodigo, errorTelefono, errorDireccion, errorNombre, errorEmail }) => {
+export const EditarClienteModal = ({ handleChange, clienteSeleccionado, comarcaEditar, setClienteSeleccionado, errorCP, errorCodigo, errorTelefono, errorDireccion, errorNombre, errorEmail }) => {
 
     // Declaramos variables necesarias
     const [comarcas, setComarcas] = useState([]);
-    const [provincias, setProvincias] = useState([]);
-    const [poblaciones, setPoblaciones] = useState([]);
 
     const [contactoSeleccionado, setContactoSeleccionado] = useState({
-
         id: 0,
         nombre: '',
         telefono: '',
@@ -53,11 +42,9 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     const [ContactoClienteEliminar, setContactoClienteEliminar] = useState([]);
 
-
     const [data, setData] = useState([]);
 
     const [rowsIds, setRowsIds] = useState([]);
-    const [rows, setRows] = useState([]);
 
     const [modalInsertar, setModalInsertar] = useState(false);
 
@@ -65,10 +52,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     const [modalEliminar, setModalEliminar] = useState(false);
 
-    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
-
-    const { usuarioActual } = useUsuarioActual();
-
+    const { user } = useContext(AuthContext)
 
     const columns = [
         { field: 'nombre', headerName: 'Nombre', width: 200 },
@@ -83,19 +67,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     useEffect(() => {
 
         getComarcas()
-            .then(comarcas => {
-                setComarcas(comarcas);
-            });
-
-        getProvincias()
-            .then(provincias => {
-                setProvincias(provincias);
-            });
-
-        getPoblaciones()
-            .then(poblaciones => {
-                setPoblaciones(poblaciones);
-            });
+            .then(resp => setComarcas(resp.filter(comarca => !comarca.deleted)));
 
         peticionGet();
 
@@ -103,7 +75,6 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     const handleChangeContacto = e => {
 
-        const { name, value } = e.target;
         setContactoSeleccionado(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
@@ -112,7 +83,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     }
 
     const handleChangeCheckbox = e => {
-        const { name, value, checked } = e.target
+        const { name, checked } = e.target
         setContactoSeleccionado(prevState => ({
             ...prevState,
             [name]: checked
@@ -120,37 +91,17 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     }
 
     const peticionGet = async () => {
-
         const resp = await getContactos();
         setData(resp.filter(contacto => contacto.codigoCliente === clienteSeleccionado.codigo && !contacto.deleted))
-
     }
 
     const peticionPostContacto = async () => {
 
-        contactoSeleccionado.id = null;
+        contactoSeleccionado.id = 0;
         contactoSeleccionado.codigoCliente = clienteSeleccionado.codigo;
 
-        const resp = await postContactos(contactoSeleccionado);
-
-        abrirCerrarModalInsertar();
+        await postContactos(contactoSeleccionado);
         peticionGet();
-        setContactoSeleccionado({
-            id: 0,
-            nombre: '',
-            telefono: '',
-            email: '',
-            cargo: '',
-            comentarios: '',
-            idCliente: "",
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        });
 
         Swal.fire({
             position: 'center',
@@ -219,7 +170,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
 
     const peticionPutContacto = async () => {
 
-        const resp = await putContactos(contactoSeleccionado);
+        await putContactos(contactoSeleccionado);
 
         var contactoModificado = data;
         contactoModificado.map(contacto => {
@@ -228,23 +179,6 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
             }
         });
         peticionGet();
-        abrirCerrarModalEditar();
-        setContactoSeleccionado({
-            id: 0,
-            nombre: '',
-            telefono: '',
-            email: '',
-            cargo: '',
-            comentarios: '',
-            idCliente: "",
-            addDate: null,
-            addIdUser: null,
-            modDate: null,
-            modIdUser: null,
-            delDate: null,
-            delIdUser: null,
-            deleted: null,
-        })
 
         Swal.fire({
             position: 'center',
@@ -351,7 +285,29 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
     return (
         <>
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Código" name="codigo" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.codigo} error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
+                <TextField 
+                    sx={{ 
+                        width: '100%', 
+                        marginTop: '25px', 
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Código" name="codigo" 
+                    type="number" 
+                    onChange={handleChange} 
+                    value={clienteSeleccionado && clienteSeleccionado.codigo} 
+                    error={errorCodigo} 
+                    helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} 
+                />
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -406,7 +362,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                 <TextField sx={{ width: '100%', marginBottom: '10px' }} label="Población" name="poblacion" onChange={handleChange} value={clienteSeleccionado && clienteSeleccionado.poblacion} />
             </Grid>
 
-            {usuarioActual.idPerfil === 1 ?
+            {user.idPerfil === 1 ?
                 <>
                     <Grid container spacing={3}>
 
@@ -453,8 +409,8 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                                     }}
                                     rows={data}
                                     columns={columns}
-                                    pageSize={4}
-                                    rowsPerPageOptions={[4]}
+                                    pageSize={10}
+                                    rowsPerPageOptions={[10]}
                                     checkboxSelection
                                     disableSelectionOnClick
                                     onSelectionModelChange={(ids) => handleSelectRow(ids)}
@@ -540,7 +496,7 @@ export const EditarClienteModal = ({ handleChange, autocompleteChange, clienteSe
                                         height: 700,
                                         backgroundColor: '#FFFFFF'
                                     }}
-                                    rows={rows}
+                                    rows={data}
                                     columns={columns}
                                     pageSize={4}
                                     rowsPerPageOptions={[4]}

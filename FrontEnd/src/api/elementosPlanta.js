@@ -43,3 +43,21 @@ export const deleteElementosPlanta = async ( id ) => {
     }
 
 }
+
+export const SubirIconoElementoPlanta = async (idElemento, archivo) =>{
+    const formData = new FormData();
+    formData.append('file', archivo);
+
+    const resp = await instance.post(`/elementosplanta/subirIconoElementoPlanta?idElemento=${idElemento}`, formData);
+    return resp.data;
+}
+
+export const GetIconoElementoPlanta = async (idElemento) =>{
+    const resp = await instance.get(`/elementosplanta/getIconoElemento?idElemento=${idElemento}`);
+    return resp.data;
+}
+
+export const EliminarIconoElementoPlanta = async (idElemento) =>{
+    const resp = await instance.post(`/elementosplanta/eliminarIconoElementoPlanta?idElemento=${idElemento}`);
+    return resp.data;
+}

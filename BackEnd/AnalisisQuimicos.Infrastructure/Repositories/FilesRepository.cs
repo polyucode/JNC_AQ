@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,14 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
             return file.Id;
         }
 
+        public async Task<int> UploadFiles(Files file)
+        {
+            await _entities.AddAsync(file);
+            await _context.SaveChangesAsync();
+
+            return file.Id;
+        }
+
         public async Task<int> UploadTask(Files file)
         {
             await _entities.AddAsync(file);
@@ -46,13 +55,20 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
             return file.Id;
         }
 
+        public async Task<bool> SendEmailNoFQ(int codigoCliente, string texto, int analisis, IFormFile file)
+        {
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<string> DownloadFolderSchema(string clientName, string clientCode, string clientOffer, string accionType)
         {
             try
             {
                 //TODO: Mirar en un futuro de estandarizar las estructuras de ficheros
                 accionType = accionType.Replace(" ", "_");
-                string rutaFinal = Path.Combine(Environment.CurrentDirectory, "Pdf", clientName, clientOffer, "Planta_1", accionType);
+                accionType = RemoveAccents(accionType);
+                string rutaFinal = Path.Combine(Environment.CurrentDirectory, "Pdf", clientName.Replace(",", " ").Replace(".", " ").TrimEnd(), clientOffer, "Planta_" + clientName.Replace(",", " ").Replace(".", " ").TrimEnd(), accionType);
                 //string rutaFinal = Path.Combine(Environment.CurrentDirectory, "Pdf",clientName, clientOffer);
                 if (!Directory.Exists(rutaFinal))
                 {
@@ -73,11 +89,31 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
             }
         }
 
+        public static string RemoveAccents(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            string normalizedString = input.Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (char c in normalizedString)
+            {
+                UnicodeCategory unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
         private void MontarSubcarpetas(ref EstructuraCarpetasJson carpeta)
         {
             carpeta.nombre = carpeta.ruta.Split("\\")[carpeta.ruta.Split("\\").Length - 1];
             //La ruta se la paso antes de entrar en la funcion
-            List<string> listaFicherosAux = Directory.GetFiles(carpeta.ruta).ToList();
+            List<string> listaFicherosAux = Directory.GetFiles(carpeta.ruta).OrderByDescending(f => File.GetLastWriteTime(f)).ToList();
             List<string> listaFicherosAux2 = new List<string>();
             foreach (string fichero in listaFicherosAux)
             {

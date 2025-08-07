@@ -1,22 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Grid, Button, TextField, Autocomplete } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { getPerfiles } from '../../api';
 
 export const EditarContactoModal = ({ change:handleChangeContacto, handleChangeCheckbox, contactoSeleccionado }) =>{
-
-    const [perfiles, setPerfiles] = useState([]);
-
-    useEffect(() => {
-
-        getPerfiles()
-            .then( perfil => {
-                setPerfiles(perfil);
-            })
-            .catch( err => console.log('Ha habido un error:', err));
-
-    }, []);
 
     return (
         <>

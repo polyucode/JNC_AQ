@@ -54,9 +54,12 @@ namespace AnalisisQuimicos.Api
 
             services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
 
+            //services.AddDbContext<YucodeDevelopmentJNC_AQContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("ConStringAnalisisQuimicos"))
+            //    );
             services.AddDbContext<YucodeDevelopmentJNC_AQContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ConStringAnalisisQuimicos"))
-                );
+                    options.UseSqlServer(Configuration.GetConnectionString("ConStringAnalisisQuimicos"))
+                    );
 
             //services.AddDbContext<JNCT1Context>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("ConStringJNegre"))
@@ -78,6 +81,9 @@ namespace AnalisisQuimicos.Api
             services.AddTransient<IClienteService, ClienteService>();
             services.AddTransient<IClientesContactosService, ClientesContactosService>();
             services.AddTransient<IParametrosAnalisisPlantaService, ParametrosAnalisisPlantaService>();
+            services.AddTransient<IObservacionesElementosService, ObservacionesElementosService>();
+            services.AddTransient<IHistorialCorreosContactosService, HistorialCorreosEnviadosService>();
+            services.AddTransient<IElementosPlantaExtra, ElementosPlantaService>();
 
             services.AddAuthentication(options =>
             {

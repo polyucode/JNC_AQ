@@ -1,44 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Grid, Card, Typography, Button } from '@mui/material';
-import axios from "axios";
-import { Modal, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { MainLayout } from "../layout/MainLayout";
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
+import { ModalLayout } from "../components/ModalLayout";
 
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Slide from '@mui/material/Slide';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
 import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarProductoModal } from "../components/Modals/InsertarProductoModal";
 import { EditarProductoModal } from '../components/Modals/EditarProductoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteProductos, getProductos, getProductosById, postProductos, putProductos } from "../api";
-import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { getProductos, getProductosById, postProductos, putProductos } from "../api";
 import { ModalLayout2 } from "../components/ModalLayout2";
 
 import Swal from 'sweetalert2';
-
-import { isNumeric } from 'validator';
-import { replace } from "lodash";
-
-
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { AuthContext } from "../context/AuthContext";
 
 export const ProductosPage = () => {
 
@@ -65,17 +44,11 @@ export const ProductosPage = () => {
         deleted: null,
     });
 
-    const [FilasSeleccionadas, setFilasSeleccionadas] = useState([]);
-
     const [ProductoEliminar, setProductoEliminar] = useState([]);
-
-    const [productos, setProductos] = useState([]);
 
     const [data, setData] = useState([]);
 
-    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
-
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
     const [errorProducto, setErrorProducto] = useState(false);
 
@@ -84,9 +57,9 @@ export const ProductosPage = () => {
         //Visibles
         { headerName: 'Codigo del Producto', field: 'codigoProducto', width: 500 },
         { headerName: 'Descripcion', field: 'descripcion', width: 500 },
-        { 
-            headerName: 'KG', 
-            field: 'kg', 
+        {
+            headerName: 'KG',
+            field: 'kg',
             width: 500,
             valueFormatter: (params) => {
                 if (params.value !== 0 && params.value !== null && params.value !== undefined) {
@@ -116,6 +89,8 @@ export const ProductosPage = () => {
 
         if (data.length > 0) {
             setRows(data);
+        } else {
+            setRows([]);
         }
 
     }, [data]);
@@ -124,31 +99,17 @@ export const ProductosPage = () => {
 
     const peticionPost = async () => {
 
-        if (productoSeleccionado.codigoProducto != "") {
+        if (productoSeleccionado.codigoProducto !== "") {
             setErrorProducto(false)
         } else {
             setErrorProducto(true)
         }
 
-        if (productoSeleccionado.codigoProducto != "") {
+        if (productoSeleccionado.codigoProducto !== "") {
 
-            const resp = await postProductos(productoSeleccionado);
+            await postProductos(productoSeleccionado);
 
-            abrirCerrarModalInsertar();
             peticionGet();
-            setProductoSeleccionado({
-                id: 0,
-                codigoProducto: "",
-                descripcion: "",
-                kg: 0,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
 
             Swal.fire({
                 position: 'center',
@@ -170,13 +131,13 @@ export const ProductosPage = () => {
 
     const peticionPut = async () => {
 
-        if (productoSeleccionado.codigoProducto != "") {
+        if (productoSeleccionado.codigoProducto !== "") {
             setErrorProducto(false)
         } else {
             setErrorProducto(true)
         }
 
-        if (productoSeleccionado.codigoProducto != "") {
+        if (productoSeleccionado.codigoProducto !== "") {
 
             const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
             if (decimalRegex.test(productoSeleccionado.kg)) {
@@ -184,7 +145,7 @@ export const ProductosPage = () => {
                 productoSeleccionado.kg = Number(normalizedValue.replace(',', '.')) || 0
             }
 
-            const resp = await putProductos(productoSeleccionado);
+            await putProductos(productoSeleccionado);
 
             var productoModificado = data;
 
@@ -193,21 +154,7 @@ export const ProductosPage = () => {
                     producto = productoSeleccionado
                 }
             });
-            abrirCerrarModalEditar();
             peticionGet();
-            setProductoSeleccionado({
-                id: 0,
-                codigoProducto: "",
-                descripcion: "",
-                kg: 0,
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
 
             Swal.fire({
                 position: 'center',
@@ -340,7 +287,6 @@ export const ProductosPage = () => {
 
 
     const handleChange = e => {
-        const { name, value } = e.target;
         setProductoSeleccionado(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
@@ -348,7 +294,7 @@ export const ProductosPage = () => {
     }
 
     const handleChangeDecimal = (event) => {
-        const { name, value } = event.target;
+        const { value } = event.target;
         const decimalRegex = /^-?\d+(\,\d{1,2})?|\.\d{1,2}$/;
         if (decimalRegex.test(value)) {
             const normalizedValue = normalizeDecimal(value);
@@ -360,7 +306,7 @@ export const ProductosPage = () => {
     };
 
     const normalizeDecimal = (value) => {
-        if(typeof value !== 'string') {
+        if (typeof value !== 'string') {
             value = String(value);
         }
 
@@ -379,29 +325,11 @@ export const ProductosPage = () => {
 
     }
 
-    const handleSnackClose = (event, reason) => {
-
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackData({ open: false, msg: '', severity: 'info' });
-
-    };
-
     return (
         <>
-            {usuarioActual.idPerfil === 1 ?
+            {user.idPerfil === 1 ?
                 <MainLayout title='Productos'>
-
-                    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} open={snackData.open} autoHideDuration={6000} onClose={handleSnackClose} TransitionComponent={(props) => (<Slide {...props} direction="left" />)} >
-                        <Alert onClose={handleSnackClose} severity={snackData.severity} sx={{ width: '100%' }}>
-                            {snackData.msg}
-                        </Alert>
-                    </Snackbar>
-
                     <Grid container spacing={2}>
-
                         {/* Título y botones de opción */}
                         <Grid item xs={12}>
                             <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
@@ -439,7 +367,6 @@ export const ProductosPage = () => {
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
@@ -493,9 +420,10 @@ export const ProductosPage = () => {
                                 errorProducto={errorProducto}
                                 handleChangeDecimal={handleChangeDecimal}
                             />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
-                            peticionPut();
-                        })
+                        botones={[
+                            insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                                peticionPut();
+                            })
                         ]}
                         open={modalEditar}
                         onClose={abrirCerrarModalEditar}
@@ -539,7 +467,6 @@ export const ProductosPage = () => {
                         <Grid item xs={12}>
                             <Card>
                                 <DataGrid
-                                    //components={{ Toolbar: GridToolbar }}
                                     localeText={DATAGRID_LOCALE_TEXT}
                                     sx={{
                                         width: '100%',
@@ -568,15 +495,10 @@ export const ProductosPage = () => {
                                 productoSeleccionado={productoSeleccionado}
                                 change={handleChange}
                             />}
-                        botones={[insertarBotonesModal(<AddIcon />, 'Editar', async () => {
-                            abrirCerrarModalEditar()
-
-                            if (peticionPut()) {
-                                setSnackData({ open: true, msg: 'Producto editado correctamente', severity: 'success' });
-                            } else {
-                                setSnackData({ open: true, msg: 'Ha habido un error al editar el producto', severity: 'error' })
-                            }
-                        })
+                        botones={[
+                            insertarBotonesModal(<AddIcon />, 'Editar', async () => {
+                                abrirCerrarModalEditar()
+                            })
                         ]}
                         open={modalEditar}
                         onClose={abrirCerrarModalEditar}

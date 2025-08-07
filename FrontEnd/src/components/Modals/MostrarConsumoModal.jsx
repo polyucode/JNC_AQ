@@ -1,24 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Grid, Card, Typography, Button, TextField } from '@mui/material';
 import { getConsumos, getModoEnvio, getProductos } from '../../api';
-
 import { DataGrid } from '@mui/x-data-grid';
-import { GridToolbar } from '@mui/x-data-grid-premium';
-
-
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { DATAGRID_LOCALE_TEXT } from '../../helpers/datagridLocale';
 
-export const MostrarConsumoModal = ({ofertaProducto}) => {
+export const MostrarConsumoModal = ({ofertaProducto, ofertaSeleccionada, productoEditar}) => {
 
-    const [productos, setProductos] = useState([]);
     const [rows, setRows] = useState([]);
-
     const [data, setData] = useState([]);
-
     const [modoEnvio, setModoEnvio] = useState([]);
 
     const columns = [
@@ -30,7 +19,7 @@ export const MostrarConsumoModal = ({ofertaProducto}) => {
             type: 'date',
             width: 150,
             valueFormatter: (params) => {
-                if (params.value != null) {
+                if (params.value !== null) {
                     const date = new Date(params.value);
                     return date.toLocaleDateString();
                 } else {
@@ -50,26 +39,17 @@ export const MostrarConsumoModal = ({ofertaProducto}) => {
         },
         { headerName: 'Numero Albaran', field: 'albaran', width: 200 },
         { headerName: 'Nº Unidades', field: 'cantidad', width: 120 },
-        { headerName: 'Observaciones', field: 'observaciones', width: 190 }
+        { headerName: 'Observaciones', field: 'observaciones', width: 1000 }
     ];
 
     useEffect(() => {
-
-        getProductos()
-            .then(productos => {
-                setProductos(productos);
-            })
         
         peticionGet();
 
         getModoEnvio()
-            .then(envio => {
-                setModoEnvio(envio);
-            })
+            .then(resp => setModoEnvio(resp.filter(envio => !envio.deleted)));
 
     }, [])
-
-    console.log(ofertaProducto)
 
     useEffect(() => {
 
@@ -80,10 +60,8 @@ export const MostrarConsumoModal = ({ofertaProducto}) => {
     }, [data]);
 
     const peticionGet = async () => {
-
         const resp = await getConsumos();
-        setData(resp.filter(consumo => consumo.oferta == ofertaProducto.oferta && consumo.producto == ofertaProducto.producto));
-
+        setData(resp.filter(consumo => consumo.oferta === ofertaSeleccionada.numeroOferta && consumo.producto === ofertaProducto.idProducto && !consumo.deleted));
     }
 
     return (
@@ -93,14 +71,13 @@ export const MostrarConsumoModal = ({ofertaProducto}) => {
 
                 <Grid item xs={12}>
                     <Card sx={{ p: 2, textAlign: 'center' }}>
-                        <Typography variant='h6'>{ofertaProducto.descripcionProducto}</Typography>
+                        <Typography variant='h6'>{productoEditar[0].descripcion ? productoEditar[0].descripcion : ""}</Typography>
                     </Card>
                 </Grid>
 
                 <Grid item xs={12}>
                     <Card>
                         <DataGrid
-                            //components={{ Toolbar: GridToolbar }}
                             localeText={DATAGRID_LOCALE_TEXT}
                             sx={{
                                 width: '100%',

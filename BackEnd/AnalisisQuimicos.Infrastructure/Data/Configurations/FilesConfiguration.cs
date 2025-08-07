@@ -18,6 +18,7 @@ namespace AnalisisQuimicos.Infrastructure.Data.Configurations
             builder.Property(e => e.Name).HasMaxLength(300);
             builder.Property(e => e.Format).HasMaxLength(50);
             builder.Property(e => e.Path);
+            builder.Property(e => e.idTareaAnalisis);
         }
     }
 }

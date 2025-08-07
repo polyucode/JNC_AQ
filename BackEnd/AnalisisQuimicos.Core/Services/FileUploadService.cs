@@ -3,8 +3,13 @@ using AnalisisQuimicos.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
@@ -20,6 +25,68 @@ namespace AnalisisQuimicos.Core.Services
 
         public async Task<int> Upload(IFormFile file, string mode, int id)
         {
+
+            ParametrosAnalisisPlanta tarea = _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.GetById(id).Result;
+            
+            Analisis analisis = _unidadDeTrabajo.AnalisisRepository.GetById(tarea.Analisis).Result;
+
+            string nombreElemento = tarea.NombreElemento.Replace(" ", "_");
+            string nombreAnalisis = analisis.Nombre.Replace(" ", "_");
+
+            string workingDirectory = Environment.CurrentDirectory;
+
+            string path = Path.Combine(workingDirectory, "Pdf");
+            path = Path.Combine(path, tarea.NombreCliente.Replace(",", " ").Replace(".", " ").TrimEnd());
+            path = Path.Combine(path, tarea.Oferta.ToString());
+            path = Path.Combine(path, "Planta_" + tarea.NombreCliente.Replace(",", " ").Replace(".", " ").TrimEnd());
+            path = Path.Combine(path, nombreElemento);
+            path = Path.Combine(path, nombreAnalisis);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path = Path.Combine(path, file.FileName);
+
+            using (Stream fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+                fileStream.Close();
+            }
+
+            int indiceDelUltimoPunto = file.FileName.LastIndexOf('.');
+
+            string _nombre = file.FileName.Substring(0, indiceDelUltimoPunto);
+            string _extension = file.FileName.Substring(indiceDelUltimoPunto + 1, file.FileName.Length - indiceDelUltimoPunto - 1);
+
+            Files newFile = new Files()
+            {
+                Name = _nombre,
+                Format = _extension,
+                Path = path
+            };
+
+
+            try
+            {
+                await _unidadDeTrabajo.FilesRepository.Upload(newFile);
+
+                tarea.Pdf = newFile.Id;
+
+                _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.Update(tarea);
+
+                return newFile.Id;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<int> UploadFiles(IFormFile file, string mode, int id)
+        {
+
             string workingDirectory = Environment.CurrentDirectory;
 
             string path = Path.Combine(workingDirectory, "Archivos");
@@ -53,27 +120,11 @@ namespace AnalisisQuimicos.Core.Services
             {
                 await _unidadDeTrabajo.FilesRepository.Upload(newFile);
 
-                switch (mode)
-                {
-                    case "pdf":
+                Usuarios usuarios = _unidadDeTrabajo.UsuarioRepository.GetById(id).Result;
 
-                        ParametrosAnalisisPlanta parametros = _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.GetById(id).Result;
+                usuarios.Firma = newFile.Id;
 
-                        parametros.Pdf = newFile.Id;
-
-                        _unidadDeTrabajo.ParametrosAnalisisPlantaRepository.Update(parametros);
-
-                        break;
-                    case "firma":
-
-                        Usuarios usuarios = _unidadDeTrabajo.UsuarioRepository.GetById(id).Result;
-
-                        usuarios.Firma = newFile.Id;
-
-                        _unidadDeTrabajo.UsuarioRepository.Update(usuarios);
-
-                        break;
-                }
+                _unidadDeTrabajo.UsuarioRepository.Update(usuarios);
 
                 return newFile.Id;
             }
@@ -85,9 +136,37 @@ namespace AnalisisQuimicos.Core.Services
 
         public async Task<int> UploadTask(IFormFile file, string mode, int id)
         {
+
+            Tareas tarea = _unidadDeTrabajo.TareasRepository.GetById(id).Result;
+
+            Analisis analisis = _unidadDeTrabajo.AnalisisRepository.GetById(tarea.Analisis).Result;
+
+            ElementosPlanta elemento = _unidadDeTrabajo.ElementosPlantaRepository.GetById(tarea.Elemento).Result;
+
+            string nombreElemento = "";
+
+            if (elemento.Descripcion != null)
+            {
+                nombreElemento = elemento.Nombre + " " + elemento.Descripcion;
+            }
+            else
+            {
+                nombreElemento = elemento.Nombre + " " + elemento.Numero;
+            }
+
+            nombreElemento = nombreElemento.Replace(" ", "_");
+            nombreElemento = RemoveAccents(nombreElemento);
+
+            string nombreAnalisis = analisis.Nombre.Replace(" ", "_");
+
             string workingDirectory = Environment.CurrentDirectory;
 
-            string path = Path.Combine(workingDirectory, "Archivos");
+            string path = Path.Combine(workingDirectory, "Pdf");
+            path = Path.Combine(path, tarea.NombreCliente.Replace(",", " ").Replace(".", " ").TrimEnd());
+            path = Path.Combine(path, tarea.Oferta.ToString());
+            path = Path.Combine(path, "Planta_" + tarea.NombreCliente.Replace(",", " ").Replace(".", " ").TrimEnd());
+            path = Path.Combine(path, nombreElemento);
+            path = Path.Combine(path, nombreAnalisis);
 
             if (!Directory.Exists(path))
             {
@@ -118,28 +197,142 @@ namespace AnalisisQuimicos.Core.Services
             {
                 await _unidadDeTrabajo.FilesRepository.UploadTask(newFile);
 
-                if(id != 0)
-                {
-                    switch (mode)
-                    {
-                        case "pdf":
-
-                            Tareas tareas = _unidadDeTrabajo.TareasRepository.GetById(id).Result;
-
-                            tareas.Pdf = newFile.Id;
-
-                            _unidadDeTrabajo.TareasRepository.Update(tareas);
-
-                            break;
-                    }
-                }
-
                 return newFile.Id;
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        public static string RemoveAccents(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            string normalizedString = input.Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (char c in normalizedString)
+            {
+                UnicodeCategory unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        public async Task<bool> SendEmailToClientNoFQ(int codigoCliente, IFormFile documentoPDF, string texto, int tipoAnalisis, string contactosString, int idElemento)
+        {
+            try
+            {
+                var contactos = _unidadDeTrabajo.ClientesContactosRepository.GetByCodigoCliente(codigoCliente);
+                var correo = _unidadDeTrabajo.CorreosRepository.GetAll().FirstOrDefault();
+                var analisis = _unidadDeTrabajo.AnalisisRepository.GetById(tipoAnalisis).Result;
+
+                if (string.IsNullOrEmpty(contactosString))
+                {
+                    return true;
+                }
+
+                var emailsContactosEnviarCorreo = contactosString.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
+                if (emailsContactosEnviarCorreo.Length == 0)
+                {
+                    return true;
+                }
+
+                byte[] pdfBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await documentoPDF.CopyToAsync(memoryStream);
+                    pdfBytes = memoryStream.ToArray();
+                }
+
+                string fileName = documentoPDF.FileName;
+                string contentType = documentoPDF.ContentType;
+
+                foreach (var email in emailsContactosEnviarCorreo)
+                {
+                    string emailEnviar = "";
+                    string nombreContacto = "";
+                    var contacto = contactos.FirstOrDefault(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+                    if (contacto != null)
+                    {
+                        if (contacto.Deleted == true)
+                        {
+                            continue;
+                        }
+                        if (!(bool)contacto.Correo)
+                        {
+                            continue;
+                        }
+                        emailEnviar = contacto.Email;
+                        nombreContacto = contacto.Nombre;
+                    }
+                    else
+                    {
+                        emailEnviar = email;
+                        nombreContacto = "";
+                    }
+
+                    var fromAddress = new MailAddress(correo.Username, "Gemma");
+                    var toAddress = new MailAddress(emailEnviar, nombreContacto);
+                    //const string fromPassword = "Jn3gr32024/*";
+                    string subject = "Pdf " + analisis.Nombre;
+                    string body = texto;
+
+                    using (var smtp = new SmtpClient
+                    {
+                        Host = "smtp.serviciodecorreo.es",
+                        Port = 587,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, correo.Password),
+                        EnableSsl = true
+                    })
+                    using (var emailEnvio = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = subject,
+                        Body = body == "null" ? "" : body,
+                        IsBodyHtml = true
+                    })
+                    {
+                        using (var attachmentStream = new MemoryStream(pdfBytes))
+                        using (var attachment = new Attachment(attachmentStream, fileName, contentType))
+                        {
+                            emailEnvio.Attachments.Add(attachment);
+                            await smtp.SendMailAsync(emailEnvio);
+                        }
+                    }
+
+                    _unidadDeTrabajo.HistorialCorreosContactosRepository.InsertarHistorialCorreo(new HistorialCorreosEnviados
+                    {
+                        CodigoCliente = codigoCliente,
+                        Email = emailEnviar,
+                        NombreContacto = nombreContacto,
+                        Fecha = DateTime.Now,
+                        IdElemento = idElemento
+                    });
+
+                    await Task.Delay(250);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private void GuardarRegistroCorreosEnviados()
+        {
+
         }
 
         public async Task<Files> Download(int id)

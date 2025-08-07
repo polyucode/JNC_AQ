@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { getUsuarios } from '../../api';
 
 const protocolos = [
@@ -48,16 +47,7 @@ const protocolos = [
 
 export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisis, analisisid, errorFecha }) => {
 
-    const [operarios, setOperarios] = useState([]);
     const [nombreAnalisis, setNombreAnalisis] = useState([]);
-
-    useEffect(() => {
-
-        getUsuarios(operarios => {
-            setOperarios(operarios);
-        })
-
-    }, [])
 
     useEffect(() => {
 
@@ -67,7 +57,7 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
     }, [analisis])
 
     useEffect(() => {
-        
+
         setAnalisisSeleccionado(prevState => ({
             ...prevState,
             analisis: analisisid
@@ -100,7 +90,7 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={12} md={2} style={{ display: 'flex', marginTop: '22px' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <Typography> Fecha </Typography>
             </Grid>
             <Grid item xs={8} md={4}>
@@ -113,22 +103,10 @@ export const InsertarVisModal1 = ({ change: handleChangeInput, analisisSeleccion
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    error={errorFecha} 
+                    error={errorFecha}
                     helperText={errorFecha ? 'Introduzca una fecha' : ' '}
                 />
             </Grid>
-
-            <Grid item xs={12} md={12}>
-                <p> Observaciones </p>
-                <TextareaAutosize
-                    aria-label="empty textarea"
-                    minRows={8}
-                    style={{ width: '100%' }}
-                    name="observaciones"
-                    onChange={handleChangeInput}
-                />
-            </Grid>
-
         </>
     )
 }

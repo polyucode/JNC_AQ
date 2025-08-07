@@ -1,7 +1,8 @@
 import { Modal, Fade, Grid, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import '../App.css';
-import { useUsuarioActual } from '../hooks/useUsuarioActual';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const style = {
   position: 'absolute',
@@ -15,7 +16,7 @@ const style = {
 
 export const ModalLayout2 = ({ titulo, contenido, botones, open, onClose }) => {
 
-const { usuarioActual } = useUsuarioActual();
+const { user } = useContext(AuthContext);
 
 {/* ()=>peticionPost() */}
 
@@ -56,7 +57,7 @@ const { usuarioActual } = useUsuarioActual();
               spacing={ 2 }
             >
               {
-                usuarioActual.idPerfil === 1 ?
+                user.idPerfil === 1 ?
                 botones.map( boton => boton )
                 :
                 false

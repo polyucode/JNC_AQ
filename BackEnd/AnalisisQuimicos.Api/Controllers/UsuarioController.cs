@@ -3,11 +3,13 @@ using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
 using AnalisisQuimicos.Core.QueryFilters;
+using AnalisisQuimicos.Infrastructure.Data;
 using AnalisisQuimicos.Infrastructure.Interfaces;
 using AnalisisQuimicos.Infrastructure.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,13 +25,15 @@ namespace AnalisisQuimicos.Api.Controllers
         private readonly IUsuarioService _usuarioService;
         private readonly IPasswordService _passwordService;
         private readonly IMapper _mapper;
+        private readonly YucodeDevelopmentJNC_AQContext _db;
 
 
-        public UsuarioController(IUsuarioService usuarioServicey,IMapper mapper, IPasswordService passwordService) 
+        public UsuarioController(YucodeDevelopmentJNC_AQContext db, IUsuarioService usuarioServicey,IMapper mapper, IPasswordService passwordService) 
         {
             _usuarioService = usuarioServicey;
             _mapper = mapper;
             _passwordService = passwordService;
+            _db = db;
         }
 
         [HttpGet]
@@ -68,19 +72,55 @@ namespace AnalisisQuimicos.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> PutUsuario(int id,UsuarioDto usuarioDto)
         {
-            var usuario = _mapper.Map<Usuarios>(usuarioDto);
-             
-            var result = await _usuarioService.UpdateUsuario(usuario);
+            var usuarioExistente = await _usuarioService.GetUsuario(id);
+            if (usuarioExistente == null)
+            {
+                return NotFound(new ApiResponses<string>("Usuario no encontrado"));
+            }
+
+            usuarioExistente.Nombre = usuarioDto.Nombre;
+            usuarioExistente.Apellidos = usuarioDto.Apellidos;
+            usuarioExistente.Telefono = usuarioDto.Telefono;
+            usuarioExistente.Usuario = usuarioDto.Usuario;
+            usuarioExistente.Activo = usuarioDto.Activo;
+            usuarioExistente.Firma = usuarioDto.Firma;
+            usuarioExistente.IdPerfil = usuarioDto.IdPerfil;
+            usuarioExistente.IdCliente = usuarioDto.IdCliente;
+            usuarioExistente.CodigoOperario = usuarioDto.CodigoOperario;
+
+            // Si la contraseña no está vacía, hashearla y actualizarla
+            if (!string.IsNullOrEmpty(usuarioDto.Password))
+            {
+                usuarioExistente.Password = _passwordService.Hash(usuarioDto.Password);
+            }
+
+            // Actualizar usuario
+            var result = await _usuarioService.UpdateUsuario(usuarioExistente);
             var response = new ApiResponses<bool>(result);
             return Ok(response);
         }
          
         [HttpDelete ("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        public IActionResult DeleteUsuario(int id)
          {
-            var result = await _usuarioService.DeleteUsuario(id);
-            var response = new ApiResponses<bool>(result);
-            return Ok(response);
+            try
+            {
+                var usuario = _db.GesUsuarios.FirstOrDefault(x => x.Id == id && x.Deleted != true);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                usuario.Deleted = true;
+
+                _db.SaveChanges();
+
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
         }
 
         //[HttpPost]

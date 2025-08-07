@@ -1,5 +1,6 @@
 ﻿using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Infrastructure.Data;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,13 @@ namespace AnalisisQuimicos.Api.Controllers
     {
         private readonly IFileUploadService _fileUpload;
         private readonly IMapper _mapper;
+        private readonly IHistorialCorreosContactosService _historialCorreos;
 
-
-        public FileUploadController(IFileUploadService fileUpload, IMapper mapper)
+        public FileUploadController(IFileUploadService fileUpload, IMapper mapper, IHistorialCorreosContactosService historialCorreos)
         {
             _fileUpload = fileUpload;
             _mapper = mapper;
+            _historialCorreos = historialCorreos;
         }
 
         [HttpGet]
@@ -44,6 +46,19 @@ namespace AnalisisQuimicos.Api.Controllers
             }
         }
 
+        [HttpPost("uploadFiles/{mode}/{id}")]
+        public async Task<IActionResult> UploadFiles(IFormFile file, string mode, int id)
+        {
+            try
+            {
+                return Ok(await _fileUpload.UploadFiles(file, mode, id));
+            }
+            catch (Exception e)
+            {
+                return Ok(e.InnerException.Message);
+            }
+        }
+
         [HttpPost("uploadTask/{mode}/{id}")]
         public async Task<IActionResult> UploadTask(IFormFile file, string mode, int id)
         {
@@ -57,6 +72,31 @@ namespace AnalisisQuimicos.Api.Controllers
             }
         }
 
+        [HttpPost("send")]
+        public async Task<IActionResult> SendEmailNoFQ(int codigo, string texto, int analisis, IFormFile file, string contactos, int idElemento)
+        {
+            try
+            {
+                return Ok(await _fileUpload.SendEmailToClientNoFQ(codigo, file, texto, analisis, contactos, idElemento));
+            }
+            catch (Exception e)
+            {
+                return Ok(e.InnerException.Message);
+            }
+        }
+
+        //[HttpPost("send/{codigo}/{texto}/{analisis}")]
+        //public async Task<IActionResult> SendEmailNoFQ(IFormFile file, int codigo, string texto, int analisis)
+        //{
+        //    try
+        //    {
+        //        return Ok(await _fileUpload.SendEmailToClientNoFQ(codigo, file, texto, analisis));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return Ok(e.InnerException.Message);
+        //    }
+        //}
 
         [HttpGet("download/{id}")]
         public async Task<IActionResult> Download(int id)
@@ -72,9 +112,9 @@ namespace AnalisisQuimicos.Api.Controllers
 
                 return _fileContent;
             }
-            catch
+            catch (Exception ex)
             {
-                return Ok("NO SE A DESCARGADO");
+                return Ok($"Error al descargar el archivo: {ex.Message}");
             }
         }
 
@@ -138,9 +178,9 @@ namespace AnalisisQuimicos.Api.Controllers
 
                     return _fileContent;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return Ok("NO SE A DESCARGADO");
+                    return Ok($"Error al descargar el archivo: {ex.Message}");
                 }
             }
             catch (Exception ex)

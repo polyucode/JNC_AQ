@@ -2,6 +2,7 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Infrastructure.Data;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,13 @@ namespace AnalisisQuimicos.Api.Controllers
     {
         private readonly IRepository<Tareas> _tareasService;
         private readonly IRepository<ParametrosAnalisisPlanta> _parametrosAnalisisPlantaService;
-
+        private readonly YucodeDevelopmentJNC_AQContext _db;
         private readonly IMapper _mapper;
 
 
-        public TareasController(IRepository<Tareas> tareasServicey, IMapper mapper)
+        public TareasController(YucodeDevelopmentJNC_AQContext db, IRepository<Tareas> tareasServicey, IMapper mapper)
         {
+            _db = db;
             _tareasService = tareasServicey;
             _mapper = mapper;
         }
@@ -71,11 +73,53 @@ namespace AnalisisQuimicos.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                var tarea = _db.GesTareas.FirstOrDefault(x => x.Id == id && x.Deleted != true);
+                if (tarea == null)
+                {
+                    return NotFound();
+                }
 
-            await _tareasService.Delete(id);
+                tarea.Deleted = true;
 
+                var parametrosAnalisis = _db.GesParametrosAnalisisPlanta.Where(o => o.CodigoCliente == tarea.CodigoCliente && o.Oferta == tarea.Oferta && o.Elemento == tarea.Elemento && o.Analisis == tarea.Analisis && o.Deleted != true).ToList();
+                if (parametrosAnalisis != null)
+                {
+                    foreach (var param in parametrosAnalisis)
+                    {
+                        param.Deleted = true;
+                    }
+                }
+
+                var parametrosElemento = _db.GesParametrosElementoPlantaCliente.Where(o => o.CodigoCliente == tarea.CodigoCliente && o.Oferta == tarea.Oferta && o.Id_Elemento == tarea.Elemento && o.Id_Analisis == tarea.Analisis && o.Deleted != true).ToList();
+                if (parametrosElemento != null)
+                {
+                    foreach (var param in parametrosElemento)
+                    {
+                        param.Deleted = true;
+                    }
+                }
+
+                var valores = _db.GesValorParametros.Where(o => o.CodigoCliente == tarea.CodigoCliente && o.Oferta == tarea.Oferta && o.Id_Elemento == tarea.Elemento && o.Id_Analisis == tarea.Analisis && o.Deleted != true).ToList();
+                if (valores != null)
+                {
+                    foreach (var valor in valores)
+                    {
+                        valor.Deleted = true;
+                    }
+                }
+
+                _db.SaveChanges();
+
+                return Ok(tarea);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
         }
     }
 }

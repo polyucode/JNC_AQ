@@ -28,47 +28,28 @@ namespace AnalisisQuimicos.Core.Services
             return await _unidadDeTrabajo.OfertasProductosRepository.GetById(id);
         }
 
-        public IEnumerable<OfertasProductos> GetAll() //ClientesContactosQueryFilter filtro
-        {
-            var OfertasProductos = _unidadDeTrabajo.OfertasProductosRepository.GetAll();
-            //if (filtro.Nombre != null)
-            //{
-            //    ClientesContactos = ClientesContactos.Where(x => x.Nombre.ToLower().Contains(filtro.Nombre.ToLower()));
-            //}
-            //if (filtro.Apellidos != null)
-            //{
-            //    ClientesContactos = ClientesContactos.Where(x => x.Apellidos.ToLower().Contains(filtro.Apellidos.ToLower()));
-            //}
-            //if (filtro.Telefono != null)
-            //{
-            //    ClientesContactos = ClientesContactos.Where(x => x.Telefono.ToLower().Contains(filtro.Telefono.ToLower()));
-            //}
-            ////if(filtro.Date != null)
-            ////{
-            ////    ClientesContactos = ClientesContactos.Where(x => x.AddDate.ToShortDateString() == filtro.Date?.ToShortDateString());
 
-            ////}
-            //if (filtro.IdPerfil != null)
-            //{
-            //    ClientesContactos = ClientesContactos.Where(x => x.IdPerfil == filtro.IdPerfil);
-            //}
-            return OfertasProductos;
+        public IEnumerable<OfertasProductos> GetAll()
+        {
+            var OfertasProductosAsociados = _unidadDeTrabajo.OfertasProductosRepository.GetAll();
+
+            return OfertasProductosAsociados;
         }
 
-        public async Task Add(OfertasProductos producto)
+        public async Task Add(OfertasProductos oferta)
         {
-            //if (cliente.Nombre == "NoPermitir")
+            //if (oferta.Nombre == "NoPermitir")
             //{
-            //    throw new BussinesException("No se puede añadir un cliente con ese nombre");
+            //    throw new BussinesException("No se puede añadir una oferta con ese nombre");
             //}
-            await _unidadDeTrabajo.OfertasProductosRepository.Add(producto);
+            await _unidadDeTrabajo.OfertasProductosRepository.Add(oferta);
             await _unidadDeTrabajo.SaveChangesAsync();
 
         }
 
-        public async void Update(OfertasProductos producto)
+        public async void Update(OfertasProductos oferta)
         {
-            _unidadDeTrabajo.OfertasProductosRepository.Update(producto);
+            _unidadDeTrabajo.OfertasProductosRepository.Update(oferta);
             await _unidadDeTrabajo.SaveChangesAsync();
         }
     }

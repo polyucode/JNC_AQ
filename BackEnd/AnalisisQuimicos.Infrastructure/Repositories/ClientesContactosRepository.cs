@@ -16,7 +16,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IEnumerable<ClientesContactos> GetByCodigoCliente(int codigo)
         {
             var list = _entities.AsEnumerable();
-            var sel = list.Where(x => x.CodigoCliente == codigo);
+            var sel = list.Where(x => x.CodigoCliente == codigo && x.Deleted != true);
 
             if (sel.ToArray().Length != 0)
             {

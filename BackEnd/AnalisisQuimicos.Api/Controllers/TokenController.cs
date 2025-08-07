@@ -37,12 +37,15 @@ namespace AnalisisQuimicos.Api.Controllers
                 return Ok(new { token, validation.Item2 });
             }
 
-            return NotFound();
+            return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
         }
 
-        private async Task<(bool,Usuarios)> IsValidUser(UserLogin login)
+        private async Task<(bool, Usuarios)> IsValidUser(UserLogin login)
         {
             var user = await _usuarioService.GetLoginByCredentials(login);
+            if (user == null)
+                return (false, null);
+
             var isValid = _passwordService.Check(user.Password, login.Password);
             return (isValid, user);
         }

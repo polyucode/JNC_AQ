@@ -9,5 +9,7 @@ namespace AnalisisQuimicos.Core.Entities
         public string Name { get; set; }
         public string Format { get; set; }
         public string Path { get; set; }
+        public int? idTareaAnalisis { get; set; }
+        public int? idComentario { get; set; }
     }
 }

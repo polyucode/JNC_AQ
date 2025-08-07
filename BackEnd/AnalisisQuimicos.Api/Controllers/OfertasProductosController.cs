@@ -2,7 +2,9 @@
 using AnalisisQuimicos.Core.DTOs;
 using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using AnalisisQuimicos.Infrastructure.Data;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,27 +13,27 @@ using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Api.Controllers
 {
-    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OfertasProductosController : ControllerBase
     {
-
         private readonly IRepository<OfertasProductos> _ofertasProductosService;
         private readonly IMapper _mapper;
+        private readonly YucodeDevelopmentJNC_AQContext _db;
 
-        public OfertasProductosController(IRepository<OfertasProductos> ofertasProductosService, IMapper mapper)
+        public OfertasProductosController(IRepository<OfertasProductos> OfertasProductosService, IMapper mapper, YucodeDevelopmentJNC_AQContext db)
         {
-            _ofertasProductosService = ofertasProductosService;
+            _ofertasProductosService = OfertasProductosService;
             _mapper = mapper;
+            _db = db;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var productos = _ofertasProductosService.GetAll();
-            var productosDto = _mapper.Map<IEnumerable<OfertasProductosDTO>>(productos);
-            var response = new ApiResponses<IEnumerable<OfertasProductosDTO>>(productosDto);
+            var ofertas = _ofertasProductosService.GetAll();
+            var ofertasDto = _mapper.Map<IEnumerable<OfertasProductosDTO>>(ofertas);
+            var response = new ApiResponses<IEnumerable<OfertasProductosDTO>>(ofertasDto);
             return Ok(response);
         }
 
@@ -39,30 +41,48 @@ namespace AnalisisQuimicos.Api.Controllers
         public async Task<IActionResult> GetById(int id)
 
         {
-            var producto = await _ofertasProductosService.GetById(id);
-            var productoDTO = _mapper.Map<OfertasProductosDTO>(producto);
-            var response = new ApiResponses<OfertasProductosDTO>(productoDTO);
+            var oferta = await _ofertasProductosService.GetById(id);
+            var OfertasProductosDTO = _mapper.Map<OfertasProductosDTO>(oferta);
+            var response = new ApiResponses<OfertasProductosDTO>(OfertasProductosDTO);
+            return Ok(response);
+        }
+
+        [HttpGet("GetByOfferId")]
+        public IActionResult GetByOfferId(int offerId)
+        {
+            ApiResponses<IEnumerable<OfertasProductosDTO>> response = null;
+            try
+            {
+                var ofertas = _ofertasProductosService.GetAll();
+                var ofertasFiltradas = ofertas.Where(x => x.IdOferta == offerId);
+                var ofertasDto = _mapper.Map<IEnumerable<OfertasProductosDTO>>(ofertasFiltradas);
+                response = new ApiResponses<IEnumerable<OfertasProductosDTO>>(ofertasDto);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(OfertasProductosDTO ProductoDTO)
+        public async Task<IActionResult> Insert(OfertasProductosDTO OfertasProductosAsociadosDTO)
         {
-            var producto = _mapper.Map<OfertasProductos>(ProductoDTO);
+            var oferta = _mapper.Map<OfertasProductos>(OfertasProductosAsociadosDTO);
+            await _ofertasProductosService.Add(oferta);
 
-            await _ofertasProductosService.Add(producto);
-
-            ProductoDTO = _mapper.Map<OfertasProductosDTO>(producto);
-            var response = new ApiResponses<OfertasProductosDTO>(ProductoDTO);
+            OfertasProductosAsociadosDTO = _mapper.Map<OfertasProductosDTO>(oferta);
+            var response = new ApiResponses<OfertasProductosDTO>(OfertasProductosAsociadosDTO);
             return Ok(response);
         }
 
         [HttpPut]
-        public void Update(int id, OfertasProductosDTO ProductosDTO)
+        public void Update(int id, OfertasProductosDTO OfertasProductosAsociadosDTO)
         {
-            var producto = _mapper.Map<OfertasProductos>(ProductosDTO);
+            var oferta = _mapper.Map<OfertasProductos>(OfertasProductosAsociadosDTO);
 
-            _ofertasProductosService.Update(producto);
+            _ofertasProductosService.Update(oferta);
 
         }
 
@@ -72,6 +92,54 @@ namespace AnalisisQuimicos.Api.Controllers
 
             await _ofertasProductosService.Delete(id);
 
+        }
+
+        [HttpPost("UpdateOfferProducts")]
+        public async void UpdateOfferProducts(List<OfertasProductos> productos, int idOfertaSeleccionada)
+        {
+            try
+            {
+                var ofertaContactos = _ofertasProductosService.GetAll();
+                var oferFiltradas = ofertaContactos.Where(x => x.IdOferta == idOfertaSeleccionada).ToList();
+
+                var lo = (from logs in _db.GesOfertasContactos where logs.IdOferta == idOfertaSeleccionada select logs).ToList();
+
+                _db.GesOfertasContactos.RemoveRange(lo);
+                _db.SaveChanges();
+                foreach (var cont in productos)
+                {
+                    cont.Id = 0;
+                }
+                _db.AddRange(productos);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            };
+        }
+
+        [HttpPost("InsertOfferProducts")]
+        public async void InsertOfferProducts(List<OfertasProductos> productos, int idOfertaSeleccionada)
+        {
+            try
+            {
+                var idOfertaCreada = (from log
+                                      in _db.GesOfertasClientes
+                                      where log.NumeroOferta == idOfertaSeleccionada
+                                      orderby log.Id descending
+                                      select log).FirstOrDefault();
+                foreach (var prod in productos)
+                {
+                    prod.IdOferta = idOfertaCreada.Id;
+                }
+                _db.AddRange(productos);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+            };
         }
     }
 }

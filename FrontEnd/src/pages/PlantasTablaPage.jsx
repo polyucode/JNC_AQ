@@ -1,26 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
 import { Autocomplete, Button, Card, Grid, TableContainer, TextField, Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { ThemeContext } from '../router/AppRouter';
 import { MainLayout } from "../layout/MainLayout";
-import { useParserFront } from "../hooks/useParserFront";
-import { useParserBack } from "../hooks/useParserBack";
 import TaskIcon from '@mui/icons-material/Task';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import { useLocation } from "react-router-dom";
 import { LineaParametro } from '../components/LineaParametro';
 import Swal from 'sweetalert2';
 import {
     getParametrosElementoPlantaCliente, getParametrosElementoPlantaClienteConFiltros, postValorParametros,
-    getConfNivelesPlantasCliente, getElementos, getOfertas, getParametros, getParametrosAnalisisPlanta, getAnalisisNivelesPlantasCliente,
-    getAnalisis, getClientes, putParametrosElementoPlantaCliente, postParametrosElementoPlantaCliente, getValorParametros, getElementosPlanta
+    getConfNivelesPlantasCliente, getOfertas, getParametros, getAnalisisNivelesPlantasCliente, getAnalisis, getClientes, putParametrosElementoPlantaCliente, 
+    postParametrosElementoPlantaCliente, getValorParametros, getElementosPlanta, putValorParametros
 } from '../api';
-
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
 
 export const PlantasTablaPage = () => {
 
@@ -39,7 +28,6 @@ export const PlantasTablaPage = () => {
     const [parametros, setParametros] = useState([]);
     const [elementosAutocomplete, setElementosAutocomplete] = useState([]);
     const [analisisAutocomplete, setAnalisisAutocomplete] = useState([]);
-    const [parametrosAnalisisPlanta, setParametrosAnalisisPlanta] = useState([]);
     const [parametrosElementoPlanta, setParametrosElementoPlanta] = useState([]);
     const [tipoParametros, setTipoParametros] = useState([]);
     const [parametrosSeleccionado, setParametrosSeleccionado] = useState({
@@ -235,46 +223,32 @@ export const PlantasTablaPage = () => {
     const [abroPlantilla, setAbroPlantilla] = useState(false);
     const [key, setKey] = useState(0);
 
-    /*** HOOKS ***/
-    const { state } = useLocation();
-    const { parametrosBack, setDatosParametrosBack } = useParserBack();
-    const { parametrosFront, setDatosParametrosFront, cambiarCampoFijo, cambiarCampoPersonalizado } = useParserFront(setDatosParametrosBack);
-
-    /*** EFECTOS ***/
-
-    // Efecto que comprueba si se reciben parametros de la página anterior y los setea
-    useEffect(() => {
-        if (state != null) {
-            setParametrosSeleccionado(prevParam => ({ ...prevParam, codigoCliente: state.codigoCliente, oferta: state.codigoOferta }));
-        }
-    }, []);
+    const [inputCodigoCliente, setInputCodigoCliente] = useState('');
+    const [inputNombreCliente, setInputNombreCliente] = useState('');
 
     // Peticiones al backend
     useEffect(() => {
 
         getClientes()
-            .then(resp => setClientes(resp));
+            .then(resp => setClientes(resp.filter(cliente => !cliente.deleted)));
 
         getOfertas()
-            .then(resp => setOferta(resp));
+            .then(resp => setOferta(resp.filter(oferta => !oferta.deleted)));
 
         getElementosPlanta()
-            .then(resp => setElementos(resp));
+            .then(resp => setElementos(resp.filter(elemento => !elemento.deleted)));
 
-        getParametros()
-            .then(resp => setParametros(resp));
+        getParametros()     
+            .then(resp => setParametros(resp.filter(param => !param.deleted)));
 
         getAnalisis()
-            .then(resp => setAnalisis(resp));
-
-        getParametrosAnalisisPlanta()
-            .then(resp => setParametrosAnalisisPlanta(resp));
+            .then(resp => setAnalisis(resp.filter(an => !an.deleted)));
 
         getConfNivelesPlantasCliente()
-            .then(resp => setConfNivelesPlantasCliente(resp));
+            .then(resp => setConfNivelesPlantasCliente(resp.filter(nivel => !nivel.deleted)));
 
         getAnalisisNivelesPlantasCliente()
-            .then(resp => setConfAnalisisNivelesPlantasCliente(resp));
+            .then(resp => setConfAnalisisNivelesPlantasCliente(resp.filter(an => !an.deleted)));
 
         GetValorParametros();
 
@@ -316,13 +290,8 @@ export const PlantasTablaPage = () => {
 
     }, [parametrosSeleccionado.idElemento])
 
-    // Revisar si sirve o no
     useEffect(() => {
-        setDatosParametrosBack(parametrosFront)
-    }, [parametrosFront]);
-
-    useEffect(() => {
-        setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false })))
+        setTipoParametros(parametros.map(parametro => ({ id: parametro.id, nombre: parametro.nombre, limInf: 0, limSup: 0, unidades: parametro.unidad, activo: false, verInspector: false, esCalculado: parametro.esCalculado })))
     }, [parametros]);
 
     useEffect(() => {
@@ -331,33 +300,10 @@ export const PlantasTablaPage = () => {
         }
     }, [parametrosFiltrados])
 
-    useEffect(() => {
-
-        if (parametrosSeleccionado.codigoCliente != 0) {
-            const codigo = clientes.filter(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente)[0];
-            setParametrosSeleccionado({
-                ...parametrosSeleccionado,
-                nombreCliente: codigo.razonSocial
-            });
-        }
-
-    }, [parametrosSeleccionado.codigoCliente]);
-
-    useEffect(() => {
-
-        if (parametrosSeleccionado.nombreCliente != "") {
-            const nombre = clientes.filter(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente)[0];
-            setParametrosSeleccionado({
-                ...parametrosSeleccionado,
-                codigoCliente: nombre.codigo
-            });
-        }
-
-    }, [parametrosSeleccionado.nombreCliente]);
-
     const GetParametrosElementoPlantaCliente = async () => {
         const resp = await getParametrosElementoPlantaCliente();
-        setParametrosElementoPlanta(resp);
+        const parametrosFiltrados = resp.filter(valor => !valor.deleted)
+        setParametrosElementoPlanta(parametrosFiltrados);
     }
 
     const GetValorParametros = async () => {
@@ -367,16 +313,26 @@ export const PlantasTablaPage = () => {
 
     /*** FUNCIONES ***/
 
+    const normalizeDecimal = (value) => {
+        if (typeof value !== 'string') {
+            value = String(value);
+        }
+
+        return value.replace('.', ',');
+    };
+
     const handleLimitInferior = (e) => {
 
         // Extraemos los datos necesarios
         const { name, value } = e.target;
 
+        const normalizedValue = normalizeDecimal(value);
+
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
         setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
-                return { ...parametro, limInf: value };
+                return { ...parametro, limInf: normalizedValue };
             } else {
                 return parametro;
             }
@@ -390,11 +346,13 @@ export const PlantasTablaPage = () => {
         // Extraemos los datos necesarios
         const { name, value } = e.target;
 
+        const normalizedValue = normalizeDecimal(value);
+
         // Seteamos el estado recorriendo los valores hasta encontrar la linea correcta
         setTipoParametros(prev => (prev.map(parametro => {
 
             if (name === parametro.nombre) {
-                return { ...parametro, limSup: value };
+                return { ...parametro, limSup: normalizedValue };
             } else {
                 return parametro;
             }
@@ -436,8 +394,10 @@ export const PlantasTablaPage = () => {
                 }
             })
         ));
-
     }
+
+    //AMF INI handleActivo para los elementos calculados
+
 
     const handleVerInspector = (e) => {
 
@@ -460,7 +420,38 @@ export const PlantasTablaPage = () => {
     async function valorParametros() {
 
         tipoParametros.map((parametro) => {
-            if (parametro.activo == true) {
+            if (parametro.activo === true) {
+                const param2 = {
+                    id: 0,
+                    CodigoCliente: parametrosSeleccionado.codigoCliente,
+                    Referencia: "",
+                    Oferta: parametrosSeleccionado.oferta,
+                    Id_Elemento: parametrosSeleccionado.idElemento,
+                    Id_Analisis: parametrosSeleccionado.idAnalisis,
+                    Parametro: parametro.id,
+                    Fecha: null,
+                    Valor: "",
+                    Unidad: parametro.unidades,
+                    addDate: null,
+                    addIdUser: null,
+                    modDate: null,
+                    modIdUser: null,
+                    delDate: null,
+                    delIdUser: null,
+                    deleted: null
+                }
+                const valorFiltradoActivar = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro && valor.fecha === null && valor.deleted === true)
+                if(valorFiltradoActivar.length >= 1){
+                    valorFiltradoActivar[0].deleted = false;
+                    const resp = putValorParametros(valorFiltradoActivar[0])
+                    return resp
+                }
+                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro && valor.fecha === null)
+                if (valorFiltrado.length === 0) {
+                    const resp = postValorParametros(param2);
+                    return resp;
+                }
+            } else{
                 const param2 = {
                     id: 0,
                     CodigoCliente: parametrosSeleccionado.codigoCliente,
@@ -481,10 +472,11 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
-                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro)
-                if (valorFiltrado.length == 0) {
-                    const resp = postValorParametros(param2);
-                    return resp;
+                const valorFiltrado = valoresParametros.filter(valor => valor.codigoCliente === param2.CodigoCliente && valor.oferta === param2.Oferta && valor.id_Elemento === param2.Id_Elemento && valor.id_Analisis === param2.Id_Analisis && valor.parametro === param2.Parametro && valor.fecha === null)
+                if(valorFiltrado.length >= 1){
+                    valorFiltrado[0].deleted = true;
+                    const resp = putValorParametros(valorFiltrado[0])
+                    return resp
                 }
             }
         })
@@ -494,22 +486,32 @@ export const PlantasTablaPage = () => {
 
         setAbroPlantilla(false)
         const resp = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
-
-        const datosMapeados = resp.map(datos => {
-
+        const datosMapeados = tipoParametros.map(datos => {
             // Obtenemos el índice del elemeto actual, para poder obtener su nombre luego
-            const indiceElemento = tipoParametros.indexOf(tipoParametros.filter(param => param.id === datos.parametro)[0]);
-
-            // Devolvemos la linea mapeada
-            return {
-                dbId: datos.id,
-                id: datos.parametro,
-                nombre: tipoParametros[indiceElemento].nombre,
-                limInf: datos.limInf,
-                limSup: datos.limSup,
-                unidades: datos.unidades,
-                activo: datos.activo,
-                verInspector: datos.verInspector
+            const elementoEncontrado = resp.find(param => param.parametro === datos.id);
+            if(!elementoEncontrado){
+                return {
+                    dbId: 0,
+                    id: datos.id,
+                    nombre: datos.nombre,
+                    limInf: datos.limInf,
+                    limSup: datos.limSup,
+                    unidades: datos.unidades,
+                    activo: datos.activo,
+                    verInspector: datos.verInspector,
+                }
+            } 
+            else{
+                return {
+                    dbId: elementoEncontrado.id,
+                    id: elementoEncontrado.parametro,
+                    nombre: datos.nombre,
+                    limInf: elementoEncontrado.limInf,
+                    limSup: elementoEncontrado.limSup,
+                    unidades: elementoEncontrado.unidades,
+                    activo: elementoEncontrado.activo,
+                    verInspector: elementoEncontrado.verInspector,
+                }
             }
 
         });
@@ -527,7 +529,6 @@ export const PlantasTablaPage = () => {
         const resp2 = await getParametrosElementoPlantaClienteConFiltros(parametrosSeleccionado.codigoCliente, parametrosSeleccionado.oferta, parametrosSeleccionado.idElemento, parametrosSeleccionado.idAnalisis);
 
         if (resp2.length > 0) {
-
             const resp = tipoParametros.map(async (parametro) => {
                 const param = {
                     id: 0,
@@ -538,8 +539,8 @@ export const PlantasTablaPage = () => {
                     Id_Elemento: parametrosSeleccionado.idElemento,
                     Id_Analisis: parametrosSeleccionado.idAnalisis,
                     EsPlantilla: true,
-                    LimInf: parseInt(parametro.limInf, 10),
-                    LimSup: parseInt(parametro.limSup, 10),
+                    LimInf: parametro.limInf !== 0 ? parseFloat(typeof parametro.limInf === 'string' ? parametro.limInf.replace(',', '.') : parametro.limInf) : 0,
+                    LimSup: parametro.limSup !== 0 ? parseFloat(typeof parametro.limSup === 'string' ? parametro.limSup.replace(',', '.') : parametro.limSup) : 0,
                     Unidades: parametro.unidades,
                     Activo: parametro.activo,
                     VerInspector: parametro.verInspector,
@@ -552,10 +553,13 @@ export const PlantasTablaPage = () => {
                     deleted: null
                 }
 
-                const registro  = resp2.find(item => item.parametro === parametro.id)
-                param.id = registro.id
-
-                await putParametrosElementoPlantaCliente(param)
+                const registro = resp2.find(item => item.parametro === parametro.id)
+                if(registro !== undefined){
+                    param.id = registro.id
+                    await putParametrosElementoPlantaCliente(param)
+                } else{
+                    await postParametrosElementoPlantaCliente(param)
+                }                            
             })
 
             if (resp) {
@@ -606,8 +610,8 @@ export const PlantasTablaPage = () => {
                     Id_Elemento: parametrosSeleccionado.idElemento,
                     Id_Analisis: parametrosSeleccionado.idAnalisis,
                     EsPlantilla: true,
-                    LimInf: parseInt(parametro.limInf, 10),
-                    LimSup: parseInt(parametro.limSup, 10),
+                    LimInf: parametro.limInf !== 0 ? parseFloat(typeof parametro.limInf === 'string' ? parametro.limInf.replace(',', '.') : parametro.limInf) : 0,
+                    LimSup: parametro.limSup !== 0 ? parseFloat(typeof parametro.limSup === 'string' ? parametro.limSup.replace(',', '.') : parametro.limSup) : 0,
                     Unidades: parametro.unidades,
                     Activo: parametro.activo,
                     VerInspector: parametro.verInspector,
@@ -685,22 +689,44 @@ export const PlantasTablaPage = () => {
             nombreAnalisis: ""
         }))
 
+        setParametrosFiltrados([])
+
         setKey(key + 1)
     }
 
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setParametrosSeleccionado(prevState => ({
-            ...prevState,
-            [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
-        }));
+    function filtrarCodigoCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputCodigoCliente === '') {
+                return true;
+            } else {
+                if (cliente.codigo?.toString().indexOf(inputCodigoCliente) >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function filtrarNombreCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputNombreCliente === '') {
+                return true;
+            } else {
+                const nombreClienteLowerCase = cliente.razonSocial ? cliente.razonSocial.toString().toLowerCase() : '';
+                const inputNombreClienteLowerCase = inputNombreCliente.toLowerCase();
+                return nombreClienteLowerCase.includes(inputNombreClienteLowerCase);
+            }
+        } else {
+            return false;
+        }
     }
 
     return (
         <MainLayout title="Parametrización de planta">
-
             <Grid container spacing={2}>
-
                 {/* SELECCIÓN DE CLIENTE Y OFERTA */}
                 <Grid item xs={12}>
                     <Card sx={{ p: 2, display: 'flex' }}>
@@ -708,17 +734,19 @@ export const PlantasTablaPage = () => {
 
                             <Grid item xs={3}>
                                 <Autocomplete
-                                    disableClearable={true}
                                     id="codigoCliente"
                                     options={clientes}
                                     value={clientes.find(cliente => cliente.razonSocial === parametrosSeleccionado.nombreCliente) || null}
-                                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                                    filterOptions={options => clientes.filter((cliente) => filtrarNombreCliente(cliente))}
+                                    onInputChange={(event, newInputValue) => {
+                                        setInputNombreCliente(newInputValue);
+                                    }}
                                     getOptionLabel={option => option.razonSocial}
                                     renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
                                         nombreCliente: value ? value.razonSocial : null,
-                                        codigoCliente: '',
+                                        codigoCliente: value ? parseInt(value.codigo) : null,
                                         oferta: '',
                                         idElemento: 0,
                                         nombreElemento: '',
@@ -730,11 +758,13 @@ export const PlantasTablaPage = () => {
 
                             <Grid item xs={2}>
                                 <Autocomplete
-                                    disableClearable={true}
                                     id="codigoCliente"
                                     options={clientes}
                                     value={clientes.find(cliente => cliente.codigo === parametrosSeleccionado.codigoCliente) || null}
-                                    filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                                    filterOptions={options => clientes.filter((cliente) => filtrarCodigoCliente(cliente))}
+                                    onInputChange={(event, newInputValue) => {
+                                        setInputCodigoCliente(newInputValue);
+                                    }}
                                     getOptionLabel={option => option.codigo.toString()}
                                     renderInput={(params) => <TextField {...params} name="codigoCliente" label="Código cliente" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
@@ -752,16 +782,25 @@ export const PlantasTablaPage = () => {
 
                             <Grid item xs={2}>
                                 <Autocomplete
-                                    disableClearable={true}
-                                    id="Oferta"
-                                    inputValue={parametrosSeleccionado.oferta.toString()}
+                                    id="clientes"
                                     options={oferta}
-                                    filterOptions={options => oferta.filter(oferta => oferta.codigoCliente === parametrosSeleccionado.codigoCliente && !oferta.deleted)}
+                                    value={oferta.find(ofert => ofert.numeroOferta === parametrosSeleccionado.oferta) || null}
+                                    filterOptions={options => {
+                                        if (parametrosSeleccionado.nombreCliente !== "" && parametrosSeleccionado.codigoCliente !== 0 && parametrosSeleccionado.oferta !== 0) {
+                                            return options.filter(oferta =>
+                                                oferta.nombreCliente === parametrosSeleccionado.nombreCliente && oferta.codigoCliente === parametrosSeleccionado.codigoCliente && !oferta.deleted
+                                            );
+                                        } else {
+                                            return options.filter(oferta => !oferta.deleted);
+                                        }
+                                    }}
                                     getOptionLabel={option => option.numeroOferta.toString()}
-                                    renderInput={(params) => <TextField {...params} name="oferta" label="Código oferta" />}
+                                    renderInput={params => <TextField {...params} label="Oferta" name="oferta" />}
                                     onChange={(event, value) => setParametrosSeleccionado(prevState => ({
                                         ...prevState,
-                                        oferta: parseInt(value.numeroOferta),
+                                        codigoCliente: value ? parseInt(value.codigoCliente) : null,
+                                        nombreCliente: value ? value.nombreCliente : null,
+                                        oferta: value ? parseInt(value.numeroOferta) : null,
                                         idElemento: 0,
                                         nombreElemento: '',
                                         idAnalisis: 0,
@@ -844,10 +883,7 @@ export const PlantasTablaPage = () => {
                                                 Guardar plantilla
                                             </Button>
                                         </Grid>
-
                                 }
-
-
                             </>
                         </Grid>
                     </Card>
@@ -891,6 +927,7 @@ export const PlantasTablaPage = () => {
                                                             activar={handleActivo}
                                                             verInsp={handleVerInspector}
                                                             disabled={abroPlantilla}
+                                                            parametrosGenerales={parametros}
                                                         />
                                                     ))
                                                     :
@@ -905,6 +942,7 @@ export const PlantasTablaPage = () => {
                                                             activar={handleActivo}
                                                             verInsp={handleVerInspector}
                                                             disabled={parametrosSeleccionado.nombreAnalisis === ""}
+                                                            parametrosGenerales={parametros}
                                                         />
                                                     ))
                                             }

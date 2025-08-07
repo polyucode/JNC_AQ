@@ -8,6 +8,6 @@ namespace AnalisisQuimicos.Core.Interfaces
 {
     public interface IPDFGeneratorService
     {
-        Task<int> NewPdf(List<ValorParametros> valores);
+        Task<int> NewPdf(List<ValorParametros> valores, string fechaRealizado, int idTarea, int archivos, int comentarioId, string comentario);
     }
 }

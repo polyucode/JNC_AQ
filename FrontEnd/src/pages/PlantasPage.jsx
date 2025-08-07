@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Autocomplete, Typography, Button, TextField, Card, Grid, List, ListItemButton, ListItemText, Tooltip, Alert } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import { Autocomplete, Typography, Button, TextField, Card, Grid, List, ListItemButton, ListItemText, Tooltip, Alert, RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
 import SaveIcon from '@mui/icons-material/Save';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import DownloadIcon from '@mui/icons-material/Download';
 import Swal from 'sweetalert2';
 import { camelCase } from 'lodash';
-import ReactFlow, { Background } from "react-flow-renderer";
+import ReactFlow, { Background, ConnectionMode, ReactFlowProvider, useEdgesState, useNodesState } from "react-flow-renderer";
 import { MainLayout } from "../layout/MainLayout";
 import {
     getAnalisisNivelesPlantasCliente, getAnalisisNivelesPlantasClientePorIdNivel, getClientes, getConfNivelesPlantasClientePorPlanta, getConfPlantaCliente,
     getConfPlantaClientePorClienteOferta, getElementoPorId, getAnalisis, getOfertas, getParametros, postAnalisisNivelesPlantasCliente, postConfNivelesPlantasCliente,
-    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente, deleteAnalisisNivelesPlantasCliente, getElementosPlanta, deleteElementosPlanta, getElementoPlantaPorId, postElementosPlanta, putElementosPlanta, getElementos
+    postConfPlantaCliente, postElementos, postParametrosElementoPlantaCliente, putAnalisisNivelesPlantasCliente, putConfNivelesPlantasCliente, putConfPlantaCliente, putElementos, deleteConfPlantaCliente, deleteConfNivelesPlantasCliente, deleteAnalisisNivelesPlantasCliente, getElementosPlanta, deleteElementosPlanta, getElementoPlantaPorId, postElementosPlanta, putElementosPlanta, getElementos,
+    postAnalisis,
+    putAnalisis,
+    SubirIconoElementoPlanta
 } from "../api";
 import { NivelPlanta } from "../components/Plantas/NivelPlanta";
 import { CheckBoxAnalisis } from "../components/Plantas/CheckBoxAnalisis";
@@ -20,7 +24,15 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate } from 'react-router-dom';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useUsuarioActual } from '../hooks/useUsuarioActual';
+import { preguntarParaEliminar } from '../helpers/swalHelper';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
+import { ModalLayout4 } from '../components/ModalLayout4';
+import { AuthContext } from '../context/AuthContext';
+import { edgeTypes, initialEdges, initialNodes } from '../components/DiagramaEditableEdges/initialElements';
+import { ConnectionLine } from '../components/DiagramaEditableEdges/edges/ConnectionLine'
+import FlowWithProvider from '../components/DiagramaEditableEdges/components/FlowWithProvider';
 
 export const PlantasPage = () => {
 
@@ -39,6 +51,7 @@ export const PlantasPage = () => {
     const [elementoNuevo, setElementoNuevo] = useState({
         id: 0,
         nombre: '',
+        nombreIcono: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -51,6 +64,7 @@ export const PlantasPage = () => {
     const [elementoCambiado, setElementoCambiado] = useState({
         id: 0,
         nombre: '',
+        nombreIcono: '',
         addDate: null,
         addIdUser: null,
         modDate: null,
@@ -60,9 +74,39 @@ export const PlantasPage = () => {
         deleted: null
     })
 
+    const [analisisNuevo, setAnalisisNuevo] = useState({
+        id: 0,
+        nombre: '',
+        tipo: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null
+    })
+
+    const [analisisCambiado, setAnalisisCambiado] = useState({
+        id: 0,
+        nombre: '',
+        tipo: 0,
+        addDate: null,
+        addIdUser: null,
+        modDate: null,
+        modIdUser: null,
+        delDate: null,
+        delIdUser: null,
+        deleted: null
+    })
+
+    const [analisisActivo, setAnalisisActivo] = useState({});
+    const [elementoActivo, setElementoActivo] = useState({});
+
     const [crearPlanta, setCrearPlanta] = useState(true);
     const [plantaCreada, setPlantaCreada] = useState(false);
     const [niveles, setNiveles] = useState([]);
+    const [permiteCambiarPlanta, setPermiteCambiarPlanta] = useState(false);
 
     // Datos de los autocomplete
     const [clientes, setClientes] = useState([]);
@@ -72,6 +116,7 @@ export const PlantasPage = () => {
     const [elementos, setElementos] = useState([]);
 
     const [textFieldValue, setTextFieldValue] = useState('');
+    const [textFieldValueAnalisis, setTextFieldValueAnalisis] = useState('');
 
     // Listado de elementos
     const [elementosPlanta, setElementosPlanta] = useState([]);
@@ -82,22 +127,35 @@ export const PlantasPage = () => {
     const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
     const [confNivelesPlantaCliente, setConfNivelesPlantaCliente] = useState([]);
     const [analisisNiveles, setAnalisisNiveles] = useState([]);
+    const [diagrama, setDiagrama] = useState([])
     const [datosGuardados, setDatosGuardados] = useState(false);
     const [diagramaGuardado, setDiagramaGuardado] = useState(false);
+    const [estadoGenerarDiagrama, setEstadoGenerarDiagrama] = useState(false);
 
     const [estadoEliminarPlanta, setEstadoEliminarPlanta] = useState(false);
 
     const [errorElemento, setErrorElemento] = useState(false);
     const [errorElementoCambiado, setErrorElementoCambiado] = useState(false);
+    const [errorAnalisis, setErrorAnalisis] = useState(false);
+
+    const [openModal, setOpenModal] = useState(false);
+    const [openModalElemento, setOpenModalElemento] = useState(false);
+    const [openModalEditar, setOpenModalEditar] = useState(false);
+    const [openModalEditarElemento, setOpenModalEditarElemento] = useState(false);
 
     /** HOOKS **/
     const navigate = useNavigate();
-    const [nodos2, setNodos2] = useState([]);
-    const [lados2, setLados2] = useState([]);
-    const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect } = useDiagrama();
+    const [nodos2, setNodos2, onNodesChange] = useNodesState([]);
+    const [lados2, setLados2] = useEdgesState([]);
+    const { nodos, lados, nodeTypes, diagramaGenerado, generarDiagrama, onEdgesChange, onConnect, onEdgeUpdate, onEdgeUpdateStart, onEdgeUpdateEnd, editandoDiagramaCargado, modificarEditandoDiagramaCargadoTrue, modificarEditandoDiagramaCargadoFalse, modificarNodosDesdeFueraComponente } = useDiagrama();
 
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
+    const [inputCodigoCliente, setInputCodigoCliente] = useState('');
+    const [inputNombreCliente, setInputNombreCliente] = useState('');
+    const [inputOferta, setInputOferta] = useState('');
+
+    const [iconoElemento, setIconoElemento] = useState({});
 
     /** EFECTOS **/
 
@@ -105,54 +163,52 @@ export const PlantasPage = () => {
     useEffect(() => {
 
         getClientes()
-            .then(resp => { setClientes(resp) });
+            .then(resp => setClientes(resp.filter(cliente => !cliente.deleted)));
 
         getOfertas()
-            .then(resp => { setOfertas(resp) });
-
-        getAnalisis()
-            .then(resp => { setAnalisis(resp) });
+            .then(resp => setOfertas(resp.filter(oferta => !oferta.deleted)));
 
         getParametros()
-            .then(resp => { setParametros(resp) });
+            .then(resp => setParametros(resp.filter(param => !param.deleted)));
 
         getElemento();
 
+        getAnalisi();
+
     }, []);
 
-    // Setea el nombre del cliente cada vez que se selecciona un código de cliente
-    useEffect(() => {
+    const getElemento = async () => {
+        const resp = await getElementos();
+        setElementos(resp.filter(el => !el.deleted));
+    }
 
-        if (confPlantaCliente.CodigoCliente != 0) {
-            const clienteSeleccionado = clientes.filter(cliente => cliente.codigo === confPlantaCliente.CodigoCliente)[0];
-            setConfPlantaCliente({
-                ...confPlantaCliente,
-                NombreCliente: clienteSeleccionado.razonSocial
-            });
-        }
+    const getAnalisi = async () => {
+        const resp = await getAnalisis();
+        setAnalisis(resp.filter(an => !an.deleted));
+    }
 
-    }, [confPlantaCliente.CodigoCliente]);
-
-    useEffect(() => {
-
-        if (confPlantaCliente.NombreCliente != "") {
-            const clienteSeleccionado = clientes.filter(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente)[0];
-            setConfPlantaCliente({
-                ...confPlantaCliente,
-                CodigoCliente: clienteSeleccionado.codigo
-            });
-        }
-
-    }, [confPlantaCliente.NombreCliente]);
 
     // Convierte los datos del diagrama en un string para almacenar en la base de datos
     useEffect(() => {
-
+        // guardarNuevoLocationNodos2);
         const datosDiagrama = {
             nodos,
             lados
         }
-
+        const datosDiagrama2 = {
+            nodos2,
+            lados2
+        }
+        if (editandoDiagramaCargado === true) {
+            modificarNodosDesdeFueraComponente(datosDiagrama.nodos, datosDiagrama.lados);
+            setNodos2(datosDiagrama2.nodos2);
+            setLados2(datosDiagrama.lados);
+        } else {
+            guardarNuevoLocationNodos1();
+            modificarNodosDesdeFueraComponente(datosDiagrama.nodos, datosDiagrama.lados);
+            setNodos2(datosDiagrama2.nodos2);
+            setLados2(datosDiagrama.lados);
+        }
         setConfPlantaCliente({
             ...confPlantaCliente,
             Diagrama: JSON.stringify(datosDiagrama)
@@ -180,17 +236,21 @@ export const PlantasPage = () => {
 
     // Acemos una petición automáticamente para saber si existe la planta o no
     useEffect(() => {
+        if (confPlantaCliente.CodigoCliente !== null && confPlantaCliente.Oferta !== null) {
+            getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta)
+                .then(res => {
+                    if (res == null) {
+                        setCrearPlanta(true);
+                    } else {
+                        setCrearPlanta(false);
+                        setConfPlantaCliente(prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
+                    }
 
-        getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta)
-            .then(res => {
-                if (res == null) {
-                    setCrearPlanta(true);
-                } else {
-                    setCrearPlanta(false);
-                    setConfPlantaCliente(prev => ({ ...prev, NumNiveles: res.numNiveles.toString() }));
-                }
+                });
+        } else {
+            setCrearPlanta(true)
+        }
 
-            });
 
     }, [confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta]);
 
@@ -226,14 +286,10 @@ export const PlantasPage = () => {
 
     }, [elementosPlanta]);
 
-    const getElemento = async () => {
-
-        const resp = await getElementos();
-        setElementos(resp);
-
-    }
 
     // FUNCIONES
+
+
 
     const handleCrearCargarPlanta = async () => {
 
@@ -289,6 +345,7 @@ export const PlantasPage = () => {
 
         } else {
 
+            setPermiteCambiarPlanta(true);
             // Comprobamos si se debe crear o cargar la planta
             if (crearPlanta) {
 
@@ -311,11 +368,15 @@ export const PlantasPage = () => {
 
                 if (respPlanta) {
                     setEstadoEliminarPlanta(true)
+                    setEstadoGenerarDiagrama(true)
                 }
 
                 const datosDiagrama = JSON.parse(respPlanta.diagrama);
                 setNodos2(datosDiagrama.nodos)
                 setLados2(datosDiagrama.lados)
+                modificarNodosDesdeFueraComponente(datosDiagrama.nodos, datosDiagrama.lados);
+                modificarEditandoDiagramaCargadoTrue();
+
 
                 // Actualizamos los datos de la planta
                 setConfPlantaCliente(prevState => ({ ...prevState, Id: respPlanta.id, NumNiveles: respPlanta.numNiveles, Diagrama: respPlanta.diagrama }));
@@ -355,7 +416,7 @@ export const PlantasPage = () => {
                             if (!an.deleted) {
 
                                 // Preparamos el nombre del analisis
-                                const nombreAnalisis = camelCase(analisis.filter(anali => anali.id === an.id_Analisis)[0].nombre);
+                                const nombreAnalisis = analisis.filter(anali => anali.id === an.id_Analisis)[0].nombre;
 
                                 // Añadimos el análisis al objeto
                                 analisisObjeto = { ...analisisObjeto, [nombreAnalisis]: true };
@@ -366,14 +427,16 @@ export const PlantasPage = () => {
 
                         // Creamos el objecto con los datos
                         if (resp != null) {
-
                             niveles.push({
                                 id: resp.id,
                                 nivel: nivel.nivel,
                                 nombre: resp.nombre,
                                 numero: resp.numero,
+                                nombreIcono: resp.nombreIcono,
                                 descripcion: resp.descripcion,
-                                analisis: analisisObjeto
+                                verInsp: resp.verInsp,
+                                analisis: analisisObjeto,
+                                nombreIcono: resp.nombreIcono,
                             });
 
                         }
@@ -383,11 +446,149 @@ export const PlantasPage = () => {
 
                 // Añadimos el elemento al estado
                 setElementosPlanta([...niveles]);
-
             }
 
         }
 
+    }
+
+    const handleVaciarBusqueda = () => {
+        const confVacia = {
+            Id: 0,
+            CodigoCliente: 0,
+            NombreCliente: '',
+            Oferta: 0,
+            NumNiveles: '',
+            Diagrama: ""
+        }
+        setNodos2([]);
+        setLados2([]);
+        modificarNodosDesdeFueraComponente([], []);
+        modificarEditandoDiagramaCargadoFalse()
+        setConfPlantaCliente(confVacia);
+        setElementosPlanta([]);
+        setNiveles([]);
+        setEstadoEliminarPlanta(false);
+        setEstadoGenerarDiagrama(false);
+        setPlantaCreada(false);
+        setPermiteCambiarPlanta(false);
+    }
+
+    const addNivelPlanta = async () => {
+        const nivelesTotalesActualizados = parseInt(confPlantaCliente.NumNiveles, 10) + 1
+        if (nivelesTotalesActualizados > 5) {
+            // Avisamos al usuario
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error',
+                text: 'El número máximo de niveles que se pueden crear son 5',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+            return;
+        }
+
+        if (plantaCreada) {
+            putConfPlantaCliente({
+                ...confPlantaCliente,
+                NumNiveles: nivelesTotalesActualizados
+            });
+
+            setConfPlantaCliente({
+                ...confPlantaCliente,
+                NumNiveles: nivelesTotalesActualizados
+            })
+            const respPlanta = await getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta);
+
+            if (respPlanta) {
+                setEstadoEliminarPlanta(true)
+                setEstadoGenerarDiagrama(true)
+            }
+
+            setPlantaCreada(true);
+
+            setNiveles([])
+
+            // Generamos los niveles según lo indicado por el usuario
+            for (let i = 0; i < nivelesTotalesActualizados; i++) {
+                setNiveles(prevState => [...prevState, i + 1]);
+            }
+
+            // Obtenemos todos los niveles
+            const respNiveles = await getConfNivelesPlantasClientePorPlanta(respPlanta.id)
+            setConfNivelesPlantaCliente(respNiveles);
+
+            // Obtenemos todos los registros de analisis - elemento (nivel)
+            const respAnalisis = await getAnalisisNivelesPlantasCliente();
+
+            let niveles = [];
+
+            // Recorremos cada nivel para obtener los datos del elemento
+            const nivelesPromise = await Promise.all(
+                respNiveles.map(async (nivel) => {
+
+                    // Obtenemos los datos del elemento
+                    const resp = await getElementoPlantaPorId(nivel.id_Elemento);
+
+                    // Obtenemos los analisis por este elemento
+                    const analisisFiltro = respAnalisis.filter(anali => anali.id_NivelesPlanta === nivel.id)
+
+                    // Preparamos el objeto de analisis
+                    let analisisObjeto = {}
+
+                    // Recorremos la lista de analisis para crear un objeto coherente
+                    analisisFiltro.map(an => {
+
+                        // Evaluamos si este elemento está desmarcado (para no añadirlo al objeto)
+                        if (!an.deleted) {
+
+                            // Preparamos el nombre del analisis
+                            const nombreAnalisis = analisis.filter(anali => anali.id === an.id_Analisis)[0].nombre;
+
+                            // Añadimos el análisis al objeto
+                            analisisObjeto = { ...analisisObjeto, [nombreAnalisis]: true };
+
+                        }
+
+                    });
+
+                    // Creamos el objecto con los datos
+                    if (resp != null) {
+
+                        niveles.push({
+                            id: resp.id,
+                            nivel: nivel.nivel,
+                            nombre: resp.nombre,
+                            numero: resp.numero,
+                            descripcion: resp.descripcion,
+                            analisis: analisisObjeto
+                        });
+
+                    }
+
+                })
+            );
+        } else {
+            const respPlanta = await getConfPlantaClientePorClienteOferta(confPlantaCliente.CodigoCliente, confPlantaCliente.Oferta);
+            if (respPlanta) {
+                putConfPlantaCliente({
+                    ...respPlanta,
+                    NumNiveles: nivelesTotalesActualizados
+                });
+
+                setConfPlantaCliente({
+                    ...confPlantaCliente,
+                    NumNiveles: nivelesTotalesActualizados
+                })
+            }
+        }
     }
 
     const handleConfPlantaClienteChange = (event) => {
@@ -420,6 +621,98 @@ export const PlantasPage = () => {
 
     }
 
+    const handleAddAnalisis = () => {
+        setOpenModal(true)
+
+        setAnalisisNuevo({
+            id: 0,
+            nombre: '',
+            tipo: 0,
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null
+        })
+    }
+
+    const handleAddElemento = () => {
+        setOpenModalElemento(true)
+
+        setElementoNuevo({
+            id: 0,
+            nombre: '',
+            nombreIcono: '',
+            addDate: null,
+            addIdUser: null,
+            modDate: null,
+            modIdUser: null,
+            delDate: null,
+            delIdUser: null,
+            deleted: null
+        })
+    }
+
+    const handleEditElemento = () => {
+        setOpenModalEditarElemento(true)
+        setElementoActivo(prev => ({ ...prev, nombre: elementoCambiado.nombre, id: elementoCambiado.id, nombreIcono: elementoCambiado.nombreIcono }))
+    }
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleCloseModalElemento = () => {
+        setOpenModalElemento(false);
+    };
+
+    const handleEditAnalisis = () => {
+        setOpenModalEditar(true)
+        setAnalisisActivo(prev => ({ ...prev, nombre: analisisCambiado.nombre, id: analisisCambiado.id }))
+    }
+
+    const handleCloseModalEditar = () => {
+        if (openModalEditar) {
+            setAnalisisCambiado({
+                id: 0,
+                nombre: '',
+                tipo: 0,
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            })
+            setOpenModalEditar(!openModalEditar);
+        } else {
+            setOpenModalEditar(!openModalEditar);
+        }
+    };
+
+    const handleCloseModalEditarElemento = () => {
+        if (openModalEditarElemento) {
+            setElementoCambiado({
+                id: 0,
+                nombre: '',
+                nombreIcono: '',
+                addDate: null,
+                addIdUser: null,
+                modDate: null,
+                modIdUser: null,
+                delDate: null,
+                delIdUser: null,
+                deleted: null
+            })
+            setOpenModalEditarElemento(!openModalEditarElemento);
+        } else {
+            setOpenModalEditarElemento(!openModalEditarElemento);
+        }
+    };
+
     const handleElemento = (e) => {
         const { name, value } = e.target;
         setElementoNuevo(prevState => ({
@@ -428,8 +721,33 @@ export const PlantasPage = () => {
         }))
     }
 
-    const handleAnalisis = (event) => {
+    const handleAnalisisNuevo = (e) => {
+        const { name, value } = e.target;
+        const newValue = name === 'tipo' ? parseInt(value) : value;
+        setAnalisisNuevo(prevState => ({
+            ...prevState,
+            [name]: newValue
+        }))
+    }
 
+    const handleAnalisisCambiado = (e) => {
+        const { name, value } = e.target;
+        const newValue = name === 'tipo' ? parseInt(value) : value;
+        setAnalisisCambiado(prevState => ({
+            ...prevState,
+            [name]: newValue
+        }))
+    }
+
+    const handleElementoCambiado = (e) => {
+        const { name, value } = e.target;
+        setElementoCambiado(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
+    const handleAnalisis = (event) => {
         setElementoSeleccionado({
             ...elementoSeleccionado,
             analisis: {
@@ -437,14 +755,12 @@ export const PlantasPage = () => {
                 [event.target.name]: event.target.checked
             }
         });
-
     }
 
     const handleTextFieldChange = event => {
         const nuevoNombre = event.target.value;
         setTextFieldValue(nuevoNombre);
 
-        // Actualizar el nombre del elementoNuevo cuando se modifica el TextField
         setElementoCambiado(prevState => ({
             ...prevState,
             nombre: nuevoNombre
@@ -482,10 +798,45 @@ export const PlantasPage = () => {
 
     };
 
+    const guardarNuevoLocationNodos1 = () => {
+        if (confPlantaCliente.Diagrama === "") {
+            return;
+        }
+        const diagramaModificar = JSON.parse(confPlantaCliente.Diagrama);
+        const nodosGrupoNivel = nodos.filter((nodo) => nodo.id.includes('nivel'));
+        nodosGrupoNivel.map(nodo => {
+            const nuevaPosX = nodo.position.x;
+            const nuevaPosY = nodo.position.y;
+            let nodoModificar = diagramaModificar.nodos.filter((nod) => nod.id === nodo.id);
+            if (nodoModificar[0] !== undefined) {
+                nodoModificar[0].position.x = nuevaPosX;
+                nodoModificar[0].position.y = nuevaPosY;
+            }
+        });
+        confPlantaCliente.Diagrama = JSON.stringify(diagramaModificar);
+    }
+
+    const guardarNuevoLocationNodos2 = () => {
+        if (confPlantaCliente.Diagrama === "") {
+            return;
+        }
+        const diagramaModificar = JSON.parse(confPlantaCliente.Diagrama);
+        const nodosGrupoNivel = nodos2.filter((nodo) => nodo.id.includes('nivel'));
+        nodosGrupoNivel.map(nodo => {
+            const nuevaPosX = nodo.position.x;
+            const nuevaPosY = nodo.position.y;
+            let nodoModificar = diagramaModificar.nodos.filter((nod) => nod.id === nodo.id);
+            if (nodoModificar[0] !== undefined) {
+                nodoModificar[0].position.x = nuevaPosX;
+                nodoModificar[0].position.y = nuevaPosY;
+            }
+        });
+        confPlantaCliente.Diagrama = JSON.stringify(diagramaModificar);
+    }
+
     const handleGuardarDatos = async () => {
 
         let niveles = [];
-
         // Guardamos los datos de la planta
         await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
 
@@ -495,12 +846,13 @@ export const PlantasPage = () => {
         await Promise.all(elementosPlanta.map(async (elemento) => {
 
             let idElementoActualizado = 0;
-
             // Preparamos los datos a enviar a la base de datos
             let postElemento = {
                 nombre: elemento.nombre,
                 numero: elemento.numero,
-                descripcion: elemento.descripcion
+                descripcion: elemento.descripcion,
+                verInsp: elemento.verInsp,
+                nombreIcono: elemento.nombreIcono,
             }
 
             // Guardamos los registros de los niveles y elementos relacionados al nivel
@@ -513,6 +865,17 @@ export const PlantasPage = () => {
                 visible: true,
                 conecta: null,
             }
+            //Si el elemento se actualiza pero no tiene icono, se lo agregamos
+            if (elemento.nombreIcono === null || elemento.nombreIcono === undefined) {
+                const elementoEncontrado = elementos.filter(x => x.nombre === elemento.nombre)
+                console.log(elementoEncontrado, 'ALBERTO ELEMENTO ENCONTRADO ANALISIS')
+                if (elementoEncontrado !== undefined) {
+                    postElemento = {
+                        ...postElemento,
+                        nombreIcono: elementoEncontrado[0].nombreIcono
+                    }
+                }
+            }
 
             // Realizamos la petición según si tiene id o no y obtenemos el ID
             if (elemento.id > 0) {
@@ -523,11 +886,26 @@ export const PlantasPage = () => {
                     id: elemento.id
                 }
 
+                const diagramaParseado = JSON.parse(confPlantaCliente.Diagrama)
+
+                diagramaParseado.nodos.map(async (param) => {
+                    if (param.type === 'nodoElemento') {
+                        if (param.data.id === elemento.id) {
+                            param.data.verInsp = elemento.verInsp
+                        }
+                    }
+                })
+
+                var stringed = JSON.stringify(diagramaParseado)
+                confPlantaCliente.Diagrama = stringed;
+
+                await putConfPlantaCliente(confPlantaCliente)
+
                 // Hacemos un PUT
                 await putElementosPlanta(postElemento);
 
                 // Añadimos el elemento al listado
-                elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
+                elementosActualizados.push({ ...postElemento, id: elemento.id, nivel: elemento.nivel, verInsp: elemento.verInsp, analisis: elemento.analisis });
                 idElementoActualizado = elemento.id;
 
                 // Añadimos el ID del elemento al registro del nivel
@@ -542,7 +920,7 @@ export const PlantasPage = () => {
                 const respElemento = await postElementosPlanta(postElemento);
 
                 // Añadimos el elemento al listado
-                elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel, analisis: elemento.analisis });
+                elementosActualizados.push({ ...postElemento, id: respElemento.id, nivel: elemento.nivel, verInsp: elemento.verInsp, analisis: elemento.analisis });
                 idElementoActualizado = respElemento.id;
 
                 // Añadimos el ID del elemento al registro del nivel
@@ -588,7 +966,7 @@ export const PlantasPage = () => {
                 for (const anali in elemento.analisis) {
 
                     // Obtenemos el ID del análisis y nivel
-                    const idAnalisis = analisis.filter(analisis => camelCase(analisis.nombre) === anali)[0].id;
+                    const idAnalisis = analisis.filter(analisis => analisis.nombre === anali)[0].id;
 
                     // Comprobamos si el registro existe en la base de datos
                     const registros = respNivelesAnalisis.filter(nivel => nivel.id_Analisis === idAnalisis);
@@ -640,6 +1018,7 @@ export const PlantasPage = () => {
         }));
 
         // Una vez terminado el mapeo, seteamos el estado con los IDs nuevos
+        setEstadoGenerarDiagrama(true);
         setElementosPlanta(elementosActualizados);
         setConfNivelesPlantaCliente(niveles)
         setDatosGuardados(true);
@@ -667,19 +1046,25 @@ export const PlantasPage = () => {
 
         const elementoRepetido = elementos.filter(elem => elem.nombre === elementoNuevo.nombre)
 
-        if (elementoRepetido.length > 0) {
-            setErrorElemento(true)
-        } else {
-            setErrorElemento(false)
-        }
-
-        if (elementoRepetido.length == 0) {
+        if (elementoRepetido.length == 0 && elementoNuevo.nombre !== "") {
             const resp = await postElementos(elementoNuevo);
+            
+            if (elementoNuevo.nombreIcono !== '' && elementoNuevo.nombreIcono !== null) {
+                const icono = await SubirIconoElementoPlanta(resp.id, iconoElemento)
+                elementoNuevo.nombreIcono = icono
+                var elementoModificado = elementos;
+                elementoModificado.map(elemento => {
+                if (elemento.id === resp.id) {
+                    elemento = resp
+                }
+            });
+            }
 
             getElemento();
             setElementoNuevo({
                 id: 0,
                 nombre: '',
+                nombreIcono: '',
                 addDate: null,
                 addIdUser: null,
                 modDate: null,
@@ -703,22 +1088,51 @@ export const PlantasPage = () => {
                     popup: 'animate__animated animate__bounceOut'
                 }
             });
+        } else if (elementoRepetido.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Elemento Repetido',
+                text: `Este elemento ya existe, introduzca uno nuevo`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Elemento Vacío',
+                text: `Introduzca un nombre de Elemento`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
     }
 
     const peticionPutElemento = async () => {
 
-        const elementoRepetido = elementos.filter(elem => elem.nombre === elementoCambiado.nombre)
+        const elementoRepetido = elementos.filter(elem => elem.nombre === elementoCambiado.nombre && elem.id !== elementoCambiado.id)
 
-        if (elementoRepetido.length > 0) {
-            setErrorElementoCambiado(true)
-        } else {
-            setErrorElementoCambiado(false)
-        }
+        if (elementoRepetido.length == 0 && elementoCambiado.nombre !== "") {
 
-        if (elementoRepetido.length == 0) {
+            if (elementoCambiado.nombreIcono !== '' && elementoCambiado.nombreIcono !== null) {
+                const resp = await SubirIconoElementoPlanta(elementoCambiado.id, iconoElemento)
+                elementoCambiado.nombreIcono = resp;
+            }
+
             const resp = await putElementos(elementoCambiado);
-
             var elementoModificado = elementos;
             elementoModificado.map(elemento => {
                 if (elemento.id === elementoCambiado.id) {
@@ -727,17 +1141,7 @@ export const PlantasPage = () => {
             });
 
             getElemento();
-            setElementoCambiado({
-                id: 0,
-                nombre: '',
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null
-            })
+            setElementoCambiado(prev => ({ ...prev, nombre: elementoCambiado.nombre, id: elementoCambiado.id, nombreIcono: elementoCambiado.nombreIcono }))
 
             Swal.fire({
                 position: 'center',
@@ -753,12 +1157,177 @@ export const PlantasPage = () => {
                     popup: 'animate__animated animate__bounceOut'
                 }
             });
+        } else if (elementoRepetido.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Elemento Repetido',
+                text: `Este elemento ya existe, introduzca uno nuevo`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Elemento Vacío',
+                text: `Introduzca un nombre de Elemento`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
         }
     }
 
+    const peticionPostAnalisis = async () => {
+        analisisNuevo.id = 0;
+
+        const analisisRepetido = analisis.filter(anal => anal.nombre === analisisNuevo.nombre)
+
+        if (analisisRepetido.length == 0 && analisisNuevo.nombre !== "") {
+            const resp = await postAnalisis(analisisNuevo);
+
+            getAnalisi();
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Analisis Creado',
+                text: `El analisis se ha creado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else if (analisisRepetido.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Análisis Repetido',
+                text: `Este análisis ya existe, introduzca uno nuevo`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Análisis Vacío',
+                text: `Introduzca un nombre de Análisis`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
+    }
+
+    const peticionPutAnalisis = async () => {
+
+        const analisisRepetido = analisis.filter(anal => anal.nombre === analisisCambiado.nombre && analisisActivo.nombre !== analisisCambiado.nombre)
+
+        if (analisisRepetido.length == 0 && analisisCambiado.nombre !== "") {
+            const resp = await putAnalisis(analisisCambiado);
+
+            var analisisModificado = analisis;
+            analisisModificado.map(analisi => {
+                if (analisi.id === analisisCambiado.id) {
+                    analisi = analisisCambiado
+                }
+            });
+
+            getAnalisi();
+            setAnalisisActivo(prev => ({ ...prev, nombre: analisisCambiado.nombre, id: analisisCambiado.id }))
+
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Analisis Modificado',
+                text: `El analisis se ha modificado correctamente`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else if (analisisRepetido.length > 0) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Análisis Repetido',
+                text: `Este análisis ya existe, introduzca uno nuevo`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Análisis Vacío',
+                text: `Introduzca un nombre de Análisis`,
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__bounceOut'
+                }
+            });
+        }
+    }
+    const modificarLadosParaDarlesFormaFlecha = () => {
+        const diagramaModificar = JSON.parse(confPlantaCliente.Diagrama);
+        const ladoFlecha = {
+            type: 'arrowclosed',
+            width: 20,
+            height: 20,
+        }
+        // diagramaModificar.lados[0].markerEnd  = ladoFlecha;
+        diagramaModificar.lados.map((lado) => {
+            lado.markerEnd = ladoFlecha
+        });
+        confPlantaCliente.Diagrama = JSON.stringify(diagramaModificar);
+    }
     const handleGuardarDiagrama = async () => {
 
         // Guardamos los datos de la planta
+        guardarNuevoLocationNodos2();
+        modificarLadosParaDarlesFormaFlecha();
         await putConfPlantaCliente({ ...confPlantaCliente, NumNiveles: parseInt(confPlantaCliente.NumNiveles, 10) });
         setDiagramaGuardado(true);
 
@@ -784,19 +1353,44 @@ export const PlantasPage = () => {
         if (value) {
             setElementoCambiado({
                 id: value.id,
-                nombre: value.nombre
+                nombre: value.nombre,
+                nombreIcono: value.nombreIcono
             });
             setTextFieldValue(value.nombre);
         } else {
             setElementoCambiado({
                 id: value.id,
-                nombre: ''
+                nombre: '',
+                nombreIcono: ''
             });
             setTextFieldValue('');
         }
     };
 
+    const handleAnalisisChange = (event, value) => {
+        if (value) {
+            setAnalisisCambiado({
+                id: value.id,
+                nombre: value.nombre,
+                tipo: value.tipo
+            });
+            setTextFieldValueAnalisis(value.nombre)
+        } else {
+            setAnalisisCambiado({
+                id: '',
+                nombre: '',
+                tipo: false,
+            });
+            setTextFieldValueAnalisis('');
+        }
+    };
+
     const eliminarPlanta = async (id) => {
+
+        let confirma = await preguntarParaEliminar();
+        if (confirma === false) {
+            return;
+        }
 
         const respAnalisis = await getAnalisisNivelesPlantasCliente();
 
@@ -865,13 +1459,64 @@ export const PlantasPage = () => {
         }
     }
 
-    const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial && !c.deleted)
-    );
+    function filtrarCodigoCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputCodigoCliente === '') {
+                return true;
+            } else {
+                if (cliente.codigo?.toString().indexOf(inputCodigoCliente) >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function filtrarNombreCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputNombreCliente === '') {
+                return true;
+            } else {
+                const nombreClienteLowerCase = cliente.razonSocial ? cliente.razonSocial.toString().toLowerCase() : '';
+                const inputNombreClienteLowerCase = inputNombreCliente.toLowerCase();
+                return nombreClienteLowerCase.includes(inputNombreClienteLowerCase);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    const activarInputFile = () => {
+        let input = document.getElementById("seleccionar-icono-input")
+        input.click();
+    }
+
+    const handleFileChange = (e) => {
+        if (e.target.files) {
+            setIconoElemento(e.target.files[0]);
+            setElementoNuevo(prevState => ({
+                ...prevState,
+                nombreIcono: e.target.files[0].name
+            }))
+        }
+    };
+
+    const handleFileChangeCambiado = (e) => {
+        if (e.target.files) {
+            setIconoElemento(e.target.files[0]);
+            setElementoCambiado(prevState => ({
+                ...prevState,
+                nombreIcono: e.target.files[0].name
+            }))
+        }
+    };
 
     return (
         <>
-            {usuarioActual.idPerfil === 1 ?
+            {user.idPerfil === 1 ?
                 <MainLayout title="Plantas">
 
                     <Grid container spacing={2}>
@@ -884,35 +1529,45 @@ export const PlantasPage = () => {
                                     <Grid item xs={3}>
                                         <Autocomplete
                                             disabled={plantaCreada}
-                                            disableClearable={true}
                                             id="NombreCliente"
                                             options={clientes}
                                             value={clientes.find(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente) || null}
-                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                                            filterOptions={options => clientes.filter((cliente) => filtrarNombreCliente(cliente))}
                                             getOptionLabel={option => option.razonSocial}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Nombre Cliente" name="NombreCliente" />}
                                             onChange={(event, value) => setConfPlantaCliente(prevState => ({
                                                 ...prevState,
-                                                NombreCliente: value ? value.razonSocial : null
+                                                CodigoCliente: value ? parseInt(value.codigo) : null,
+                                                NombreCliente: value ? value.razonSocial : null,
+                                                Oferta: '',
+                                                NumNiveles: ""
                                             }))}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputNombreCliente(newInputValue);
+                                            }}
                                         />
                                     </Grid>
 
                                     <Grid item xs={2}>
                                         <Autocomplete
                                             disabled={plantaCreada}
-                                            disableClearable={true}
                                             id="CodigoCliente"
                                             options={clientes}
                                             value={clientes.find(cliente => cliente.codigo === confPlantaCliente.CodigoCliente) || null}
-                                            filterOptions={options => clientes.filter(cliente => !cliente.deleted)}
+                                            filterOptions={options => clientes.filter((cliente) => filtrarCodigoCliente(cliente))}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
                                             onChange={(event, value) => setConfPlantaCliente(prevState => ({
                                                 ...prevState,
                                                 CodigoCliente: value ? parseInt(value.codigo) : null,
                                                 NombreCliente: value ? value.razonSocial : null,
+                                                Oferta: '',
+                                                NumNiveles: ''
                                             }))}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputCodigoCliente(newInputValue);
+                                            }}
+
                                         />
                                     </Grid>
 
@@ -920,13 +1575,30 @@ export const PlantasPage = () => {
                                     <Grid item xs={3}>
                                         <Autocomplete
                                             disabled={plantaCreada}
-                                            disableClearable={true}
-                                            id="Oferta"
+                                            id="ofertas"
                                             options={ofertas}
-                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente && !oferta.deleted)}
+                                            value={ofertas.find(oferta => oferta.numeroOferta === confPlantaCliente.Oferta) || null}
+                                            filterOptions={options => {
+                                                if (confPlantaCliente.NombreCliente !== "" && confPlantaCliente.CodigoCliente !== 0 && confPlantaCliente.Oferta !== 0) {
+                                                    return options.filter(oferta =>
+                                                        oferta.nombreCliente === confPlantaCliente.NombreCliente && oferta.codigoCliente === confPlantaCliente.CodigoCliente && !oferta.deleted
+                                                    );
+                                                } else {
+                                                    return options.filter(oferta => !oferta.deleted);
+                                                }
+                                            }}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputOferta(newInputValue);
+                                            }}
                                             getOptionLabel={option => option.numeroOferta.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" label="Número de Oferta" name="Oferta" />}
-                                            onChange={handleConfPlantaClienteChange}
+                                            renderInput={params => <TextField {...params} label="Oferta" name="oferta" />}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                CodigoCliente: value ? parseInt(value.codigoCliente) : null,
+                                                NombreCliente: value ? value.nombreCliente : null,
+                                                Oferta: value ? value.numeroOferta : null,
+                                                NumNiveles: ""
+                                            }))}
                                         />
                                     </Grid>
 
@@ -938,29 +1610,57 @@ export const PlantasPage = () => {
                                     {/* Botón para crear */}
                                     <Grid item xs={2}>
                                         {
-                                            crearPlanta
+                                            permiteCambiarPlanta
                                                 ? (
-                                                    <Button
-                                                        disabled={plantaCreada}
-                                                        sx={{ width: '100%' }}
-                                                        color='success'
-                                                        variant='contained'
-                                                        startIcon={<AddIcon />}
-                                                        onClick={handleCrearCargarPlanta}
-                                                    >
-                                                        Crear
-                                                    </Button>
+                                                    <div sx={{ display: 'flex', flexDirection: 'row' }}>
+                                                        <Button
+                                                            sx={{ width: '10%', marginRight: '5px', height: '40px' }}
+                                                            color='success'
+                                                            variant='contained'
+                                                            startIcon={<AddIcon />}
+                                                            onClick={addNivelPlanta}
+                                                        >
+                                                        </Button>
+                                                        <Button
+                                                            // disabled={plantaCreada}
+                                                            sx={{ width: '70%' }}
+                                                            color='success'
+                                                            variant='contained'
+                                                            startIcon={<SearchOffIcon />}
+                                                            onClick={handleVaciarBusqueda}
+                                                        >
+                                                            Vaciar busqueda
+                                                        </Button>
+                                                    </div>
+
                                                 ) : (
-                                                    <Button
-                                                        disabled={plantaCreada}
-                                                        sx={{ width: '100%' }}
-                                                        color='success'
-                                                        variant='contained'
-                                                        startIcon={<DownloadIcon />}
-                                                        onClick={handleCrearCargarPlanta}
-                                                    >
-                                                        Cargar
-                                                    </Button>
+                                                    crearPlanta
+                                                        ? (
+                                                            <Button
+                                                                disabled={plantaCreada}
+                                                                sx={{ width: '100%' }}
+                                                                color='success'
+                                                                variant='contained'
+                                                                startIcon={<AddIcon />}
+                                                                onClick={handleCrearCargarPlanta}
+                                                            >
+                                                                Crear
+                                                            </Button>
+                                                        ) : (
+                                                            <div sx={{ display: 'flex', flexDirection: 'row' }}>
+                                                                <Button
+                                                                    disabled={plantaCreada}
+                                                                    sx={{ width: '100%', height: '40px' }}
+                                                                    color='success'
+                                                                    variant='contained'
+                                                                    startIcon={<DownloadIcon />}
+                                                                    onClick={handleCrearCargarPlanta}
+                                                                >
+                                                                    Cargar
+                                                                </Button>
+                                                            </div>
+
+                                                        )
                                                 )
                                         }
                                     </Grid>
@@ -973,45 +1673,85 @@ export const PlantasPage = () => {
                             <Card sx={{ p: 2, display: 'flex' }}>
                                 <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
-                                    <Grid item xs={3}>
+                                    {/* <Grid item xs={2}>
                                         <TextField
                                             sx={{ width: '100%' }}
                                             name="nombre"
                                             onChange={handleElemento}
-                                            error={errorElemento}
-                                            helperText={errorElemento ? 'Este elemento ya existe' : ' '}
                                         />
-                                    </Grid>
+                                    </Grid> */}
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={2}>
                                         <Button
-                                            sx={{ ml: 2, marginBottom: '22px' }}
+                                            sx={{ width: '100%' }}
                                             variant='contained'
                                             startIcon={<AddIcon />}
-                                            onClick={peticionPostElemento}
+                                            onClick={handleAddElemento}
                                         >
-                                            Añadir Elemento de Planta
+                                            Añadir Elemento
                                         </Button>
                                     </Grid>
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={2}>
                                         <Autocomplete
                                             id="elemento"
                                             options={elementos}
+                                            sx={{ width: '100%' }}
                                             getOptionLabel={option => option.nombre}
-                                            renderInput={params => <TextField {...params} label="Elemento" value={textFieldValue} onChange={handleTextFieldChange} name="nombre" error={errorElementoCambiado} helperText={errorElementoCambiado ? 'Este elemento ya existe' : ' '} />}
-                                            onChange={handleElementoChange}
+                                            renderInput={params => <TextField {...params} label="Elemento" name="nombre" value={textFieldValue} />}
+                                            onChange={(event, newValue) => {
+                                                handleElementoChange(event, newValue);
+                                            }}
+                                            clearOnBlur
                                             value={elementoCambiado}
                                         />
                                     </Grid>
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={2}>
                                         <Button
-                                            sx={{ width: "50%", marginBottom: '22px' }}
+                                            sx={{ width: "70%" }}
                                             variant='contained'
-                                            onClick={peticionPutElemento}
+                                            onClick={handleEditElemento}
+                                            disabled={elementoCambiado.nombre !== "" ? false : true}
                                         >
-                                            Modificar
+                                            Modificar Elemento
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Button
+                                            sx={{ width: "100%" }}
+                                            variant='contained'
+                                            startIcon={<AddIcon />}
+                                            onClick={handleAddAnalisis}
+                                        >
+                                            Añadir Análisis
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            id="analisis"
+                                            options={analisis}
+                                            sx={{ width: '100%' }}
+                                            getOptionLabel={option => option.nombre}
+                                            renderInput={params => <TextField {...params} label="Análisis" name="nombre" value={textFieldValueAnalisis} />}
+                                            onChange={(event, newValue) => {
+                                                handleAnalisisChange(event, newValue);
+                                            }}
+                                            clearOnBlur
+                                            value={analisisCambiado}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Button
+                                            sx={{ ml: 1 }}
+                                            variant='contained'
+                                            onClick={handleEditAnalisis}
+                                            disabled={analisisCambiado.nombre !== "" ? false : true}
+                                        >
+                                            Modificar Análisis
                                         </Button>
                                     </Grid>
 
@@ -1035,8 +1775,11 @@ export const PlantasPage = () => {
                                             indiceElemento={indiceElemento}
                                             setIndiceElemento={setIndiceElemento}
                                             confNivelesPlantaCliente={confNivelesPlantaCliente}
+                                            confPlantaCliente={confPlantaCliente}
                                             datosGuardados={datosGuardados}
                                             plantaCreada={plantaCreada}
+                                            setNodos2={setNodos2}
+                                            setLados2={setLados2}
                                         />
                                     ))
                                 }
@@ -1053,7 +1796,27 @@ export const PlantasPage = () => {
                                         ? (
                                             <List>
                                                 {
-                                                    elementosPlanta.map(elemento => (
+                                                    elementosPlanta.sort((a, b) => {
+                                                        // Comparar primero por nombre (orden alfabético)
+                                                        if (a.nombre < b.nombre) return -1;
+                                                        if (a.nombre > b.nombre) return 1;
+
+                                                        // Si los nombres son iguales, comparar por descripción (si no es null)
+                                                        if (a.descripcion && b.descripcion) {
+                                                            if (a.descripcion < b.descripcion) return -1;
+                                                            if (a.descripcion > b.descripcion) return 1;
+                                                        }
+                                                        // Si solo uno tiene descripción, el que la tenga va primero
+                                                        else if (a.descripcion && !b.descripcion) {
+                                                            return -1;
+                                                        }
+                                                        else if (!a.descripcion && b.descripcion) {
+                                                            return 1;
+                                                        }
+
+                                                        // Si los nombres son iguales y las descripciones son iguales o no existen, comparar por número
+                                                        return a.numero - b.numero;
+                                                    }).map(elemento => (
                                                         <ListItemButton
                                                             key={elemento.id}
                                                             selected={elementoSeleccionado.id === elemento.id}
@@ -1112,11 +1875,11 @@ export const PlantasPage = () => {
                                             <Grid item xs={6} key={analisis.id}>
                                                 <CheckBoxAnalisis
                                                     label={analisis.nombre}
-                                                    name={camelCase(analisis.nombre)}
+                                                    name={analisis.nombre}
                                                     onChange={handleAnalisis}
                                                     elementoSeleccionado={elementoSeleccionado}
                                                     elementosPlanta={elementosPlanta}
-                                                    usuarioActual={usuarioActual}
+                                                    user={user}
                                                 />
                                             </Grid>
                                         )
@@ -1156,8 +1919,11 @@ export const PlantasPage = () => {
                                     color='primary'
                                     variant='contained'
                                     startIcon={<AccountTreeIcon />}
-                                    disabled={!datosGuardados || diagramaGenerado}
-                                    onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
+                                    disabled={!estadoGenerarDiagrama}
+                                    onClick={() => {
+                                        generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)
+                                        // setNodos2(nodos);
+                                    }}>
                                     Generar diagrama
                                 </Button>
 
@@ -1166,7 +1932,7 @@ export const PlantasPage = () => {
                                     color='success'
                                     variant='contained'
                                     startIcon={<AccountTreeIcon />}
-                                    disabled={!datosGuardados || !diagramaGenerado}
+                                    disabled={nodos.length === 0}
                                     onClick={handleGuardarDiagrama}>
                                     Guardar diagrama
                                 </Button>
@@ -1200,31 +1966,192 @@ export const PlantasPage = () => {
 
                                 <Typography variant="h6">Diagrama de la planta</Typography>
                                 {nodos2.length > 0 ?
-                                    <ReactFlow
+                                    <FlowWithProvider
                                         nodes={nodos2}
                                         edges={lados2}
                                         onEdgesChange={onEdgesChange}
+                                        onNodesChange={onNodesChange}
                                         onConnect={onConnect}
                                         nodeTypes={nodeTypes}
-                                        fitView
+                                        // onEdgeClick={handlerBorrarUnion}
+                                        onEdgeUpdate={onEdgeUpdate}
+                                        onEdgeUpdateStart={onEdgeUpdateStart}
+                                        onEdgeUpdateEnd={onEdgeUpdateEnd}
+                                        connectionLineComponent={ConnectionLine}
                                     >
                                         <Background />
-                                    </ReactFlow> :
-                                    <ReactFlow
+                                    </FlowWithProvider>
+                                    :
+                                    <FlowWithProvider
                                         nodes={nodos}
                                         edges={lados}
                                         onEdgesChange={onEdgesChange}
+                                        onNodesChange={onNodesChange}
                                         onConnect={onConnect}
                                         nodeTypes={nodeTypes}
-                                        fitView
+                                        onEdgeUpdate={onEdgeUpdate}
+                                        onEdgeUpdateStart={onEdgeUpdateStart}
+                                        onEdgeUpdateEnd={onEdgeUpdateEnd}
+
+                                        connectionLineComponent={ConnectionLine}
                                     >
                                         <Background />
-                                    </ReactFlow>
+                                    </FlowWithProvider>
                                 }
                             </Card>
                         </Grid>
 
                     </Grid>
+
+                    <ModalLayout4
+                        titulo="Añadir Elemento"
+                        contenido={
+                            <Grid item xs={12}>
+                                <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ width: '100%', marginBottom: '20px' }}
+                                            name="nombre"
+                                            onChange={handleElemento}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12}>
+                                        <Grid sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} md={12}>
+                                            <Typography sx={{ marginLeft: '4px' }}>Seleccionar icono:<p>{elementoNuevo.nombreIcono}</p></Typography>
+                                            <Button sx={{ marginLeft: '15px' }}
+                                                color='primary'
+                                                variant='contained'
+                                                onClick={() => activarInputFile()}
+                                            >
+                                                Seleccionar
+                                            </Button>
+                                            <input id="seleccionar-icono-input" type="file" accept="image/png, image/gif, image/jpeg" style={{ marginTop: '10px', marginLeft: '4px' }} onChange={handleFileChange} />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        }
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPostElemento();
+                        })
+                        ]}
+                        open={openModalElemento}
+                        onClose={handleCloseModalElemento}
+                    />
+
+                    <ModalLayout4
+                        titulo="Editar Elemento"
+                        contenido={
+                            <Grid item xs={12}>
+                                <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ width: '100%', marginBottom: '20px' }}
+                                            name="nombre"
+                                            onChange={handleElementoCambiado}
+                                            value={elementoCambiado && elementoCambiado.nombre}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={12}>
+                                        <Grid sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} md={12}>
+                                            <Typography sx={{ marginLeft: '4px' }}>Seleccionar icono:<p>{elementoCambiado.nombreIcono}</p></Typography>
+                                            <Button sx={{ marginLeft: '15px' }}
+                                                color='primary'
+                                                variant='contained'
+                                                onClick={() => activarInputFile()}
+                                            >
+                                                Seleccionar
+                                            </Button>
+                                            <input id="seleccionar-icono-input" type="file" accept="image/png, image/gif, image/jpeg" style={{ marginTop: '10px', marginLeft: '4px' }} onChange={handleFileChangeCambiado} />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        }
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPutElemento();
+                        })
+                        ]}
+                        open={openModalEditarElemento}
+                        onClose={handleCloseModalEditarElemento}
+                    />
+
+                    <ModalLayout4
+                        titulo="Añadir Analisis"
+                        contenido={
+                            <Grid item xs={12}>
+                                <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ width: '100%', marginBottom: '20px' }}
+                                            name="nombre"
+                                            onChange={handleAnalisisNuevo}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={5}>
+                                        <FormControl>
+                                            <FormLabel id="demo-controlled-radio-buttons-group">Tipo</FormLabel>
+                                            <RadioGroup
+                                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                                name="controlled-radio-buttons-group"
+                                                value={analisisNuevo.tipo}
+                                                onChange={handleAnalisisNuevo}
+                                            >
+                                                <FormControlLabel value="0" name='tipo' control={<Radio />} label="Físico-Químico" />
+                                                <FormControlLabel value="1" name='tipo' control={<Radio />} label="No FQ" />
+                                                <FormControlLabel value="2" name='tipo' control={<Radio />} label="Aerobios y Legionelas" />
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        }
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPostAnalisis();
+                        })
+                        ]}
+                        open={openModal}
+                        onClose={handleCloseModal}
+                    />
+
+                    <ModalLayout4
+                        titulo="Editar Analisis"
+                        contenido={
+                            <Grid item xs={12}>
+                                <Grid container sx={{ textAlign: 'center', pb: 2 }}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            sx={{ width: '100%', marginBottom: '20px' }}
+                                            name="nombre"
+                                            onChange={handleAnalisisCambiado}
+                                            value={analisisCambiado && analisisCambiado.nombre}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={5}>
+                                        <FormControl>
+                                            <FormLabel id="demo-controlled-radio-buttons-group">Tipo</FormLabel>
+                                            <RadioGroup
+                                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                                name="controlled-radio-buttons-group"
+                                                value={analisisCambiado && analisisCambiado.tipo}
+                                                onChange={handleAnalisisCambiado}
+                                            >
+                                                <FormControlLabel value="0" name='tipo' control={<Radio />} label="Físico-Químico" />
+                                                <FormControlLabel value="1" name='tipo' control={<Radio />} label="No FQ" />
+                                                <FormControlLabel value="2" name='tipo' control={<Radio />} label="Aerobios y Legionelas" />
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        }
+                        botones={[insertarBotonesModal(<AddIcon />, 'Guardar', async () => {
+                            peticionPutAnalisis();
+                        })
+                        ]}
+                        open={openModalEditar}
+                        onClose={handleCloseModalEditar}
+                    />
 
                 </MainLayout>
                 :
@@ -1237,30 +2164,78 @@ export const PlantasPage = () => {
                             <Card sx={{ p: 2, display: 'flex' }}>
                                 <Grid container spacing={2} sx={{ alignItems: 'center' }}>
 
-                                    {/* Código de Cliente */}
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <Autocomplete
                                             disabled={plantaCreada}
-                                            disableClearable={true}
+                                            id="NombreCliente"
+                                            options={clientes}
+                                            value={clientes.find(cliente => cliente.razonSocial === confPlantaCliente.NombreCliente) || null}
+                                            filterOptions={options => clientes.filter((cliente) => filtrarNombreCliente(cliente))}
+                                            getOptionLabel={option => option.razonSocial}
+                                            renderInput={params => <TextField {...params} variant="outlined" label="Nombre Cliente" name="NombreCliente" />}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                CodigoCliente: value ? parseInt(value.codigo) : null,
+                                                NombreCliente: value ? value.razonSocial : null,
+                                                Oferta: '',
+                                                NumNiveles: ''
+                                            }))}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputNombreCliente(newInputValue);
+                                            }}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disabled={plantaCreada}
                                             id="CodigoCliente"
                                             options={clientes}
+                                            value={clientes.find(cliente => cliente.codigo === confPlantaCliente.CodigoCliente) || null}
+                                            filterOptions={options => clientes.filter((cliente) => filtrarCodigoCliente(cliente))}
                                             getOptionLabel={option => option.codigo.toString()}
                                             renderInput={params => <TextField {...params} variant="outlined" label="Código de Cliente" name="CodigoCliente" />}
-                                            onChange={handleConfPlantaClienteChange}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                CodigoCliente: value ? parseInt(value.codigo) : null,
+                                                NombreCliente: value ? value.razonSocial : null,
+                                                Oferta: '',
+                                                NumNiveles: ''
+                                            }))}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputCodigoCliente(newInputValue);
+                                            }}
+
                                         />
                                     </Grid>
 
                                     {/* Número de Oferta */}
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <Autocomplete
-                                            disabled={plantaCreada}
-                                            disableClearable={true}
-                                            id="Oferta"
+                                            id="clientes"
                                             options={ofertas}
-                                            filterOptions={options => ofertas.filter(oferta => oferta.codigoCliente === confPlantaCliente.CodigoCliente)}
+                                            value={ofertas.find(oferta => oferta.numeroOferta === confPlantaCliente.Oferta) || null}
+                                            filterOptions={options => {
+                                                if (confPlantaCliente.NombreCliente !== "" && confPlantaCliente.CodigoCliente !== 0 && confPlantaCliente.Oferta !== 0) {
+                                                    return options.filter(oferta =>
+                                                        oferta.nombreCliente === confPlantaCliente.NombreCliente && oferta.codigoCliente === confPlantaCliente.CodigoCliente && !oferta.deleted
+                                                    );
+                                                } else {
+                                                    return options;
+                                                }
+                                            }}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputOferta(newInputValue);
+                                            }}
                                             getOptionLabel={option => option.numeroOferta.toString()}
-                                            renderInput={params => <TextField {...params} variant="outlined" label="Número de Oferta" name="Oferta" />}
-                                            onChange={handleConfPlantaClienteChange}
+                                            renderInput={params => <TextField {...params} label="Oferta" name="oferta" />}
+                                            onChange={(event, value) => setConfPlantaCliente(prevState => ({
+                                                ...prevState,
+                                                CodigoCliente: value ? parseInt(value.codigoCliente) : null,
+                                                NombreCliente: value ? value.nombreCliente : null,
+                                                Oferta: value ? value.numeroOferta : null,
+                                                NumNiveles: ""
+                                            }))}
                                         />
                                     </Grid>
 
@@ -1275,7 +2250,7 @@ export const PlantasPage = () => {
                                             crearPlanta
                                                 ? (
                                                     <Button
-                                                        disabled
+                                                        disabled={plantaCreada}
                                                         sx={{ width: '100%' }}
                                                         color='success'
                                                         variant='contained'
@@ -1297,6 +2272,99 @@ export const PlantasPage = () => {
                                                     </Button>
                                                 )
                                         }
+                                    </Grid>
+
+                                </Grid>
+                            </Card>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Card sx={{ p: 2, display: 'flex' }}>
+                                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+
+                                    {/* <Grid item xs={2}>
+                                        <TextField
+                                            disabled
+                                            sx={{ width: '100%' }}
+                                            name="nombre"
+                                            onChange={handleElemento}
+                                            error={errorElemento}
+                                            helperText={errorElemento ? 'Este elemento ya existe' : ' '}
+                                        />
+                                    </Grid> */}
+
+                                    <Grid item xs={1}>
+                                        <Button
+                                            disabled
+                                            sx={{ ml: 1, marginBottom: '22px' }}
+                                            variant='contained'
+                                            startIcon={<AddIcon />}
+                                            onClick={handleAddElemento}
+                                        >
+                                            Añadir Elemento
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disabled
+                                            id="elemento"
+                                            options={elementos}
+                                            getOptionLabel={option => option.nombre}
+                                            renderInput={params => <TextField {...params} label="Elemento" value={textFieldValue} onChange={handleTextFieldChange} name="nombre" error={errorElementoCambiado} helperText={errorElementoCambiado ? 'Este elemento ya existe' : ' '} />}
+                                            onChange={handleElementoChange}
+                                            value={elementoCambiado}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Button
+                                            disabled
+                                            sx={{ width: "70%", marginBottom: '22px' }}
+                                            variant='contained'
+                                            onClick={peticionPutElemento}
+                                        >
+                                            Modificar Elemento
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={1}>
+                                        <Button
+                                            disabled
+                                            sx={{ width: "100%", marginBottom: '22px' }}
+                                            variant='contained'
+                                            startIcon={<AddIcon />}
+                                            onClick={handleAddAnalisis}
+                                        >
+                                            Añadir Análisis
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Autocomplete
+                                            disabled
+                                            id="analisis"
+                                            options={analisis}
+                                            sx={{ width: '100%', marginBottom: '22px' }}
+                                            getOptionLabel={option => option.nombre}
+                                            renderInput={params => <TextField {...params} label="Análisis" name="nombre" value={textFieldValueAnalisis} />}
+                                            onChange={(event, newValue) => {
+                                                handleAnalisisChange(event, newValue);
+                                            }}
+                                            clearOnBlur
+                                            value={analisisCambiado}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={2}>
+                                        <Button
+                                            disabled
+                                            sx={{ ml: 1, marginBottom: '22px' }}
+                                            variant='contained'
+                                            onClick={handleEditAnalisis}
+                                        >
+                                            Modificar Análisis
+                                        </Button>
                                     </Grid>
 
                                 </Grid>
@@ -1333,7 +2401,27 @@ export const PlantasPage = () => {
                                         ? (
                                             <List>
                                                 {
-                                                    elementosPlanta.map(elemento => (
+                                                    elementosPlanta.sort((a, b) => {
+                                                        // Comparar primero por nombre (orden alfabético)
+                                                        if (a.nombre < b.nombre) return -1;
+                                                        if (a.nombre > b.nombre) return 1;
+
+                                                        // Si los nombres son iguales, comparar por descripción (si no es null)
+                                                        if (a.descripcion && b.descripcion) {
+                                                            if (a.descripcion < b.descripcion) return -1;
+                                                            if (a.descripcion > b.descripcion) return 1;
+                                                        }
+                                                        // Si solo uno tiene descripción, el que la tenga va primero
+                                                        else if (a.descripcion && !b.descripcion) {
+                                                            return -1;
+                                                        }
+                                                        else if (!a.descripcion && b.descripcion) {
+                                                            return 1;
+                                                        }
+
+                                                        // Si los nombres son iguales y las descripciones son iguales o no existen, comparar por número
+                                                        return a.numero - b.numero;
+                                                    }).map(elemento => (
                                                         <ListItemButton
                                                             key={elemento.id}
                                                             selected={elementoSeleccionado.id === elemento.id}
@@ -1392,7 +2480,7 @@ export const PlantasPage = () => {
                                             <Grid item xs={6} key={analisis.id}>
                                                 <CheckBoxAnalisis
                                                     label={analisis.nombre}
-                                                    usuarioActual={usuarioActual}
+                                                    user={user}
                                                     name={camelCase(analisis.nombre)}
                                                     onChange={handleAnalisis}
                                                     elementoSeleccionado={elementoSeleccionado}
@@ -1408,62 +2496,6 @@ export const PlantasPage = () => {
                             </Card>
                         </Grid>
 
-                        {/* BOTONES DE ACCIONES */}
-                        {/* <Grid item xs={12}>
-                            <Card sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                                <Button
-                                    disabled={!estadoEliminarPlanta}
-                                    color='error'
-                                    variant='contained'
-                                    startIcon={<DeleteIcon />}
-                                    onClick={() => eliminarPlanta(confPlantaCliente.Id)}
-                                >
-                                    Eliminar Planta
-                                </Button>
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    disabled={!plantaCreada}
-                                    color='success'
-                                    variant='contained'
-                                    startIcon={<SaveIcon />}
-                                    onClick={handleGuardarDatos}
-                                >
-                                    Guardar datos
-                                </Button>
-
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    color='primary'
-                                    variant='contained'
-                                    startIcon={<AccountTreeIcon />}
-                                    disabled={!datosGuardados || diagramaGenerado}
-                                    onClick={() => generarDiagrama(confPlantaCliente.NumNiveles, elementosPlanta, setNodos2, setLados2)}>
-                                    Generar diagrama
-                                </Button>
-
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    color='success'
-                                    variant='contained'
-                                    startIcon={<AccountTreeIcon />}
-                                    disabled={!datosGuardados || !diagramaGenerado}
-                                    onClick={handleGuardarDiagrama}>
-                                    Guardar diagrama
-                                </Button>
-
-                                <Button
-                                    sx={{ ml: 2 }}
-                                    color='primary'
-                                    variant='contained'
-                                    endIcon={<NavigateNextIcon />}
-                                    disabled={!diagramaGuardado}
-                                    onClick={() => { navigate('/plantasTabla', { state: { codigoCliente: confPlantaCliente.CodigoCliente, codigoOferta: confPlantaCliente.Oferta }, replace: true }); }}>
-                                    Siguiente
-                                </Button>
-
-                            </Card>
-                        </Grid> */}
-
                         {/* APARTADO DE DIAGRAMA */}
                         <Grid item xs={12}>
                             <Card sx={{ p: 2, height: '800px', display: 'flex', flexDirection: 'column' }}>
@@ -1474,9 +2506,17 @@ export const PlantasPage = () => {
                                         nodes={nodos2}
                                         edges={lados2}
                                         onEdgesChange={onEdgesChange}
+                                        onNodesChange={onNodesChange}
                                         onConnect={onConnect}
                                         nodeTypes={nodeTypes}
                                         fitView
+                                        onEdgeUpdate={onEdgeUpdate}
+                                        onEdgeUpdateStart={onEdgeUpdateStart}
+                                        onEdgeUpdateEnd={onEdgeUpdateEnd}
+                                        snapToGrid
+                                        connectionMode={ConnectionMode.Loose}
+                                        connectionLineComponent={ConnectionLine}
+                                        attributionPosition={null}
                                     >
                                         <Background />
                                     </ReactFlow> :
@@ -1484,9 +2524,18 @@ export const PlantasPage = () => {
                                         nodes={nodos}
                                         edges={lados}
                                         onEdgesChange={onEdgesChange}
+                                        onNodesChange={onNodesChange}
                                         onConnect={onConnect}
                                         nodeTypes={nodeTypes}
                                         fitView
+                                        // onEdgeClick={handlerBorrarUnion}
+                                        onEdgeUpdate={onEdgeUpdate}
+                                        onEdgeUpdateStart={onEdgeUpdateStart}
+                                        onEdgeUpdateEnd={onEdgeUpdateEnd}
+                                        snapToGrid
+                                        connectionMode={ConnectionMode.Loose}
+                                        connectionLineComponent={ConnectionLine}
+                                        attributionPosition={null}
                                     >
                                         <Background />
                                     </ReactFlow>

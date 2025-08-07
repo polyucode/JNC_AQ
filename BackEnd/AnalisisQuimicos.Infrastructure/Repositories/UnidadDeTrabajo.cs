@@ -14,6 +14,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly YucodeDevelopmentJNC_AQContext _context;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IRepository<Archivos> _archivosRepository;
+        private readonly IRepository<Correos> _correosRepository;
         private readonly IRepository<Analisis> _analisisRepository;
         private readonly IClienteRepository _clienteRepository;
         private readonly IRepository<Comarcas> _comarcaRepository;
@@ -30,6 +31,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IAnalisisNivelesPlantasClienteRepository _analisisNivelesPlantasClienteRepository;
         private readonly IClientesContactosRepository _clientesContactosRepository;
         private readonly IRepository<OfertasClientes> _ofertasClientesRepository;
+        private readonly IRepository<OfertasContactos> _ofertasContactosRepository;
         private readonly IRepository<Productos> _productosRepository;
         private readonly IRepository<OfertasProductos> _ofertasProductosRepository;
         private readonly IRepository<Consumos> _consumosRepository;
@@ -39,6 +41,8 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         private readonly IRepository<ModoEnvio> _modoEnvioRepository;
         private readonly IRepository<Elementos> _elementosRepository;
         private readonly IRepository<Parametros> _parametrosRepository;
+        private readonly IRepository<ObservacionesElementos> _observacionesElementosRepository;
+        private readonly IHistorialCorreosContactosRepository _historialCorreosContactosRepository;
         private readonly IFilesRepository _elementosFiles;
 
         private readonly IRepository<Files> _filesRepository;
@@ -51,6 +55,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IUsuarioRepository UsuarioRepository => _usuarioRepository ?? new UsuarioRepository(_context);
 
         public IRepository<Archivos> ArchivosRepository => _archivosRepository ?? new BaseRepository<Archivos>(_context);
+        public IRepository<Correos> CorreosRepository => _correosRepository ?? new BaseRepository<Correos>(_context);
 
         public IRepository<Analisis> AnalisisRepository => _analisisRepository ?? new BaseRepository<Analisis>(_context);
 
@@ -81,6 +86,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IClientesContactosRepository ClientesContactosRepository => _clientesContactosRepository ?? new ClientesContactosRepository(_context);
 
         public IRepository<OfertasClientes> OfertasClientesRepository => _ofertasClientesRepository ?? new BaseRepository<OfertasClientes>(_context);
+        public IRepository<OfertasContactos> OfertasContactosRepository => _ofertasContactosRepository ?? new BaseRepository<OfertasContactos>(_context);
 
         public IRepository<Productos> ProductosRepository => _productosRepository ?? new BaseRepository<Productos>(_context);
         public IRepository<OfertasProductos> OfertasProductosRepository => _ofertasProductosRepository ?? new BaseRepository<OfertasProductos>(_context);
@@ -93,7 +99,11 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public IRepository<Parametros> ParametrosRepository => _parametrosRepository ?? new BaseRepository<Parametros>(_context);
         public IFilesRepository FilesRepository => _elementosFiles ?? new FilesRepository(_context);
         public IRepository<Files> FilesRepository2 => _filesRepository ?? new BaseRepository<Files>(_context);
-        
+
+        public IRepository<ObservacionesElementos> ObservacionesElementos => _observacionesElementosRepository ?? new BaseRepository<ObservacionesElementos>(_context);
+
+        public IHistorialCorreosContactosRepository HistorialCorreosContactosRepository => _historialCorreosContactosRepository ?? new HistorialCorreosEnviadosRepository(_context);
+
         public void Dispose()
         {
             if(_context != null){

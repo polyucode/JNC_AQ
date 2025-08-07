@@ -98,7 +98,7 @@ function Perfil() {
     function enviarImagenFirma(e) {
       e.preventDefault();
 
-      console.log(User);
+      // console.log(User);
 
       // Obtenemos el formulario
       var formData = new FormData(document.getElementById("firma-image-form"));

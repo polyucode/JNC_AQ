@@ -1,50 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { getUsuarios } from '../../api';
-
-const protocolos = [
-    {
-        value: 'Desinfeccion Parado 4B',
-        label: 'Desinfeccion Parado 4B'
-    },
-    {
-        value: 'Desinfeccion Continuo 4B',
-        label: 'Desinfeccion Continuo 4B'
-    },
-    {
-        value: 'Desinfeccion limpieza parado',
-        label: 'Desinfeccion limpieza parado'
-    },
-    {
-        value: 'Desinfeccion limpieza continuo',
-        label: 'Desinfeccion limpieza continuo'
-    },
-    {
-        value: 'Desinfeccion Protocolo 4C',
-        label: 'Desinfeccion Protocolo 4C'
-    },
-    {
-        value: 'Desinfeccion de aporte',
-        label: 'Desinfeccion de aporte'
-    },
-    {
-        value: 'Desinfeccion contraincendios',
-        label: 'Desinfeccion contraincendios'
-    },
-    {
-        value: 'Desinfeccion parado fuente ornamental',
-        label: 'Desinfeccion parado fuente ornamental'
-    },
-    {
-        value: 'Desinfeccion ACS (termico)',
-        label: 'Desinfeccion ACS (termico)'
-    },
-    {
-        value: 'Desinfeccion AFCH (cloracion)',
-        label: 'Desinfeccion AFCH (cloracion)'
-    }
-]
 
 export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSeleccionado, setAnalisisSeleccionado, analisisid, analisis, errorFecha }) => {
 
@@ -66,7 +22,7 @@ export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSel
     }, [analisis])
 
     useEffect(() => {
-        
+
         setAnalisisSeleccionado(prevState => ({
             ...prevState,
             analisis: analisisid
@@ -99,7 +55,7 @@ export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSel
                 <TextField sx={{ width: '100%' }} label="Periodo" name="periodo" onChange={handleChangeInput} />
             </Grid>
 
-            <Grid item xs={12} md={2} style={{ display: 'flex', marginTop: '22px' }}>
+            <Grid item xs={12} md={2} style={{ display: 'flex' }}>
                 <Typography> Fecha </Typography>
             </Grid>
             <Grid item xs={8} md={4}>
@@ -112,22 +68,10 @@ export const InsertarVisModalAerobio = ({ change: handleChangeInput, analisisSel
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    error={errorFecha} 
+                    error={errorFecha}
                     helperText={errorFecha ? 'Introduzca una fecha' : ' '}
                 />
             </Grid>
-
-            <Grid item xs={12} md={12}>
-                <p> Observaciones </p>
-                <TextareaAutosize
-                    aria-label="empty textarea"
-                    minRows={8}
-                    style={{ width: '100%' }}
-                    name="observaciones"
-                    onChange={handleChangeInput}
-                />
-            </Grid>
-
         </>
     )
 }

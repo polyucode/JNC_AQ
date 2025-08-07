@@ -48,7 +48,6 @@ const MenuItems = ({ items, depthLevel }) => {
             Logout();
             break;
     }
-    console.log(id);
   };
 
   return (

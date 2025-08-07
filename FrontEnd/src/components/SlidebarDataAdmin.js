@@ -10,6 +10,8 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import CategoryIcon from '@mui/icons-material/Category';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import StackedLineChartOutlinedIcon from '@mui/icons-material/StackedLineChartOutlined';
+import EuroIcon from '@mui/icons-material/Euro';
 
 export const SlidebarDataAdmin = [
     
@@ -84,10 +86,24 @@ export const SlidebarDataAdmin = [
         key: 10
     },
     {
-        title: 'Consumos de Articulos',
+        title: 'Consumos de Artículos',
         path: '/consumoarticulos',
         icon: <CategoryIcon />,
         cName: 'nav-text',
         key: 11
+    },
+    {
+        title: 'Parámetros',
+        path: '/parametros',
+        icon: <StackedLineChartOutlinedIcon />,
+        cName: 'nav-text',
+        key: 12
+    },
+    {
+        title: 'Facturación',
+        path: '/facturacion',
+        icon: <EuroIcon />,
+        cName: 'nav-text',
+        key: 13
     }
 ]

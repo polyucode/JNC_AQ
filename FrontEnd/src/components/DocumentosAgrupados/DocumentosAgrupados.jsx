@@ -5,20 +5,49 @@ import { IconButton } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { PintarCarpeta } from './PintarCarpeta';
 
-export const DocumentosAgrupados = ({idUsuario, planta, cliente, elementoActivo}) => {
+export const DocumentosAgrupados = ({ idUsuario, planta, cliente, elementoActivo }) => {
 
 
   let [estructura, setEstructura] = useState(null);
 
-  useEffect(async () =>{
-    bajarEsquemaCarpetas(planta.nombreCliente,planta.codigoCliente,planta.oferta,elementoActivo).then((res) => {
-      setEstructura(res.data);
-    });
-    //TODO: MODIFICAR ESTA CHAPUZA CON CHRISTIAN, NO SE QUE VARIABLE ES LA QUE CAMBIA Y CUANDO
-  },[elementoActivo, estructura])
+  //TODO: Old, comentado para revisar cuando venga Christian
+  // useEffect(async () =>{
+  //   bajarEsquemaCarpetas(planta.nombreCliente,planta.codigoCliente,planta.oferta,elementoActivo).then((res) => {
+  //     if (JSON.stringify(res.data) !== JSON.stringify(estructura)) {
+  //       setEstructura(res.data);
+  //     }
+  //   });
+  //   //TODO: MODIFICAR ESTA CHAPUZA CON CHRISTIAN, NO SE QUE VARIABLE ES LA QUE CAMBIA Y CUANDO
+  // },[elementoActivo, estructura])
 
-  const actualizarPadre = () =>{
-    bajarEsquemaCarpetas(planta.nombreCliente,planta.codigoCliente,planta.oferta,elementoActivo).then((res) => {
+  useEffect(() => {
+    // Definir una función asíncrona dentro del useEffect
+    const fetchEstructura = async () => {
+      try {
+        const res = await bajarEsquemaCarpetas(
+          planta.nombreCliente,
+          planta.codigoCliente,
+          planta.oferta,
+          elementoActivo
+        );
+
+        // Comparar y actualizar solo si es necesario
+        if (JSON.stringify(res.data) !== JSON.stringify(estructura)) {
+          setEstructura(res.data);
+        }
+      } catch (error) {
+        console.error("Error al bajar esquema de carpetas:", error);
+      }
+    };
+
+    // Llamar la función asíncrona
+    fetchEstructura();
+
+    // TODO: MODIFICAR ESTA CHAPUZA CON CHRISTIAN, NO SE QUE VARIABLE ES LA QUE CAMBIA Y CUANDO
+  }, [elementoActivo, estructura, planta]);
+
+  const actualizarPadre = () => {
+    bajarEsquemaCarpetas(planta.nombreCliente, planta.codigoCliente, planta.oferta, elementoActivo).then((res) => {
       setEstructura(res.data);
     });
   }
@@ -26,18 +55,19 @@ export const DocumentosAgrupados = ({idUsuario, planta, cliente, elementoActivo}
   if (estructura != null || estructura === "") {
     return (
       <div className='contenedor'>
-        <PintarCarpeta carpeta = {estructura}
-                      actualizarPadre = {actualizarPadre}
-                       permisoUsuario={idUsuario}
-                       carpetaRaiz={estructura.nombre}>
-                       </PintarCarpeta>
+        <PintarCarpeta
+          carpeta={estructura}
+          actualizarPadre={actualizarPadre}
+          permisoUsuario={idUsuario}
+          carpetaRaiz={estructura.nombre}>
+        </PintarCarpeta>
       </div>
     )
-  }else{
-    return(
+  } else {
+    return (
       <IconButton>
-      <AddBoxIcon/>
-    </IconButton>
+        <AddBoxIcon />
+      </IconButton>
     )
   }
 

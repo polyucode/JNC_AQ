@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
+using AnalisisQuimicos.Infrastructure.Data;
 
 namespace AnalisisQuimicos.Api.Controllers
 {
@@ -16,19 +18,33 @@ namespace AnalisisQuimicos.Api.Controllers
     {
         private readonly IPDFGeneratorService _pdfGenerator;
         private readonly IMapper _mapper;
+        private readonly YucodeDevelopmentJNC_AQContext _db;
 
-        public PDFGeneratorController(IMapper mapper, IPDFGeneratorService pdfGenerator)
+        public PDFGeneratorController(YucodeDevelopmentJNC_AQContext db, IMapper mapper, IPDFGeneratorService pdfGenerator)
         {
+            _db = db;
             _pdfGenerator = pdfGenerator;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewPdf(List<ValorParametrosDTO> valoresDto)
+        public async Task<IActionResult> NewPdf(PDFGeneratorObject pdfGeneratorObject)
         {
+            List<ValorParametrosDTO> valoresDto = pdfGeneratorObject.ValoresParametros;
             var valores = _mapper.Map<List<ValorParametros>>(valoresDto);
+            int comentarioId = 0;
+            string comentario = "";
+            if(pdfGeneratorObject.idComentario != 0)
+            {
+                comentarioId = pdfGeneratorObject.idComentario;
+                comentario = pdfGeneratorObject.Comentario;
+            }
+            
+            string fechaRealizado = pdfGeneratorObject.FechaRealizado;
+            int idTarea = pdfGeneratorObject.idTarea;
+            var archivos = _db.GesFiles.Where(x => x.idTareaAnalisis == idTarea).Count();
 
-            int idFile = await _pdfGenerator.NewPdf(valores);
+            int idFile = await _pdfGenerator.NewPdf(valores, fechaRealizado, idTarea, archivos, comentarioId, comentario);
 
             return Ok(idFile);
 
@@ -48,5 +64,13 @@ namespace AnalisisQuimicos.Api.Controllers
             }*/
         }
 
+    }
+    public class PDFGeneratorObject
+    {
+        public int idComentario { get; set; }
+        public string Comentario { get; set; }
+        public List<ValorParametrosDTO> ValoresParametros { get; set; }
+        public string FechaRealizado { get; set; }
+        public int idTarea { get; set; }
     }
 }

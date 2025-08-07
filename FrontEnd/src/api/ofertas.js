@@ -33,3 +33,9 @@ export const deleteOfertas = async ( idOferta ) => {
     return resp;
 
 }
+
+export const cloneOferta = async (id, oferta) => {
+
+    const resp = await instance.post(`/ofertasclientes/clone/${ id }/${ oferta }`)
+    return resp;
+}

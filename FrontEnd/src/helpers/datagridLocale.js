@@ -149,4 +149,11 @@ export const DATAGRID_LOCALE_TEXT = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'size',
+
+  MuiTablePagination: {
+    labelRowsPerPage: 'Filas por página', // Traducción para "Rows per page"
+    labelDisplayedRows: ({ from, to, count }) =>
+      `${from}–${to} de ${count !== -1 ? count : `más de ${to}`}`, // Traducción para "Displayed rows"
+  },
+  
 };

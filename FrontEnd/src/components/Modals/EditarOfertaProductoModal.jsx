@@ -13,17 +13,15 @@ export const EditarOfertaProductoModal = ({ handleChangeProducto, ofertaProducto
     useEffect(() => {
 
         getProductos()
-            .then(productos => {
-                setProductos(productos);
-            })
+            .then(resp => setProductos(resp.filter(producto => !producto.deleted)));
 
         calcularConsumidosYPendientes()
     }, [])
 
     const calcularConsumidosYPendientes = () => {
 
-        const cantidad = ofertaProducto.cantidad;
-        const ofertaProductoKey = `${ofertaSeleccionada.numeroOferta}_${ofertaProducto.producto}`;
+        const cantidad = ofertaProducto.unidades;
+        const ofertaProductoKey = `${ofertaSeleccionada.numeroOferta}_${ofertaProducto.idProducto}`;
         const consumoInfo = consumos[ofertaProductoKey];
 
         const consumidos = consumoInfo ? consumoInfo.totalCantidad : 0;
@@ -48,18 +46,37 @@ export const EditarOfertaProductoModal = ({ handleChangeProducto, ofertaProducto
                     renderInput={(params) => <TextField {...params} name="producto" label="Producto" />}
                     onChange={(event, value) => setOfertaProducto(prevState => ({
                         ...prevState,
-                        producto: value.id,
-                        descripcionProducto: value.descripcion
+                        idProducto: value.id,
                     }))}
                 />
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio" name="precio" onChange={handleChangeProducto} error={errorProductoPrecio} helperText={errorProductoPrecio ? 'El formato es máximo 2 decimales' : ' '} value={ofertaProducto && ofertaProducto.precio} />
+                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Precio Unitario" name="precio" onChange={handleChangeProducto} error={errorProductoPrecio} helperText={errorProductoPrecio ? 'El formato es máximo 2 decimales' : ' '} value={ofertaProducto && ofertaProducto.precio} />
             </Grid>
 
             <Grid item xs={6} md={4}>
-                <TextField sx={{ width: '100%' }} label="Estimación Consumo" name="cantidad" type='number' onChange={handleChangeProducto} value={ofertaProducto && ofertaProducto.cantidad} />
+                <TextField 
+                    sx={{ 
+                        width: '100%', 
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Unidades" 
+                    name="unidades"
+                    type='number'
+                    onChange={handleChangeProducto}
+                    value={ofertaProducto && ofertaProducto.unidades}
+                />
             </Grid>
 
             <Grid item xs={6} md={4}>

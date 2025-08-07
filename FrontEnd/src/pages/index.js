@@ -11,3 +11,6 @@ export * from './ProductosPage';
 export * from './ConsumoArticulosPage';
 export * from './VisualizacionPage';
 export * from './LoginPage';
+export * from './ParametrosPage';
+export * from './TareasPendientesPage';
+export * from './FacturacionPage';

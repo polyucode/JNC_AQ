@@ -131,8 +131,6 @@ export const Diagrama = ({ nodeData = nodeDataMock }) => {
   const nodeNivel4 = nodeData.filter( node => node.Nivel === 4 );
   const nodeNivel5 = nodeData.filter( node => node.Nivel === 5 );
 
-  console.log({ nodeNivel1, nodeNivel2, nodeNivel3, nodeNivel4, nodeNivel5 })
-
   // Comprobamos si existen elementos por cada nivel y creamos los grupos si los hay
   if( nodeNivel1.length > 0 ) {
     nodes.push({

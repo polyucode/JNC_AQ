@@ -15,7 +15,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public async Task<ConfPlantasCliente> GetByClient(ConfPlantasClienteQueryFilter filtro)
         {
             var list = _entities.AsEnumerable();
-            var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta);
+            var sel = list.Where(x => x.CodigoCliente == filtro.CodigoCliente && x.Oferta == filtro.Oferta && x.Deleted != true);
 
             if( sel.ToArray().Length != 0 )
             {

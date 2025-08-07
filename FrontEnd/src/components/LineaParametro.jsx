@@ -1,7 +1,18 @@
 import { Checkbox, TableCell, TableRow, TextField } from "@mui/material"
 
-export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, activar, verInsp, disabled }) => {
+export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, activar, verInsp, disabled, activarParametroCalculado, parametrosGenerales }) => {
 
+    const habilitarLimitesParametro = (activo, deshabilitado) =>{
+        if (deshabilitado === false && activo === true) {
+            if (parametrosGenerales.filter(param => param.id == parametros[indice].id)[0].esCalculado === true) {
+                return true;
+            } else{
+                return false;
+            }
+        }else{
+            return true
+        }
+    }
     return (
         <TableRow
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -14,17 +25,17 @@ export const LineaParametro = ({ parametros, indice, limInf, limSup, unidades, a
                     margin="none"
                     onChange={ limInf }
                     value={ parametros[indice].limInf }
-                    disabled={ !parametros[indice].activo || disabled }
+                    disabled={ habilitarLimitesParametro(parametros[indice].activo, disabled)}
                 />
             </TableCell>
             <TableCell>
                 <TextField
-                name={ parametros[indice].nombre }
+                    name={ parametros[indice].nombre }
                     size="small"
                     margin="none"
                     onChange={ limSup }
                     value={ parametros[indice].limSup }
-                    disabled={ !parametros[indice].activo || disabled }
+                    disabled={ habilitarLimitesParametro(parametros[indice].activo, disabled)}
                 />
             </TableCell>
             <TableCell>

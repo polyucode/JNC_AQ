@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Grid, Card, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { MainLayout } from "../layout/MainLayout";
-import { ModalLayout, ModalPopup } from "../components/ModalLayout";
-
-import MuiAlert from '@mui/material/Alert';
+import { ModalLayout } from "../components/ModalLayout";
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,21 +13,10 @@ import { DATAGRID_LOCALE_TEXT } from '../helpers/datagridLocale';
 import { InsertarConsumoModal } from "../components/Modals/InsertarConsumoModal";
 import { EditarConsumoModal } from '../components/Modals/EditarConsumoModal';
 import { insertarBotonesModal } from '../helpers/insertarBotonesModal';
-import { deleteConsumos, getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio, getClientes, getConsumosById } from "../api";
-import { useUsuarioActual } from "../hooks/useUsuarioActual";
+import { getOfertas, postConsumos, putConsumos, getProductos, getConsumos, getModoEnvio, getClientes, getConsumosById } from "../api";
+import './ConsumosArticulos.css'
 
 import Swal from 'sweetalert2';
-
-
-const token = {
-    headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token')
-    }
-};
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export const ConsumoArticulosPage = () => {
 
@@ -76,8 +63,6 @@ export const ConsumoArticulosPage = () => {
     const [productoEditar, setProductoEditar] = useState([]);
     const [modoEnvioEditar, setModoEnvioEditar] = useState([]);
 
-    const [snackData, setSnackData] = useState({ open: false, msg: 'Testing', severity: 'success' });
-
     const [errorOferta, setErrorOferta] = useState(false);
     const [errorProducto, setErrorProducto] = useState(false);
     const [errorFecha, setErrorFecha] = useState(false);
@@ -85,8 +70,6 @@ export const ConsumoArticulosPage = () => {
 
     const [filterText, setFilterText] = useState('');
     const [filterOferta, setFilterOferta] = useState(0);
-
-    const { usuarioActual } = useUsuarioActual();
 
     const columnas = [
 
@@ -133,95 +116,68 @@ export const ConsumoArticulosPage = () => {
 
 
     const peticionGet = async () => {
-
         const resp = await getConsumos();
         const consumosFiltrados = resp.filter(consumo => !consumo.deleted);
         setData(consumosFiltrados);
-
     }
 
     useEffect(() => {
         peticionGet();
 
         getOfertas()
-            .then(ofertas => {
-                setOfertas(ofertas);
-            })
+            .then(resp => setOfertas(resp.filter(oferta => !oferta.deleted)));
 
         getProductos()
-            .then(productos => {
-                setProductos(productos);
-            })
+            .then(resp => setProductos(resp.filter(producto => !producto.deleted)));
 
         getModoEnvio()
-            .then(envio => {
-                setModoEnvio(envio);
-            })
+            .then(resp => setModoEnvio(resp.filter(envio => !envio.deleted)));
 
         getClientes()
-            .then(cliente => {
-                setClientes(cliente);
-            })
+            .then(resp => setClientes(resp.filter(cliente => !cliente.deleted)));
 
     }, [])
 
     useEffect(() => {
-
         if (data.length > 0) {
             setRows(data);
+        } else {
+            setRows([]);
         }
-
     }, [data]);
+
 
     const peticionPost = async () => {
 
-        if (consumoSeleccionado.oferta != 0) {
+        if (consumoSeleccionado.oferta !== 0) {
             setErrorOferta(false)
         } else {
             setErrorOferta(true)
         }
 
-        if (consumoSeleccionado.fecha != null) {
+        if (consumoSeleccionado.fecha !== null) {
             setErrorFecha(false)
         } else {
             setErrorFecha(true)
         }
 
-        if (consumoSeleccionado.producto != "") {
+        if (consumoSeleccionado.producto !== "") {
             setErrorProducto(false)
         } else {
             setErrorProducto(true)
         }
 
-        if (consumoSeleccionado.cantidad != 0) {
+        if (consumoSeleccionado.cantidad !== 0) {
             setErrorCantidad(false)
         } else {
             setErrorCantidad(true)
         }
 
-        if (consumoSeleccionado.oferta != 0 && consumoSeleccionado.fecha != null && consumoSeleccionado.producto != "" && consumoSeleccionado.cantidad != 0) {
+        if (consumoSeleccionado.oferta !== 0 && consumoSeleccionado.fecha !== null && consumoSeleccionado.producto !== "" && consumoSeleccionado.cantidad !== 0) {
             consumoSeleccionado.id = 0;
-            const resp = await postConsumos(consumoSeleccionado);
-            abrirCerrarModalInsertar();
+            await postConsumos(consumoSeleccionado);
+
             peticionGet();
-            setConsumoSeleccionado({
-                id: 0,
-                oferta: 0,
-                fecha: null,
-                producto: 0,
-                descripcionProducto: '',
-                cantidad: 0,
-                albaran: 0,
-                modoEnvio: 0,
-                observaciones: '',
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
 
             Swal.fire({
                 position: 'center',
@@ -235,6 +191,9 @@ export const ConsumoArticulosPage = () => {
                 },
                 hideClass: {
                     popup: 'animate__animated animate__bounceOut'
+                },
+                customClass: {
+                    popup: 'custom-swal-popup'
                 }
             });
         }
@@ -242,20 +201,20 @@ export const ConsumoArticulosPage = () => {
 
     const peticionPut = async () => {
 
-        if (consumoSeleccionado.fecha != "") {
+        if (consumoSeleccionado.fecha !== "") {
             setErrorFecha(false)
         } else {
             setErrorFecha(true)
         }
 
-        if (consumoSeleccionado.cantidad != 0) {
+        if (consumoSeleccionado.cantidad !== 0) {
             setErrorCantidad(false)
         } else {
             setErrorCantidad(true)
         }
 
-        if (consumoSeleccionado.fecha != "" && consumoSeleccionado.cantidad != 0) {
-            const resp = await putConsumos(consumoSeleccionado);
+        if (consumoSeleccionado.fecha !== "" && consumoSeleccionado.cantidad !== 0) {
+            await putConsumos(consumoSeleccionado);
 
             var consumoModificado = data;
             consumoModificado.map(consumo => {
@@ -264,25 +223,6 @@ export const ConsumoArticulosPage = () => {
                 }
             });
             peticionGet();
-            abrirCerrarModalEditar();
-            setConsumoSeleccionado({
-                id: 0,
-                oferta: 0,
-                fecha: null,
-                producto: 0,
-                descripcionProducto: '',
-                cantidad: 0,
-                albaran: 0,
-                modoEnvio: 0,
-                observaciones: '',
-                addDate: null,
-                addIdUser: null,
-                modDate: null,
-                modIdUser: null,
-                delDate: null,
-                delIdUser: null,
-                deleted: null,
-            })
 
             Swal.fire({
                 position: 'center',
@@ -311,7 +251,7 @@ export const ConsumoArticulosPage = () => {
             resp.deleted = true;
 
             await putConsumos(resp);
-            
+
             peticionGet();
             abrirCerrarModalEliminar();
             setConsumoSeleccionado({
@@ -444,7 +384,6 @@ export const ConsumoArticulosPage = () => {
 
 
     const handleChange = e => {
-        const { name, value } = e.target;
         setConsumoSeleccionado(prevState => ({
             ...prevState,
             [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
@@ -452,15 +391,12 @@ export const ConsumoArticulosPage = () => {
     }
 
     const handleSelectRow = (ids) => {
-
         if (ids.length > 0) {
             setConsumoSeleccionado(data.filter(consumo => consumo.id === ids[0])[0]);
         } else {
             setConsumoSeleccionado(consumoSeleccionado);
         }
-
         setRowsIds(ids);
-
     }
 
     const handleFilterChange = (event) => {
@@ -468,24 +404,17 @@ export const ConsumoArticulosPage = () => {
     };
 
     const handleFilterOferta = (event) => {
-        setFilterOferta(parseInt(event.target.innerText));
+        if(event.target.innerText !== undefined){
+            setFilterOferta(parseInt(event.target.innerText));
+        } else{
+            setFilterOferta(0)
+        }        
     };
 
     const filteredData = rows.filter(item =>
         item.nombreCliente.toLowerCase().includes(filterText.toLowerCase()) &&
         (filterOferta !== 0 ? item.oferta === filterOferta : true)
     );
-
-    const handleSnackClose = (event, reason) => {
-
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackData({ open: false, msg: '', severity: 'info' });
-
-    };
-
 
     return (
         <>
@@ -517,7 +446,6 @@ export const ConsumoArticulosPage = () => {
                             </Grid>
                             <Grid item xs={3}>
                                 <Autocomplete
-                                    disableClearable={true}
                                     sx={{ width: '50%' }}
                                     id="Oferta"
                                     options={ofertas}

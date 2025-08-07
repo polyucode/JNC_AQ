@@ -1,24 +1,70 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getModoEnvio, getOfertas, getProductos } from '../../api';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import { Grid, TextField, Autocomplete, TextareaAutosize } from '@mui/material';
+import { getModoEnvio, getOfertasProductos } from '../../api';
 
 export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, ofertas, clientes, productos, errorCantidad, errorOferta, errorProducto, errorFecha }) => {
 
     const [modoEnvio, setModoEnvio] = useState([]);
 
+    const [productosSeleccionables, setProductosSeleccionables] = useState([]);
+    const [codigoClienteSeleccionado, setCodigoClienteSeleccionado] = useState('');
+
+    const [inputNombreCliente, setInputNombreCliente] = useState('');
     useEffect(() => {
 
         getModoEnvio()
-            .then(envio => {
-                setModoEnvio(envio);
-            })
+            .then(resp => setModoEnvio(resp.filter(envio => !envio.deleted)));
     }, [])
 
-    const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
-    );
+    useEffect(() =>{
+        if(consumoSeleccionado.oferta !== 0){
+            CargarProductosSeleccionables();
+        }
+    }, [codigoClienteSeleccionado, consumoSeleccionado.oferta]);
 
+    function ModificarCodigoClienteSeleccionado(value){
+        setCodigoClienteSeleccionado(value.codigo);
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            nombreCliente: value.razonSocial,
+            oferta: parseInt(value.numeroOferta),
+            producto: ''
+        }))
+    };
+
+    function ModificarOfertaSeleccionada(value){
+        setCodigoClienteSeleccionado(value.codigoCliente)
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            codigoCliente: value.codigoCliente,
+            nombreCliente: value.nombreCliente,
+            oferta: parseInt(value.numeroOferta)
+        }))
+    }
+
+    async function CargarProductosSeleccionables(){
+        if (codigoClienteSeleccionado.toString() !== '' && consumoSeleccionado.oferta.toString() !== '') {
+            const resp = await getOfertasProductos();
+            const oferta = ofertas.filter(ofer => ofer.numeroOferta === consumoSeleccionado.oferta && !ofer.deleted)[0]
+            const filtrados = resp.filter((producto) => producto.idOferta === oferta.id && !producto.deleted);
+            const idFiltrados = filtrados.map(producto => producto.idProducto);
+            setProductosSeleccionables(productos.filter((producto) => idFiltrados.includes(producto.id)));
+        }
+    }
+
+    function filtrarNombreCliente(cliente) {
+        if (!cliente.deleted) {
+            if (inputNombreCliente === '') {
+                return true;
+            } else {
+                const nombreClienteLowerCase = cliente.razonSocial ? cliente.razonSocial.toString().toLowerCase() : '';
+                const inputNombreClienteLowerCase = inputNombreCliente.toLowerCase();
+                return nombreClienteLowerCase.includes(inputNombreClienteLowerCase);
+            }
+        } else {
+            return false;
+        }
+    }
 
     return (
         <>
@@ -26,13 +72,15 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                 <Autocomplete
                     disableClearable={true}
                     id="nombreCliente"
-                    options={clientesUnicos}
+                    options={clientes}
+                    value={clientes.find(cliente => cliente.razonSocial === consumoSeleccionado.nombreCliente) || null}
+                    filterOptions={options => clientes.filter((cliente) => filtrarNombreCliente(cliente))}
+                    onInputChange={(event, newInputValue) => {
+                        setInputNombreCliente(newInputValue);
+                    }}
                     getOptionLabel={option => option.razonSocial}
                     renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
-                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                        ...prevState,
-                        nombreCliente: value.razonSocial
-                    }))}
+                    onChange={(event, value) => ModificarCodigoClienteSeleccionado(value)}
                 />
             </Grid>
 
@@ -42,13 +90,19 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                     sx={{ width: '100%', marginTop: '25px' }}
                     id="Oferta"
                     options={ofertas}
+                    value={ofertas.find(oferta => oferta.numeroOferta === consumoSeleccionado.oferta) || null}
                     getOptionLabel={option => option.numeroOferta.toString()}
-                    filterOptions={options => ofertas.filter(oferta => oferta.nombreCliente === consumoSeleccionado.nombreCliente)}
+                    filterOptions={options => {
+                        if (consumoSeleccionado.nombreCliente !== "" && consumoSeleccionado.oferta !== 0) {
+                            return options.filter(oferta =>
+                                oferta.nombreCliente === consumoSeleccionado.nombreCliente && !oferta.deleted
+                            );
+                        } else {
+                            return options.filter(oferta => !oferta.deleted);
+                        }
+                    }}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" error={errorOferta} helperText={errorOferta ? 'Este campo es obligatorio' : ' '} />}
-                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                        ...prevState,
-                        oferta: parseInt(value.numeroOferta)
-                    }))}
+                    onChange={(event, value) => ModificarOfertaSeleccionada(value)}
                 />
             </Grid>
 
@@ -63,7 +117,7 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
                 <Autocomplete
                     disableClearable={true}
                     id="producto"
-                    options={productos}
+                    options={productosSeleccionables}
                     getOptionLabel={option => option.descripcion}
                     sx={{ width: '100%', marginTop: '25px' }}
                     renderInput={(params) => <TextField {...params} name="producto" label="Producto" error={errorProducto} helperText={errorProducto ? 'Este campo es obligatorio' : ' '} />}
@@ -76,20 +130,61 @@ export const InsertarConsumoModal = ({ change: handleChange, setConsumoSeleccion
             </Grid>
 
             <Grid item xs={6} md={2}>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Cantidad" name="cantidad" type="number" onChange={handleChange} error={errorCantidad} helperText={errorCantidad ? 'Introduzca una cantidad' : ' '} />
+                <TextField
+                    sx={{ 
+                        width: '100%',
+                        marginTop: '25px',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Cantidad"
+                    name="cantidad"
+                    type="number"
+                    onChange={handleChange}
+                    error={errorCantidad}
+                    helperText={errorCantidad ? 'Introduzca una cantidad' : ' '}
+                />
             </Grid>
 
             <Grid item xs={3} md={3}>
-                <TextField sx={{ width: '100%' }} label="Nº Albaran" name="albaran" type="number" onChange={handleChange} />
+                <TextField
+                    sx={{ 
+                        width: '100%',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Nº Albaran"
+                    name="albaran"
+                    type="number"
+                    onChange={handleChange}
+                />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={3} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="producto"
                     options={modoEnvio}
                     getOptionLabel={option => option.nombre}
-                    sx={{ width: 300 }}
+                    sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} name="modoEnvio" label="Metodo Entrega" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,

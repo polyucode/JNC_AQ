@@ -12,6 +12,7 @@ namespace AnalisisQuimicos.Core.DTOs
         public string Descripcion { get; set; }
         public bool? VerInsp { get; set; }
         public bool? Maestro { get; set; }
+        public string NombreIcono { get; set; }
         public DateTime? AddDate { get; set; }
         public int? AddIdUser { get; set; }
         public DateTime? ModDate { get; set; }

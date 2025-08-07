@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { getUsuarios } from '../../api';
 
 const protocolos = [
@@ -114,17 +113,6 @@ export const InsertarVisModalLegionela = ({ change: handleChangeInput, analisisS
                     }}
                     error={errorFecha} 
                     helperText={errorFecha ? 'Introduzca una fecha' : ' '}
-                />
-            </Grid>
-
-            <Grid item xs={12} md={12}>
-                <p> Observaciones </p>
-                <TextareaAutosize
-                    aria-label="empty textarea"
-                    minRows={8}
-                    style={{ width: '100%' }}
-                    name="observaciones"
-                    onChange={handleChangeInput}
                 />
             </Grid>
         </>

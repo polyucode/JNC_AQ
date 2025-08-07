@@ -1,3 +1,27 @@
-span.MuiButtonBase-root{
+/* span.MuiButtonBase-root{
     font-size: 18px;
+} */
+
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);  /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;  /* Asegúrate de que el overlay esté encima de todo */
+}
+
+.spinner-overlay .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.negative-value {
+    color: red;
+    font-weight: bold;
 }

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
-import { useUsuarioActual } from '../../hooks/useUsuarioActual';
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,7 +18,7 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
     const { logout } = useContext( AuthContext );
     const navigate = useNavigate();
 
-    const { usuarioActual } = useUsuarioActual();
+    const { user } = useContext(AuthContext);
 
     // Variables para el menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -54,12 +53,12 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
             open={ open }
             onClose={handleClose}
         >
-            <MenuItem>
+            {/* <MenuItem>
                 <ListItemIcon>
                     <CoPresent fontSize="small" />
                 </ListItemIcon>
                 Perfil
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={ handleLogout }>
                 <ListItemIcon>
                     <Logout fontSize="small" />
@@ -94,7 +93,7 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
                 </Typography>
 
                 {
-                    usuarioActual.activo
+                    (user != null && user.activo)
                         ? (
                             <>
                                 <Button color="inherit" onClick={ handleClick } variant="outlined" startIcon={ <PersonIcon /> }>Cuenta</Button>
@@ -111,7 +110,6 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
 
     const loginVariant = (
         <AppBar position="fixed">
-
             <Toolbar>
 
                 <Avatar alt="Logo JNegre" src="/img/logo.svg" sx={{ mr: 2 }} />
@@ -126,13 +124,9 @@ export const Appbar = ({ title, variant, drawerWidth = 0, onDrawerToggle }) => {
 
     return (
         <>
-
-            {/* Barra superior del menú. Muestro una variante u otra según el tamaño de la pantalla */}
             {
-                ( variant === 'login-variant') ? loginVariant : defaultVariant
+                ( variant === "login-variant") ? loginVariant : defaultVariant
             }
-            
-
         </>
     );
 }

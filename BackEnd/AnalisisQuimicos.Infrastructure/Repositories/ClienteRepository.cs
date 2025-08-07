@@ -16,7 +16,7 @@ namespace AnalisisQuimicos.Infrastructure.Repositories
         public async Task<Clientes> GetByCodigoCliente(int codigo)
         {
             var list = _entities.AsEnumerable();
-            var sel = list.Where(x => x.Codigo == codigo);
+            var sel = list.Where(x => x.Codigo == codigo && x.Deleted != true);
 
             if (sel.ToArray().Length != 0)
             {

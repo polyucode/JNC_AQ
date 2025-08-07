@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Grid, TextField, Autocomplete } from '@mui/material';
-import { getModoEnvio, getOfertas, getProductos } from '../../api';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import { Grid, TextField, Autocomplete, TextareaAutosize } from '@mui/material';
+import { getModoEnvio, getOfertasProductos } from '../../api';
 
 export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionado, consumoSeleccionado, productoEditar, ofertaEditar, modoEnvioEditar, ofertas, clientes, productos, errorFecha, errorCantidad, clienteEditar }) => {
 
     const [modoEnvio, setModoEnvio] = useState([]);
 
+    const [productosSeleccionables, setProductosSeleccionables] = useState([]);
+    const [codigoClienteSeleccionado, setCodigoClienteSeleccionado] = useState('');
+    const [ofertaSeleccionada, setOfertaSeleccionada] = useState('');
+
     useEffect(() => {
 
         getModoEnvio()
-            .then(envio => {
-                setModoEnvio(envio);
-            })
-    })
+            .then(resp => setModoEnvio(resp.filter(envio => !envio.deleted)));
 
+            setCodigoClienteSeleccionado(clienteEditar[0].codigo);
+            setOfertaSeleccionada(ofertaEditar[0].id);
+    },[])
+
+    useEffect(() =>{
+        CargarProductosSeleccionables();
+    }, [codigoClienteSeleccionado, ofertaSeleccionada]);
 
     function formateandofechas(fecha) {
         if (fecha !== null) {
@@ -30,9 +37,35 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
         }
     }
 
-    const clientesUnicos = clientes.filter((cliente, index, self) =>
-        index === self.findIndex(c => c.razonSocial === cliente.razonSocial)
-    );
+    function ModificarCodigoClienteSeleccionado(value){
+        setCodigoClienteSeleccionado(value.codigo);
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            nombreCliente: value.razonSocial,
+            oferta: parseInt(value.numeroOferta),
+            producto: ''
+        }))
+    };
+
+    function ModificarOfertaSeleccionada(value){
+        setOfertaSeleccionada(value.id);
+        setCodigoClienteSeleccionado(value.codigoCliente)
+        setConsumoSeleccionado(prevState => ({
+            ...prevState,
+            codigoCliente: value.codigoCliente,
+            nombreCliente: value.nombreCliente,
+            oferta: parseInt(value.numeroOferta)
+        }))
+    }
+
+    async function CargarProductosSeleccionables(){
+        if (codigoClienteSeleccionado.toString() !== '' && ofertaSeleccionada.toString() !== '') {
+            const resp = await getOfertasProductos();
+            const filtrados = resp.filter((producto) => producto.idOferta === ofertaSeleccionada && !producto.deleted);
+            const idFiltrados = filtrados.map(producto => producto.idProducto);
+            setProductosSeleccionables(productos.filter((producto) => idFiltrados.includes(producto.id)));
+        }
+    }
 
     return (
         <>
@@ -40,14 +73,11 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                 <Autocomplete
                     disableClearable={true}
                     id="nombreCliente"
-                    options={clientesUnicos}
+                    options={clientes}
                     defaultValue={clienteEditar[0]}
                     getOptionLabel={option => option.razonSocial}
                     renderInput={params => <TextField {...params} label="Nombre cliente" name="nombreCliente" />}
-                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                        ...prevState,
-                        nombreCliente: value.razonSocial
-                    }))}
+                    onChange={(event, value) => ModificarCodigoClienteSeleccionado(value)}
                 />
             </Grid>
 
@@ -61,10 +91,7 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     getOptionLabel={option => option.numeroOferta.toString()}
                     filterOptions={options => ofertas.filter(oferta => oferta.nombreCliente === consumoSeleccionado.nombreCliente)}
                     renderInput={(params) => <TextField {...params} label="Oferta" name="oferta" />}
-                    onChange={(event, value) => setConsumoSeleccionado(prevState => ({
-                        ...prevState,
-                        oferta: parseInt(value.numeroOferta)
-                    }))}
+                    onChange={(event, value) => ModificarOfertaSeleccionada(value)}
                 />
             </Grid>
 
@@ -75,11 +102,11 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                 <TextField sx={{ width: '100%', marginTop: '22px' }} name="fecha" type="date" onChange={handleChange} value={consumoSeleccionado && formateandofechas(consumoSeleccionado.fecha)} error={errorFecha} helperText={errorFecha ? 'Introduzca una fecha' : ' '} />
             </Grid>
 
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={3}>
                 <Autocomplete
                     disableClearable={true}
                     id="producto"
-                    options={productos}
+                    options={productosSeleccionables}
                     getOptionLabel={option => option.descripcion}
                     defaultValue={productoEditar[0]}
                     sx={{ width: '100%' }}
@@ -92,12 +119,55 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                 />
             </Grid>
 
-            <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%', marginTop: '22px' }} label="Cantidad" name="cantidad" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.cantidad} error={errorCantidad} helperText={errorCantidad ? 'Introduzca una cantidad' : ' '} />
+            <Grid item xs={6} md={2}>
+                <TextField
+                    sx={{ 
+                        width: '100%',
+                        marginTop: '25px',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }}
+                    label="Cantidad"
+                    name="cantidad"
+                    type="number"
+                    onChange={handleChange}
+                    value={consumoSeleccionado && consumoSeleccionado.cantidad}
+                    error={errorCantidad}
+                    helperText={errorCantidad ? 'Introduzca una cantidad' : ' '}
+                />
             </Grid>
 
             <Grid item xs={6} md={3}>
-                <TextField sx={{ width: '100%' }} label="Nº Albaran" name="albaran" type="number" onChange={handleChange} value={consumoSeleccionado && consumoSeleccionado.albaran} />
+                <TextField
+                    sx={{ 
+                        width: '100%',
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Nº Albaran"
+                    name="albaran"
+                    type="number"
+                    onChange={handleChange}
+                    value={consumoSeleccionado && consumoSeleccionado.albaran}
+                />
             </Grid>
 
             <Grid item xs={6} md={4}>
@@ -107,7 +177,6 @@ export const EditarConsumoModal = ({ change: handleChange, setConsumoSeleccionad
                     options={modoEnvio}
                     defaultValue={modoEnvioEditar[0]}
                     getOptionLabel={option => option.nombre}
-                    sx={{ width: 300 }}
                     renderInput={(params) => <TextField {...params} name="modoEnvio" label="Metodo Entrega" />}
                     onChange={(event, value) => setConsumoSeleccionado(prevState => ({
                         ...prevState,

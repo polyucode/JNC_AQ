@@ -24,6 +24,7 @@ namespace AnalisisQuimicos.Core.Interfaces
         IAnalisisNivelesPlantasClienteRepository AnalisisNivelesPlantasClienteRepository { get; }
         IClientesContactosRepository ClientesContactosRepository { get; }
         IRepository<OfertasClientes> OfertasClientesRepository { get; }
+        IRepository<OfertasContactos> OfertasContactosRepository { get; }
         IRepository<Productos> ProductosRepository { get; }
         IRepository<OfertasProductos> OfertasProductosRepository { get; }
         IRepository<Consumos> ConsumosRepository { get; }
@@ -33,7 +34,9 @@ namespace AnalisisQuimicos.Core.Interfaces
         IRepository<ModoEnvio>ModoEnvioRepository { get; }
         IRepository<Elementos> ElementosRepository { get; }
         IRepository<Parametros> ParametrosRepository { get; }
-        
+        IRepository<ObservacionesElementos> ObservacionesElementos { get; }
+        IRepository<Correos> CorreosRepository { get; }
+        IHistorialCorreosContactosRepository HistorialCorreosContactosRepository { get; }
         IFilesRepository FilesRepository { get; }
 
         IRepository<Files>FilesRepository2 { get; }

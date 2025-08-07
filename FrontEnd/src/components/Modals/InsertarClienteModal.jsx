@@ -42,7 +42,29 @@ export const InsertarClienteModal = ({ change:handleChange, autocompleteChange, 
     return (
         <>
             <Grid item xs={ 3 } md={ 3 }>
-                <TextField sx={{ width: '100%', marginTop: '25px' }} label="Código" name="codigo" type="number" onChange={ handleChange } error={errorCodigo} helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} />
+                <TextField 
+                    sx={{ 
+                        width: '100%', 
+                        marginTop: '25px', 
+                        '& input[type=number]': {
+                            MozAppearance: 'textfield',
+                            '&::-webkit-outer-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            },
+                            '&::-webkit-inner-spin-button': {
+                                WebkitAppearance: 'none',
+                                margin: 0
+                            }
+                        }
+                    }} 
+                    label="Código" 
+                    name="codigo" 
+                    type="number" 
+                    onChange={ handleChange } 
+                    error={errorCodigo} 
+                    helperText={errorCodigo ? 'Este campo es obligatorio' : ' '} 
+                />
             </Grid>
 
             <Grid item xs={ 3 } md={ 3 }>

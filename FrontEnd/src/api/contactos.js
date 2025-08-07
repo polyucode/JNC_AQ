@@ -33,3 +33,9 @@ export const deleteContactos = async ( idContacto ) => {
     return resp;
 
 }
+
+export const getContactosByCodigoCliente = async ( codigoCliente ) => {
+    
+    const resp = await instance.get(`/clientescontactos/codigo/${ codigoCliente }`)
+    return resp.data.data;
+}

@@ -11,6 +11,7 @@ export * from './entregas';
 export * from './modoEnvio';
 export * from './niveles';
 export * from './ofertas';
+export * from './ofertasContactos';
 export * from './ofertasProductos';
 export * from './parametrosAnalisisPlanta';
 export * from './parametrosElementos';
@@ -20,5 +21,10 @@ export * from './planta';
 export * from './productos';
 export * from './tablasEstaticas';
 export * from './tareas';
+export * from './tareaArchivo';
 export * from './usuario';
 export * from './valorParametros';
+//AMF INI TEST DIAGRAMA
+export * from '../components/DiagramaEditableEdges/edges/EditableEdge/EditableEdge';
+export * from '../components/DiagramaEditableEdges/edges/EditableEdge/ControlPoint';
+export * from '../components/DiagramaEditableEdges/edges/EditableEdge/path';

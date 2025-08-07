@@ -1,13 +1,15 @@
 ﻿using AnalisisQuimicos.Core.Entities;
 using AnalisisQuimicos.Core.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AnalisisQuimicos.Core.Services
 {
-    public class ElementosPlantaService : IRepository<ElementosPlanta>
+    public class ElementosPlantaService : IRepository<ElementosPlanta>, IElementosPlantaExtra
     {
         private readonly IUnidadDeTrabajo _unidadDeTrabajo;
 
@@ -31,36 +33,11 @@ namespace AnalisisQuimicos.Core.Services
         public IEnumerable<ElementosPlanta> GetAll() //ElementosPlantaQueryFilter filtro
         {
             var clientes = _unidadDeTrabajo.ElementosPlantaRepository.GetAll();
-            //if (filtro.Nombre != null)
-            //{
-            //    clientes = clientes.Where(x => x.Nombre.ToLower().Contains(filtro.Nombre.ToLower()));
-            //}
-            //if (filtro.Apellidos != null)
-            //{
-            //    clientes = clientes.Where(x => x.Apellidos.ToLower().Contains(filtro.Apellidos.ToLower()));
-            //}
-            //if (filtro.Telefono != null)
-            //{
-            //    clientes = clientes.Where(x => x.Telefono.ToLower().Contains(filtro.Telefono.ToLower()));
-            //}
-            ////if(filtro.Date != null)
-            ////{
-            ////    clientes = clientes.Where(x => x.AddDate.ToShortDateString() == filtro.Date?.ToShortDateString());
-
-            ////}
-            //if (filtro.IdPerfil != null)
-            //{
-            //    clientes = clientes.Where(x => x.IdPerfil == filtro.IdPerfil);
-            //}
             return clientes;
         }
 
         public async Task Add(ElementosPlanta cliente)
         {
-            //if (cliente.Nombre == "NoPermitir")
-            //{
-            //    throw new BussinesException("No se puede añadir un cliente con ese nombre");
-            //}
             await _unidadDeTrabajo.ElementosPlantaRepository.Add(cliente);
             await _unidadDeTrabajo.SaveChangesAsync();
 
@@ -70,6 +47,88 @@ namespace AnalisisQuimicos.Core.Services
         {
             _unidadDeTrabajo.ElementosPlantaRepository.Update(cliente);
             await _unidadDeTrabajo.SaveChangesAsync();
+        }
+
+        public async Task<string> GetIconoElementoPlanta(int idElemento)
+        {
+            try
+            {
+                string workingDirectory = Environment.CurrentDirectory;
+                string path = Path.Combine(workingDirectory, "IconosElementos");
+                var elemento = await _unidadDeTrabajo.ElementosPlantaRepository.GetById(idElemento);
+                if (elemento == null)
+                {
+                    return "";
+                }
+                if (elemento.NombreIcono == null)
+                {
+                    return "";
+                }
+                var archivo = Directory.GetFiles(path, $"{elemento.NombreIcono}*");
+                if (archivo.Length == 0)
+                {
+                    return "";
+                }
+                else
+                {
+                    byte[] imageArray = File.ReadAllBytes(archivo[0]);
+                    string base64ImageRepresentation = Convert.ToBase64String(imageArray);
+                    return base64ImageRepresentation;
+                }
+
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public async Task<string> SubirIconoElemento(int idElemento, IFormFile file)
+        {
+            if (file == null)
+            {
+                return "";
+            }
+
+            BorrarIconoEnCasoSiExisteUnoAsignado(idElemento);
+
+            string workingDirectory = Environment.CurrentDirectory;
+
+            string path = Path.Combine(workingDirectory, "IconosElementos");
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string existingFilePath = Path.Combine(path, file.FileName);
+
+            if (!System.IO.File.Exists(existingFilePath))
+            {
+                using (var fileStream = new FileStream(existingFilePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            // Si ya existe, simplemente devuelves el nombre
+            return file.FileName;
+        }
+
+        private bool BorrarIconoEnCasoSiExisteUnoAsignado(int idElemento)
+        {
+            string workingDirectory = Environment.CurrentDirectory;
+            string path = Path.Combine(workingDirectory, "IconosElementos");
+            var archivo = Directory.GetFiles(path, $"{idElemento}*");
+            if (archivo.Length > 0)
+            {
+                File.Delete(archivo[0]);
+            }
+            return true;
+        }
+
+        public void EliminarIconoElementoPlanta(int idElemento)
+        {
+            BorrarIconoEnCasoSiExisteUnoAsignado(idElemento);
         }
     }
 }
